@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:triones_antd_flutter/triones_antd_flutter.dart';
+import 'package:trionesdev_antd/triones_antd_flutter.dart';
 
 void main() {
   test('adds one to input values', () {
