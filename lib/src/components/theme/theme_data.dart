@@ -14,7 +14,9 @@ class AntdThemeData with Diagnosticable {
   const AntdThemeData.raw();
 
   ThemeData toMaterialThemeData(){
-    return ThemeData();
+    return ThemeData(
+      splashFactory: NoSplash.splashFactory,
+    );
   }
 
   @override

@@ -102,6 +102,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   debugPrint('Button was pressed!');
                 }
             ),
+            Button(
+              onPressed: () {
+                debugPrint('Button was pressed!');
+              },
+              // text: "ssss",
+              icon: Icon(Icons.add),
+            )
           ],
         ),
       ),
