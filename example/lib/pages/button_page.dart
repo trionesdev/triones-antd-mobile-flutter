@@ -14,7 +14,9 @@ class _ButtonPageState extends State<ButtonPage> {
           title: Text('Button'),
         ),
         body: Center(
-            child: Column(children: [
+            child: Column(
+
+            children: [
           Row(
             children: [
               Button(
@@ -46,7 +48,26 @@ class _ButtonPageState extends State<ButtonPage> {
                 },
               )
             ],
-          )
+          ),
+              Row(
+                children: [
+                  Button(
+                    text: 'Primary',
+                    variant: ButtonVariant.solid,
+                    color: ButtonColor.primary,
+                    onPressed: () {
+                      print('ElevatedButton');
+                    },
+                  ),
+                  Button(
+                    type: ButtonType.dashed,
+                    text: 'Default',
+                    onPressed: () {
+                      print('ElevatedButton');
+                    },
+                  ),
+                ]
+              )
         ])));
   }
 }
