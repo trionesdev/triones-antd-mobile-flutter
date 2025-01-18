@@ -254,6 +254,43 @@ class _ButtonPageState extends State<ButtonPage> {
               },
             ),
           ]),
+          Row(
+            children: [
+              Button(
+                text: 'Large',
+                size: ButtonSize.large,
+                color: Color(0xffEB2F96),
+                onPressed: () {
+                  print('ElevatedButton');
+                },
+              ),
+              Button(
+                text: 'Middle',
+                color: Color(0xffEB2F96),
+                onPressed: () {
+                  print('ElevatedButton');
+                },
+              ),
+              Button(
+                text: 'Small',
+                size: ButtonSize.small,
+                color: Color(0xffEB2F96),
+                onPressed: () {
+                  print('ElevatedButton');
+                },
+              ),
+            ],
+          ),
+              Row(children: [
+                Button(
+                  text: 'Middle',
+                  shape: ButtonShape.circle,
+                  color: Color(0xffEB2F96),
+                  onPressed: () {
+                    print('ElevatedButton');
+                  },
+                ),
+              ],)
         ])));
   }
 }

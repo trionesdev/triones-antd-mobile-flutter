@@ -9,6 +9,8 @@ import 'antd_button_style.dart';
 
 enum ButtonType { primary, text, dashed, link }
 
+enum ButtonSize { large, middle, small }
+
 enum ButtonVariant {
   outlined,
   dashed,
@@ -34,6 +36,8 @@ class Button extends StatefulWidget {
       this.icon,
       this.onPressed,
       this.variant,
+      this.shape = ButtonShape.round,
+      this.size = ButtonSize.middle,
       this.style});
 
   final ButtonType? type;
@@ -45,13 +49,15 @@ class Button extends StatefulWidget {
   final Widget? icon;
   final VoidCallback? onPressed;
   final ButtonVariant? variant;
+  final ButtonShape shape;
+  final ButtonSize size;
   final AntdButtonStyle? style;
 
   @override
   State<Button> createState() => _ButtonState();
 }
 
-class _ButtonState extends State<Button> {
+class _ButtonState extends State<Button> with MaterialStateMixin{
   static AntdButtonStyle styleFrom() {
     return AntdButtonStyle();
   }
@@ -62,13 +68,13 @@ class _ButtonState extends State<Button> {
       case ButtonType.primary:
         return _PrimaryTypeButtonStyle(context: context, color: color);
       case ButtonType.dashed:
-        return _DashedTypeButtonStyle(context: context,color: color);
+        return _DashedTypeButtonStyle(context: context, color: color);
       case ButtonType.text:
-        return _TextTypeButtonStyle(context: context,);
+        return _TextTypeButtonStyle(context: context, color: color);
       case ButtonType.link:
-        return _LinkTypeButtonStyle(context: context);
+        return _LinkTypeButtonStyle(context: context, color: color);
       default:
-        return _DefaultTypeButtonStyle(context: context);
+        return _DefaultTypeButtonStyle(context: context, color: color);
     }
   }
 
@@ -80,7 +86,7 @@ class _ButtonState extends State<Button> {
       case ButtonVariant.outlined:
         return _OutlinedVariantButtonStyle(context: context, color: color);
       case ButtonVariant.dashed:
-        return _DashedVariantButtonStyle(context: context,color: color);
+        return _DashedVariantButtonStyle(context: context, color: color);
       case ButtonVariant.filled:
         return _FilledVariantButtonStyle(context: context, color: color);
       case ButtonVariant.text:
@@ -89,6 +95,17 @@ class _ButtonState extends State<Button> {
         return _LinkVariantButtonStyle(context: context, color: color);
       default:
         return _DefaultVariantButtonStyle(context: context, color: color);
+    }
+  }
+
+  static AntdButtonStyle? sizeStyle(BuildContext context, ButtonSize size) {
+    switch (size) {
+      case ButtonSize.large:
+        return _LargeSizeButtonStyle(context: context);
+      case ButtonSize.middle:
+        return _MiddleSizeButtonStyle(context: context);
+      case ButtonSize.small:
+        return _SmallSizeButtonStyle(context: context);
     }
   }
 
@@ -104,6 +121,8 @@ class _ButtonState extends State<Button> {
     if (widget.variant != null) {
       style = style.merge(variantStyle(context, widget.variant, widget.color));
     }
+    style = style.merge(sizeStyle(context, widget.size));
+    style = style.merge(_CircleShapeButtonStyle(context: context));
     style = style.merge(widget.style);
 
     if (widget.icon != null) {
@@ -119,8 +138,9 @@ class _ButtonState extends State<Button> {
       return Container(
         decoration: ShapeDecoration(
             shape: DashedBorder(
-              dashSize: 5,
-                borderRadius: BorderRadius.circular(6.0), width: 0.5)),
+                dashSize: 5,
+                borderRadius: BorderRadius.circular(6.0),
+                width: 0.5)),
         child: TextButton.icon(
           onPressed: widget.onPressed,
           icon: widget.icon,
@@ -147,13 +167,14 @@ class _ButtonState extends State<Button> {
 
 //region type
 class _DefaultTypeButtonStyle extends AntdButtonStyle {
-  const _DefaultTypeButtonStyle({required this.context});
+  const _DefaultTypeButtonStyle({required this.context, this.color});
 
   final BuildContext context;
+  final Color? color;
 
   @override
   WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: Colors.black));
+    return WidgetStateProperty.all(TextStyle(color: color ?? Colors.black));
   }
 
   @override
@@ -193,14 +214,14 @@ class _PrimaryTypeButtonStyle extends AntdButtonStyle {
 }
 
 class _DashedTypeButtonStyle extends AntdButtonStyle {
-  const _DashedTypeButtonStyle({required this.context,this.color});
+  const _DashedTypeButtonStyle({required this.context, this.color});
 
   final BuildContext context;
   final Color? color;
 
   @override
   WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: color??Colors.black));
+    return WidgetStateProperty.all(TextStyle(color: color ?? Colors.black));
   }
 
   @override
@@ -216,9 +237,10 @@ class _DashedTypeButtonStyle extends AntdButtonStyle {
 }
 
 class _TextTypeButtonStyle extends AntdButtonStyle {
-  const _TextTypeButtonStyle({required this.context});
+  const _TextTypeButtonStyle({required this.context, this.color});
 
   final BuildContext context;
+  final Color? color;
 
   @override
   WidgetStateProperty<TextStyle>? get textStyle {
@@ -233,9 +255,10 @@ class _TextTypeButtonStyle extends AntdButtonStyle {
 }
 
 class _LinkTypeButtonStyle extends AntdButtonStyle {
-  const _LinkTypeButtonStyle({required this.context});
+  const _LinkTypeButtonStyle({required this.context, this.color});
 
   final BuildContext context;
+  final Color? color;
 
   @override
   WidgetStateProperty<TextStyle>? get textStyle {
@@ -314,14 +337,14 @@ class _OutlinedVariantButtonStyle extends AntdButtonStyle {
 }
 
 class _DashedVariantButtonStyle extends AntdButtonStyle {
-  const _DashedVariantButtonStyle({required this.context,this.color});
+  const _DashedVariantButtonStyle({required this.context, this.color});
 
   final BuildContext context;
   final Color? color;
 
   @override
   WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: color??Colors.black));
+    return WidgetStateProperty.all(TextStyle(color: color ?? Colors.black));
   }
 
   @override
@@ -421,3 +444,54 @@ class _LinkVariantButtonStyle extends AntdButtonStyle {
   }
 }
 //endregion
+
+//region size
+class _SmallSizeButtonStyle extends AntdButtonStyle {
+  const _SmallSizeButtonStyle({required this.context});
+
+  final BuildContext context;
+
+  @override
+  WidgetStateProperty<TextStyle>? get textStyle {
+    return WidgetStateProperty.all(TextStyle(height: 0));
+  }
+
+  @override
+  WidgetStateProperty<EdgeInsets?>? get padding {
+    return WidgetStateProperty.all(EdgeInsets.fromLTRB(5, 0, 5, 0));
+  }
+}
+
+class _MiddleSizeButtonStyle extends AntdButtonStyle {
+  const _MiddleSizeButtonStyle({required this.context});
+
+  final BuildContext context;
+
+  @override
+  WidgetStateProperty<EdgeInsets?>? get padding {
+    return WidgetStateProperty.all(EdgeInsets.fromLTRB(15, 10, 15, 10));
+  }
+}
+
+class _LargeSizeButtonStyle extends AntdButtonStyle {
+  const _LargeSizeButtonStyle({required this.context});
+
+  final BuildContext context;
+
+  @override
+  WidgetStateProperty<EdgeInsets?>? get padding {
+    return WidgetStateProperty.all(EdgeInsets.fromLTRB(35, 20, 35, 20));
+  }
+}
+//endregion
+
+class _CircleShapeButtonStyle extends AntdButtonStyle{
+  const _CircleShapeButtonStyle({required this.context});
+
+  final BuildContext context;
+
+  @override
+  BorderRadius? get borderRadius{
+    return BorderRadius.circular(180);
+  }
+}

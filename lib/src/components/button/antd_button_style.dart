@@ -5,28 +5,41 @@ import 'package:flutter/material.dart';
 class AntdButtonStyle with Diagnosticable {
   final WidgetStateProperty<TextStyle?>? textStyle;
   final WidgetStateProperty<Color?>? backgroundColor;
+  final BorderRadius? borderRadius;
+  final BorderRadius? borderColor;
   final WidgetStateProperty<OutlinedBorder?>? shape;
+  final WidgetStateProperty<EdgeInsets?>? padding;
 
-  const AntdButtonStyle({this.textStyle, this.backgroundColor, this.shape});
+  const AntdButtonStyle(
+      {this.textStyle,
+      this.backgroundColor,
+      this.borderRadius,
+        this.borderColor,
+      this.shape,
+      this.padding});
 
   ButtonStyle toButtonStyle() {
     return ButtonStyle(
+        padding: padding,
         backgroundColor: backgroundColor,
         shape: shape ??
             WidgetStateProperty.all(RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6.0),
-                side: BorderSide(color: Color(0xFFd9d9d9),width: 0.5))));
-
+                borderRadius: BorderRadius.circular(600.0),
+                side: BorderSide(color: Color(0xFFd9d9d9), width: 0.5))));
   }
 
   AntdButtonStyle copyWith(
       {WidgetStateProperty<TextStyle?>? textStyle,
       WidgetStateProperty<Color?>? backgroundColor,
-      WidgetStateProperty<OutlinedBorder?>? shape}) {
+      borderRadius,
+      WidgetStateProperty<OutlinedBorder?>? shape,
+      WidgetStateProperty<EdgeInsets?>? padding}) {
     return AntdButtonStyle(
         textStyle: textStyle ?? this.textStyle,
         backgroundColor: backgroundColor ?? this.backgroundColor,
-        shape: shape ?? this.shape);
+        borderRadius: borderRadius ?? this.borderRadius,
+        shape: shape ?? this.shape,
+        padding: padding ?? this.padding);
   }
 
   AntdButtonStyle merge(AntdButtonStyle? style) {
@@ -36,6 +49,8 @@ class AntdButtonStyle with Diagnosticable {
     return copyWith(
         textStyle: textStyle ?? style.textStyle,
         backgroundColor: backgroundColor ?? style.backgroundColor,
-        shape: shape ?? style.shape);
+        borderRadius: borderRadius ?? style.borderRadius,
+        shape: shape ?? style.shape,
+        padding: padding ?? style.padding);
   }
 }
