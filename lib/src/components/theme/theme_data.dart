@@ -3,17 +3,21 @@ library;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-
 class AntdThemeData with Diagnosticable {
-  factory AntdThemeData(){
-    return AntdThemeData.raw(
-
-    );
+  factory AntdThemeData() {
+    return AntdThemeData.raw();
   }
 
   const AntdThemeData.raw();
 
-  ThemeData toMaterialThemeData(){
+  factory AntdThemeData.fallback() => AntdThemeData();
+
+  static AntdThemeData localize(
+      AntdThemeData? baseTheme, AntdThemeData? localTextGeometry) {
+    return AntdThemeData();
+  }
+
+  ThemeData toMaterialThemeData() {
     return ThemeData(
       splashFactory: NoSplash.splashFactory,
     );
