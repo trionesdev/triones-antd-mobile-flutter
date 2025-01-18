@@ -5,16 +5,12 @@ import 'package:flutter/material.dart';
 class AntdButtonStyle with Diagnosticable {
   final WidgetStateProperty<TextStyle?>? textStyle;
   final WidgetStateProperty<Color?>? backgroundColor;
-  final BorderRadius? borderRadius;
-  final BorderRadius? borderColor;
   final WidgetStateProperty<OutlinedBorder?>? shape;
   final WidgetStateProperty<EdgeInsets?>? padding;
 
   const AntdButtonStyle(
       {this.textStyle,
       this.backgroundColor,
-      this.borderRadius,
-        this.borderColor,
       this.shape,
       this.padding});
 
@@ -24,20 +20,18 @@ class AntdButtonStyle with Diagnosticable {
         backgroundColor: backgroundColor,
         shape: shape ??
             WidgetStateProperty.all(RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(600.0),
+                borderRadius: BorderRadius.circular(6.0),
                 side: BorderSide(color: Color(0xFFd9d9d9), width: 0.5))));
   }
 
   AntdButtonStyle copyWith(
       {WidgetStateProperty<TextStyle?>? textStyle,
       WidgetStateProperty<Color?>? backgroundColor,
-      borderRadius,
       WidgetStateProperty<OutlinedBorder?>? shape,
       WidgetStateProperty<EdgeInsets?>? padding}) {
     return AntdButtonStyle(
         textStyle: textStyle ?? this.textStyle,
         backgroundColor: backgroundColor ?? this.backgroundColor,
-        borderRadius: borderRadius ?? this.borderRadius,
         shape: shape ?? this.shape,
         padding: padding ?? this.padding);
   }
@@ -49,7 +43,6 @@ class AntdButtonStyle with Diagnosticable {
     return copyWith(
         textStyle: textStyle ?? style.textStyle,
         backgroundColor: backgroundColor ?? style.backgroundColor,
-        borderRadius: borderRadius ?? style.borderRadius,
         shape: shape ?? style.shape,
         padding: padding ?? style.padding);
   }

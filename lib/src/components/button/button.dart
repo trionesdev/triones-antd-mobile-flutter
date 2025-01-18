@@ -2,18 +2,15 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd/antd.dart';
-import 'package:widgets_easier/widgets_easier.dart';
 import '../theme/theme.dart';
-
 import 'antd_button_style.dart';
 
-enum ButtonType { primary, text, dashed, link }
+enum ButtonType { primary, text, link }
 
 enum ButtonSize { large, middle, small }
 
 enum ButtonVariant {
   outlined,
-  dashed,
   solid,
   filled,
   text,
@@ -57,56 +54,9 @@ class Button extends StatefulWidget {
   State<Button> createState() => _ButtonState();
 }
 
-class _ButtonState extends State<Button> with MaterialStateMixin{
+class _ButtonState extends State<Button> with MaterialStateMixin {
   static AntdButtonStyle styleFrom() {
     return AntdButtonStyle();
-  }
-
-  static AntdButtonStyle? typeStyle(
-      BuildContext context, ButtonType? type, Color? color) {
-    switch (type) {
-      case ButtonType.primary:
-        return _PrimaryTypeButtonStyle(context: context, color: color);
-      case ButtonType.dashed:
-        return _DashedTypeButtonStyle(context: context, color: color);
-      case ButtonType.text:
-        return _TextTypeButtonStyle(context: context, color: color);
-      case ButtonType.link:
-        return _LinkTypeButtonStyle(context: context, color: color);
-      default:
-        return _DefaultTypeButtonStyle(context: context, color: color);
-    }
-  }
-
-  static AntdButtonStyle? variantStyle(
-      BuildContext context, ButtonVariant? variant, Color? color) {
-    switch (variant) {
-      case ButtonVariant.solid:
-        return _SolidVariantButtonStyle(context: context, color: color);
-      case ButtonVariant.outlined:
-        return _OutlinedVariantButtonStyle(context: context, color: color);
-      case ButtonVariant.dashed:
-        return _DashedVariantButtonStyle(context: context, color: color);
-      case ButtonVariant.filled:
-        return _FilledVariantButtonStyle(context: context, color: color);
-      case ButtonVariant.text:
-        return _TextVariantButtonStyle(context: context, color: color);
-      case ButtonVariant.link:
-        return _LinkVariantButtonStyle(context: context, color: color);
-      default:
-        return _DefaultVariantButtonStyle(context: context, color: color);
-    }
-  }
-
-  static AntdButtonStyle? sizeStyle(BuildContext context, ButtonSize size) {
-    switch (size) {
-      case ButtonSize.large:
-        return _LargeSizeButtonStyle(context: context);
-      case ButtonSize.middle:
-        return _MiddleSizeButtonStyle(context: context);
-      case ButtonSize.small:
-        return _SmallSizeButtonStyle(context: context);
-    }
   }
 
   @override
@@ -115,42 +65,14 @@ class _ButtonState extends State<Button> with MaterialStateMixin{
 
     AntdButtonStyle style = styleFrom();
 
-    if (widget.variant == null) {
-      style = style.merge(typeStyle(context, widget.type, widget.color));
-    }
-    if (widget.variant != null) {
-      style = style.merge(variantStyle(context, widget.variant, widget.color));
-    }
-    style = style.merge(sizeStyle(context, widget.size));
-    style = style.merge(_CircleShapeButtonStyle(context: context));
+    style = style.merge(_AntdButtonStyle(context: context, button: widget));
     style = style.merge(widget.style);
 
-    if (widget.icon != null) {
-      // return Container();
+    if (widget.icon != null && widget.text == null) {
       return IconButton(
           onPressed: widget.onPressed,
           icon: widget.icon!,
           style: style.toButtonStyle());
-    }
-
-    if (widget.type == ButtonType.dashed ||
-        widget.variant == ButtonVariant.dashed) {
-      return Container(
-        decoration: ShapeDecoration(
-            shape: DashedBorder(
-                dashSize: 5,
-                borderRadius: BorderRadius.circular(6.0),
-                width: 0.5)),
-        child: TextButton.icon(
-          onPressed: widget.onPressed,
-          icon: widget.icon,
-          label: Text(
-            widget.text != null ? widget.text! : '',
-            style: style.textStyle?.resolve(const <WidgetState>{}),
-          ),
-          style: style.toButtonStyle(),
-        ),
-      );
     }
 
     return TextButton.icon(
@@ -165,333 +87,126 @@ class _ButtonState extends State<Button> with MaterialStateMixin{
   }
 }
 
-//region type
-class _DefaultTypeButtonStyle extends AntdButtonStyle {
-  const _DefaultTypeButtonStyle({required this.context, this.color});
+class _AntdButtonStyle extends AntdButtonStyle {
+  const _AntdButtonStyle({required this.context, required this.button});
 
   final BuildContext context;
-  final Color? color;
+  final Button button;
 
-  @override
-  WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: color ?? Colors.black));
+  Color? get buttonBackgroundColor {
+    Color? result = Colors.white;
+    if (button.type == ButtonType.primary) {
+      result = Color(0xFF1777ff);
+      if (button.color != null) {
+        result = button.color;
+      }
+    }
+    if (button.variant == ButtonVariant.solid) {
+      if (button.color != null) {
+        result = button.color;
+      }
+    }
+    if (button.variant == ButtonVariant.filled) {
+      result = button.color!.withOpacity(0.1);
+    }
+
+    return result;
+  }
+
+  Color? get buttonBorderColor {
+    Color? result;
+    if (button.variant == ButtonVariant.outlined) {
+      result = Color(0xFFd9d9d9);
+      if (button.color != null) {
+        return button.color;
+      }
+    }
+    if (button.type == null) {
+      result = Color(0xFFd9d9d9);
+      if (button.color != null) {
+        return button.color;
+      }
+    }
+    return result;
+  }
+
+  Color? get buttonTextColor {
+    if (button.type == ButtonType.primary) {
+      return Colors.white;
+    }
+    if (button.variant == ButtonVariant.solid) {
+      return Colors.white;
+    }
+    if (button.color != null) {
+      return button.color;
+    }
+    return Colors.black;
+  }
+
+  BorderRadius? get buttonBorderRadius {
+    if (button.shape == ButtonShape.circle) {
+      return BorderRadius.circular(180);
+    } else if (button.shape == ButtonShape.round) {
+      return BorderRadius.circular(6.0);
+    }
+    return null;
+  }
+
+  BorderSide? get buttonBorderSide {
+    if (button.variant != null) {
+      if (button.variant == ButtonVariant.outlined) {
+        return BorderSide(
+            color: buttonBorderColor ?? Color(0xFFd9d9d9), width: 1);
+      }
+    } else {
+      if (button.type == null) {
+        return BorderSide(
+            color: buttonBorderColor ?? Color(0xFFd9d9d9), width: 1);
+      }
+    }
+    // return BorderSide.none;
   }
 
   @override
-  WidgetStateProperty<Color?>? get backgroundColor {
-    return WidgetStateProperty.all(Colors.white);
-  }
-
-  @override
-  WidgetStateProperty<OutlinedBorder?>? get shape {
-    return WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0),
-        side: BorderSide(color: Color(0xFFd9d9d9), width: 0.5)));
-  }
-}
-
-class _PrimaryTypeButtonStyle extends AntdButtonStyle {
-  const _PrimaryTypeButtonStyle({required this.context, this.color});
-
-  final BuildContext context;
-  final Color? color;
-
-  @override
-  WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: Colors.white));
-  }
-
-  @override
-  WidgetStateProperty<Color?>? get backgroundColor {
-    return WidgetStateProperty.all(Color(0xFF1777ff));
-  }
-
-  @override
-  WidgetStateProperty<OutlinedBorder?>? get shape {
-    return WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0), side: BorderSide.none));
-  }
-}
-
-class _DashedTypeButtonStyle extends AntdButtonStyle {
-  const _DashedTypeButtonStyle({required this.context, this.color});
-
-  final BuildContext context;
-  final Color? color;
-
-  @override
-  WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: color ?? Colors.black));
-  }
-
-  @override
-  WidgetStateProperty<Color?>? get backgroundColor {
-    return WidgetStateProperty.all(Colors.white);
-  }
-
-  @override
-  WidgetStateProperty<OutlinedBorder?>? get shape {
-    return WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(0), side: BorderSide.none));
-  }
-}
-
-class _TextTypeButtonStyle extends AntdButtonStyle {
-  const _TextTypeButtonStyle({required this.context, this.color});
-
-  final BuildContext context;
-  final Color? color;
-
-  @override
-  WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: Colors.black));
-  }
-
-  @override
-  WidgetStateProperty<OutlinedBorder?>? get shape {
-    return WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0), side: BorderSide.none));
-  }
-}
-
-class _LinkTypeButtonStyle extends AntdButtonStyle {
-  const _LinkTypeButtonStyle({required this.context, this.color});
-
-  final BuildContext context;
-  final Color? color;
-
-  @override
-  WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: Color(0xFF1777ff)));
-  }
-
-  @override
-  WidgetStateProperty<OutlinedBorder?>? get shape {
-    return WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0), side: BorderSide.none));
-  }
-}
-
-//endregion
-
-//region variant
-
-class _DefaultVariantButtonStyle extends AntdButtonStyle {
-  const _DefaultVariantButtonStyle({required this.context, this.color});
-
-  final BuildContext context;
-  final Color? color;
-
-  @override
-  WidgetStateProperty<OutlinedBorder?>? get shape {
-    return WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0), side: BorderSide.none));
-  }
-}
-
-class _SolidVariantButtonStyle extends AntdButtonStyle {
-  const _SolidVariantButtonStyle({required this.context, this.color});
-
-  final BuildContext context;
-  final Color? color;
-
-  @override
-  WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: Colors.white));
-  }
-
-  @override
-  WidgetStateProperty<Color?>? get backgroundColor {
-    return WidgetStateProperty.all(color ?? Color(0xFF1777ff));
-  }
-
-  @override
-  WidgetStateProperty<OutlinedBorder?>? get shape {
-    return WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0), side: BorderSide.none));
-  }
-}
-
-class _OutlinedVariantButtonStyle extends AntdButtonStyle {
-  const _OutlinedVariantButtonStyle({required this.context, this.color});
-
-  final BuildContext context;
-  final Color? color;
-
-  @override
-  WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: color ?? Colors.black));
-  }
-
-  @override
-  WidgetStateProperty<Color?>? get backgroundColor {
-    return WidgetStateProperty.all(Colors.white);
-  }
-
-  @override
-  WidgetStateProperty<OutlinedBorder?>? get shape {
-    return WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0),
-        side: BorderSide(color: color ?? Color(0xFFd9d9d9), width: 0.5)));
-  }
-}
-
-class _DashedVariantButtonStyle extends AntdButtonStyle {
-  const _DashedVariantButtonStyle({required this.context, this.color});
-
-  final BuildContext context;
-  final Color? color;
-
-  @override
-  WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: color ?? Colors.black));
-  }
-
-  @override
-  WidgetStateProperty<Color?>? get backgroundColor {
-    return WidgetStateProperty.all(Colors.white);
-  }
-
-  @override
-  WidgetStateProperty<OutlinedBorder?>? get shape {
-    return WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(0), side: BorderSide.none));
-  }
-}
-
-class _FilledVariantButtonStyle extends AntdButtonStyle {
-  const _FilledVariantButtonStyle({required this.context, this.color});
-
-  final BuildContext context;
-  final Color? color;
-
-  @override
-  WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: color ?? Colors.black));
-  }
+  WidgetStateProperty<TextStyle>? get textStyle =>
+      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        return TextStyle(color: buttonTextColor ?? Colors.black);
+      });
 
   @override
   WidgetStateProperty<Color?>? get backgroundColor =>
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        Color finalColor = color ?? Colors.white;
+        Color finalColor = buttonBackgroundColor ?? Colors.white;
+        if (button.variant == ButtonVariant.filled) {
+          return finalColor.withOpacity(0.08);
+        }
         if (states.contains(WidgetState.hovered)) {
           return finalColor.withOpacity(0.08);
         }
         if (states.contains(WidgetState.pressed)) {
           return finalColor.withOpacity(0.1);
         }
-        return finalColor.withOpacity(0.1);
+        return finalColor;
       });
 
   @override
-  WidgetStateProperty<OutlinedBorder?>? get shape {
-    return WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0), side: BorderSide.none));
-  }
-}
-
-class _TextVariantButtonStyle extends AntdButtonStyle {
-  const _TextVariantButtonStyle({required this.context, this.color});
-
-  final BuildContext context;
-  final Color? color;
-
-  @override
-  WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: color ?? Colors.black));
-  }
-
-  @override
-  WidgetStateProperty<Color?>? get backgroundColor =>
+  WidgetStateProperty<EdgeInsets?>? get padding =>
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        Color finalColor = color ?? Colors.white;
-        if (states.contains(WidgetState.hovered)) {
-          return finalColor.withOpacity(0.08);
+        if (button.size == ButtonSize.large) {
+          if(button.icon != null && button.text==null){
+            return EdgeInsets.symmetric(horizontal: 16, vertical: 16);
+          }
+          return EdgeInsets.symmetric(horizontal: 20, vertical: 20);
+        }else if (button.size == ButtonSize.small) {
+          return EdgeInsets.symmetric(horizontal: 2, vertical: 2);
         }
-        if (states.contains(WidgetState.pressed)) {
-          return finalColor.withOpacity(0.1);
-        }
-        return Colors.white;
       });
 
   @override
-  WidgetStateProperty<OutlinedBorder?>? get shape {
-    return WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0), side: BorderSide.none));
-  }
-}
-
-class _LinkVariantButtonStyle extends AntdButtonStyle {
-  const _LinkVariantButtonStyle({required this.context, this.color});
-
-  final BuildContext context;
-  final Color? color;
-
-  @override
-  WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(color: color ?? Colors.black));
-  }
-
-  @override
-  WidgetStateProperty<Color?>? get backgroundColor {
-    return WidgetStateProperty.all(Colors.white);
-  }
-
-  @override
-  WidgetStateProperty<OutlinedBorder?>? get shape {
-    return WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0), side: BorderSide.none));
-  }
-}
-//endregion
-
-//region size
-class _SmallSizeButtonStyle extends AntdButtonStyle {
-  const _SmallSizeButtonStyle({required this.context});
-
-  final BuildContext context;
-
-  @override
-  WidgetStateProperty<TextStyle>? get textStyle {
-    return WidgetStateProperty.all(TextStyle(height: 0));
-  }
-
-  @override
-  WidgetStateProperty<EdgeInsets?>? get padding {
-    return WidgetStateProperty.all(EdgeInsets.fromLTRB(5, 0, 5, 0));
-  }
-}
-
-class _MiddleSizeButtonStyle extends AntdButtonStyle {
-  const _MiddleSizeButtonStyle({required this.context});
-
-  final BuildContext context;
-
-  @override
-  WidgetStateProperty<EdgeInsets?>? get padding {
-    return WidgetStateProperty.all(EdgeInsets.fromLTRB(15, 10, 15, 10));
-  }
-}
-
-class _LargeSizeButtonStyle extends AntdButtonStyle {
-  const _LargeSizeButtonStyle({required this.context});
-
-  final BuildContext context;
-
-  @override
-  WidgetStateProperty<EdgeInsets?>? get padding {
-    return WidgetStateProperty.all(EdgeInsets.fromLTRB(35, 20, 35, 20));
-  }
-}
-//endregion
-
-class _CircleShapeButtonStyle extends AntdButtonStyle{
-  const _CircleShapeButtonStyle({required this.context});
-
-  final BuildContext context;
-
-  @override
-  BorderRadius? get borderRadius{
-    return BorderRadius.circular(180);
-  }
+  WidgetStateProperty<OutlinedBorder?>? get shape =>
+      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        return RoundedRectangleBorder(
+            borderRadius: buttonBorderRadius ?? BorderRadius.circular(6.0),
+            side: buttonBorderSide ?? BorderSide.none);
+      });
 }
