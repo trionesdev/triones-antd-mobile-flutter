@@ -61,6 +61,7 @@ class _ButtonState extends State<Button> with MaterialStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final isIconButton = widget.icon != null && widget.text == null;
     final AntdThemeData theme = AntdTheme.of(context);
 
     AntdButtonStyle style = styleFrom();
@@ -68,21 +69,47 @@ class _ButtonState extends State<Button> with MaterialStateMixin {
     style = style.merge(_AntdButtonStyle(context: context, button: widget));
     style = style.merge(widget.style);
 
-    if (widget.icon != null && widget.text == null) {
-      return IconButton(
-          onPressed: widget.onPressed,
-          icon: widget.icon!,
-          style: style.toButtonStyle());
+    double? width;
+    double? height;
+    switch (widget.size) {
+      case ButtonSize.large:
+        width = isIconButton ? 40 : null;
+        height = isIconButton ? 40 : 40;
+        break;
+      case ButtonSize.middle:
+        width = isIconButton ? 32 : null;
+        height = isIconButton ? 32 : 32;
+        break;
+      case ButtonSize.small:
+        width = isIconButton ? 24 : null;
+        height = isIconButton ? 24 : 24;
+        break;
     }
 
-    return TextButton.icon(
-      onPressed: widget.onPressed,
-      icon: widget.icon,
-      label: Text(
-        widget.text != null ? widget.text! : '',
-        style: style.textStyle?.resolve(const <WidgetState>{}),
+    if (isIconButton) {
+      return SizedBox(
+        height: height,
+        width: width,
+        child: IconButton(
+            onPressed: widget.onPressed,
+            icon: widget.icon!,
+            iconSize: 18,
+            style: style.toButtonStyle()),
+      );
+    }
+
+    return SizedBox(
+      height: height,
+      width: width,
+      child: TextButton.icon(
+        onPressed: widget.onPressed,
+        icon: widget.icon,
+        label: Text(
+          widget.text != null ? widget.text! : '',
+          style: style.textStyle?.resolve(const <WidgetState>{}),
+        ),
+        style: style.toButtonStyle(),
       ),
-      style: style.toButtonStyle(),
     );
   }
 }
@@ -92,6 +119,8 @@ class _AntdButtonStyle extends AntdButtonStyle {
 
   final BuildContext context;
   final Button button;
+
+  bool get isIconButton => button.icon != null && button.text == null;
 
   Color? get buttonBackgroundColor {
     Color? result = Colors.white;
@@ -164,6 +193,7 @@ class _AntdButtonStyle extends AntdButtonStyle {
             color: buttonBorderColor ?? Color(0xFFd9d9d9), width: 1);
       }
     }
+    return null;
     // return BorderSide.none;
   }
 
@@ -177,14 +207,23 @@ class _AntdButtonStyle extends AntdButtonStyle {
   WidgetStateProperty<Color?>? get backgroundColor =>
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
         Color finalColor = buttonBackgroundColor ?? Colors.white;
-        if (button.variant == ButtonVariant.filled) {
-          return finalColor.withOpacity(0.08);
-        }
         if (states.contains(WidgetState.hovered)) {
-          return finalColor.withOpacity(0.08);
+          if ([ButtonVariant.filled, ButtonVariant.outlined, ButtonVariant.text]
+                  .contains(button.variant) ||
+              [ButtonType.text].contains(button.type)) {
+            return finalColor.withOpacity(0.08);
+          }
+          return finalColor;
         }
         if (states.contains(WidgetState.pressed)) {
-          return finalColor.withOpacity(0.1);
+          if ([ButtonVariant.filled, ButtonVariant.outlined, ButtonVariant.text]
+              .contains(button.variant)) {
+            return finalColor.withOpacity(0.1);
+          }
+          return finalColor;
+        }
+        if (button.variant == ButtonVariant.filled) {
+          return finalColor.withOpacity(0.08);
         }
         return finalColor;
       });
@@ -192,13 +231,15 @@ class _AntdButtonStyle extends AntdButtonStyle {
   @override
   WidgetStateProperty<EdgeInsets?>? get padding =>
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        if (button.size == ButtonSize.large) {
-          if(button.icon != null && button.text==null){
-            return EdgeInsets.symmetric(horizontal: 16, vertical: 16);
+        if (isIconButton) {
+          return EdgeInsets.symmetric(horizontal: 0, vertical: 0);
+        }else {
+          if (button.size == ButtonSize.small) {
+            return EdgeInsets.symmetric(horizontal: 0, vertical: 0);
+          }else if (button.size == ButtonSize.large) {
+            return EdgeInsets.symmetric(horizontal: 16, vertical: 0);
           }
-          return EdgeInsets.symmetric(horizontal: 20, vertical: 20);
-        }else if (button.size == ButtonSize.small) {
-          return EdgeInsets.symmetric(horizontal: 2, vertical: 2);
+          return EdgeInsets.symmetric(horizontal: 8, vertical: 0);
         }
       });
 

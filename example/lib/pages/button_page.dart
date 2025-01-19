@@ -261,6 +261,15 @@ class _ButtonPageState extends State<ButtonPage> {
                   ),
                   Button(
                     shape: ButtonShape.circle,
+                    size: ButtonSize.small,
+                    color: Color(0xffEB2F96),
+                    icon: Icon(Icons.add),
+                    onPressed: () {
+                      print('ElevatedButton');
+                    },
+                  ),
+                  Button(
+                    shape: ButtonShape.circle,
                     color: Color(0xffEB2F96),
                     icon: Icon(Icons.add),
                     onPressed: () {
@@ -285,6 +294,13 @@ class _ButtonPageState extends State<ButtonPage> {
                       print('ElevatedButton');
                     },
                   ),
+
+
+                ],
+
+              ),
+              Row(
+                children: [
                   Button(
                     text: 'Middle',
                     icon: Icon(Icons.add),
@@ -294,6 +310,7 @@ class _ButtonPageState extends State<ButtonPage> {
                       print('ElevatedButton');
                     },
                   ),
+                  OutlinedButton(onPressed: null, child: Text("TextButton"))
                 ],
               )
             ])));
