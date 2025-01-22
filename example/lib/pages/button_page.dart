@@ -18,7 +18,7 @@ class _ButtonPageState extends State<ButtonPage> {
           Wrap(
             direction: Axis.horizontal,
             alignment: WrapAlignment.start,
-            // spacing: 8.0,
+            spacing: 4.0,
             children: [
               Button(
                 type: ButtonType.primary,
@@ -218,6 +218,7 @@ class _ButtonPageState extends State<ButtonPage> {
             ),
           ]),
           Wrap(
+            spacing: 4,
             children: [
               Button(
                 text: 'Large',
@@ -230,6 +231,16 @@ class _ButtonPageState extends State<ButtonPage> {
               Button(
                 size: ButtonSize.large,
                 color: Color(0xffEB2F96),
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  print('ElevatedButton');
+                },
+              ),
+              Button(
+                shape: ButtonShape.circle,
+                size: ButtonSize.large,
+                color: Color(0xffEB2F96),
+                icon: Icon(Icons.add),
                 onPressed: () {
                   print('ElevatedButton');
                 },
@@ -242,7 +253,24 @@ class _ButtonPageState extends State<ButtonPage> {
                 },
               ),
               Button(
+                text: 'Middle',
+                icon: Icon(Icons.add),
                 color: Color(0xffEB2F96),
+                onPressed: () {
+                  print('ElevatedButton');
+                },
+              ),
+              Button(
+                color: Color(0xffEB2F96),
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  print('ElevatedButton');
+                },
+              ),
+              Button(
+                color: Color(0xffEB2F96),
+                shape: ButtonShape.circle,
+                icon: Icon(Icons.add),
                 onPressed: () {
                   print('ElevatedButton');
                 },
@@ -258,6 +286,16 @@ class _ButtonPageState extends State<ButtonPage> {
               Button(
                 size: ButtonSize.small,
                 color: Color(0xffEB2F96),
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  print('ElevatedButton');
+                },
+              ),
+              Button(
+                size: ButtonSize.small,
+                shape: ButtonShape.circle,
+                color: Color(0xffEB2F96),
+                icon: Icon(Icons.add),
                 onPressed: () {
                   print('ElevatedButton');
                 },
@@ -265,6 +303,7 @@ class _ButtonPageState extends State<ButtonPage> {
             ],
           ),
           Wrap(
+            spacing: 4,
             children: [
               Button(
                 text: 'Middle',
@@ -343,6 +382,7 @@ class _ButtonPageState extends State<ButtonPage> {
           ),
           Wrap(
             spacing: 10,
+              crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               MaterialButton(
                 onPressed: () {

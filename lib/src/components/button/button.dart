@@ -69,49 +69,6 @@ class _ButtonState extends State<Button> with MaterialStateMixin {
     style = style.merge(_AntdButtonStyle(context: context, button: widget));
     style = style.merge(widget.style);
 
-    double? width;
-    double? height;
-    switch (widget.size) {
-      case ButtonSize.large:
-        width = isIconButton ? 40 : null;
-        height = isIconButton ? 40 : 40;
-        break;
-      case ButtonSize.middle:
-        width = isIconButton ? 32 : null;
-        height = isIconButton ? 32 : 32;
-        break;
-      case ButtonSize.small:
-        width = isIconButton ? 24 : null;
-        height = isIconButton ? 24 : 24;
-        break;
-    }
-
-    // if (isIconButton) {
-    //   return SizedBox(
-    //     height: height,
-    //     width: width,
-    //     child: IconButton(
-    //         onPressed: widget.onPressed,
-    //         icon: widget.icon!,
-    //         iconSize: 18,
-    //         style: style.toButtonStyle()),
-    //   );
-    // }
-    //
-    // return SizedBox(
-    //   height: height,
-    //   width: width,
-    //   child: TextButton.icon(
-    //     onPressed: widget.onPressed,
-    //     icon: widget.icon,
-    //     label: Text(
-    //       widget.text != null ? widget.text! : '',
-    //       style: style.textStyle?.resolve(const <WidgetState>{}),
-    //     ),
-    //     style: style.toButtonStyle(),
-    //   ),
-    // );
-
     return MaterialButton(
       onPressed: widget.onPressed,
       shape: style.shape?.resolve(const <WidgetState>{}),
@@ -119,23 +76,20 @@ class _ButtonState extends State<Button> with MaterialStateMixin {
       height: 0,
       padding: style.padding?.resolve(const <WidgetState>{}),
       color: style.backgroundColor?.resolve(const <WidgetState>{}),
-      child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (isIconButton)
-              Icon(
-                Icons.add,
-                color: style.iconColor?.resolve(const <WidgetState>{}),
-              )
-            else
-              Icon(Icons.add,
-                  color: style.iconColor?.resolve(const <WidgetState>{})),
-            Text(
-              widget.text != null ? widget.text! : '',
-              style: style.textStyle?.resolve(const <WidgetState>{}),
-            ),
-          ]),
+      child: SizedBox(
+        height: 24,
+        child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (widget.icon != null) widget.icon!,
+              if (widget.text != null)
+                Text(
+                  widget.text != null ? widget.text! : '',
+                  style: style.textStyle?.resolve(const <WidgetState>{}),
+                )
+            ]),
+      ),
     );
   }
 }
@@ -162,7 +116,7 @@ class _AntdButtonStyle extends AntdButtonStyle {
       }
     }
     if (button.variant == ButtonVariant.filled) {
-      result = button.color!.withOpacity(0.1);
+      result = button.color!.withValues();
     }
 
     return result;
@@ -246,7 +200,7 @@ class _AntdButtonStyle extends AntdButtonStyle {
           if ([ButtonVariant.filled, ButtonVariant.outlined, ButtonVariant.text]
                   .contains(button.variant) ||
               [ButtonType.text].contains(button.type)) {
-            return finalColor.withOpacity(0.08);
+            return Colors.white;
           }
           return finalColor;
         }
@@ -258,7 +212,7 @@ class _AntdButtonStyle extends AntdButtonStyle {
           return finalColor;
         }
         if (button.variant == ButtonVariant.filled) {
-          return finalColor.withOpacity(0.08);
+          return Color(0xffbae0ff);
         }
         return finalColor;
       });
@@ -277,7 +231,7 @@ class _AntdButtonStyle extends AntdButtonStyle {
           if (button.size == ButtonSize.small) {
             return EdgeInsets.symmetric(horizontal: 12, vertical: 0);
           } else if (button.size == ButtonSize.large) {
-            return EdgeInsets.symmetric(horizontal: 20, vertical: 16);
+            return EdgeInsets.symmetric(horizontal: 24, vertical: 16);
           }
           return EdgeInsets.symmetric(horizontal: 16, vertical: 12);
         }
