@@ -86,30 +86,56 @@ class _ButtonState extends State<Button> with MaterialStateMixin {
         break;
     }
 
-    if (isIconButton) {
-      return SizedBox(
-        height: height,
-        width: width,
-        child: IconButton(
-            onPressed: widget.onPressed,
-            icon: widget.icon!,
-            iconSize: 18,
-            style: style.toButtonStyle()),
-      );
-    }
+    // if (isIconButton) {
+    //   return SizedBox(
+    //     height: height,
+    //     width: width,
+    //     child: IconButton(
+    //         onPressed: widget.onPressed,
+    //         icon: widget.icon!,
+    //         iconSize: 18,
+    //         style: style.toButtonStyle()),
+    //   );
+    // }
+    //
+    // return SizedBox(
+    //   height: height,
+    //   width: width,
+    //   child: TextButton.icon(
+    //     onPressed: widget.onPressed,
+    //     icon: widget.icon,
+    //     label: Text(
+    //       widget.text != null ? widget.text! : '',
+    //       style: style.textStyle?.resolve(const <WidgetState>{}),
+    //     ),
+    //     style: style.toButtonStyle(),
+    //   ),
+    // );
 
-    return SizedBox(
-      height: height,
-      width: width,
-      child: TextButton.icon(
-        onPressed: widget.onPressed,
-        icon: widget.icon,
-        label: Text(
-          widget.text != null ? widget.text! : '',
-          style: style.textStyle?.resolve(const <WidgetState>{}),
-        ),
-        style: style.toButtonStyle(),
-      ),
+    return MaterialButton(
+      onPressed: widget.onPressed,
+      shape: style.shape?.resolve(const <WidgetState>{}),
+      minWidth: 0,
+      height: 0,
+      padding: style.padding?.resolve(const <WidgetState>{}),
+      color: style.backgroundColor?.resolve(const <WidgetState>{}),
+      child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (isIconButton)
+              Icon(
+                Icons.add,
+                color: style.iconColor?.resolve(const <WidgetState>{}),
+              )
+            else
+              Icon(Icons.add,
+                  color: style.iconColor?.resolve(const <WidgetState>{})),
+            Text(
+              widget.text != null ? widget.text! : '',
+              style: style.textStyle?.resolve(const <WidgetState>{}),
+            ),
+          ]),
     );
   }
 }
@@ -204,6 +230,15 @@ class _AntdButtonStyle extends AntdButtonStyle {
       });
 
   @override
+  WidgetStateProperty<Color?>? get iconColor =>
+      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        if ([ButtonType.primary].contains(button.type) ||
+            [ButtonVariant.solid].contains(button.variant)) {
+          return Colors.white;
+        }
+      });
+
+  @override
   WidgetStateProperty<Color?>? get backgroundColor =>
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
         Color finalColor = buttonBackgroundColor ?? Colors.white;
@@ -232,20 +267,30 @@ class _AntdButtonStyle extends AntdButtonStyle {
   WidgetStateProperty<EdgeInsets?>? get padding =>
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
         if (isIconButton) {
-          return EdgeInsets.symmetric(horizontal: 0, vertical: 0);
-        }else {
           if (button.size == ButtonSize.small) {
             return EdgeInsets.symmetric(horizontal: 0, vertical: 0);
-          }else if (button.size == ButtonSize.large) {
-            return EdgeInsets.symmetric(horizontal: 16, vertical: 0);
+          } else if (button.size == ButtonSize.large) {
+            return EdgeInsets.symmetric(horizontal: 16, vertical: 16);
           }
-          return EdgeInsets.symmetric(horizontal: 8, vertical: 0);
+          return EdgeInsets.symmetric(horizontal: 12, vertical: 12);
+        } else {
+          if (button.size == ButtonSize.small) {
+            return EdgeInsets.symmetric(horizontal: 12, vertical: 0);
+          } else if (button.size == ButtonSize.large) {
+            return EdgeInsets.symmetric(horizontal: 20, vertical: 16);
+          }
+          return EdgeInsets.symmetric(horizontal: 16, vertical: 12);
         }
       });
 
   @override
   WidgetStateProperty<OutlinedBorder?>? get shape =>
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        if (button.shape == ButtonShape.circle) {
+          return RoundedRectangleBorder(
+              borderRadius: buttonBorderRadius ?? BorderRadius.circular(90.0),
+              side: buttonBorderSide ?? BorderSide.none);
+        }
         return RoundedRectangleBorder(
             borderRadius: buttonBorderRadius ?? BorderRadius.circular(6.0),
             side: buttonBorderSide ?? BorderSide.none);

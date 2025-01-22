@@ -1,4 +1,5 @@
 import 'package:antd_flutter_example/pages/button_page.dart';
+import 'package:antd_flutter_example/pages/input_page.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd/antd.dart';
 
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       theme: AntdThemeData(),
       routes: {
         '/button': (context) => ButtonPage(),
+        '/input': (context) => InputPage(),
       },
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -78,6 +80,9 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           ListTile(title: Text('Button'),onTap: () {
             Navigator.pushNamed(context, '/button');
+          },),
+          ListTile(title: Text('Input'),onTap: () {
+            Navigator.pushNamed(context, '/input');
           },)
         ],
       ),

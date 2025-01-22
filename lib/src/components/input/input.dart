@@ -1,20 +1,21 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class Input extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
+  const Input({super.key});
 
+  @override
+  State<StatefulWidget> createState() => _InputState();
 }
 
 class _InputState extends State<Input> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-    TextFi
+    return TextFormField(
+      decoration: InputDecoration(
+        prefixIcon: Icon(Icons.person), // 前缀图标
+        hintText: 'Enter your name', // 提示文本
+        border: OutlineInputBorder(), // 边框
+      ),
+    );
   }
-
 }
