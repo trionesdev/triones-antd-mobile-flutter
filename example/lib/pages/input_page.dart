@@ -17,7 +17,13 @@ class _InputPageState extends State<InputPage> {
         ),
         body: Center(
             child: Column(children: [
-              Input(),
+          Input(
+            placeholder: "请输入内容",
+          ),
+          Input(
+            type: InputType.password,
+            placeholder: "请输入内容",
+          ),
         ])));
   }
 }
