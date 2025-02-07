@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd/antd.dart';
+import 'package:trionesdev_antd/antd.dart' as antd;
 
 class FormPage extends StatefulWidget {
   @override
@@ -11,13 +11,17 @@ class _FormPageState extends State<FormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Input'),
+          title: Text('Form'),
         ),
-      body: Center(
-        child: Column(children: [
-          FormItem(builder: (FormFieldState<String> field) {  },)
-        ],),
-      ),
-    );
+        body: antd.Form(
+          children: [
+            antd.FormItem(
+                label: "年龄",
+                name: 'age',
+                builder: (antd.FormItemState<String> field) {
+                  return antd.Input();
+                })
+          ],
+        ));
   }
 }

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 typedef FormFieldValidator<T> = String? Function(T? value);
@@ -7,7 +9,7 @@ enum Layout { horizontal, vertical }
 class FormItem<T> extends StatefulWidget {
   final Layout? layout;
   final String? name;
-  final Widget? label;
+  final String? label;
   final Widget? child;
   final Widget Function(FormItemState<T> field) builder;
   final T? initialValue;
@@ -23,7 +25,7 @@ class FormItem<T> extends StatefulWidget {
       this.layout = Layout.horizontal, this.name, this.label, required this.builder});
 
   @override
-  State<StatefulWidget> createState() => FormItemState();
+  State<StatefulWidget> createState() => FormItemState<T>();
 }
 
 class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
@@ -43,16 +45,18 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
     return widget.layout == Layout.horizontal
         ? Row(
             children: [
-              Text(errorText ?? ''),
+              Text(widget.label ?? ''),
               Expanded(child: child),
             ],
           )
         : Column(
             children: [
-              Text(errorText ?? ''),
+              Text(widget.label ?? ''),
               Expanded(child: child),
             ],
           );
+    // return child;
+    return TextField();
   }
 
   @override
@@ -60,7 +64,7 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
 
   @override
   void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
-    registerForRestoration(_errorText, 'error_text');
-    registerForRestoration(_hasInteractedByUser, 'has_interacted_by_user');
+    // registerForRestoration(_errorText, 'error_text');
+    // registerForRestoration(_hasInteractedByUser, 'has_interacted_by_user');
   }
 }
