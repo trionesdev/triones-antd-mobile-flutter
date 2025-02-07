@@ -1,5 +1,5 @@
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class AntdColor extends ColorSwatch<int>{
   const AntdColor(super.primary, super.swatch);

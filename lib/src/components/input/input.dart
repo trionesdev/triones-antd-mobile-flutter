@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd/antd.dart';
 
 enum InputType {
   text,
@@ -13,12 +12,16 @@ class Input extends StatefulWidget {
     this.type = InputType.text,
     this.prefix,
     this.suffix,
+    this.value,
+    this.onChange,
   });
 
   final String? placeholder;
   final InputType? type;
   final Widget? prefix;
   final Widget? suffix;
+  final String? value;
+  final Function? onChange;
 
   @override
   State<StatefulWidget> createState() => _InputState();
@@ -55,6 +58,11 @@ class _InputState extends State<Input> {
           borderSide: BorderSide.none,
         ),
       ),
+      onChanged: (value) {
+        if (widget.onChange != null) {
+          widget.onChange!(value);
+        }
+      },
     );
   }
 }
