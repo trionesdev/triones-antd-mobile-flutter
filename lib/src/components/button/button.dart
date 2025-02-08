@@ -69,26 +69,30 @@ class _ButtonState extends State<Button> with MaterialStateMixin {
     style = style.merge(_AntdButtonStyle(context: context, button: widget));
     style = style.merge(widget.style);
 
-    return MaterialButton(
-      onPressed: widget.onPressed,
-      shape: style.shape?.resolve(const <WidgetState>{}),
-      minWidth: 0,
-      height: 0,
-      padding: style.padding?.resolve(const <WidgetState>{}),
-      color: style.backgroundColor?.resolve(const <WidgetState>{}),
-      child: SizedBox(
-        height: 24,
-        child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (widget.icon != null) widget.icon!,
-              if (widget.text != null)
-                Text(
-                  widget.text != null ? widget.text! : '',
-                  style: style.textStyle?.resolve(const <WidgetState>{}),
-                )
-            ]),
+    return Container(
+      width: (widget.block == true)? double.infinity:null,
+      child: MaterialButton(
+        onPressed: widget.onPressed,
+        shape: style.shape?.resolve(const <WidgetState>{}),
+        minWidth: 0,
+        height: 0,
+
+        padding: style.padding?.resolve(const <WidgetState>{}),
+        color: style.backgroundColor?.resolve(const <WidgetState>{}),
+        child: SizedBox(
+          height: 24,
+          child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (widget.icon != null) widget.icon!,
+                if (widget.text != null)
+                  Text(
+                    widget.text != null ? widget.text! : '',
+                    style: style.textStyle?.resolve(const <WidgetState>{}),
+                  )
+              ]),
+        ),
       ),
     );
   }

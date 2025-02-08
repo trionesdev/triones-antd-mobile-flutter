@@ -9,6 +9,8 @@ class FormPage extends StatefulWidget {
 }
 
 class _FormPageState extends State<FormPage> {
+  final _formKey = GlobalKey<antd.FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,17 +18,28 @@ class _FormPageState extends State<FormPage> {
           title: Text('Form'),
         ),
         body: antd.Form(
+          key: _formKey,
           children: [
             antd.FormItem(
+
                 label: "年龄",
                 name: 'age',
                 builder: (antd.FormItemState<String> field) {
-
-                  return antd.Input();
+                  return antd.Input(
+                    value: field.value,
+                    onChange: field.didChange,
+                  );
                 }),
             antd.Button(
               text: "保存",
-              onPressed: () => {},
+              block: true,
+              onPressed: () => {
+                _formKey.currentState?.validateFields().then((values) => {
+print(values)
+                }).catchError((err){
+
+                })
+              },
             )
           ],
         ));

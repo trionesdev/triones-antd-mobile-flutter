@@ -59,6 +59,7 @@ class _InputState extends State<Input> {
         ),
       ),
       onChanged: (value) {
+        print("input changed:"+value);
         if (widget.onChange != null) {
           widget.onChange!(value);
         }
