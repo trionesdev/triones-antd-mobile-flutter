@@ -33,7 +33,7 @@ class _InputState extends State<Input> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      obscureText: !passwordVisible,
+      obscureText: passwordVisible,
       decoration: InputDecoration(
         prefixIcon: widget.prefix, // 前缀图标
         suffixIcon: Row(

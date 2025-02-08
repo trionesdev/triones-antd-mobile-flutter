@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:trionesdev_antd/antd.dart' as antd;
 
 class FormPage extends StatefulWidget {
+  const FormPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _FormPageState();
 }
@@ -19,8 +21,13 @@ class _FormPageState extends State<FormPage> {
                 label: "年龄",
                 name: 'age',
                 builder: (antd.FormItemState<String> field) {
+
                   return antd.Input();
-                })
+                }),
+            antd.Button(
+              text: "保存",
+              onPressed: () => {},
+            )
           ],
         ));
   }
