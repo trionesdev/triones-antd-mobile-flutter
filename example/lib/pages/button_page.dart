@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:trionesdev_antd/antd.dart';
 
 class ButtonPage extends StatefulWidget {
+  const ButtonPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _ButtonPageState();
 }
