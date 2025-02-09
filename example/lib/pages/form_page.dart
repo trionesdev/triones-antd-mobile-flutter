@@ -21,9 +21,17 @@ class _FormPageState extends State<FormPage> {
           key: _formKey,
           children: [
             antd.FormItem(
-
                 label: "年龄",
-                name: 'age',
+                name: antd.NamePath('age'),
+                builder: (antd.FormItemState<String> field) {
+                  return antd.Input(
+                    value: field.value.toString(),
+                    onChange: field.didChange,
+                  );
+                }),
+            antd.FormItem(
+                label: "年龄x",
+                name: antd.NamePath(['z', 'age']),
                 builder: (antd.FormItemState<String> field) {
                   return antd.Input(
                     value: field.value,
@@ -34,11 +42,17 @@ class _FormPageState extends State<FormPage> {
               text: "保存",
               block: true,
               onPressed: () => {
-                _formKey.currentState?.validateFields().then((values) => {
-print(values)
-                }).catchError((err){
-
-                })
+                _formKey.currentState
+                    ?.validateFields()
+                    .then((values) => {print(values)})
+                    .catchError((err) {})
+              },
+            ),
+            antd.Button(
+              text: "赋值",
+              block: true,
+              onPressed: () => {
+                _formKey.currentState?.setFieldsValue({"age": 1,"z":{"age":"1"}})
               },
             )
           ],

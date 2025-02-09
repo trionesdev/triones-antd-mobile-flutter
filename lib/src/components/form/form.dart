@@ -34,7 +34,7 @@ class FormState extends State<Form> {
     });
   }
 
-   void _register(FormItemState<dynamic> field) {
+  void _register(FormItemState<dynamic> field) {
     _fields.add(field);
   }
 
@@ -56,8 +56,57 @@ class FormState extends State<Form> {
     _fieldDidChange();
   }
 
-  Future<dynamic> validateFields() async{
-    return "";
+  void setFieldsValue(Map<dynamic, dynamic>? values) {
+    print(values);
+
+    dynamic getValue(NamePath name,Map<dynamic, dynamic>? currentValues){
+      // List<dynamic> keys = [];
+      // for (var entry in currentValues!.entries) {
+      //   keys.add(entry.key);
+      //   if(name.value.join(".") == keys.join(".")){
+      //     return entry.value;
+      //   }else{
+      //
+      //   }
+      // }
+      Map<dynamic, dynamic>? currentValues2 = currentValues;
+      for(int i = 0;i<name.value.length;i++){
+        if(i<name.value.length-1){
+          if(currentValues2![name.value[i]] == null){
+            return null;
+          }else{
+            currentValues2 = currentValues2[name.value[i]];
+          }
+        }else{
+          return currentValues2![name.value[i]];
+        }
+      }
+    }
+
+    for (final FormItemState<dynamic> field in _fields) {
+      var v = getValue(field.name!,values);
+      field.didChange(v);
+    }
+  }
+
+  Future<Map<dynamic, dynamic>> validateFields() async {
+    Map<dynamic, dynamic> values = {};
+    for (final FormItemState<dynamic> field in _fields) {
+      print(field.value);
+      Map<dynamic, dynamic> fieldValues = values;
+      if (field.name != null && field.name!.value.isNotEmpty) {
+        List<dynamic> paths = field.name!.value;
+        for (int i = 0; i < paths.length; i++) {
+          if (i < paths.length - 1) {
+            fieldValues[paths[i]] = {};
+            fieldValues = fieldValues[paths[i]];
+          } else {
+            fieldValues[paths[i]] = field.value;
+          }
+        }
+      }
+    }
+    return values;
   }
 
   @override
@@ -97,6 +146,19 @@ class _FormScope extends InheritedWidget {
   bool updateShouldNotify(_FormScope old) => _generation != old._generation;
 }
 
+class NamePath {
+  List<dynamic> _namePaths = [];
+
+  NamePath(dynamic namePath) {
+    if (namePath is List) {
+      _namePaths = namePath;
+    } else {
+      _namePaths = [namePath];
+    }
+  }
+
+  List<dynamic> get value => _namePaths;
+}
 
 typedef FormItemBuilder<T> = Widget Function(FormItemState<T> field);
 typedef FormItemValidator<T> = String? Function(T? value);
@@ -106,7 +168,7 @@ enum Layout { horizontal, vertical }
 
 class FormItem<T> extends StatefulWidget {
   final Layout? layout;
-  final String? name;
+  final NamePath? name;
   final String? label;
   final Widget? child;
   final FormItemBuilder<T> builder;
@@ -117,23 +179,33 @@ class FormItem<T> extends StatefulWidget {
 
   const FormItem(
       {super.key,
-        this.initialValue,
-        this.validator,
-        this.restorationId,
-        this.child,
-        this.layout = Layout.horizontal, this.name, this.label, required this.builder, this.onSaved});
+      this.initialValue,
+      this.validator,
+      this.restorationId,
+      this.child,
+      this.layout = Layout.horizontal,
+      this.name,
+      this.label,
+      required this.builder,
+      this.onSaved});
 
   @override
   State<StatefulWidget> createState() => FormItemState<T>();
 }
 
 class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
-  late T? _value = widget.initialValue;
+  late dynamic _value = widget.initialValue;
   late final RestorableStringN _errorText;
   final RestorableBool _hasInteractedByUser = RestorableBool(false);
-  T? get value => _value;
+
+  dynamic get value => _value;
+
+  NamePath? get name => widget.name;
+
   String? get errorText => _errorText.value;
+
   bool get hasError => _errorText.value != null;
+
   bool get hasInteractedByUser => _hasInteractedByUser.value;
 
   void save() {
@@ -148,12 +220,12 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
     });
   }
 
-  void didChange(T? value) {
+  void didChange(dynamic value) {
     setState(() {
       _value = value;
       // _hasInteractedByUser.value = true;
     });
-    print("form item changed:"+value.toString());
+    print("form item changed:" + value.toString());
   }
 
   @override
@@ -162,24 +234,23 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
     var child = widget.builder(this);
     return widget.layout == Layout.horizontal
         ? Row(
-      children: [
-        Text(widget.label ?? ''),
-        Expanded(child: child),
-      ],
-    )
+            children: [
+              Text(widget.label ?? ''),
+              Expanded(child: child),
+            ],
+          )
         : Column(
-      children: [
-        Text(widget.label ?? ''),
-        Expanded(child: child),
-      ],
-    );
+            children: [
+              Text(widget.label ?? ''),
+              Expanded(child: child),
+            ],
+          );
     // return child;
     return TextField();
   }
 
   @override
   String? get restorationId => widget.restorationId;
-
 
   @override
   void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
