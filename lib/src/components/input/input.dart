@@ -29,13 +29,13 @@ class Input extends StatefulWidget {
 
 class _InputState extends State<Input> {
   final TextEditingController _controller = TextEditingController();
-  bool passwordVisible = false;
+  bool passwordVisible = true;
 
   @override
   void didUpdateWidget(Input oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
-      if(widget.value != _controller.text){
+      if (widget.value != _controller.text) {
         _controller.text = widget.value!;
       }
     }
@@ -45,7 +45,7 @@ class _InputState extends State<Input> {
   Widget build(BuildContext context) {
     return TextField(
       controller: _controller,
-      obscureText: passwordVisible,
+      obscureText: widget.type == InputType.password && passwordVisible,
       decoration: InputDecoration(
         prefixIcon: widget.prefix, // 前缀图标
         suffixIcon: Row(

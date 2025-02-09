@@ -69,16 +69,18 @@ class _ButtonState extends State<Button> with MaterialStateMixin {
     style = style.merge(_AntdButtonStyle(context: context, button: widget));
     style = style.merge(widget.style);
 
-    return Container(
+    return SizedBox(
       width: (widget.block == true)? double.infinity:null,
       child: MaterialButton(
         onPressed: widget.onPressed,
         shape: style.shape?.resolve(const <WidgetState>{}),
         minWidth: 0,
         height: 0,
-
         padding: style.padding?.resolve(const <WidgetState>{}),
         color: style.backgroundColor?.resolve(const <WidgetState>{}),
+        // color: Colors.transparent,
+
+focusColor: Colors.transparent,
         child: SizedBox(
           height: 24,
           child: Row(
@@ -216,7 +218,9 @@ class _AntdButtonStyle extends AntdButtonStyle {
           return finalColor;
         }
         if (button.variant == ButtonVariant.filled) {
-          return Color(0xffbae0ff);
+          // return finalColor.withOpacity(0.08);
+          return finalColor.withAlpha((255.0 * 0.08).round());
+          // return Color(0xffbae0ff);
         }
         return finalColor;
       });
@@ -230,14 +234,14 @@ class _AntdButtonStyle extends AntdButtonStyle {
           } else if (button.size == ButtonSize.large) {
             return EdgeInsets.symmetric(horizontal: 16, vertical: 16);
           }
-          return EdgeInsets.symmetric(horizontal: 12, vertical: 12);
+          return EdgeInsets.symmetric(horizontal: 8, vertical: 8);
         } else {
           if (button.size == ButtonSize.small) {
             return EdgeInsets.symmetric(horizontal: 12, vertical: 0);
           } else if (button.size == ButtonSize.large) {
             return EdgeInsets.symmetric(horizontal: 24, vertical: 16);
           }
-          return EdgeInsets.symmetric(horizontal: 16, vertical: 12);
+          return EdgeInsets.symmetric(horizontal: 12, vertical: 8);
         }
       });
 

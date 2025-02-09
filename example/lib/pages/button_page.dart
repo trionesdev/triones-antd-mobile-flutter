@@ -15,12 +15,14 @@ class _ButtonPageState extends State<ButtonPage> {
         appBar: AppBar(
           title: Text('Button'),
         ),
-        body: Center(
-            child: Column(children: [
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
           Wrap(
             direction: Axis.horizontal,
             alignment: WrapAlignment.start,
             spacing: 4.0,
+
             children: [
               Button(
                 type: ButtonType.primary,
@@ -51,7 +53,7 @@ class _ButtonPageState extends State<ButtonPage> {
               ),
             ],
           ),
-          Row(children: [
+          Row(spacing: 4, children: [
             Button(
               text: 'Primary',
               color: Color(0xff000000),
@@ -93,7 +95,7 @@ class _ButtonPageState extends State<ButtonPage> {
               },
             ),
           ]),
-          Row(children: [
+          Row(spacing: 4, children: [
             Button(
               text: 'Primary',
               variant: ButtonVariant.solid,
@@ -135,7 +137,7 @@ class _ButtonPageState extends State<ButtonPage> {
               },
             ),
           ]),
-          Wrap(children: [
+          Wrap(spacing: 4, children: [
             Button(
               text: 'Primary',
               variant: ButtonVariant.solid,
@@ -358,10 +360,11 @@ class _ButtonPageState extends State<ButtonPage> {
                   print('ElevatedButton');
                 },
               ),
-
             ],
           ),
-          Row(
+          Wrap(
+            direction: Axis.horizontal,
+            alignment: WrapAlignment.start,
             children: [
               Button(
                 text: 'Middle',
@@ -384,7 +387,7 @@ class _ButtonPageState extends State<ButtonPage> {
           ),
           Wrap(
             spacing: 10,
-              crossAxisAlignment: WrapCrossAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               MaterialButton(
                 onPressed: () {
@@ -411,9 +414,24 @@ class _ButtonPageState extends State<ButtonPage> {
                   children: [Icon(Icons.add), Text('MaterialButton')],
                 ),
               ),
+              MaterialButton(
+                onPressed: () {
+                  print('ElevatedButton');
+                },
+                // minWidth: double.infinity,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                  side: BorderSide(color: Colors.red, width: 1),
+                ),
+                color: Colors.white,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Icon(Icons.add), Text('MaterialButton')],
+                ),
+              ),
             ],
           ),
-
-        ])));
+        ]));
   }
 }

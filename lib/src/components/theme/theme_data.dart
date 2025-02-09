@@ -19,7 +19,10 @@ class AntdThemeData with Diagnosticable {
 
   ThemeData toMaterialThemeData() {
     return ThemeData(
-      splashFactory: NoSplash.splashFactory,
+      splashFactory: NoSplash.splashFactory, //移除水纹效果
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      shadowColor: Colors.transparent //移除阴影效果
     );
   }
 
