@@ -60,15 +60,7 @@ class FormState extends State<Form> {
     print(values);
 
     dynamic getValue(NamePath name,Map<dynamic, dynamic>? currentValues){
-      // List<dynamic> keys = [];
-      // for (var entry in currentValues!.entries) {
-      //   keys.add(entry.key);
-      //   if(name.value.join(".") == keys.join(".")){
-      //     return entry.value;
-      //   }else{
-      //
-      //   }
-      // }
+
       Map<dynamic, dynamic>? currentValues2 = currentValues;
       for(int i = 0;i<name.value.length;i++){
         if(i<name.value.length-1){
