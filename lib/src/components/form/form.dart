@@ -25,6 +25,7 @@ class Form extends StatefulWidget {
 class FormState extends State<Form> {
   int _generation = 0;
   bool _hasInteractedByUser = false;
+  List<Map<String, dynamic>> errorFields = [];
   final Set<FormItemState<dynamic>> _fields = <FormItemState<dynamic>>{};
 
   void _fieldDidChange() {
@@ -83,21 +84,27 @@ class FormState extends State<Form> {
     }
   }
 
-  bool _validate([Set<FormFieldState<Object?>>? invalidFields]){
+  bool _validate() {
     bool hasError = false;
     String errorMessage = '';
-
-    return hasError;
+    for (final FormItemState<dynamic> field in _fields) {
+      if (!field.validate()) {
+        if (field.name != null) {
+          errorFields
+              .add({"name": field.name?.value, "errors": field.getErrorText()});
+        }
+        hasError = true;
+      }
+    }
+    return !hasError;
   }
 
   Future<Map<dynamic, dynamic>> validateFields() async {
     if (!_validate()) {
-      throw 'Form is invalid';
+      throw Exception({errorFields});
     }
     Map<dynamic, dynamic> values = {};
     for (final FormItemState<dynamic> field in _fields) {
-
-
       print(field.value);
       Map<dynamic, dynamic> fieldValues = values;
       if (field.name != null && field.name!.value.isNotEmpty) {
@@ -113,6 +120,7 @@ class FormState extends State<Form> {
       }
     }
     return values;
+    // return Future.value(values);
   }
 
   @override
@@ -216,6 +224,10 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
 
   bool get hasInteractedByUser => _hasInteractedByUser.value;
 
+  String? getErrorText() {
+    return errorText;
+  }
+
   void save() {
     widget.onSaved?.call(value);
   }
@@ -279,14 +291,20 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
     );
 
     List<Widget> filedChildren = [child];
-    if(errorText!=null){
-      filedChildren.add(Text(errorText!,style: TextStyle(color: material.Colors.red),));
+    if (errorText != null) {
+      filedChildren.add(Container(
+        padding: EdgeInsets.only(left: 16, right: 16),
+        child: Text(
+          errorText!,
+          style: TextStyle(color: material.Colors.red),
+        ),
+      ));
     }
 // print(errorText);
     Expanded filedInput = Expanded(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-      children: [child],
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: filedChildren,
     ));
 
     return widget.layout == Layout.horizontal

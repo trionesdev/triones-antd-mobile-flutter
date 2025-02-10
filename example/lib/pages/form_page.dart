@@ -42,7 +42,7 @@ class _FormPageState extends State<FormPage> {
             antd.FormItem(
                 name: antd.NamePath(['username']),
                 validator: (value) {
-                  if (value == null ) {
+                  if (value == null) {
                     return '请输入用户名';
                   }
                   return null;
@@ -73,9 +73,9 @@ class _FormPageState extends State<FormPage> {
                 _formKey.currentState
                     ?.validateFields()
                     .then((values) => {print(values)})
-                    .catchError((err) {
-                      print(err);
-                })
+                    .catchError((err) => {
+                      print(err)
+                    })
               },
             ),
             antd.Button(
