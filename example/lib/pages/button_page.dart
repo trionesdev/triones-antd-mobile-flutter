@@ -310,6 +310,22 @@ class _ButtonPageState extends State<ButtonPage> {
                 spacing: 10,
                 children: [
                   Button(
+                    shape: ButtonShape.circle,
+                    icon: Icon(Icons.add),
+                    onPressed: () {
+                      print('ElevatedButton');
+                    },
+                  ),
+                  Button(
+                    shape: ButtonShape.round,
+                    icon: Icon(Icons.add),
+                  )
+                ]
+              ),
+              Wrap(
+                spacing: 10,
+                children: [
+                  Button(
                     text: 'Middle',
                     shape: ButtonShape.circle,
                     color: Color(0xffEB2F96),
@@ -336,6 +352,7 @@ class _ButtonPageState extends State<ButtonPage> {
                   ),
                   Button(
                     shape: ButtonShape.circle,
+                    size: ButtonSize.middle,
                     color: Color(0xffEB2F96),
                     icon: Icon(Icons.add),
                     onPressed: () {
@@ -368,7 +385,7 @@ class _ButtonPageState extends State<ButtonPage> {
                 alignment: WrapAlignment.start,
                 children: [
                   Button(
-                    text: 'Middle',
+                    text: 'MaterialButton',
                     icon: Icon(Icons.add),
                     shape: ButtonShape.round,
                     color: Color(0xffEB2F96),
@@ -401,10 +418,10 @@ class _ButtonPageState extends State<ButtonPage> {
                     onPressed: () {
                       print('ElevatedButton');
                     },
-                    padding: EdgeInsets.all(0),
+                    // padding: EdgeInsets.all(0),
                     color: Color(0xffEB2F96),
                     minWidth: 10,
-                    shape: CircleBorder(),
+                    shape: CircleBorder(side: BorderSide(color: Colors.red)),
                     child: Icon(Icons.add),
                   ),
                   MaterialButton(

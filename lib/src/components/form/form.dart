@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
+import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd/antd.dart';
 
 class Form extends StatefulWidget {
@@ -212,11 +213,27 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
     });
   }
 
+  bool validate() {
+    setState(() {
+      _validate();
+    });
+    return !hasError;
+  }
+
+  void _validate() {
+    if (widget.validator != null) {
+      _errorText.value = widget.validator!(_value);
+    } else {
+      _errorText.value = null;
+    }
+  }
+
   void didChange(dynamic value) {
     setState(() {
       _value = value;
       // _hasInteractedByUser.value = true;
     });
+    Form.maybeOf(context)?._fieldDidChange();
     print("form item changed:" + value.toString());
   }
 
@@ -238,7 +255,6 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
             ],
           );
     // return child;
-    return TextField();
   }
 
   @override
