@@ -27,7 +27,9 @@ class FormState extends State<Form> {
   bool _hasInteractedByUser = false;
   final Set<FormItemState<dynamic>> _fields = <FormItemState<dynamic>>{};
 
-  void _fieldDidChange() {}
+  void _fieldDidChange() {
+    _forceRebuild();
+  }
 
   void _forceRebuild() {
     setState(() {
@@ -45,7 +47,7 @@ class FormState extends State<Form> {
 
   void save() {
     for (final FormItemState<dynamic> field in _fields) {
-      // field.save();
+      field.save();
     }
   }
 
@@ -60,31 +62,42 @@ class FormState extends State<Form> {
   void setFieldsValue(Map<dynamic, dynamic>? values) {
     print(values);
 
-    dynamic getValue(NamePath name,Map<dynamic, dynamic>? currentValues){
-
+    dynamic getValue(NamePath name, Map<dynamic, dynamic>? currentValues) {
       Map<dynamic, dynamic>? currentValues2 = currentValues;
-      for(int i = 0;i<name.value.length;i++){
-        if(i<name.value.length-1){
-          if(currentValues2![name.value[i]] == null){
+      for (int i = 0; i < name.value.length; i++) {
+        if (i < name.value.length - 1) {
+          if (currentValues2![name.value[i]] == null) {
             return null;
-          }else{
+          } else {
             currentValues2 = currentValues2[name.value[i]];
           }
-        }else{
+        } else {
           return currentValues2![name.value[i]];
         }
       }
     }
 
     for (final FormItemState<dynamic> field in _fields) {
-      var v = getValue(field.name!,values);
+      var v = getValue(field.name!, values);
       field.didChange(v);
     }
   }
 
+  bool _validate([Set<FormFieldState<Object?>>? invalidFields]){
+    bool hasError = false;
+    String errorMessage = '';
+
+    return hasError;
+  }
+
   Future<Map<dynamic, dynamic>> validateFields() async {
+    if (!_validate()) {
+      throw 'Form is invalid';
+    }
     Map<dynamic, dynamic> values = {};
     for (final FormItemState<dynamic> field in _fields) {
+
+
       print(field.value);
       Map<dynamic, dynamic> fieldValues = values;
       if (field.name != null && field.name!.value.isNotEmpty) {
@@ -169,6 +182,7 @@ class FormItem<T> extends StatefulWidget {
   final T? initialValue;
   final FormItemValidator<T>? validator;
   final String? restorationId;
+  final bool? required;
 
   const FormItem(
       {super.key,
@@ -180,7 +194,8 @@ class FormItem<T> extends StatefulWidget {
       this.name,
       this.label,
       required this.builder,
-      this.onSaved});
+      this.onSaved,
+      this.required});
 
   @override
   State<StatefulWidget> createState() => FormItemState<T>();
@@ -188,7 +203,7 @@ class FormItem<T> extends StatefulWidget {
 
 class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
   late dynamic _value = widget.initialValue;
-  late final RestorableStringN _errorText;
+  late final RestorableStringN _errorText = RestorableStringN(null);
   final RestorableBool _hasInteractedByUser = RestorableBool(false);
 
   dynamic get value => _value;
@@ -238,20 +253,53 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
   }
 
   @override
+  void deactivate() {
+    Form.maybeOf(context)?._unregister(this);
+    super.deactivate();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Form.maybeOf(context)?._register(this);
     var child = widget.builder(this);
+
+    Row fieldLabel = Row(
+      children: [
+        Text(
+          widget.required == true ? "*" : "",
+          style: TextStyle(color: material.Colors.red),
+        ),
+        Text(widget.label ?? ''),
+      ],
+    );
+
+    List<Widget> filedChildren = [child];
+    if(errorText!=null){
+      filedChildren.add(Text(errorText!,style: TextStyle(color: material.Colors.red),));
+    }
+// print(errorText);
+    Expanded filedInput = Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+      children: [child],
+    ));
+
     return widget.layout == Layout.horizontal
         ? Row(
             children: [
-              Text(widget.label ?? ''),
-              Expanded(child: child),
+              fieldLabel,
+              filedInput,
             ],
           )
         : Column(
             children: [
-              Text(widget.label ?? ''),
-              Expanded(child: child),
+              fieldLabel,
+              filedInput,
             ],
           );
     // return child;
@@ -262,7 +310,7 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
 
   @override
   void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
-    // registerForRestoration(_errorText, 'error_text');
+    registerForRestoration(_errorText, 'error_text');
     // registerForRestoration(_hasInteractedByUser, 'has_interacted_by_user');
   }
 }
