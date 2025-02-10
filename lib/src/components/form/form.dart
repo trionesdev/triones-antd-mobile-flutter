@@ -85,6 +85,7 @@ class FormState extends State<Form> {
   }
 
   bool _validate() {
+    errorFields = [];
     bool hasError = false;
     String errorMessage = '';
     for (final FormItemState<dynamic> field in _fields) {
@@ -261,6 +262,7 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
       // _hasInteractedByUser.value = true;
     });
     Form.maybeOf(context)?._fieldDidChange();
+    _validate();
     print("form item changed:" + value.toString());
   }
 
@@ -293,7 +295,7 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
     List<Widget> filedChildren = [child];
     if (errorText != null) {
       filedChildren.add(Container(
-        padding: EdgeInsets.only(left: 16, right: 16),
+        padding: EdgeInsets.only(left: 16, right: 16,top: 0),
         child: Text(
           errorText!,
           style: TextStyle(color: material.Colors.red),
