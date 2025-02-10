@@ -1,7 +1,8 @@
 import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
+import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd/antd.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
 
     return AntdApp(
       title: 'Flutter Demo',
-      theme: AntdThemeData(),
+      theme: ThemeData(),
       routes: {
         '/button': (context) => ButtonPage(),
         '/input': (context) => InputPage(),
@@ -68,33 +69,32 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
+    return material.Scaffold(
+      appBar: material.AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: ListView(
         children: [
-          ListTile(title: Text('Button'),onTap: () {
+          material.ListTile(title: Text('Button'),onTap: () {
             Navigator.pushNamed(context, '/button');
           },),
-          ListTile(title: Text('Input'),onTap: () {
+          material.ListTile(title: Text('Input'),onTap: () {
             Navigator.pushNamed(context, '/input');
           },),
-          ListTile(title: Text('Form'),onTap: () {
+          material.ListTile(title: Text('Form'),onTap: () {
             Navigator.pushNamed(context, '/form');
           },)
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: material.FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: const Icon(material.Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

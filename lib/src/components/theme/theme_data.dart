@@ -1,28 +1,28 @@
 library;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
 
-class AntdThemeData with Diagnosticable {
-  factory AntdThemeData() {
-    return AntdThemeData.raw();
+class ThemeData with Diagnosticable {
+  factory ThemeData() {
+    return ThemeData.raw();
   }
 
-  const AntdThemeData.raw();
+  const ThemeData.raw();
 
-  factory AntdThemeData.fallback() => AntdThemeData();
+  factory ThemeData.fallback() => ThemeData();
 
-  static AntdThemeData localize(
-      AntdThemeData? baseTheme, AntdThemeData? localTextGeometry) {
-    return AntdThemeData();
+  static ThemeData localize(
+      ThemeData? baseTheme, ThemeData? localTextGeometry) {
+    return ThemeData();
   }
 
-  ThemeData toMaterialThemeData() {
-    return ThemeData(
-      splashFactory: NoSplash.splashFactory, //移除水纹效果
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      shadowColor: Colors.transparent //移除阴影效果
+  material.ThemeData toMaterialThemeData() {
+    return material.ThemeData(
+      splashFactory: material.NoSplash.splashFactory, //移除水纹效果
+      splashColor: material.Colors.transparent,
+      highlightColor: material.Colors.transparent,
+      shadowColor: material.Colors.transparent //移除阴影效果
     );
   }
 

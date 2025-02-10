@@ -1,6 +1,7 @@
 library;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
+import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd/antd.dart';
 import '../theme/theme.dart';
 import 'antd_button_style.dart';
@@ -54,15 +55,14 @@ class Button extends StatefulWidget {
   State<Button> createState() => _ButtonState();
 }
 
-class _ButtonState extends State<Button> with MaterialStateMixin {
+class _ButtonState extends State<Button> with material.MaterialStateMixin {
   static AntdButtonStyle styleFrom() {
     return AntdButtonStyle();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isIconButton = widget.icon != null && widget.text == null;
-    final AntdThemeData theme = AntdTheme.of(context);
+    final ThemeData theme = Theme.of(context);
 
     AntdButtonStyle style = styleFrom();
 
@@ -71,18 +71,15 @@ class _ButtonState extends State<Button> with MaterialStateMixin {
 
     return SizedBox(
       width: (widget.block == true)? double.infinity:null,
-      child: MaterialButton(
+      child: material.MaterialButton(
         onPressed: widget.onPressed,
         shape: style.shape?.resolve(const <WidgetState>{}),
         minWidth: 0,
-        height: 0,
+        // height: 0,
         padding: style.padding?.resolve(const <WidgetState>{}),
         color: style.backgroundColor?.resolve(const <WidgetState>{}),
-        // color: Colors.transparent,
-
-focusColor: Colors.transparent,
         child: SizedBox(
-          height: 24,
+          // height: 24,
           child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -109,7 +106,7 @@ class _AntdButtonStyle extends AntdButtonStyle {
   bool get isIconButton => button.icon != null && button.text == null;
 
   Color? get buttonBackgroundColor {
-    Color? result = Colors.white;
+    Color? result = material.Colors.white;
     if (button.type == ButtonType.primary) {
       result = Color(0xFF1777ff);
       if (button.color != null) {
@@ -147,15 +144,15 @@ class _AntdButtonStyle extends AntdButtonStyle {
 
   Color? get buttonTextColor {
     if (button.type == ButtonType.primary) {
-      return Colors.white;
+      return material.Colors.white;
     }
     if (button.variant == ButtonVariant.solid) {
-      return Colors.white;
+      return material.Colors.white;
     }
     if (button.color != null) {
       return button.color;
     }
-    return Colors.black;
+    return material.Colors.black;
   }
 
   BorderRadius? get buttonBorderRadius {
@@ -186,7 +183,7 @@ class _AntdButtonStyle extends AntdButtonStyle {
   @override
   WidgetStateProperty<TextStyle>? get textStyle =>
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        return TextStyle(color: buttonTextColor ?? Colors.black);
+        return TextStyle(color: buttonTextColor ?? material.Colors.black);
       });
 
   @override
@@ -194,19 +191,19 @@ class _AntdButtonStyle extends AntdButtonStyle {
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
         if ([ButtonType.primary].contains(button.type) ||
             [ButtonVariant.solid].contains(button.variant)) {
-          return Colors.white;
+          return material.Colors.white;
         }
       });
 
   @override
   WidgetStateProperty<Color?>? get backgroundColor =>
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        Color finalColor = buttonBackgroundColor ?? Colors.white;
+        Color finalColor = buttonBackgroundColor ?? material.Colors.white;
         if (states.contains(WidgetState.hovered)) {
           if ([ButtonVariant.filled, ButtonVariant.outlined, ButtonVariant.text]
                   .contains(button.variant) ||
               [ButtonType.text].contains(button.type)) {
-            return Colors.white;
+            return material.Colors.white;
           }
           return finalColor;
         }
@@ -230,18 +227,18 @@ class _AntdButtonStyle extends AntdButtonStyle {
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
         if (isIconButton) {
           if (button.size == ButtonSize.small) {
-            return EdgeInsets.symmetric(horizontal: 0, vertical: 0);
+            return EdgeInsets.symmetric(horizontal: 10, vertical: 0);
           } else if (button.size == ButtonSize.large) {
             return EdgeInsets.symmetric(horizontal: 16, vertical: 16);
           }
-          return EdgeInsets.symmetric(horizontal: 8, vertical: 8);
+          return EdgeInsets.symmetric(horizontal: 10, vertical: 10);
         } else {
           if (button.size == ButtonSize.small) {
             return EdgeInsets.symmetric(horizontal: 12, vertical: 0);
           } else if (button.size == ButtonSize.large) {
-            return EdgeInsets.symmetric(horizontal: 24, vertical: 16);
+            return EdgeInsets.symmetric(horizontal: 24, vertical: 18);
           }
-          return EdgeInsets.symmetric(horizontal: 12, vertical: 8);
+          return EdgeInsets.symmetric(horizontal: 12, vertical: 10);
         }
       });
 
