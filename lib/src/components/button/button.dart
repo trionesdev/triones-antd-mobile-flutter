@@ -22,8 +22,8 @@ enum ButtonColor { primary, danger }
 
 enum ButtonShape { circle, round }
 
-class Button extends StatefulWidget {
-  const Button(
+class AntButton extends StatefulWidget {
+  const AntButton(
       {super.key,
       this.type,
       this.block,
@@ -52,10 +52,10 @@ class Button extends StatefulWidget {
   final AntdButtonStyle? style;
 
   @override
-  State<Button> createState() => _ButtonState();
+  State<AntButton> createState() => _ButtonState();
 }
 
-class _ButtonState extends State<Button> with material.MaterialStateMixin {
+class _ButtonState extends State<AntButton> with material.MaterialStateMixin {
   static AntdButtonStyle styleFrom() {
     return AntdButtonStyle();
   }
@@ -90,7 +90,7 @@ class _ButtonState extends State<Button> with material.MaterialStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final AntThemeData theme = AntTheme.of(context);
 
     AntdButtonStyle style = styleFrom();
 
@@ -129,7 +129,7 @@ class _AntdButtonStyle extends AntdButtonStyle {
   const _AntdButtonStyle({required this.context, required this.button});
 
   final BuildContext context;
-  final Button button;
+  final AntButton button;
 
   bool get isIconButton => button.icon != null && button.text == null;
 

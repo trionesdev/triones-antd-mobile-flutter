@@ -2,31 +2,38 @@ import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd/antd.dart';
 
-class Form extends StatefulWidget {
-  const Form({super.key, required this.children});
+enum FormLayout { horizontal, vertical }
+
+class AntForm extends StatefulWidget {
+  const AntForm(
+      {super.key, this.layout = FormLayout.horizontal, required this.children});
+
+  final FormLayout? layout;
 
   final List<Widget> children;
 
-  static FormState? maybeOf(BuildContext context) {
-    final _FormScope? scope =
-        context.dependOnInheritedWidgetOfExactType<_FormScope>();
+  static AntFormState? maybeOf(BuildContext context) {
+    final _AntFormScope? scope =
+        context.dependOnInheritedWidgetOfExactType<_AntFormScope>();
     return scope?._formState;
   }
 
-  static FormState of(BuildContext context) {
-    final FormState? formState = maybeOf(context);
+  static AntFormState of(BuildContext context) {
+    final AntFormState? formState = maybeOf(context);
     return formState!;
   }
 
   @override
-  State<StatefulWidget> createState() => FormState();
+  State<StatefulWidget> createState() => AntFormState();
 }
 
-class FormState extends State<Form> {
+class AntFormState extends State<AntForm> {
   int _generation = 0;
   bool _hasInteractedByUser = false;
   List<Map<String, dynamic>> errorFields = [];
-  final Set<FormItemState<dynamic>> _fields = <FormItemState<dynamic>>{};
+  final Set<AntFormItemState<dynamic>> _fields = <AntFormItemState<dynamic>>{};
+
+  FormLayout? get layout => widget.layout;
 
   void _fieldDidChange() {
     _forceRebuild();
@@ -38,22 +45,22 @@ class FormState extends State<Form> {
     });
   }
 
-  void _register(FormItemState<dynamic> field) {
+  void _register(AntFormItemState<dynamic> field) {
     _fields.add(field);
   }
 
-  void _unregister(FormItemState<dynamic> field) {
+  void _unregister(AntFormItemState<dynamic> field) {
     _fields.remove(field);
   }
 
   void save() {
-    for (final FormItemState<dynamic> field in _fields) {
+    for (final AntFormItemState<dynamic> field in _fields) {
       field.save();
     }
   }
 
   void reset() {
-    for (final FormItemState<dynamic> field in _fields) {
+    for (final AntFormItemState<dynamic> field in _fields) {
       field.reset();
     }
     _hasInteractedByUser = false;
@@ -78,7 +85,7 @@ class FormState extends State<Form> {
       }
     }
 
-    for (final FormItemState<dynamic> field in _fields) {
+    for (final AntFormItemState<dynamic> field in _fields) {
       var v = getValue(field.name!, values);
       field.didChange(v);
     }
@@ -88,7 +95,7 @@ class FormState extends State<Form> {
     errorFields = [];
     bool hasError = false;
     String errorMessage = '';
-    for (final FormItemState<dynamic> field in _fields) {
+    for (final AntFormItemState<dynamic> field in _fields) {
       if (!field.validate()) {
         if (field.name != null) {
           errorFields
@@ -105,7 +112,7 @@ class FormState extends State<Form> {
       throw Exception({errorFields});
     }
     Map<dynamic, dynamic> values = {};
-    for (final FormItemState<dynamic> field in _fields) {
+    for (final AntFormItemState<dynamic> field in _fields) {
       print(field.value);
       Map<dynamic, dynamic> fieldValues = values;
       if (field.name != null && field.name!.value.isNotEmpty) {
@@ -131,7 +138,7 @@ class FormState extends State<Form> {
     // );
 
     return PopScope(
-        child: _FormScope(
+        child: _AntFormScope(
             formState: this,
             generation: _generation,
             child: Column(
@@ -140,25 +147,25 @@ class FormState extends State<Form> {
   }
 }
 
-class _FormScope extends InheritedWidget {
-  const _FormScope({
+class _AntFormScope extends InheritedWidget {
+  const _AntFormScope({
     required super.child,
-    required FormState formState,
+    required AntFormState formState,
     required int generation,
   })  : _formState = formState,
         _generation = generation;
 
-  final FormState _formState;
+  final AntFormState _formState;
 
   /// Incremented every time a form field has changed. This lets us know when
   /// to rebuild the form.
   final int _generation;
 
   /// The [Form] associated with this widget.
-  Form get form => _formState.widget;
+  AntForm get form => _formState.widget;
 
   @override
-  bool updateShouldNotify(_FormScope old) => _generation != old._generation;
+  bool updateShouldNotify(_AntFormScope old) => _generation != old._generation;
 }
 
 class NamePath {
@@ -175,16 +182,14 @@ class NamePath {
   List<dynamic> get value => _namePaths;
 }
 
-typedef FormItemBuilder<T> = Widget Function(FormItemState<T> field);
+typedef FormItemBuilder<T> = Widget Function(AntFormItemState<T> field);
 typedef FormItemValidator<T> = String? Function(T? value);
 typedef FormItemSetter<T> = void Function(T? newValue);
 
-enum Layout { horizontal, vertical }
-
-class FormItem<T> extends StatefulWidget {
-  final Layout? layout;
+class AntFormItem<T> extends StatefulWidget {
+  final FormLayout? layout;
   final NamePath? name;
-  final String? label;
+  final Widget? label;
   final Widget? child;
   final FormItemBuilder<T> builder;
   final FormItemSetter<T>? onSaved;
@@ -193,13 +198,13 @@ class FormItem<T> extends StatefulWidget {
   final String? restorationId;
   final bool? required;
 
-  const FormItem(
+  const AntFormItem(
       {super.key,
       this.initialValue,
       this.validator,
       this.restorationId,
       this.child,
-      this.layout = Layout.horizontal,
+      this.layout,
       this.name,
       this.label,
       required this.builder,
@@ -207,10 +212,10 @@ class FormItem<T> extends StatefulWidget {
       this.required});
 
   @override
-  State<StatefulWidget> createState() => FormItemState<T>();
+  State<StatefulWidget> createState() => AntFormItemState<T>();
 }
 
-class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
+class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
   late dynamic _value = widget.initialValue;
   late final RestorableStringN _errorText = RestorableStringN(null);
   final RestorableBool _hasInteractedByUser = RestorableBool(false);
@@ -218,6 +223,14 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
   dynamic get value => _value;
 
   NamePath? get name => widget.name;
+
+  FormLayout? get layout {
+    if (widget.layout != null) {
+      return widget.layout;
+    } else {
+      return AntForm.maybeOf(context)?.layout;
+    }
+  }
 
   String? get errorText => _errorText.value;
 
@@ -232,6 +245,8 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
   void save() {
     widget.onSaved?.call(value);
   }
+
+  // void setFormSettings({}){}
 
   void reset() {
     setState(() {
@@ -261,14 +276,14 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
       _value = value;
       // _hasInteractedByUser.value = true;
     });
-    Form.maybeOf(context)?._fieldDidChange();
+    AntForm.maybeOf(context)?._fieldDidChange();
     _validate();
     print("form item changed:" + value.toString());
   }
 
   @override
   void deactivate() {
-    Form.maybeOf(context)?._unregister(this);
+    AntForm.maybeOf(context)?._unregister(this);
     super.deactivate();
   }
 
@@ -279,48 +294,52 @@ class FormItemState<T> extends State<FormItem<T>> with RestorationMixin {
 
   @override
   Widget build(BuildContext context) {
-    Form.maybeOf(context)?._register(this);
-    var child = widget.builder(this);
+    AntForm.maybeOf(context)?._register(this);
 
-    Row fieldLabel = Row(
-      children: [
-        Text(
+    List<Widget> fieldItemChildren = [];
+    if (widget.label != null) {
+      List<Widget> fieldLabelChildren = [];
+      if (widget.required == true) {
+        fieldLabelChildren.add(Text(
           widget.required == true ? "*" : "",
           style: TextStyle(color: material.Colors.red),
-        ),
-        Text(widget.label ?? ''),
-      ],
-    );
-
-    List<Widget> filedChildren = [child];
-    if (errorText != null) {
-      filedChildren.add(Container(
-        padding: EdgeInsets.only(left: 16, right: 16,top: 0),
-        child: Text(
-          errorText!,
-          style: TextStyle(color: material.Colors.red),
-        ),
-      ));
+        ));
+      }
+      fieldLabelChildren.add(widget.label!);
+      Row fieldLabel = Row(
+        children: fieldLabelChildren,
+      );
+      fieldItemChildren.add(fieldLabel);
     }
+    if (widget.builder != null) {
+      var child = widget.builder(this);
+      List<Widget> filedInputChildren = [child];
+      if (errorText != null) {
+        filedInputChildren.add(Container(
+          padding: EdgeInsets.only(left: 16, right: 16, top: 0),
+          child: Text(
+            errorText!,
+            style: TextStyle(color: material.Colors.red),
+          ),
+        ));
+      }
 // print(errorText);
-    Expanded filedInput = Expanded(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: filedChildren,
-    ));
+      Widget fieldItem = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: filedInputChildren,
+      );
+      Widget filedInput = layout == FormLayout.horizontal
+          ? Expanded(child: fieldItem)
+          : fieldItem;
+      fieldItemChildren.add(filedInput);
+    }
 
-    return widget.layout == Layout.horizontal
+    return layout == FormLayout.horizontal
         ? Row(
-            children: [
-              fieldLabel,
-              filedInput,
-            ],
+            children: fieldItemChildren,
           )
         : Column(
-            children: [
-              fieldLabel,
-              filedInput,
-            ],
+            children: fieldItemChildren,
           );
     // return child;
   }

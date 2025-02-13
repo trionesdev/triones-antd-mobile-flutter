@@ -16,14 +16,31 @@ class _InputPageState extends State<InputPage> {
           title: Text('Input'),
         ),
         body: Center(
-            child: Column(children: [
-          Input(
+
+            child: Column(
+                spacing: 10,
+                children: [
+          AntInput(
+            decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.blue, // 边框颜色
+                    width: 2.0,         // 边框宽度
+                  ),
+                  top: BorderSide.none,
+                  left: BorderSide.none,
+                  right: BorderSide.none,
+                )
+            ),
             placeholder: "请输入内容",
           ),
-          Input(
+          AntInput(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+            ),
             type: InputType.password,
             placeholder: "请输入内容",
-          ),
+          )
         ])));
   }
 }

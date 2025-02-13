@@ -4,8 +4,8 @@ import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import '../theme/theme_data.dart';
 
-class AntdApp extends StatelessWidget {
-  const AntdApp(
+class AntApp extends StatelessWidget {
+  const AntApp(
       {super.key,
       this.title,
       this.theme,
@@ -13,7 +13,7 @@ class AntdApp extends StatelessWidget {
       this.routes = const <String, WidgetBuilder>{}});
 
   final String? title;
-  final ThemeData? theme;
+  final AntThemeData? theme;
   final Widget? home;
   final Map<String, WidgetBuilder> routes;
 

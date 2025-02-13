@@ -16,9 +16,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return AntdApp(
+    return AntApp(
       title: 'Flutter Demo',
-      theme: ThemeData(),
+      theme: AntThemeData(),
       routes: {
         '/button': (context) => ButtonPage(),
         '/input': (context) => InputPage(),

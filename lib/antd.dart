@@ -5,3 +5,4 @@ export 'src/components/app/app.dart';
 export 'src/components/button/button.dart';
 export 'src/components/input/input.dart';
 export 'src/components/form/form.dart';
+export 'src/components/page/page_container.dart';

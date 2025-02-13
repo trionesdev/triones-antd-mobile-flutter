@@ -3,18 +3,18 @@ library;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as material;
 
-class ThemeData with Diagnosticable {
-  factory ThemeData() {
-    return ThemeData.raw();
+class AntThemeData with Diagnosticable {
+  factory AntThemeData() {
+    return AntThemeData.raw();
   }
 
-  const ThemeData.raw();
+  const AntThemeData.raw();
 
-  factory ThemeData.fallback() => ThemeData();
+  factory AntThemeData.fallback() => AntThemeData();
 
-  static ThemeData localize(
-      ThemeData? baseTheme, ThemeData? localTextGeometry) {
-    return ThemeData();
+  static AntThemeData localize(
+      AntThemeData? baseTheme, AntThemeData? localTextGeometry) {
+    return AntThemeData();
   }
 
   material.ThemeData toMaterialThemeData() {
@@ -22,7 +22,7 @@ class ThemeData with Diagnosticable {
       splashFactory: material.NoSplash.splashFactory, //移除水纹效果
       splashColor: material.Colors.transparent,
       highlightColor: material.Colors.transparent,
-      shadowColor: material.Colors.transparent //移除阴影效果
+      shadowColor: material.Colors.transparent, //移除阴影效果
     );
   }
 
