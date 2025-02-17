@@ -12,7 +12,7 @@ class AntAppBar extends StatefulWidget implements PreferredSizeWidget {
       this.onBack,
       this.left,
       this.right, this.decoration, this.bottom})
-      : preferredSize = _PreferredAppBarSize(0, bottom?.preferredSize.height);
+      : preferredSize = _PreferredAppBarSize(null, bottom?.preferredSize.height);
 
   final Widget? title;
   final bool? back;

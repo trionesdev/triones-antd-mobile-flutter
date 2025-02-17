@@ -1,6 +1,7 @@
 import 'package:antd_flutter_example/pages/app_bar_page.dart';
 import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
+import 'package:antd_flutter_example/pages/grid_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/input': (context) => InputPage(),
         '/form': (context) => FormPage(),
         '/app-bar': (context) => AppBarPage(),
+        '/grid': (context) => GridPage(),
       },
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -103,6 +105,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('AppBar'),
             onTap: () {
               Navigator.pushNamed(context, '/app-bar');
+            },
+          ),
+          material.ListTile(
+            title: Text('Grid'),
+            onTap: () {
+              Navigator.pushNamed(context, '/grid');
             },
           )
         ],
