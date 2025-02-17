@@ -11,8 +11,8 @@ class AntAppBar extends StatefulWidget implements PreferredSizeWidget {
       this.backIcon,
       this.onBack,
       this.left,
-      this.right})
-      : preferredSize = _PreferredAppBarSize(50, 50);
+      this.right, this.decoration, this.bottom})
+      : preferredSize = _PreferredAppBarSize(0, bottom?.preferredSize.height);
 
   final Widget? title;
   final bool? back;
@@ -20,6 +20,8 @@ class AntAppBar extends StatefulWidget implements PreferredSizeWidget {
   final OnBack? onBack;
   final List<Widget>? left;
   final List<Widget>? right;
+  final BoxDecoration? decoration;
+  final PreferredSizeWidget? bottom;
 
   @override
   State<StatefulWidget> createState() => _AntAppBarState();
@@ -34,45 +36,58 @@ class _AntAppBarState extends State<AntAppBar> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
-
-
-    return Container(
-      height: widget.preferredSize.height,
-      child: Stack(alignment: Alignment.center, children: [
-        Center(
-          child: widget.title,
-        ),
-        Positioned(
+    List<Widget> widgets = [
+      Center(
+        child: widget.title,
+      ),
+    ];
+    if ((widget.left != null && widget.left!.isNotEmpty) ||
+        widget.back == true) {
+      List<Widget> leftWidgets = [];
+      if (widget.back == true) {
+        leftWidgets.add(IconButton(
+          icon: widget.backIcon ?? Icon(Icons.arrow_back),
+          onPressed: () {
+            if (widget.onBack != null) {
+              widget.onBack!(context);
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
+        ));
+      }
+      if (leftWidgets.isNotEmpty) {
+        widgets.add(Positioned(
           left: 0,
-          child: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              print('menu');
-            },
+          // top: 0,
+          child: Row(
+            children: leftWidgets,
           ),
+        ));
+      }
+    }
+    if (widget.right != null && widget.right!.isNotEmpty) {
+      widgets.add(Positioned(
+        right: 0,
+        // top: 0,
+        child: Row(
+          children: widget.right!,
         ),
-        Positioned(
-          right: 0,
-          child: IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              print('search');
-            },
-          ),
-        ),
-      ]),
+      ));
+    }
+    return Container(
+      decoration: widget.decoration,
+      height: widget.preferredSize.height,
+      child: Stack(alignment: Alignment.center, children: widgets),
     );
   }
 }
 
 class _PreferredAppBarSize extends Size {
   _PreferredAppBarSize(this.toolbarHeight, this.bottomHeight)
-      : super.fromHeight(60);
+      : super.fromHeight((toolbarHeight ?? kToolbarHeight) + (bottomHeight ?? 0));
 
   final double? toolbarHeight;
   final double? bottomHeight;

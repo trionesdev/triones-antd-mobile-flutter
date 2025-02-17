@@ -1,3 +1,4 @@
+import 'package:antd_flutter_example/pages/app_bar_page.dart';
 import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
@@ -15,7 +16,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return AntApp(
       title: 'Flutter Demo',
       theme: AntThemeData(),
@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
         '/button': (context) => ButtonPage(),
         '/input': (context) => InputPage(),
         '/form': (context) => FormPage(),
+        '/app-bar': (context) => AppBarPage(),
       },
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -80,15 +81,30 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: ListView(
         children: [
-          material.ListTile(title: Text('Button'),onTap: () {
-            Navigator.pushNamed(context, '/button');
-          },),
-          material.ListTile(title: Text('Input'),onTap: () {
-            Navigator.pushNamed(context, '/input');
-          },),
-          material.ListTile(title: Text('Form'),onTap: () {
-            Navigator.pushNamed(context, '/form');
-          },)
+          material.ListTile(
+            title: Text('Button'),
+            onTap: () {
+              Navigator.pushNamed(context, '/button');
+            },
+          ),
+          material.ListTile(
+            title: Text('Input'),
+            onTap: () {
+              Navigator.pushNamed(context, '/input');
+            },
+          ),
+          material.ListTile(
+            title: Text('Form'),
+            onTap: () {
+              Navigator.pushNamed(context, '/form');
+            },
+          ),
+          material.ListTile(
+            title: Text('AppBar'),
+            onTap: () {
+              Navigator.pushNamed(context, '/app-bar');
+            },
+          )
         ],
       ),
       floatingActionButton: material.FloatingActionButton(
