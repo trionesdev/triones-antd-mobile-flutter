@@ -11,8 +11,15 @@ class AntAppBar extends StatefulWidget implements PreferredSizeWidget {
       this.backIcon,
       this.onBack,
       this.left,
-      this.right, this.decoration, this.bottom})
-      : preferredSize = _PreferredAppBarSize(null, bottom?.preferredSize.height);
+      this.right,
+      this.decoration,
+      this.bottom,
+      this.child,
+      this.childHeight = 0,
+      this.bottomHeight = 0,
+      this.toolbarHeight})
+      : preferredSize =
+            _PreferredAppBarSize(toolbarHeight, childHeight, bottomHeight);
 
   final Widget? title;
   final bool? back;
@@ -21,7 +28,11 @@ class AntAppBar extends StatefulWidget implements PreferredSizeWidget {
   final List<Widget>? left;
   final List<Widget>? right;
   final BoxDecoration? decoration;
-  final PreferredSizeWidget? bottom;
+  final Widget? child;
+  final double? childHeight;
+  final Widget? bottom;
+  final double? bottomHeight;
+  final double? toolbarHeight;
 
   @override
   State<StatefulWidget> createState() => _AntAppBarState();
@@ -38,7 +49,8 @@ class _AntAppBarState extends State<AntAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgets = [
+    List<Widget> widgets = [];
+    List<Widget> toolbarWidgets = [
       Center(
         child: widget.title,
       ),
@@ -59,9 +71,8 @@ class _AntAppBarState extends State<AntAppBar> {
         ));
       }
       if (leftWidgets.isNotEmpty) {
-        widgets.add(Positioned(
+        toolbarWidgets.add(Positioned(
           left: 0,
-          // top: 0,
           child: Row(
             children: leftWidgets,
           ),
@@ -69,26 +80,41 @@ class _AntAppBarState extends State<AntAppBar> {
       }
     }
     if (widget.right != null && widget.right!.isNotEmpty) {
-      widgets.add(Positioned(
+      toolbarWidgets.add(Positioned(
         right: 0,
-        // top: 0,
         child: Row(
           children: widget.right!,
         ),
       ));
     }
+
+    if (toolbarWidgets.isNotEmpty) {
+      widgets.add(SizedBox(
+        height: widget.toolbarHeight ?? kToolbarHeight,
+        child: Stack(alignment: Alignment.center, children: toolbarWidgets),
+      ));
+    }
+    if (widget.child != null) {
+      widgets.add(widget.child!);
+    }
+
     return Container(
       decoration: widget.decoration,
       height: widget.preferredSize.height,
-      child: Stack(alignment: Alignment.center, children: widgets),
+      child: Column(
+        children: widgets,
+      ),
     );
   }
 }
 
 class _PreferredAppBarSize extends Size {
-  _PreferredAppBarSize(this.toolbarHeight, this.bottomHeight)
-      : super.fromHeight((toolbarHeight ?? kToolbarHeight) + (bottomHeight ?? 0));
+  _PreferredAppBarSize(this.toolbarHeight, this.childHeight, this.bottomHeight)
+      : super.fromHeight((toolbarHeight ?? kToolbarHeight) +
+            (childHeight ?? 0) +
+            (bottomHeight ?? 0));
 
   final double? toolbarHeight;
+  final double? childHeight;
   final double? bottomHeight;
 }
