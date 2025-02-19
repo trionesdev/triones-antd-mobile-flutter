@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:trionesdev_antd/antd.dart';
 
 class PagePage extends StatefulWidget {
@@ -11,6 +11,26 @@ class PagePage extends StatefulWidget {
 class _PagePageState extends State<PagePage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer();
+    return AntPageContainer(
+      bottomNavigationBar: AntTabBar(
+        items: [
+          AntTabBarItem(
+            icon: Icons.home,
+            label: "首页",
+            id: 'index',
+          ),
+          AntTabBarItem(
+            icon: Icons.search,
+            label: "搜索",
+            id: 'search',
+          ),
+          AntTabBarItem(
+            icon: Icons.person,
+            label: "我的",
+            id: 'my',
+          ),
+        ],
+      ),
+    );
   }
 }

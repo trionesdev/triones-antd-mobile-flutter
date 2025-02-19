@@ -5,8 +5,7 @@ class AppBarPage extends StatefulWidget {
   const AppBarPage({super.key});
 
   @override
-  State<StatefulWidget> createState()=> _AppBarPageState();
-
+  State<AppBarPage> createState() => _AppBarPageState();
 }
 
 class _AppBarPageState extends State<AppBarPage> {
@@ -14,14 +13,8 @@ class _AppBarPageState extends State<AppBarPage> {
   Widget build(BuildContext context) {
     return AntPageContainer(
       appBar: AntAppBar(
-        title: Text('AppBar'),
-        back: true,
-        left: [],
-        right: [],
-        childHeight: 20,
-        child: Text('AppBar'),
+        title: Text("AppBar"),
       ),
     );
   }
-
 }

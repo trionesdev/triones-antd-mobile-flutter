@@ -3,6 +3,7 @@ import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
+import 'package:antd_flutter_example/pages/tab_bar_page.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd/antd.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/form': (context) => FormPage(),
         '/app-bar': (context) => AppBarPage(),
         '/grid': (context) => GridPage(),
+        '/tab-bar': (context) => TabBarPage()
       },
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -111,6 +113,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Grid'),
             onTap: () {
               Navigator.pushNamed(context, '/grid');
+            },
+          ),
+          material.ListTile(
+            title: Text('TabBar'),
+            onTap: () {
+              Navigator.pushNamed(context, '/tab-bar');
             },
           )
         ],

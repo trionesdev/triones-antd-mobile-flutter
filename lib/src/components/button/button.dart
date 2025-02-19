@@ -60,8 +60,8 @@ class _ButtonState extends State<AntButton> with material.MaterialStateMixin {
     return AntdButtonStyle();
   }
 
-  double? get height{
-    switch(widget.size){
+  double? get height {
+    switch (widget.size) {
       case ButtonSize.large:
         return 48;
       case ButtonSize.middle:
@@ -71,12 +71,12 @@ class _ButtonState extends State<AntButton> with material.MaterialStateMixin {
     }
   }
 
-  double? get width{
-    if((widget.shape != ButtonShape.circle && widget.block == true)){
+  double? get width {
+    if ((widget.shape != ButtonShape.circle && widget.block == true)) {
       return double.infinity;
     }
-    if( widget.text==null ){
-      switch(widget.size){
+    if (widget.text == null) {
+      switch (widget.size) {
         case ButtonSize.large:
           return 48;
         case ButtonSize.middle:
@@ -97,30 +97,30 @@ class _ButtonState extends State<AntButton> with material.MaterialStateMixin {
     style = style.merge(_AntdButtonStyle(context: context, button: widget));
     style = style.merge(widget.style);
 
-
     return SizedBox(
       width: width,
       height: height,
       child: material.MaterialButton(
-        onPressed: widget.onPressed,
-        shape: style.shape?.resolve(const <WidgetState>{}),
-        minWidth: 0,
-        height: 0,
-        padding: style.padding?.resolve(const <WidgetState>{}),
-        //   padding: EdgeInsets.symmetric(horizontal: 0,vertical: 0),
-        color: style.backgroundColor?.resolve(const <WidgetState>{}),
-        child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (widget.icon != null) widget.icon!,
-              if (widget.text != null)
-                Text(
-                  widget.text != null ? widget.text! : '',
-                  style: style.textStyle?.resolve(const <WidgetState>{}),
-                )
-            ])
-      ),
+          onPressed: () {
+            widget.onPressed?.call();
+          },
+          shape: style.shape?.resolve(const <WidgetState>{}),
+          minWidth: 0,
+          height: 0,
+          padding: style.padding?.resolve(const <WidgetState>{}),
+          //   padding: EdgeInsets.symmetric(horizontal: 0,vertical: 0),
+          color: style.backgroundColor?.resolve(const <WidgetState>{}),
+          child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (widget.icon != null) widget.icon!,
+                if (widget.text != null)
+                  Text(
+                    widget.text != null ? widget.text! : '',
+                    style: style.textStyle?.resolve(const <WidgetState>{}),
+                  )
+              ])),
     );
   }
 }
@@ -149,7 +149,6 @@ class _AntdButtonStyle extends AntdButtonStyle {
     if (button.variant == ButtonVariant.filled) {
       result = button.color!.withValues();
     }
-
     return result;
   }
 
@@ -239,7 +238,8 @@ class _AntdButtonStyle extends AntdButtonStyle {
         if (states.contains(WidgetState.pressed)) {
           if ([ButtonVariant.filled, ButtonVariant.outlined, ButtonVariant.text]
               .contains(button.variant)) {
-            return finalColor.withOpacity(0.1);
+            return finalColor.withAlpha((255.0 * 0.1).round());
+            // return finalColor.withOpacity(0.1);
           }
           return finalColor;
         }
@@ -259,10 +259,9 @@ class _AntdButtonStyle extends AntdButtonStyle {
         } else {
           if (button.size == ButtonSize.small) {
             return EdgeInsets.symmetric(horizontal: 12);
-          }else if (button.size == ButtonSize.middle){
+          } else if (button.size == ButtonSize.middle) {
             return EdgeInsets.symmetric(horizontal: 18);
-          }
-          else if (button.size == ButtonSize.large) {
+          } else if (button.size == ButtonSize.large) {
             return EdgeInsets.symmetric(horizontal: 24);
           }
         }
@@ -273,8 +272,7 @@ class _AntdButtonStyle extends AntdButtonStyle {
   WidgetStateProperty<OutlinedBorder?>? get shape =>
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
         if (button.shape == ButtonShape.circle && button.text == null) {
-          return CircleBorder(
-              side: buttonBorderSide ?? BorderSide.none);
+          return CircleBorder(side: buttonBorderSide ?? BorderSide.none);
         }
         return RoundedRectangleBorder(
             borderRadius: buttonBorderRadius ?? BorderRadius.circular(6.0),
