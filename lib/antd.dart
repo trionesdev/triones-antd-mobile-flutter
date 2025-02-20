@@ -10,3 +10,4 @@ export 'src/components/app_bar/app_bar.dart';
 export 'src/components/grid/grid.dart';
 export 'src/components/tab_bar/tab_bar.dart';
 export 'src/components/card/card.dart';
+export 'src/components/list/list.dart';
