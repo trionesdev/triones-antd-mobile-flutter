@@ -134,7 +134,7 @@ class _AntdButtonStyle extends AntdButtonStyle {
   bool get isIconButton => button.icon != null && button.text == null;
 
   Color? get buttonBackgroundColor {
-    Color? result = material.Colors.white;
+    Color? result = material.Colors.transparent;
     if (button.type == ButtonType.primary) {
       result = Color(0xFF1777ff);
       if (button.color != null) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:trionesdev_antd/antd.dart';
 
 typedef OnBack = void Function(BuildContext context);
 
@@ -59,7 +60,8 @@ class _AntAppBarState extends State<AntAppBar> {
         widget.back == true) {
       List<Widget> leftWidgets = [];
       if (widget.back == true) {
-        leftWidgets.add(IconButton(
+        leftWidgets.add(AntButton(
+          type: ButtonType.text,
           icon: widget.backIcon ?? Icon(Icons.arrow_back),
           onPressed: () {
             if (widget.onBack != null) {
@@ -72,7 +74,7 @@ class _AntAppBarState extends State<AntAppBar> {
       }
       if (leftWidgets.isNotEmpty) {
         toolbarWidgets.add(Positioned(
-          left: 0,
+          left: 8,
           child: Row(
             children: leftWidgets,
           ),
@@ -81,7 +83,7 @@ class _AntAppBarState extends State<AntAppBar> {
     }
     if (widget.right != null && widget.right!.isNotEmpty) {
       toolbarWidgets.add(Positioned(
-        right: 0,
+        right: 8,
         child: Row(
           children: widget.right!,
         ),

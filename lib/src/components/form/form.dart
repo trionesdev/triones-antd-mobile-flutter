@@ -333,13 +333,16 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       fieldItemChildren.add(filedInput);
     }
 
-    return layout == FormLayout.horizontal
-        ? Row(
-            children: fieldItemChildren,
-          )
-        : Column(
-            children: fieldItemChildren,
-          );
+    return Container(
+      margin: EdgeInsets.only(bottom: 8),
+      child: layout == FormLayout.horizontal
+          ? Row(
+        children: fieldItemChildren,
+      )
+          : Column(
+        children: fieldItemChildren,
+      ),
+    );
     // return child;
   }
 
