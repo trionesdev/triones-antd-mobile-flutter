@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd/antd.dart';
+import 'package:trionesdev_antd_mobile/antd.dart';
 
 class ButtonPage extends StatefulWidget {
   const ButtonPage({super.key});
@@ -11,18 +11,19 @@ class ButtonPage extends StatefulWidget {
 class _ButtonPageState extends State<ButtonPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
+    return AntPageContainer(
+        appBar: AntAppBar(
           title: Text('Button'),
         ),
         body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 10,
             children: [
               Wrap(
                 direction: Axis.horizontal,
                 alignment: WrapAlignment.start,
                 spacing: 4.0,
+                runSpacing: 4.0,
                 children: [
                   AntButton(
                     type: ButtonType.primary,
@@ -53,7 +54,7 @@ class _ButtonPageState extends State<ButtonPage> {
                   ),
                 ],
               ),
-              Row(spacing: 4, children: [
+              Wrap(spacing: 4, runSpacing: 4, children: [
                 AntButton(
                   text: 'Primary',
                   color: Color(0xff000000),
@@ -95,7 +96,7 @@ class _ButtonPageState extends State<ButtonPage> {
                   },
                 ),
               ]),
-              Row(spacing: 4, children: [
+              Wrap(spacing: 4, runSpacing: 4, children: [
                 AntButton(
                   text: 'Primary',
                   variant: ButtonVariant.solid,
@@ -137,7 +138,7 @@ class _ButtonPageState extends State<ButtonPage> {
                   },
                 ),
               ]),
-              Wrap(spacing: 4, children: [
+              Wrap(spacing: 4, runSpacing: 4, children: [
                 AntButton(
                   text: 'Primary',
                   variant: ButtonVariant.solid,
@@ -179,7 +180,7 @@ class _ButtonPageState extends State<ButtonPage> {
                   },
                 ),
               ]),
-              Wrap(spacing: 10, children: [
+              Wrap(spacing: 4, runSpacing: 4, children: [
                 AntButton(
                   text: 'Primary',
                   variant: ButtonVariant.solid,
@@ -222,7 +223,8 @@ class _ButtonPageState extends State<ButtonPage> {
                 ),
               ]),
               Wrap(
-                spacing: 10,
+                spacing: 4,
+                runSpacing: 4,
                 children: [
                   AntButton(
                     text: 'Large',
@@ -306,24 +308,22 @@ class _ButtonPageState extends State<ButtonPage> {
                   ),
                 ],
               ),
+              Wrap(spacing: 4, runSpacing: 4, children: [
+                AntButton(
+                  shape: ButtonShape.circle,
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    print('ElevatedButton');
+                  },
+                ),
+                AntButton(
+                  shape: ButtonShape.round,
+                  icon: Icon(Icons.add),
+                )
+              ]),
               Wrap(
-                spacing: 10,
-                children: [
-                  AntButton(
-                    shape: ButtonShape.circle,
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      print('ElevatedButton');
-                    },
-                  ),
-                  AntButton(
-                    shape: ButtonShape.round,
-                    icon: Icon(Icons.add),
-                  )
-                ]
-              ),
-              Wrap(
-                spacing: 10,
+                spacing: 4,
+                runSpacing: 4,
                 children: [
                   AntButton(
                     text: 'Middle',
@@ -380,7 +380,8 @@ class _ButtonPageState extends State<ButtonPage> {
                 ],
               ),
               Wrap(
-                spacing: 10,
+                spacing: 4,
+                runSpacing: 4,
                 direction: Axis.horizontal,
                 alignment: WrapAlignment.start,
                 children: [
@@ -411,7 +412,8 @@ class _ButtonPageState extends State<ButtonPage> {
                 ],
               ),
               Wrap(
-                spacing: 10,
+                spacing: 4,
+                runSpacing: 4,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   MaterialButton(

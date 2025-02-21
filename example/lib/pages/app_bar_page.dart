@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:trionesdev_antd/antd.dart';
+import 'package:trionesdev_antd_mobile/antd.dart';
 
 class AppBarPage extends StatefulWidget {
   const AppBarPage({super.key});

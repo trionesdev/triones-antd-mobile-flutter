@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:trionesdev_antd/antd.dart';
+import 'package:trionesdev_antd_mobile/antd.dart';
 
 class TabBarPage extends StatefulWidget {
   const TabBarPage({super.key});

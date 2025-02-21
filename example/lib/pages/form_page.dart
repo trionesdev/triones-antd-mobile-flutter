@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd/antd.dart' as antd;
+import 'package:trionesdev_antd_mobile/antd.dart' as antd;
 
 class FormPage extends StatefulWidget {
   const FormPage({super.key});

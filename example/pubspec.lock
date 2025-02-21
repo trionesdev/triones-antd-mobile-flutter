@@ -192,7 +192,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.3"
-  trionesdev_antd:
+  trionesdev_antd_mobile:
     dependency: "direct main"
     description:
       path: ".."

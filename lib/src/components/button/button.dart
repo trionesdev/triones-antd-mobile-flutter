@@ -2,7 +2,7 @@ library;
 
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
-import 'package:trionesdev_antd/antd.dart';
+import '../../../antd.dart';
 import '../theme/theme.dart';
 import 'antd_button_style.dart';
 

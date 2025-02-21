@@ -1,6 +1,7 @@
 
 import 'package:flutter/widgets.dart';
-import 'package:trionesdev_antd/src/components/theme/theme_data.dart';
+
+import '../../../antd.dart';
 
 class AntTheme extends StatelessWidget{
 

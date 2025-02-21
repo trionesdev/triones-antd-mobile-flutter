@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:trionesdev_antd/antd.dart';
+
+import '../../../antd.dart';
 
 typedef OnBack = void Function(BuildContext context);
 

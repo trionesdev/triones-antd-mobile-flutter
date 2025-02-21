@@ -3,10 +3,12 @@ import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
+import 'package:antd_flutter_example/pages/list_page.dart';
+import 'package:antd_flutter_example/pages/space_page.dart';
 import 'package:antd_flutter_example/pages/tab_bar_page.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
-import 'package:trionesdev_antd/antd.dart';
+import 'package:trionesdev_antd_mobile/antd.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +29,9 @@ class MyApp extends StatelessWidget {
         '/form': (context) => FormPage(),
         '/app-bar': (context) => AppBarPage(),
         '/grid': (context) => GridPage(),
-        '/tab-bar': (context) => TabBarPage()
+        '/tab-bar': (context) => TabBarPage(),
+        '/list': (context) => ListPage(),
+        '/space': (context) => SpacePage(),
       },
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -74,13 +78,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return material.Scaffold(
-      appBar: material.AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
+    return AntPageContainer(
+      appBar: AntAppBar(
         title: Text(widget.title),
       ),
       body: ListView(
@@ -120,13 +119,20 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: () {
               Navigator.pushNamed(context, '/tab-bar');
             },
+          ),
+          material.ListTile(
+            title: Text('List'),
+            onTap: () {
+              Navigator.pushNamed(context, '/list');
+            },
+          ),
+          material.ListTile(
+            title: Text('Space'),
+            onTap: () {
+              Navigator.pushNamed(context, '/space');
+            },
           )
         ],
-      ),
-      floatingActionButton: material.FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(material.Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
