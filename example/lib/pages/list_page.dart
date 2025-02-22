@@ -28,10 +28,13 @@ class _ListPageState extends State<ListPage>{
         dataSource: list,
         itemRender: (context,item, index){
           return AntListItem(
-            style: const StateStyle(
-              backgroundColor: Colors.red,
-              fontSize: 20,
-            ),
+            style: StateStyle(style: const Style(
+              borderBottom: StyleBorder(
+                color: Colors.black,
+                width: 1,
+                style: BorderStyle.solid
+              )
+            )),
             icon: const Icon(Icons.person),
             title: Text(item["name"]),
             extra: Icon(Icons.arrow_circle_right),

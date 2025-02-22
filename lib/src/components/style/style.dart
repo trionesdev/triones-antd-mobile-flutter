@@ -103,7 +103,7 @@ class Style with Diagnosticable {
   final double? borderRightWidth;
   final BorderStyle? borderRightStyle;
 
-  Style merge(Style? source) {
+  Style merge<T extends Style>(T? source) {
     if (source == null) {
       return this;
     }
@@ -114,6 +114,12 @@ class Style with Diagnosticable {
       width: source.width ?? width,
       backgroundColor: source.backgroundColor ?? backgroundColor,
       backgroundImage: source.backgroundImage ?? backgroundImage,
+      //padding
+      padding: source.padding?? padding,
+      paddingTop: source.paddingTop ?? paddingTop,
+      paddingBottom: source.paddingBottom ?? paddingBottom,
+      paddingLeft: source.paddingLeft ?? paddingLeft,
+      paddingRight: source.paddingRight ?? paddingRight,
       //border
       border: source.border ?? border,
       borderColor: source.borderColor ?? borderColor,
@@ -126,9 +132,9 @@ class Style with Diagnosticable {
       borderBottomWidth: source.borderBottomWidth ?? borderBottomWidth,
       borderBottomStyle: source.borderBottomStyle ?? borderBottomStyle,
       borderBottomLeftRadius:
-      source.borderBottomLeftRadius ?? borderBottomLeftRadius,
+          source.borderBottomLeftRadius ?? borderBottomLeftRadius,
       borderBottomRightRadius:
-      source.borderBottomRightRadius ?? borderBottomRightRadius,
+          source.borderBottomRightRadius ?? borderBottomRightRadius,
       // border top
       borderTop: source.borderTop ?? borderTop,
       borderTopColor: source.borderTopColor ?? borderTopColor,
@@ -147,7 +153,7 @@ class Style with Diagnosticable {
       borderRightWidth: source.borderRightWidth ?? borderRightWidth,
       borderRightStyle: source.borderRightStyle ?? borderRightStyle,
     );
-    return this;
+    return mergedStyle;
   }
 
   BoxDecoration get decoration {

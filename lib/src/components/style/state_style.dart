@@ -2,48 +2,11 @@ import 'package:flutter/widgets.dart';
 
 import 'style.dart';
 
-abstract class  StateStyle extends Style {
+class StateStyle {
   const StateStyle(
-      {super.height,
-      super.width,
-      super.color,
-      super.fontSize,
-      //background
-      super.backgroundColor,
-      super.backgroundImage,
-      //padding
-      super.padding,
-      super.paddingTop,
-      super.paddingBottom,
-      super.paddingLeft,
-      super.paddingRight,
-      //border
-      super.border,
-      super.borderColor,
-      super.borderWidth,
-      super.borderStyle,
-      super.borderRadius,
-      //border bottom
-      super.borderBottom,
-      super.borderBottomColor,
-      super.borderBottomWidth,
-      super.borderBottomStyle,
-      super.borderBottomLeftRadius,
-      super.borderBottomRightRadius,
-      //border top
-      super.borderTop,
-      super.borderTopColor,
-      super.borderTopWidth,
-      super.borderTopStyle,
-      super.borderTopLeftRadius,
-      super.borderTopRightRadius,
-      //border left
-      super.borderLeft,
-      super.borderLeftColor,
-      super.borderLeftWidth,
-      super.borderRightColor,
-      super.borderRightWidth,
+      {
 //state
+      this.style ,
       this.hovered,
       this.focused,
       this.pressed,
@@ -53,6 +16,7 @@ abstract class  StateStyle extends Style {
       this.disabled,
       this.error});
 
+  final Style? style;
   final Style? hovered;
   final Style? focused;
   final Style? pressed;
@@ -64,7 +28,7 @@ abstract class  StateStyle extends Style {
 
   Style? resolve(Set<WidgetState> states) {
     return WidgetStateProperty.resolveWith((states) {
-      Style? style = this;
+      Style? style = this.style ?? Style();
       if (states.contains(WidgetState.hovered)) {
         style = style.merge(hovered);
       }
@@ -79,5 +43,13 @@ abstract class  StateStyle extends Style {
       }
       return style;
     }).resolve(states);
+  }
+
+  StateStyle merge(StateStyle? source) {
+    if (source == null) {
+      return this;
+    }
+    return StateStyle(
+        style: (style ?? Style()).merge(source.style));
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:trionesdev_antd_mobile/antd.dart';
 
-import '../style/state_style.dart';
-import '../style/style_element.dart';
 
 typedef ListItemRenderCallback = Widget Function(
     BuildContext context, dynamic item, int index);
@@ -61,8 +60,9 @@ class AntListItem extends StatefulWidget {
 class _AntListItemState extends State<AntListItem> {
   @override
   Widget build(BuildContext context) {
-    _AntListItemStyle style = _AntListItemStyle();
-    style = style.merge(widget.style);
+
+    StateStyle style = _AntListItemStyle(context,widget);
+style = style.merge(widget.style);
 
     List<Widget> children = [];
     if (widget.icon != null) {
@@ -92,24 +92,21 @@ class _AntListItemState extends State<AntListItem> {
 }
 
 class _AntListItemStyle extends StateStyle {
-  const _AntListItemStyle();
+  const _AntListItemStyle(this.context, this.listItem);
+  final BuildContext context;
+  final AntListItem listItem;
+
 
   @override
-  Color? get backgroundColor {
-    return const Color(0xffffffff);
-  }
-
-  @override
-  double? get fontSize => 12;
-
-  @override
-  StylePadding? get padding => const StylePadding(
+  Style get style{
+    return Style(
+      padding: StylePadding(
         top: 8,
         bottom: 8,
-        left: 16,
-        right: 16,
-      );
-
-
+        left: 8,
+        right: 8,
+      )
+    );
+  }
 
 }

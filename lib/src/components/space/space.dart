@@ -33,7 +33,7 @@ class _AntSpaceState extends State<AntSpace> {
   @override
   Widget build(BuildContext context) {
     _AntSpaceStyle style = _AntSpaceStyle();
-    style.merge(widget.style);
+    // style.merge(widget.style);
 
     Widget child = widget.children != null
         ? widget.direction == SpaceDirection.vertical
