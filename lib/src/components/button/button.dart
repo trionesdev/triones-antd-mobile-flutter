@@ -4,7 +4,6 @@ import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import '../../../antd.dart';
 import '../theme/theme.dart';
-import 'antd_button_style.dart';
 
 enum ButtonType { primary, text, link }
 
@@ -49,17 +48,13 @@ class AntButton extends StatefulWidget {
   final ButtonVariant? variant;
   final ButtonShape shape;
   final ButtonSize size;
-  final AntdButtonStyle? style;
+  final StateStyle? style;
 
   @override
   State<AntButton> createState() => _ButtonState();
 }
 
 class _ButtonState extends State<AntButton> with material.MaterialStateMixin {
-  static AntdButtonStyle styleFrom() {
-    return AntdButtonStyle();
-  }
-
   double? get height {
     switch (widget.size) {
       case ButtonSize.large:
@@ -92,24 +87,52 @@ class _ButtonState extends State<AntButton> with material.MaterialStateMixin {
   Widget build(BuildContext context) {
     final AntThemeData theme = AntTheme.of(context);
 
-    AntdButtonStyle style = styleFrom();
+    StateStyle stateStyle = _AntButtonStyle(widget);
+    stateStyle = stateStyle.merge(widget.style);
 
-    style = style.merge(_AntdButtonStyle(context: context, button: widget));
-    style = style.merge(widget.style);
+    BorderSide? buttonBorderSide() {
+      if (widget.variant != null) {
+        if (widget.variant == ButtonVariant.outlined) {
+          return BorderSide(
+              color: stateStyle.resolve(materialStates)?.borderColor ??
+                  Color(0xFFd9d9d9),
+              width: 1);
+        }
+      } else {
+        if (widget.type == null) {
+          return BorderSide(
+              color: stateStyle.resolve(materialStates)?.borderColor ??
+                  Color(0xFFd9d9d9),
+              width: 1);
+        }
+      }
+      return null;
+      // return BorderSide.none;
+    }
 
-    return SizedBox(
+    ShapeBorder? shapeBorder() {
+      if (widget.shape == ButtonShape.circle && widget.text == null) {
+        return CircleBorder(side: buttonBorderSide() ?? BorderSide.none);
+      }
+      return RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+              stateStyle.resolve(materialStates)?.borderRadius ?? 6.0),
+          side: buttonBorderSide() ?? BorderSide.none);
+    }
+
+    return Container(
       width: width,
       height: height,
       child: material.MaterialButton(
           onPressed: () {
             widget.onPressed?.call();
           },
-          shape: style.shape?.resolve(const <WidgetState>{}),
+          shape: shapeBorder(),
           minWidth: 0,
           height: 0,
-          padding: style.padding?.resolve(const <WidgetState>{}),
+          padding: stateStyle.resolve(materialStates)?.computedPadding,
           //   padding: EdgeInsets.symmetric(horizontal: 0,vertical: 0),
-          color: style.backgroundColor?.resolve(const <WidgetState>{}),
+          color: stateStyle.resolve(materialStates)?.backgroundColor,
           child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -118,20 +141,57 @@ class _ButtonState extends State<AntButton> with material.MaterialStateMixin {
                 if (widget.text != null)
                   Text(
                     widget.text != null ? widget.text! : '',
-                    style: style.textStyle?.resolve(const <WidgetState>{}),
+                    style: TextStyle(
+                        color: stateStyle.resolve(materialStates)?.color,
+                        fontSize: stateStyle.resolve(materialStates)?.fontSize),
                   )
               ])),
     );
   }
 }
 
-class _AntdButtonStyle extends AntdButtonStyle {
-  const _AntdButtonStyle({required this.context, required this.button});
+class _AntButtonStyle extends StateStyle {
+  const _AntButtonStyle(this.button);
 
-  final BuildContext context;
   final AntButton button;
 
   bool get isIconButton => button.icon != null && button.text == null;
+
+  Color? get iconColor {
+    if ([ButtonType.primary].contains(button.type) ||
+        [ButtonVariant.solid].contains(button.variant)) {
+      return material.Colors.white;
+    }
+    return null;
+  }
+
+  Color? get buttonTextColor {
+    if (button.type == ButtonType.primary) {
+      return material.Colors.white;
+    }
+    if (button.variant == ButtonVariant.solid) {
+      return material.Colors.white;
+    }
+    if (button.color != null) {
+      return button.color;
+    }
+    return material.Colors.black;
+  }
+
+  StylePadding? get padding {
+    if (isIconButton) {
+      return StylePadding();
+    } else {
+      if (button.size == ButtonSize.small) {
+        return StylePadding(left: 12, right: 12);
+      } else if (button.size == ButtonSize.middle) {
+        return StylePadding(left: 18, right: 18);
+      } else if (button.size == ButtonSize.large) {
+        return StylePadding(left: 24, right: 24);
+      }
+    }
+    return null;
+  }
 
   Color? get buttonBackgroundColor {
     Color? result = material.Colors.transparent;
@@ -169,113 +229,53 @@ class _AntdButtonStyle extends AntdButtonStyle {
     return result;
   }
 
-  Color? get buttonTextColor {
-    if (button.type == ButtonType.primary) {
-      return material.Colors.white;
-    }
-    if (button.variant == ButtonVariant.solid) {
-      return material.Colors.white;
-    }
-    if (button.color != null) {
-      return button.color;
-    }
-    return material.Colors.black;
-  }
-
-  BorderRadius? get buttonBorderRadius {
-    if (button.shape == ButtonShape.circle) {
-      return BorderRadius.circular(180);
-    } else if (button.shape == ButtonShape.round) {
-      return BorderRadius.circular(6.0);
-    }
-    return null;
-  }
-
-  BorderSide? get buttonBorderSide {
-    if (button.variant != null) {
-      if (button.variant == ButtonVariant.outlined) {
-        return BorderSide(
-            color: buttonBorderColor ?? Color(0xFFd9d9d9), width: 1);
+  @override
+  Style? get style {
+    Color? backgroundColor() {
+      Color finalColor = buttonBackgroundColor ?? material.Colors.white;
+      if (button.variant == ButtonVariant.filled) {
+        return finalColor.withAlpha((255.0 * 0.08).round());
       }
-    } else {
-      if (button.type == null) {
-        return BorderSide(
-            color: buttonBorderColor ?? Color(0xFFd9d9d9), width: 1);
-      }
+      return finalColor;
     }
-    return null;
-    // return BorderSide.none;
+
+    return Style(
+        color: buttonTextColor ?? material.Colors.black,
+        backgroundColor: backgroundColor(),
+        padding: padding,
+        borderColor: buttonBorderColor,
+        borderRadius: button.shape == ButtonShape.circle ? 180 : 6);
   }
 
   @override
-  WidgetStateProperty<TextStyle>? get textStyle =>
-      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        return TextStyle(color: buttonTextColor ?? material.Colors.black);
-      });
+  Style? get hovered {
+    Color? backgroundColor() {
+      if ([ButtonVariant.filled, ButtonVariant.outlined, ButtonVariant.text]
+              .contains(button.variant) ||
+          [ButtonType.text].contains(button.type)) {
+        return material.Colors.white;
+      }
+      return buttonBackgroundColor;
+    }
+
+    return Style(
+      backgroundColor: backgroundColor(),
+    );
+  }
 
   @override
-  WidgetStateProperty<Color?>? get iconColor =>
-      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        if ([ButtonType.primary].contains(button.type) ||
-            [ButtonVariant.solid].contains(button.variant)) {
-          return material.Colors.white;
-        }
-        return null;
-      });
+  Style? get pressed {
+    Color? backgroundColor() {
+      if ([ButtonVariant.filled, ButtonVariant.outlined, ButtonVariant.text]
+          .contains(button.variant)) {
+        return material.Colors.white.withAlpha((255.0 * 0.1).round());
+        // return finalColor.withOpacity(0.1);
+      }
+      return buttonBackgroundColor;
+    }
 
-  @override
-  WidgetStateProperty<Color?>? get backgroundColor =>
-      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        Color finalColor = buttonBackgroundColor ?? material.Colors.white;
-        if (states.contains(WidgetState.hovered)) {
-          if ([ButtonVariant.filled, ButtonVariant.outlined, ButtonVariant.text]
-                  .contains(button.variant) ||
-              [ButtonType.text].contains(button.type)) {
-            return material.Colors.white;
-          }
-          return finalColor;
-        }
-        if (states.contains(WidgetState.pressed)) {
-          if ([ButtonVariant.filled, ButtonVariant.outlined, ButtonVariant.text]
-              .contains(button.variant)) {
-            return finalColor.withAlpha((255.0 * 0.1).round());
-            // return finalColor.withOpacity(0.1);
-          }
-          return finalColor;
-        }
-        if (button.variant == ButtonVariant.filled) {
-          // return finalColor.withOpacity(0.08);
-          return finalColor.withAlpha((255.0 * 0.08).round());
-          // return Color(0xffbae0ff);
-        }
-        return finalColor;
-      });
-
-  @override
-  WidgetStateProperty<EdgeInsets?>? get padding =>
-      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        if (isIconButton) {
-          return EdgeInsets.symmetric(horizontal: 0, vertical: 0);
-        } else {
-          if (button.size == ButtonSize.small) {
-            return EdgeInsets.symmetric(horizontal: 12);
-          } else if (button.size == ButtonSize.middle) {
-            return EdgeInsets.symmetric(horizontal: 18);
-          } else if (button.size == ButtonSize.large) {
-            return EdgeInsets.symmetric(horizontal: 24);
-          }
-        }
-        return null;
-      });
-
-  @override
-  WidgetStateProperty<OutlinedBorder?>? get shape =>
-      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        if (button.shape == ButtonShape.circle && button.text == null) {
-          return CircleBorder(side: buttonBorderSide ?? BorderSide.none);
-        }
-        return RoundedRectangleBorder(
-            borderRadius: buttonBorderRadius ?? BorderRadius.circular(6.0),
-            side: buttonBorderSide ?? BorderSide.none);
-      });
+    return Style(
+      backgroundColor: backgroundColor(),
+    );
+  }
 }
