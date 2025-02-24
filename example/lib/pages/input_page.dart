@@ -40,7 +40,18 @@ class _InputPageState extends State<InputPage> {
             ),
             type: InputType.password,
             placeholder: "请输入内容",
-          )
+            // height: 24,
+          ),
+                  AntInput(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                    ),
+                    type: InputType.password,
+                    placeholder: "请输入内容",
+                    suffix: Icon(Icons.add),
+                    // height: 24,
+                  ),
+                  TextField()
         ])));
   }
 }

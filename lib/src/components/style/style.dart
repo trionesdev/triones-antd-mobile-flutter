@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'style_element.dart';
 
@@ -115,7 +114,7 @@ class Style with Diagnosticable {
       backgroundColor: source.backgroundColor ?? backgroundColor,
       backgroundImage: source.backgroundImage ?? backgroundImage,
       //padding
-      padding: source.padding?? padding,
+      padding: source.padding ?? padding,
       paddingTop: source.paddingTop ?? paddingTop,
       paddingBottom: source.paddingBottom ?? paddingBottom,
       paddingLeft: source.paddingLeft ?? paddingLeft,
@@ -154,6 +153,16 @@ class Style with Diagnosticable {
       borderRightStyle: source.borderRightStyle ?? borderRightStyle,
     );
     return mergedStyle;
+  }
+
+  BorderRadius get computedBorderRadius {
+    return BorderRadius.only(
+      topLeft: Radius.circular(borderTopLeftRadius ?? borderRadius ?? 0),
+      topRight: Radius.circular(borderTopRightRadius ?? borderRadius ?? 0),
+      bottomLeft: Radius.circular(borderBottomLeftRadius ?? borderRadius ?? 0),
+      bottomRight:
+          Radius.circular(borderBottomRightRadius ?? borderRadius ?? 0),
+    );
   }
 
   BoxDecoration get decoration {
@@ -228,17 +237,10 @@ class Style with Diagnosticable {
                   border?.style ??
                   BorderStyle.none,
             )),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(borderTopLeftRadius ?? borderRadius ?? 0),
-          topRight: Radius.circular(borderTopRightRadius ?? borderRadius ?? 0),
-          bottomLeft:
-              Radius.circular(borderBottomLeftRadius ?? borderRadius ?? 0),
-          bottomRight:
-              Radius.circular(borderBottomRightRadius ?? borderRadius ?? 0),
-        ));
+        borderRadius: computedBorderRadius);
   }
 
-  EdgeInsetsGeometry get edgeInsets {
+  EdgeInsetsGeometry get computedPadding {
     double top = paddingTop ?? padding?.top ?? 0;
     double bottom = paddingBottom ?? padding?.bottom ?? 0;
     double left = paddingBottom ?? padding?.left ?? 0;

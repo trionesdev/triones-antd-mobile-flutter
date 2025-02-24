@@ -23,6 +23,9 @@ class AntThemeData with Diagnosticable {
       splashColor: material.Colors.transparent,
       highlightColor: material.Colors.transparent,
       shadowColor: material.Colors.transparent, //移除阴影效果
+      textTheme: material.TextTheme(
+
+      )
     );
   }
 

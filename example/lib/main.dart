@@ -4,6 +4,7 @@ import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
 import 'package:antd_flutter_example/pages/list_page.dart';
+import 'package:antd_flutter_example/pages/search_bar_page.dart';
 import 'package:antd_flutter_example/pages/space_page.dart';
 import 'package:antd_flutter_example/pages/tab_bar_page.dart';
 import 'package:flutter/material.dart' as material;
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         '/tab-bar': (context) => TabBarPage(),
         '/list': (context) => ListPage(),
         '/space': (context) => SpacePage(),
+        '/search-bar': (context) => SearchBarPage(),
       },
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -130,6 +132,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Space'),
             onTap: () {
               Navigator.pushNamed(context, '/space');
+            },
+          ),
+          material.ListTile(
+            title: Text('SearchBar'),
+            onTap: () {
+              Navigator.pushNamed(context, '/search-bar');
             },
           )
         ],

@@ -80,7 +80,7 @@ style = style.merge(widget.style);
       },
       child: Container(
         decoration: style.resolve(const <WidgetState>{})?.decoration,
-        padding: style.resolve(const <WidgetState>{})?.edgeInsets,
+        padding: style.resolve(const <WidgetState>{})?.computedPadding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           spacing: 2,
