@@ -19,7 +19,7 @@ class AntInput extends StatefulWidget {
     this.value,
     this.onChange,
     this.decoration,
-    this.height,
+    this.height = 32,
     this.style,
     this.onBlur,
     this.onFocus,
@@ -41,7 +41,7 @@ class AntInput extends StatefulWidget {
   State<StatefulWidget> createState() => _InputState();
 }
 
-class _InputState extends State<AntInput> {
+class _InputState extends State<AntInput> with MaterialStateMixin {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   bool passwordVisible = true;
@@ -61,6 +61,7 @@ class _InputState extends State<AntInput> {
     super.initState();
     _controller.text = widget.value ?? "";
     _focusNode.addListener(() {
+      setMaterialState(WidgetState.focused, _focusNode.hasFocus);
       if (_focusNode.hasFocus) {
         widget.onFocus?.call();
       } else {
@@ -81,10 +82,21 @@ class _InputState extends State<AntInput> {
     StateStyle style = _AntInputStyle();
     style = style.merge(widget.style);
 
+    double? iconSize() {
+      if (widget.height != null) {
+        double size = widget.height! * 7 / 10;
+        if (size <= 40) {
+          return size;
+        }
+      }
+      return null;
+    }
+
     Widget? suffixIcon;
     if (widget.type == InputType.password || widget.suffix != null) {
       suffixIcon = Row(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           if (widget.type == InputType.password)
             GestureDetector(
@@ -94,7 +106,9 @@ class _InputState extends State<AntInput> {
                 });
               },
               child: Icon(
-                  passwordVisible ? Icons.visibility_off : Icons.visibility),
+                passwordVisible ? Icons.visibility_off : Icons.visibility,
+                size: iconSize(),
+              ),
             ),
           if (widget.suffix != null) widget.suffix!,
         ],
@@ -103,16 +117,15 @@ class _InputState extends State<AntInput> {
 
     return Container(
       decoration:
-          widget.decoration ?? style.resolve(const <WidgetState>{})?.decoration,
+          widget.decoration ?? style.resolve(materialStates)?.decoration,
       height: widget.height,
-      padding: style.resolve(const <WidgetState>{})?.computedPadding,
+      padding: style.resolve(materialStates)?.computedPadding,
       child: TextField(
         controller: _controller,
         focusNode: _focusNode,
         obscureText: widget.type == InputType.password && passwordVisible,
         cursorColor: Colors.black,
-        style:
-            TextStyle(fontSize: style.resolve(const <WidgetState>{})?.fontSize),
+        style: TextStyle(fontSize: style.resolve(materialStates)?.fontSize),
         decoration: InputDecoration(
           prefixIcon: widget.prefix,
 
@@ -147,6 +160,7 @@ class _AntInputStyle extends StateStyle {
   Style get style {
     return Style(
       fontSize: 14,
+      borderRadius: 6,
       padding: StylePadding(left: 8, right: 8, top: 0, bottom: 0),
     );
   }

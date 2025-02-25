@@ -11,47 +11,40 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
+    return AntPageContainer(
+        appBar: AntAppBar(
           title: Text('Input'),
         ),
         body: Center(
-
-            child: Column(
-                spacing: 10,
-                children: [
+            child: Column(spacing: 10, children: [
           AntInput(
-            decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Colors.blue, // 边框颜色
-                    width: 2.0,         // 边框宽度
-                  ),
-                  top: BorderSide.none,
-                  left: BorderSide.none,
-                  right: BorderSide.none,
-                )
+            style: StateStyle(
+              style: Style(
+                  borderRadius: 0,
+                  borderBottom: StyleBorder(
+                      color: Colors.blue, width: 2, style: BorderStyle.solid)),
             ),
             placeholder: "请输入内容",
           ),
           AntInput(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
+            style: StateStyle(
+              style: Style(
+                  border: StyleBorder(
+                      color: Colors.black, width: 1, style: BorderStyle.solid)),
             ),
             type: InputType.password,
             placeholder: "请输入内容",
             // height: 24,
           ),
-                  AntInput(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                    ),
-                    type: InputType.password,
-                    placeholder: "请输入内容",
-                    suffix: Icon(Icons.add),
-                    // height: 24,
-                  ),
-                  TextField()
+          AntInput(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+            ),
+            placeholder: "请输入内容",
+            height: 48,
+            suffix: Icon(Icons.add),
+            // height: 24,
+          ),
         ])));
   }
 }

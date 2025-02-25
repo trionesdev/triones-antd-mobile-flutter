@@ -24,7 +24,8 @@ class AntSearchBar extends StatefulWidget {
       this.allowClear = true,
       this.onlyShowClearWhenFocus = true,
       this.clearOnCancel = true,
-      this.onCancel});
+      this.onCancel,
+      this.cancelText});
 
   final StateStyle? style;
   final BoxDecoration? decoration;
@@ -39,12 +40,13 @@ class AntSearchBar extends StatefulWidget {
   final double? height;
   final bool? onlyShowClearWhenFocus;
   final bool? clearOnCancel;
+  final String? cancelText;
 
   @override
   State<StatefulWidget> createState() => _SearchBarState();
 }
 
-class _SearchBarState extends State<AntSearchBar> {
+class _SearchBarState extends State<AntSearchBar> with MaterialStateMixin {
   String? _value;
   bool _focused = false;
 
@@ -82,13 +84,12 @@ class _SearchBarState extends State<AntSearchBar> {
     List<Widget> children = [
       Expanded(
           child: Container(
-        decoration: widget.decoration ??
-            style.resolve(const <WidgetState>{})?.decoration,
-        padding: style.resolve(const <WidgetState>{})?.computedPadding,
+        decoration:
+            widget.decoration ?? style.resolve(materialStates)?.decoration,
+        padding: style.resolve(materialStates)?.computedPadding,
         height: widget.height,
         child: ClipRRect(
-          borderRadius:
-              style.resolve(const <WidgetState>{})!.computedBorderRadius,
+          borderRadius: style.resolve(materialStates)!.computedBorderRadius,
           child: AntInput(
             value: _value,
             onChange: (value) {
@@ -120,7 +121,7 @@ class _SearchBarState extends State<AntSearchBar> {
         ((widget.onlyShowClearWhenFocus == true && _focused == true) ||
             (widget.onlyShowClearWhenFocus == false))) {
       children.add(AntButton(
-        text: '取消',
+        text: widget.cancelText ?? '取消',
         type: ButtonType.text,
         onPressed: () {
           if (widget.clearOnCancel == true) {
@@ -147,19 +148,26 @@ class _SearchBarStyle extends StateStyle {
   @override
   Style get style {
     return Style(
-      // padding: StylePadding(left: 8, right: 8, top: 8, bottom: 8),
-      border: StyleBorder(
-          color: Color(0xffD5D5D5), width: 1, style: BorderStyle.solid),
       borderRadius: 6,
     );
   }
 
+  @override
+  Style get focused {
+    return Style();
+  }
+
   StateStyle get inputStyle {
     return StateStyle(
-        style: Style(
-      backgroundColor: Color(0xffF5F5F5),
-      padding: StylePadding(left: 0, right: 0, top: 0, bottom: 0),
-      // borderRadius: 6
-    ));
+      style: Style(
+        backgroundColor: Color(0xffF5F5F5),
+        padding: StylePadding(left: 0, right: 0, top: 0, bottom: 0),
+        // borderRadius: 6
+      ),
+      focused: Style(
+        backgroundColor: Color(0xffFfffff),
+        // borderRadius: 6
+      ),
+    );
   }
 }

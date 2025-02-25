@@ -16,3 +16,4 @@ export 'src/components/card/card.dart';
 export 'src/components/list/list.dart';
 export 'src/components/space/space.dart';
 export 'src/components/search_bar/search_bar.dart';
+export 'src/components/tag/tag.dart';

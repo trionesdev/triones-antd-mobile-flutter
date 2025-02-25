@@ -50,6 +50,11 @@ class StateStyle {
       return this;
     }
     return StateStyle(
-        style: (style ?? Style()).merge(source.style));
+        style: (style ?? Style()).merge(source.style),
+        hovered: (hovered ?? Style()).merge(source.hovered),
+        focused: (focused ?? Style()).merge(source.focused),
+        pressed: (pressed ?? Style()).merge(source.pressed),
+        dragged: (dragged ?? Style()).merge(source.dragged),
+    );
   }
 }

@@ -7,6 +7,7 @@ import 'package:antd_flutter_example/pages/list_page.dart';
 import 'package:antd_flutter_example/pages/search_bar_page.dart';
 import 'package:antd_flutter_example/pages/space_page.dart';
 import 'package:antd_flutter_example/pages/tab_bar_page.dart';
+import 'package:antd_flutter_example/pages/tag_page.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
@@ -34,8 +35,9 @@ class MyApp extends StatelessWidget {
         '/list': (context) => ListPage(),
         '/space': (context) => SpacePage(),
         '/search-bar': (context) => SearchBarPage(),
+        '/tag': (context) => TagPage(),
       },
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
   }
 }
@@ -139,7 +141,13 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: () {
               Navigator.pushNamed(context, '/search-bar');
             },
-          )
+          ),
+          material.ListTile(
+            title: Text('Tag'),
+            onTap: () {
+              Navigator.pushNamed(context, '/tag');
+            },
+          ),
         ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
