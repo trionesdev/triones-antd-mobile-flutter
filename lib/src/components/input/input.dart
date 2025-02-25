@@ -50,8 +50,8 @@ class _InputState extends State<AntInput> {
   void didUpdateWidget(AntInput oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
-      if (widget.value != null && widget.value != _controller.text) {
-        _controller.text = widget.value!;
+      if (widget.value != _controller.text) {
+        _controller.text = widget.value ?? '';
       }
     }
   }
@@ -111,7 +111,8 @@ class _InputState extends State<AntInput> {
         focusNode: _focusNode,
         obscureText: widget.type == InputType.password && passwordVisible,
         cursorColor: Colors.black,
-        style: TextStyle(fontSize: style.resolve(const <WidgetState>{})?.fontSize),
+        style:
+            TextStyle(fontSize: style.resolve(const <WidgetState>{})?.fontSize),
         decoration: InputDecoration(
           prefixIcon: widget.prefix,
 

@@ -15,65 +15,128 @@ class AntSearchBar extends StatefulWidget {
       this.style,
       this.decoration,
       this.searchIcon,
-      this.showCancelButton = true,
+      this.showCancelButton = false,
       this.placeholder,
       this.value,
       this.onChange,
       this.styles,
-      this.height = 36});
+      this.height = 32,
+      this.allowClear = true,
+      this.onlyShowClearWhenFocus = true,
+      this.clearOnCancel = true,
+      this.onCancel});
 
   final StateStyle? style;
   final BoxDecoration? decoration;
   final Widget? searchIcon;
+  final bool? allowClear;
   final bool? showCancelButton;
   final String? placeholder;
   final String? value;
   final Function? onChange;
+  final Function? onCancel;
   final AntSearchBarStyles? styles;
   final double? height;
+  final bool? onlyShowClearWhenFocus;
+  final bool? clearOnCancel;
 
   @override
   State<StatefulWidget> createState() => _SearchBarState();
 }
 
 class _SearchBarState extends State<AntSearchBar> {
-  final TextEditingController _controller = TextEditingController();
+  String? _value;
+  bool _focused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.value;
+    _focused = false;
+  }
 
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    _value = null;
   }
 
   @override
   Widget build(BuildContext context) {
     StateStyle style = _SearchBarStyle();
     style = style.merge(widget.style);
-    return Container(
-      decoration:
-          widget.decoration ?? style.resolve(const <WidgetState>{})?.decoration,
-      padding: style.resolve(const <WidgetState>{})?.computedPadding,
-      height: widget.height,
-      child: Row(children: [
-        Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                    child: ClipRRect(
-                      borderRadius: style.resolve(const <WidgetState>{})!.computedBorderRadius,
-                      child: AntInput(
-                        value: widget.value,
-                        onChange: widget.onChange,
-                        placeholder: widget.placeholder,
-                        prefix: widget.searchIcon ??
-                            Icon(Icons.search, color: Color(0xffD5D5D5), size: 20),
-                        // height: 24,
-                        style: _SearchBarStyle().inputStyle.merge(widget.styles?.input),
-                      ),
-                    )),
-              ],
-            ))
-      ]),
+
+    Widget? cancelIcon;
+    if (_value != null && _value != '' && widget.allowClear == true) {
+      cancelIcon = GestureDetector(
+        child: Icon(Icons.cancel_rounded, color: Color(0xffCCCCCC), size: 20),
+        onTap: () {
+          setState(() {
+            _value = null;
+          });
+          widget.onChange?.call(null);
+        },
+      );
+    }
+
+    List<Widget> children = [
+      Expanded(
+          child: Container(
+        decoration: widget.decoration ??
+            style.resolve(const <WidgetState>{})?.decoration,
+        padding: style.resolve(const <WidgetState>{})?.computedPadding,
+        height: widget.height,
+        child: ClipRRect(
+          borderRadius:
+              style.resolve(const <WidgetState>{})!.computedBorderRadius,
+          child: AntInput(
+            value: _value,
+            onChange: (value) {
+              setState(() {
+                _value = value;
+              });
+              widget.onChange?.call(value);
+            },
+            placeholder: widget.placeholder,
+            prefix: widget.searchIcon ??
+                Icon(Icons.search, color: Color(0xffD5D5D5), size: 20),
+            suffix: cancelIcon,
+            onFocus: () {
+              setState(() {
+                _focused = true;
+              });
+            },
+            onBlur: () {
+              setState(() {
+                _focused = false;
+              });
+            },
+            style: _SearchBarStyle().inputStyle.merge(widget.styles?.input),
+          ),
+        ),
+      ))
+    ];
+    if (widget.showCancelButton == true &&
+        ((widget.onlyShowClearWhenFocus == true && _focused == true) ||
+            (widget.onlyShowClearWhenFocus == false))) {
+      children.add(AntButton(
+        text: '取消',
+        type: ButtonType.text,
+        onPressed: () {
+          if (widget.clearOnCancel == true) {
+            setState(() {
+              _value = null;
+            });
+            widget.onChange?.call(null);
+          }
+          widget.onCancel?.call();
+        },
+      ));
+    }
+
+    return Row(
+      spacing: 8,
+      children: children,
     );
   }
 }
@@ -96,7 +159,7 @@ class _SearchBarStyle extends StateStyle {
         style: Style(
       backgroundColor: Color(0xffF5F5F5),
       padding: StylePadding(left: 0, right: 0, top: 0, bottom: 0),
-          // borderRadius: 6
+      // borderRadius: 6
     ));
   }
 }
