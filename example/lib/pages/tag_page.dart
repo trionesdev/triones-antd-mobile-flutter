@@ -17,7 +17,7 @@ class _TagPageState extends State<TagPage> {
         appBar: AntAppBar(
           title: Text('Tag'),
         ),
-        body: Column(
+        body: ListView(
           children: [
             DemoBlock(
               title: "基础使用",

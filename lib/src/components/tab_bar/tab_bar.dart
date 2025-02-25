@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 typedef TabBarChangeCallback = void Function(String id);
 
 class AntTabBar extends StatefulWidget {
-  const AntTabBar({super.key,
-    this.padding,
-    this.height = 54,
-    this.items,
-    this.color = Colors.black,
-    this.activeColor = defaultActiveColor,
-    this.activeId,
-    this.defaultActiveId,
-    this.onChange, this.decoration});
+  const AntTabBar(
+      {super.key,
+      this.padding,
+      this.height = 54,
+      this.items,
+      this.color = Colors.black,
+      this.activeColor = defaultActiveColor,
+      this.activeId,
+      this.defaultActiveId,
+      this.onChange,
+      this.decoration});
 
   static const Color defaultActiveColor = Color(0xff1677FF);
   final BoxDecoration? decoration;
@@ -26,7 +28,7 @@ class AntTabBar extends StatefulWidget {
 
   static AntTabBarState? maybeOf(BuildContext context) {
     _AntTabBarScope? scope =
-    context.dependOnInheritedWidgetOfExactType<_AntTabBarScope>();
+        context.dependOnInheritedWidgetOfExactType<_AntTabBarScope>();
     return scope?._tabBarState;
   }
 
@@ -84,12 +86,12 @@ class AntTabBarState extends State<AntTabBar> {
   @override
   void initState() {
     super.initState();
-    _currentActiveId = (widget.activeId ?? widget.defaultActiveId)?? widget.items?.first.id;
+    _currentActiveId =
+        (widget.activeId ?? widget.defaultActiveId) ?? widget.items?.first.id;
   }
 
   @override
   void didUpdateWidget(AntTabBar oldWidget) {
-
     super.didUpdateWidget(oldWidget);
     if (oldWidget.activeId != widget.activeId) {
       setState(() {
@@ -106,7 +108,8 @@ class AntTabBarState extends State<AntTabBar> {
             generation: _generation,
             child: Container(
               decoration: widget.decoration,
-              child: BottomAppBar(
+              child: SafeArea(
+                  child: BottomAppBar(
                 color: Colors.transparent,
                 height: widget.height!,
                 padding: widget.padding ?? EdgeInsets.only(top: 4, bottom: 4),
@@ -114,15 +117,16 @@ class AntTabBarState extends State<AntTabBar> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: widget.items ?? [],
                 ),
-              ),
+              )),
             )));
   }
 }
 
 class _AntTabBarScope extends InheritedWidget {
-  const _AntTabBarScope({required super.child,
-    required int generation,
-    required AntTabBarState tabBarState})
+  const _AntTabBarScope(
+      {required super.child,
+      required int generation,
+      required AntTabBarState tabBarState})
       : _generation = generation,
         _tabBarState = tabBarState;
   final int _generation;
@@ -136,14 +140,16 @@ class _AntTabBarScope extends InheritedWidget {
 typedef TabBarItemTapCallback = void Function(String id);
 
 class AntTabBarItem extends StatefulWidget {
-  const AntTabBarItem({super.key,
-    required this.id,
-    this.child,
-    this.icon,
-    this.label,
-    this.onPressed,
-    this.color,
-    this.activeColor, this.stopPropagation});
+  const AntTabBarItem(
+      {super.key,
+      required this.id,
+      this.child,
+      this.icon,
+      this.label,
+      this.onPressed,
+      this.color,
+      this.activeColor,
+      this.stopPropagation});
 
   final String id;
   final Widget? child;

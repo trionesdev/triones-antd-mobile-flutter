@@ -100,13 +100,13 @@ class _AntAppBarState extends State<AntAppBar> {
       widgets.add(widget.child!);
     }
 
-    return Container(
+    return SafeArea(child: Container(
       decoration: widget.decoration,
       height: widget.preferredSize.height,
       child: Column(
         children: widgets,
       ),
-    );
+    ));
   }
 }
 
