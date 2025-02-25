@@ -90,6 +90,25 @@ class _TagPageState extends State<TagPage> {
                 ],
               ),
             ),
+            DemoBlock(
+              title: "自定义样式",
+              child: Wrap(
+                spacing: 10,
+                alignment: WrapAlignment.start,
+                children: [
+                  AntTag(
+                    style: StateStyle(
+                      style: Style(
+                          color: Colors.white,
+                          backgroundColor: Color(0xff6c2121),
+                          border: StyleBorder(),
+                          borderRadius: 0),
+                    ),
+                    child: Text("Tag1"),
+                  ),
+                ],
+              ),
+            ),
           ],
         ));
   }
