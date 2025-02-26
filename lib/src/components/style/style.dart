@@ -155,6 +155,8 @@ class Style with Diagnosticable {
     return mergedStyle;
   }
 
+
+
   BorderRadius get computedBorderRadius {
     return BorderRadius.only(
       topLeft: Radius.circular(borderTopLeftRadius ?? borderRadius ?? 0),
@@ -164,6 +166,8 @@ class Style with Diagnosticable {
           Radius.circular(borderBottomRightRadius ?? borderRadius ?? 0),
     );
   }
+
+
 
   BoxDecoration get decoration {
     return BoxDecoration(

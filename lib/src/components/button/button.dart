@@ -1,7 +1,6 @@
 library;
 
-import 'package:flutter/material.dart' as material;
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import '../../../antd.dart';
 import '../theme/theme.dart';
 
@@ -54,7 +53,7 @@ class AntButton extends StatefulWidget {
   State<AntButton> createState() => _ButtonState();
 }
 
-class _ButtonState extends State<AntButton> with material.MaterialStateMixin {
+class _ButtonState extends State<AntButton> with MaterialStateMixin {
   double? get height {
     switch (widget.size) {
       case ButtonSize.large:
@@ -89,21 +88,20 @@ class _ButtonState extends State<AntButton> with material.MaterialStateMixin {
 
     StateStyle stateStyle = _AntButtonStyle(widget);
     stateStyle = stateStyle.merge(widget.style);
+    Style? style = stateStyle.resolve(materialStates);
 
     BorderSide? buttonBorderSide() {
       if (widget.variant != null) {
         if (widget.variant == ButtonVariant.outlined) {
           return BorderSide(
-              color: stateStyle.resolve(materialStates)?.borderColor ??
-                  Color(0xFFd9d9d9),
-              width: 1);
+              color: style?.borderColor ?? Color(0xFFd9d9d9),
+              width: style?.borderWidth ?? 1);
         }
       } else {
         if (widget.type == null) {
           return BorderSide(
-              color: stateStyle.resolve(materialStates)?.borderColor ??
-                  Color(0xFFd9d9d9),
-              width: 1);
+              color: style?.borderColor ?? Color(0xFFd9d9d9),
+              width: style?.borderWidth ?? 1);
         }
       }
       return null;
@@ -123,16 +121,15 @@ class _ButtonState extends State<AntButton> with material.MaterialStateMixin {
     return Container(
       width: width,
       height: height,
-      child: material.MaterialButton(
+      child: MaterialButton(
           onPressed: () {
             widget.onPressed?.call();
           },
           shape: shapeBorder(),
           minWidth: 0,
           height: 0,
-          padding: stateStyle.resolve(materialStates)?.computedPadding,
-          //   padding: EdgeInsets.symmetric(horizontal: 0,vertical: 0),
-          color: stateStyle.resolve(materialStates)?.backgroundColor,
+          padding: style?.computedPadding,
+          color: style?.backgroundColor,
           child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -142,8 +139,7 @@ class _ButtonState extends State<AntButton> with material.MaterialStateMixin {
                   Text(
                     widget.text != null ? widget.text! : '',
                     style: TextStyle(
-                        color: stateStyle.resolve(materialStates)?.color,
-                        fontSize: stateStyle.resolve(materialStates)?.fontSize),
+                        color: style?.color, fontSize: style?.fontSize),
                   )
               ])),
     );
@@ -160,22 +156,22 @@ class _AntButtonStyle extends StateStyle {
   Color? get iconColor {
     if ([ButtonType.primary].contains(button.type) ||
         [ButtonVariant.solid].contains(button.variant)) {
-      return material.Colors.white;
+      return Colors.white;
     }
     return null;
   }
 
   Color? get buttonTextColor {
     if (button.type == ButtonType.primary) {
-      return material.Colors.white;
+      return Colors.white;
     }
     if (button.variant == ButtonVariant.solid) {
-      return material.Colors.white;
+      return Colors.white;
     }
     if (button.color != null) {
       return button.color;
     }
-    return material.Colors.black;
+    return Colors.black;
   }
 
   StylePadding? get padding {
@@ -194,7 +190,7 @@ class _AntButtonStyle extends StateStyle {
   }
 
   Color? get buttonBackgroundColor {
-    Color? result = material.Colors.transparent;
+    Color? result = Colors.transparent;
     if (button.type == ButtonType.primary) {
       result = Color(0xFF1777ff);
       if (button.color != null) {
@@ -232,7 +228,7 @@ class _AntButtonStyle extends StateStyle {
   @override
   Style? get style {
     Color? backgroundColor() {
-      Color finalColor = buttonBackgroundColor ?? material.Colors.white;
+      Color finalColor = buttonBackgroundColor ?? Colors.white;
       if (button.variant == ButtonVariant.filled) {
         return finalColor.withAlpha((255.0 * 0.08).round());
       }
@@ -240,7 +236,7 @@ class _AntButtonStyle extends StateStyle {
     }
 
     return Style(
-        color: buttonTextColor ?? material.Colors.black,
+        color: buttonTextColor ?? Colors.black,
         backgroundColor: backgroundColor(),
         padding: padding,
         borderColor: buttonBorderColor,
@@ -253,7 +249,7 @@ class _AntButtonStyle extends StateStyle {
       if ([ButtonVariant.filled, ButtonVariant.outlined, ButtonVariant.text]
               .contains(button.variant) ||
           [ButtonType.text].contains(button.type)) {
-        return material.Colors.white;
+        return Colors.white;
       }
       return buttonBackgroundColor;
     }
@@ -268,7 +264,7 @@ class _AntButtonStyle extends StateStyle {
     Color? backgroundColor() {
       if ([ButtonVariant.filled, ButtonVariant.outlined, ButtonVariant.text]
           .contains(button.variant)) {
-        return material.Colors.white.withAlpha((255.0 * 0.1).round());
+        return Colors.white.withAlpha((255.0 * 0.1).round());
         // return finalColor.withOpacity(0.1);
       }
       return buttonBackgroundColor;
