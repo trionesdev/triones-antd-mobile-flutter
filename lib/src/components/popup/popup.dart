@@ -7,6 +7,7 @@ class AntPopup {
   static void show({
     required BuildContext context,
     double? minHeight,
+    Widget? child
   }) {
     showModalBottomSheet(
         context: context,
@@ -26,45 +27,9 @@ class AntPopup {
                 minWidth: MediaQuery.of(context).size.width,
                 minHeight:
                     minHeight ?? MediaQuery.of(context).size.height * 0.4,
-                maxHeight: MediaQuery.of(context).size.height * 0.8,
+                maxHeight: MediaQuery.of(context).size.height * 0.4,
               ),
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey, width: 0.5),
-                      ),
-                    ),
-                    padding:
-                        EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            child: SizedBox(
-                              child: Text(
-                                "取消",
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            child: SizedBox(
-                              child: Text("确定",
-                                  style: TextStyle(color: Colors.blue)),
-                            ),
-                          ),
-                        ]),
-                  ),
-                  Expanded(
-                      child: Row(
-                    children: [
-AntPickerView()
-                    ],
-                  ))
-                ],
-              ));
+              child: child);
         });
   }
 }

@@ -18,3 +18,4 @@ export 'src/components/space/space.dart';
 export 'src/components/search_bar/search_bar.dart';
 export 'src/components/tag/tag.dart';
 export 'src/components/popup/popup.dart';
+export 'src/components/picker/picker.dart';
