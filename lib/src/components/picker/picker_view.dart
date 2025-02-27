@@ -21,50 +21,57 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
       return Stack(
         alignment: Alignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            child: Container(
-              height: 40,
-              width: MediaQuery.of(context).size.width - 32,
-              decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.all(Radius.circular(6))),
-            ),
-          ),
           Container(
             padding: const EdgeInsets.only(left: 32, right: 32),
             width: MediaQuery.of(context).size.width,
             // color: Colors.red,
-            child: Container(),
+            child: ListWheelScrollView(
+              itemExtent: 40,              // 条目固定高度
+              diameterRatio: 1.5,          // 滚轮直径比例
+              perspective: 0.003,          // 3D透视效果
+              physics: FixedExtentScrollPhysics(), // 物理效果
+              useMagnifier: true,          // 放大镜效果
+              magnification: 1.2,          // 放大系数
+              children: List.generate(50, (i) =>
+                  Text("sss")
+              ),
+            ),
           ),
-          Positioned(
-              top: 0,
-              child: IgnorePointer(
-                ignoring: true,
-                child: Container(
-                  height: (viewHeight - 36) / 2,
+          IgnorePointer(
+            ignoring: true,
+            child: Column(
+              children: [
+                Expanded(
+                    child: Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [Colors.white, Colors.white.withOpacity(0)])),
+                )),
+                Container(
+                  height: 36,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      // color: Colors.grey
+                      border: Border(
+                          top: BorderSide(color: Colors.grey, width: 0.5),
+                          bottom: BorderSide(color: Colors.grey, width: 0.5))),
+                  child: Text("ddd"),
                 ),
-              )),
-          Positioned(
-              bottom: 0,
-              child: IgnorePointer(
-                ignoring: true,
-                child: Container(
-                  height: (viewHeight - 36) / 2,
+                Expanded(
+                    child: Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
                           colors: [Colors.white, Colors.white.withOpacity(0)])),
-                ),
-              ))
+                ))
+              ],
+            ),
+          )
         ],
       );
     });
