@@ -20,7 +20,7 @@ class AntCascaderPicker {
     required BuildContext context,
     double? minHeight,
     double? maxHeight,
-    List<List<CascaderPickerOption>>? columns,
+    List<CascaderPickerOption>? options,
     List<String>? value,
     OnOk? onOk,
     OnCancel? onCancel,
@@ -28,7 +28,7 @@ class AntCascaderPicker {
     AntPopup.show(
         context: context,
         child: AntCascaderPickerView(
-          columns: columns,
+          options: options,
         ));
   }
 }

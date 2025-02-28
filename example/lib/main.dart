@@ -89,37 +89,39 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return material.Scaffold(
+      backgroundColor: material.Colors.white,
       appBar: material.AppBar(
+        backgroundColor: material.Colors.white,
         title: Text(widget.title),
       ),
       body: ListView(
         children: [
           material.ListTile(
-            title: Text('Button'),
+            title: Text('Button 按钮'),
             onTap: () {
               Navigator.pushNamed(context, '/button');
             },
           ),
           material.ListTile(
-            title: Text('Input'),
+            title: Text('Input 输入框'),
             onTap: () {
               Navigator.pushNamed(context, '/input');
             },
           ),
           material.ListTile(
-            title: Text('Form'),
+            title: Text('Form 表单'),
             onTap: () {
               Navigator.pushNamed(context, '/form');
             },
           ),
           material.ListTile(
-            title: Text('AppBar'),
+            title: Text('AppBar '),
             onTap: () {
               Navigator.pushNamed(context, '/app-bar');
             },
           ),
           material.ListTile(
-            title: Text('Grid'),
+            title: Text('Grid 栅格'),
             onTap: () {
               Navigator.pushNamed(context, '/grid');
             },
@@ -131,43 +133,43 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           material.ListTile(
-            title: Text('List'),
+            title: Text('List 列表'),
             onTap: () {
               Navigator.pushNamed(context, '/list');
             },
           ),
           material.ListTile(
-            title: Text('Space'),
+            title: Text('Space 间距'),
             onTap: () {
               Navigator.pushNamed(context, '/space');
             },
           ),
           material.ListTile(
-            title: Text('SearchBar'),
+            title: Text('SearchBar 搜索栏'),
             onTap: () {
               Navigator.pushNamed(context, '/search-bar');
             },
           ),
           material.ListTile(
-            title: Text('Tag'),
+            title: Text('Tag 标签'),
             onTap: () {
               Navigator.pushNamed(context, '/tag');
             },
           ),
           material.ListTile(
-            title: Text('Popup'),
+            title: Text('Popup 弹框'),
             onTap: () {
               Navigator.pushNamed(context, '/popup');
             },
           ),
           material.ListTile(
-            title: Text('Picker'),
+            title: Text('Picker 选择器'),
             onTap: () {
               Navigator.pushNamed(context, '/picker');
             },
           ),
           material.ListTile(
-            title: Text('CascasderPicker'),
+            title: Text('CascasderPicker 级联选择器'),
             onTap: () {
               Navigator.pushNamed(context, '/cascader-picker');
             },

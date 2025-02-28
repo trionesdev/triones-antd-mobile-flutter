@@ -9,21 +9,19 @@ class CascaderPickerPage extends StatefulWidget {
 }
 
 class _CascaderPickerPageState extends State<CascaderPickerPage> {
-  final List<List<CascaderPickerOption>> _columns = [
-    [
-      CascaderPickerOption(label: "江苏", value: "jaingsu", children: [
-        CascaderPickerOption(label: "泰州", value: "taizhou", children: [
-          CascaderPickerOption(label: "泰兴", value: "taixing"),
-          CascaderPickerOption(label: "靖江", value: "靖江"),
-        ]),
-        CascaderPickerOption(label: "苏州", value: "suzhou"),
-        CascaderPickerOption(label: "无锡", value: "wuxi"),
+  final List<CascaderPickerOption> _options =     [
+    CascaderPickerOption(label: "江苏", value: "jaingsu", children: [
+      CascaderPickerOption(label: "泰州", value: "taizhou", children: [
+        CascaderPickerOption(label: "泰兴", value: "taixing"),
+        CascaderPickerOption(label: "靖江", value: "靖江"),
       ]),
-      CascaderPickerOption(label: "山东", value: "shandong"),
-      CascaderPickerOption(label: "浙江", value: "zhejiang"),
-      CascaderPickerOption(label: "上海", value: "shanghai"),
-      CascaderPickerOption(label: "广东", value: "guangdong"),
-    ],
+      CascaderPickerOption(label: "苏州", value: "suzhou"),
+      CascaderPickerOption(label: "无锡", value: "wuxi"),
+    ]),
+    CascaderPickerOption(label: "山东", value: "shandong"),
+    CascaderPickerOption(label: "浙江", value: "zhejiang"),
+    CascaderPickerOption(label: "上海", value: "shanghai"),
+    CascaderPickerOption(label: "广东", value: "guangdong"),
   ];
 
   @override
@@ -34,7 +32,14 @@ class _CascaderPickerPageState extends State<CascaderPickerPage> {
       ),
       body: SingleChildScrollView(
         child: Column(
-            children: [AntButton(text: "CascaderPicker", onPressed: () {})]),
+            children: [AntButton(text: "CascaderPicker", onPressed: () {
+              AntCascaderPicker.show(
+                  context: context,
+                  options: _options,
+                  onOk: (value) {
+                    print(value);
+                  });
+            })]),
       ),
     );
   }
