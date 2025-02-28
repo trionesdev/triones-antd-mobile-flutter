@@ -19,3 +19,4 @@ export 'src/components/search_bar/search_bar.dart';
 export 'src/components/tag/tag.dart';
 export 'src/components/popup/popup.dart';
 export 'src/components/picker/picker.dart';
+export 'src/components/cascader_picker/cascader_picker.dart';

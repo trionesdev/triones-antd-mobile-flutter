@@ -1,5 +1,6 @@
 import 'package:antd_flutter_example/pages/app_bar_page.dart';
 import 'package:antd_flutter_example/pages/button_page.dart';
+import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/tag': (context) => TagPage(),
         '/popup': (context) => PopupPage(),
         '/picker': (context) => PickerPage(),
+        '/cascader-picker': (context) => CascaderPickerPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -162,6 +164,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Picker'),
             onTap: () {
               Navigator.pushNamed(context, '/picker');
+            },
+          ),
+          material.ListTile(
+            title: Text('CascasderPicker'),
+            onTap: () {
+              Navigator.pushNamed(context, '/cascader-picker');
             },
           ),
         ],

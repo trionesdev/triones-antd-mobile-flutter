@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:trionesdev_antd_mobile/src/components/picker/picker.dart';
+import './picker.dart';
+
+typedef OnOk = void Function(List<PickerOption?> value);
+typedef OnCancel = void Function();
 
 class AntPickerView extends StatefulWidget {
-  const AntPickerView({super.key, this.columns});
+  const AntPickerView(
+      {super.key,
+      this.columns,
+      this.onOk,
+      this.onCancel,
+      this.value,
+      this.title});
 
+  final Widget? title;
   final List<List<PickerOption>>? columns;
+  final List<String>? value;
+  final OnCancel? onCancel;
+  final OnOk? onOk;
 
   @override
   State<StatefulWidget> createState() => _AntPickerViewState();
@@ -13,19 +25,48 @@ class AntPickerView extends StatefulWidget {
 
 class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
   double viewHeight = 0;
-  List<PickerOption> _value = [];
+  List<PickerOption?> _value = [];
+
   @override
   void initState() {
     super.initState();
     setState(() {
-      _value = widget.columns?[0] ?? [];
+      _value = List.filled(widget.columns?.length ?? 0, null);
+      if (widget.value != null) {
+        for (int i = 0; i < (widget.columns?.length ?? 0); i++) {
+          if (widget.value?[i] != null) {
+            _value[i] = widget.columns?[i].firstWhere((option) {
+              return option.value == widget.value?[i];
+            });
+          } else {
+            _value[i] = widget.columns?[i].first;
+          }
+        }
+      } else {
+        for (int i = 0; i < (widget.columns?.length ?? 0); i++) {
+          _value[i] = widget.columns?[i].first;
+        }
+      }
+      print(_value);
     });
+  }
+
+  PickerOption? _getOptionByValue(int columnIndex) {
+    if (widget.columns != null && widget.value != null) {
+      if (widget.columns!.length > columnIndex &&
+          widget.value!.length > columnIndex) {
+        return widget.columns![columnIndex].firstWhere((option) {
+          return option.value == widget.value![columnIndex];
+        });
+      }
+    }
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     print(MediaQuery.of(context).size.height);
-
+    double _rowHight = 34;
 
     return Column(
       children: [
@@ -40,18 +81,25 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             GestureDetector(
               child: Container(
-                padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+                padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
                 child: Text(
                   "取消",
                   style: TextStyle(color: Color(0xFF1777ff)),
                 ),
               ),
+              onTap: () {
+                widget.onCancel?.call();
+              },
             ),
+            if (widget.title != null) Expanded(child: Center(child: widget.title!,)),
             GestureDetector(
               child: Container(
-                padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+                padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
                 child: Text("确定", style: TextStyle(color: Color(0xFF1777ff))),
               ),
+              onTap: () {
+                widget.onOk?.call(_value);
+              },
             ),
           ]),
         ),
@@ -67,31 +115,18 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
                 width: MediaQuery.of(context).size.width,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: (widget.columns ?? []).map((options) {
+                  children:
+                      (widget.columns ?? []).asMap().keys.map((columnIndex) {
                     return Expanded(
-                        child: ListWheelScrollView(
-                            itemExtent: 34,
-                            // 条目固定高度
-                            diameterRatio: 1.5,
-                            // 滚轮直径比例
-                            perspective: 0.003,
-                            // 3D透视效果
-                            physics: FixedExtentScrollPhysics(),
-                            // 物理效果
-                            useMagnifier: true,
-                            // 放大镜效果
-                            magnification: 1.2,
-                            // 放大系数
-                            onSelectedItemChanged: (index) {
-                              setState(() {
-
-                              });
-                            },
-                            children: (options ?? []).map((option) {
-                              return Center(
-                                child: Text(option?.label ?? ''),
-                              );
-                            }).toList()));
+                        child: AntPickerViewColumn(
+                      options: widget.columns?[columnIndex],
+                      onSelected: (option) {
+                        setState(() {
+                          _value[columnIndex] = option;
+                        });
+                      },
+                      value: _getOptionByValue(columnIndex),
+                    ));
                   }).toList(),
                 ),
               ),
@@ -108,11 +143,11 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
                               end: Alignment.bottomCenter,
                               colors: [
                             Colors.white,
-                            Colors.white.withOpacity(0)
+                            Colors.white.withAlpha(0)
                           ])),
                     )),
                     Container(
-                      height: 34,
+                      height: _rowHight,
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                           // color: Colors.grey
@@ -130,7 +165,7 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
                               end: Alignment.topCenter,
                               colors: [
                             Colors.white,
-                            Colors.white.withOpacity(0)
+                            Colors.white.withAlpha(0)
                           ])),
                     ))
                   ],
@@ -141,5 +176,75 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
         }))
       ],
     );
+  }
+}
+
+typedef OnSelected = void Function(PickerOption? option);
+
+class AntPickerViewColumn extends StatefulWidget {
+  const AntPickerViewColumn(
+      {super.key, this.options, this.onSelected, this.value});
+
+  final List<PickerOption>? options;
+  final OnSelected? onSelected;
+  final PickerOption? value;
+
+  @override
+  State<StatefulWidget> createState() => _AntPickerViewColumnState();
+}
+
+class _AntPickerViewColumnState extends State<AntPickerViewColumn> {
+  FixedExtentScrollController _controller =
+      FixedExtentScrollController(initialItem: 2);
+
+  @override
+  void initState() {
+    super.initState();
+    int initItemIndex = 0;
+    if (widget.value != null) {
+      initItemIndex = widget.options
+              ?.indexWhere((element) => element.value == widget.value?.value) ??
+          0;
+    }
+    _controller = FixedExtentScrollController(initialItem: initItemIndex);
+  }
+
+  @override
+  void didUpdateWidget(AntPickerViewColumn oldWidget) {
+    if (oldWidget.value != widget.value) {
+      if (widget.value != null) {
+        _controller.jumpToItem(widget.options?.indexWhere(
+                (element) => element.value == widget.value?.value) ??
+            0);
+      } else {
+        _controller.jumpToItem(0);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListWheelScrollView(
+        controller: _controller,
+        itemExtent: 34,
+        // 条目固定高度
+        diameterRatio: 1.5,
+        // 滚轮直径比例
+        perspective: 0.003,
+        // 3D透视效果
+        physics: FixedExtentScrollPhysics(),
+        // 物理效果
+        useMagnifier: true,
+        // 放大镜效果
+        magnification: 1.2,
+        // 放大系数
+        onSelectedItemChanged: (index) {
+          widget.onSelected?.call(widget.options?[index]);
+        },
+        children: (widget.options ?? []).map((option) {
+          return Center(
+            child: Text(option.label ?? ''),
+          );
+        }).toList());
   }
 }
