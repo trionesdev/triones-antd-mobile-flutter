@@ -20,6 +20,7 @@ class AntCascaderPicker {
     required BuildContext context,
     double? minHeight,
     double? maxHeight,
+    double? itemHeight = 34,
     List<CascaderPickerOption>? options,
     List<String>? value,
     OnOk? onOk,
@@ -28,7 +29,17 @@ class AntCascaderPicker {
     AntPopup.show(
         context: context,
         child: AntCascaderPickerView(
+          itemHeight: itemHeight,
           options: options,
+          value: value,
+          onOk: (value) {
+            Navigator.of(context).pop();
+            onOk?.call(value);
+          },
+          onCancel: () {
+            Navigator.of(context).pop();
+            onCancel?.call();
+          },
         ));
   }
 }

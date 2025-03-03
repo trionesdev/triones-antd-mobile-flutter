@@ -16,17 +16,27 @@ class _SearchBarPageState extends State<SearchBarPage> {
       appBar: AntAppBar(
         title: Text("SearchBar"),
       ),
-      body: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          spacing: 10,
-
-          children: [
-            AntSearchBar(),
-            AntSearchBar(placeholder: "请输入查询条件",),
-            AntSearchBar(placeholder: "请输入查询条件",showCancelButton: true,onlyShowClearWhenFocus: false,),
-            AntSearchBar(placeholder: "请输入查询条件",showCancelButton: true,),
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            spacing: 10,
+            children: [
+              AntSearchBar(),
+              AntSearchBar(
+                placeholder: "请输入查询条件",
+              ),
+              AntSearchBar(
+                placeholder: "请输入查询条件",
+                showCancelButton: true,
+                onlyShowClearWhenFocus: false,
+              ),
+              AntSearchBar(
+                placeholder: "请输入查询条件",
+                showCancelButton: true,
+              ),
+            ],
+          ),
         ),
       ),
     );

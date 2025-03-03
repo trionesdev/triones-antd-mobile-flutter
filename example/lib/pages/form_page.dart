@@ -1,5 +1,6 @@
+import 'package:antd_flutter_example/demo_block.dart';
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd_mobile/antd.dart' as antd;
+import 'package:trionesdev_antd_mobile/antd.dart'  ;
 
 class FormPage extends StatefulWidget {
   const FormPage({super.key});
@@ -9,107 +10,112 @@ class FormPage extends StatefulWidget {
 }
 
 class _FormPageState extends State<FormPage> {
-  final _formKey = GlobalKey<antd.AntFormState>();
-  final _formKey2 = GlobalKey<antd.AntFormState>();
+  final _formKey = GlobalKey< AntFormState>();
+  final _formKey2 = GlobalKey< AntFormState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AntPageContainer(
         backgroundColor: Colors.white,
-        appBar: AppBar(
+        appBar: AntAppBar(
           title: Text('Form'),
         ),
-        body: Column(
+        body: SingleChildScrollView(child: Column(
           children: [
-            antd.AntForm(
+            DemoBlock(title: "基本使用",child: AntForm(
               key: _formKey,
               children: [
-                antd.AntFormItem(
+                AntFormItem(
                     label: Text("年龄"),
-                    name: antd.NamePath('age'),
-                    builder: (antd.AntFormItemState<String> field) {
-                      return antd.AntInput(
+                    name: NamePath('age'),
+                    builder: (AntFormItemState<String> field) {
+                      return AntInput(
                         value: field.value.toString(),
                         onChange: field.didChange,
                       );
                     }),
-                antd.AntFormItem(
+                AntFormItem(
                     label: Text("年龄x"),
-                    name: antd.NamePath(['z', 'age']),
-                    builder: (antd.AntFormItemState<String> field) {
-                      return antd.AntInput(
+                    name: NamePath(['z', 'age']),
+                    builder: (AntFormItemState<String> field) {
+                      return AntInput(
                         value: field.value,
                         onChange: field.didChange,
                       );
                     }),
-                antd.AntFormItem(
-                    name: antd.NamePath(['username']),
+                AntFormItem(
+                    name: NamePath(['username']),
                     validator: (value) {
                       if (value == null) {
                         return '请输入用户名';
                       }
                       return null;
                     },
-                    builder: (antd.AntFormItemState<String> field) {
-                      return antd.AntInput(
+                    builder: (AntFormItemState<String> field) {
+                      return AntInput(
                         value: field.value,
                         onChange: field.didChange,
                         placeholder: '请输入用户名',
                         prefix: Icon(Icons.person),
                       );
                     }),
-                antd.AntFormItem(
-                    name: antd.NamePath(['password']),
-                    builder: (antd.AntFormItemState<String> field) {
-                      return antd.AntInput(
+                AntFormItem(
+                    name: NamePath(['password']),
+                    builder: (AntFormItemState<String> field) {
+                      return AntInput(
                         value: field.value,
                         onChange: field.didChange,
-                        type: antd.InputType.password,
+                        type: InputType.password,
                         placeholder: '请输入密码',
                         prefix: Icon(Icons.lock),
                       );
                     }),
-                antd.AntButton(
-                  text: "保存",
-                  block: true,
-                  onPressed: () => {
-                    _formKey.currentState
-                        ?.validateFields()
-                        .then((values) => {print(values)})
-                        .catchError((err) => {print(err)})
-                  },
-                ),
-                antd.AntButton(
-                  text: "赋值",
-                  block: true,
-                  onPressed: () => {
-                    _formKey.currentState?.setFieldsValue({
-                      "age": 1,
-                      "z": {"age": "1"}
-                    })
-                  },
+                Column(
+                  spacing: 10,
+                  children: [
+                    AntButton(
+                      text: "保存",
+                      block: true,
+                      onPressed: () => {
+                        _formKey.currentState
+                            ?.validateFields()
+                            .then((values) => {print(values)})
+                            .catchError((err) => {print(err)})
+                      },
+                    ),
+                    AntButton(
+                      text: "赋值",
+                      block: true,
+                      onPressed: () => {
+                        _formKey.currentState?.setFieldsValue({
+                          "age": 1,
+                          "z": {"age": "1"}
+                        })
+                      },
+                    )
+                  ],
                 )
               ],
-            ),
-            antd.AntForm(key: _formKey2,layout: antd.FormLayout.vertical, children: [
-              antd.AntFormItem(
-                label: Text("用户名"),
-                  name: antd.NamePath(['username']),
+            ),),
+            AntForm(key: _formKey2,layout: FormLayout.vertical, children: [
+              AntFormItem(
+                  label: Text("用户名"),
+                  name: NamePath(['username']),
                   validator: (value) {
                     if (value == null) {
                       return '请输入用户名';
                     }
                     return null;
                   },
-                  builder: (antd.AntFormItemState<String> field) {
-                    return antd.AntInput(
+                  builder: (AntFormItemState<String> field) {
+                    return AntInput(
                       value: field.value,
                       onChange: field.didChange,
                       placeholder: '请输入用户名',
                       prefix: Icon(Icons.person),
                     );
                   }),
-              antd.AntButton(
+              AntButton(
                 text: "保存",
                 block: true,
                 onPressed: () => {
@@ -121,6 +127,6 @@ class _FormPageState extends State<FormPage> {
               )
             ])
           ],
-        ));
+        ),));
   }
 }
