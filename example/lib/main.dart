@@ -1,5 +1,6 @@
 import 'package:antd_flutter_example/pages/app_bar_page.dart';
 import 'package:antd_flutter_example/pages/button_page.dart';
+import 'package:antd_flutter_example/pages/calendar_picker_page.dart';
 import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         '/popup': (context) => PopupPage(),
         '/picker': (context) => PickerPage(),
         '/cascader-picker': (context) => CascaderPickerPage(),
+        '/calendar-picker': (context) => CalendarPickerPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -172,6 +174,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('CascasderPicker 级联选择器'),
             onTap: () {
               Navigator.pushNamed(context, '/cascader-picker');
+            },
+          ),
+          material.ListTile(
+            title: Text('CalendarPicker 日历选择器'),
+            onTap: () {
+              Navigator.pushNamed(context, '/calendar-picker');
             },
           ),
         ],

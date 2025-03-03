@@ -322,6 +322,12 @@ class _AntCascaderPickerViewColumnState
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListView.builder(
         itemExtent: widget.itemHeight,

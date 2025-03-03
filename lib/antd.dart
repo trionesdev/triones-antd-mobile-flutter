@@ -20,3 +20,4 @@ export 'src/components/tag/tag.dart';
 export 'src/components/popup/popup.dart';
 export 'src/components/picker/picker.dart';
 export 'src/components/cascader_picker/cascader_picker.dart';
+export 'src/components/calendar_picker/calendar_picker.dart';

@@ -11,13 +11,15 @@ class AntPickerView extends StatefulWidget {
       this.onOk,
       this.onCancel,
       this.value,
-      this.title});
+      this.title,
+      this.itemHeight = 34});
 
   final Widget? title;
   final List<List<PickerOption>>? columns;
   final List<String>? value;
   final OnCancel? onCancel;
   final OnOk? onOk;
+  final double? itemHeight;
 
   @override
   State<StatefulWidget> createState() => _AntPickerViewState();
@@ -66,7 +68,6 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
   @override
   Widget build(BuildContext context) {
     print(MediaQuery.of(context).size.height);
-    double _rowHight = 34;
 
     return Column(
       children: [
@@ -91,7 +92,11 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
                 widget.onCancel?.call();
               },
             ),
-            if (widget.title != null) Expanded(child: Center(child: widget.title!,)),
+            if (widget.title != null)
+              Expanded(
+                  child: Center(
+                child: widget.title!,
+              )),
             GestureDetector(
               child: Container(
                 padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
@@ -119,6 +124,7 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
                       (widget.columns ?? []).asMap().keys.map((columnIndex) {
                     return Expanded(
                         child: AntPickerViewColumn(
+                      itemHeight: widget.itemHeight,
                       options: widget.columns?[columnIndex],
                       onSelected: (option) {
                         setState(() {
@@ -147,7 +153,7 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
                           ])),
                     )),
                     Container(
-                      height: _rowHight,
+                      height: widget.itemHeight,
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                           // color: Colors.grey
@@ -183,11 +189,16 @@ typedef OnSelected = void Function(PickerOption? option);
 
 class AntPickerViewColumn extends StatefulWidget {
   const AntPickerViewColumn(
-      {super.key, this.options, this.onSelected, this.value});
+      {super.key,
+      this.options,
+      this.onSelected,
+      this.value,
+      this.itemHeight = 34});
 
   final List<PickerOption>? options;
   final OnSelected? onSelected;
   final PickerOption? value;
+  final double? itemHeight;
 
   @override
   State<StatefulWidget> createState() => _AntPickerViewColumnState();
@@ -223,10 +234,16 @@ class _AntPickerViewColumnState extends State<AntPickerViewColumn> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListWheelScrollView(
         controller: _controller,
-        itemExtent: 34,
+        itemExtent: widget.itemHeight!,
         // 条目固定高度
         diameterRatio: 1.5,
         // 滚轮直径比例
