@@ -28,6 +28,25 @@ class _CalendarPickerPageState extends State<CalendarPickerPage> {
                     onPressed: () {
                       AntCalendarPicker.show(context: context);
                     },
+                  ),
+                  Container(
+                    height: 100,
+                    child: PageView(
+                      scrollDirection: Axis.vertical,
+                      onPageChanged: (index) {
+                        print(index);
+                      },
+                      children: [
+                        Container(
+                          height: 50,
+                          child: Text("1"),
+                        ),
+                        Container(
+                          height: 50,
+                          child: Text("2"),
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),
