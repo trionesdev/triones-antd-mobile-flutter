@@ -29,25 +29,19 @@ class _CalendarPickerPageState extends State<CalendarPickerPage> {
                       AntCalendarPicker.show(context: context);
                     },
                   ),
-                  Container(
-                    height: 100,
-                    child: PageView(
-                      scrollDirection: Axis.vertical,
-                      onPageChanged: (index) {
-                        print(index);
-                      },
-                      children: [
-                        Container(
-                          height: 50,
-                          child: Text("1"),
-                        ),
-                        Container(
-                          height: 50,
-                          child: Text("2"),
-                        )
-                      ],
-                    ),
-                  )
+                ],
+              ),
+            ),
+            DemoBlock(
+              title: "设置默认值",
+              child: Column(
+                children: [
+                  AntButton(
+                    text: "设置默认值",
+                    onPressed: () {
+                      AntCalendarPicker.show(context: context, value: DateTime.now());
+                    },
+                  ),
                 ],
               ),
             )

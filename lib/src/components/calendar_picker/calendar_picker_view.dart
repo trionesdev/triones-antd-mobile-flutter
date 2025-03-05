@@ -18,6 +18,12 @@ class _AntCalendarPickerViewState extends State<AntCalendarPickerView> {
   DateTime? _selectedDate;
 
   @override
+  void initState() {
+    super.initState();
+    _selectedDate = widget.value;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -45,7 +51,7 @@ class _AntCalendarPickerViewState extends State<AntCalendarPickerView> {
           ),
         ),
         AntCalendarView(
-          value: widget.value,
+          value: _selectedDate,
           onSelected: (date) {
             setState(() {
               _selectedDate = date;
@@ -102,6 +108,7 @@ class _AntCalendarViewState extends State<AntCalendarView> {
   @override
   void initState() {
     super.initState();
+    _selectedDate = widget.value;
     _currentMouth = widget.value ?? DateTime.now();
     _mouths = generateMouths(_currentMouth!);
     _controller = PageController(initialPage: 1);
@@ -146,6 +153,7 @@ class _AntCalendarViewState extends State<AntCalendarView> {
           itemCount: _mouths.length,
           itemBuilder: (context, index) {
             return SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
                 child: AntCalendarMouthView(
               month: _mouths[index],
               selectedDate: _selectedDate,
@@ -195,7 +203,7 @@ typedef OnMouthViewRendered = void Function(double? height);
 
 class _AntCalendarMouthViewState extends State<AntCalendarMouthView> {
   DateTime? _month;
-
+  double? _height;
   final _key = GlobalKey();
 
   List<DateTime> generateMonthDates(DateTime? date) {
@@ -253,9 +261,11 @@ class _AntCalendarMouthViewState extends State<AntCalendarMouthView> {
         return;
       }
       final RenderBox renderBox = renderObject as RenderBox;
-      final height = renderBox.size.height;
-      print('高度 $height');
-      widget.onRendered?.call(height);
+      if(_height != renderBox.size.height){
+        _height = renderBox.size.height;
+        print('高度 $_height');
+        widget.onRendered?.call(_height);
+      }
     });
 
     return Column(
