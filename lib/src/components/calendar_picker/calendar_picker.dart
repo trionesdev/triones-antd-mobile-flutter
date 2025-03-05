@@ -6,17 +6,17 @@ import 'calendar_picker_view.dart';
 class AntCalendarPicker {
   static void show({
     required BuildContext context,
-    double? minHeight,
-    double? maxHeight,
-
+    DateTime? value,
+    OnOk? onOk,
   }) {
     AntPopup.show(
         context: context,
-        minHeight: minHeight,
-        maxHeight: maxHeight,
         child: AntCalendarPickerView(
-
-        )
-    );
+          value: value,
+          onOk: (date) {
+            Navigator.of(context).pop();
+            onOk?.call(date);
+          },
+        ));
   }
 }

@@ -23,9 +23,8 @@ class AntPopup {
               constraints: BoxConstraints(
                 minWidth: MediaQuery.of(context).size.width,
                 minHeight:
-                    minHeight ?? MediaQuery.of(context).size.height * 0.4,
-                maxHeight:
-                    maxHeight ?? MediaQuery.of(context).size.height * 0.4,
+                    minHeight ?? MediaQuery.of(context).size.height * 0.3,
+                maxHeight: maxHeight ?? MediaQuery.of(context).size.height,
               ),
               child: child);
         });
