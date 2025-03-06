@@ -6,12 +6,14 @@ import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
 import 'package:antd_flutter_example/pages/list_page.dart';
+import 'package:antd_flutter_example/pages/modal_page.dart';
 import 'package:antd_flutter_example/pages/picker_page.dart';
 import 'package:antd_flutter_example/pages/popup_page.dart';
 import 'package:antd_flutter_example/pages/search_bar_page.dart';
 import 'package:antd_flutter_example/pages/space_page.dart';
 import 'package:antd_flutter_example/pages/tab_bar_page.dart';
 import 'package:antd_flutter_example/pages/tag_page.dart';
+import 'package:antd_flutter_example/pages/toast_page.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
@@ -44,6 +46,8 @@ class MyApp extends StatelessWidget {
         '/picker': (context) => PickerPage(),
         '/cascader-picker': (context) => CascaderPickerPage(),
         '/calendar-picker': (context) => CalendarPickerPage(),
+        '/modal': (context) => ModalPage(),
+        '/toast': (context) => ToastPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -180,6 +184,18 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('CalendarPicker 日历选择器'),
             onTap: () {
               Navigator.pushNamed(context, '/calendar-picker');
+            },
+          ),
+          material.ListTile(
+            title: Text('Modal 模态框'),
+            onTap: () {
+              Navigator.pushNamed(context, '/modal');
+            },
+          ),
+          material.ListTile(
+            title: Text('Toast 轻提示'),
+            onTap: () {
+              Navigator.pushNamed(context, '/toast');
             },
           ),
         ],
