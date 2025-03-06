@@ -25,3 +25,4 @@ export 'src/components/calendar_picker/calendar_picker.dart';
 export 'src/components/modal/modal.dart';
 export 'src/components/toast/toast.dart';
 export 'src/components/toast/toast_view.dart';
+export 'src/components/divider/divider.dart';

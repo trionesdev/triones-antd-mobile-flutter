@@ -2,6 +2,7 @@ import 'package:antd_flutter_example/pages/app_bar_page.dart';
 import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/calendar_picker_page.dart';
 import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
+import 'package:antd_flutter_example/pages/divider_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         '/calendar-picker': (context) => CalendarPickerPage(),
         '/modal': (context) => ModalPage(),
         '/toast': (context) => ToastPage(),
+        '/divider': (context) => DividerPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -196,6 +198,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Toast 轻提示'),
             onTap: () {
               Navigator.pushNamed(context, '/toast');
+            },
+          ),
+          material.ListTile(
+            title: Text('Divider 分割线'),
+            onTap: () {
+              Navigator.pushNamed(context, '/divider');
             },
           ),
         ],
