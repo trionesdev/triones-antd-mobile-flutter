@@ -10,21 +10,22 @@ class AntDivider extends StatefulWidget {
       {super.key,
       this.direction = DividerDirection.horizontal,
       this.child,
-      this.contentPosition = ContentPosition.center});
+      this.contentPosition = ContentPosition.center,
+      this.height,
+      this.color});
 
   final DividerDirection? direction;
   final ContentPosition? contentPosition;
   final Widget? child;
+  final double? height;
+  final Color? color;
 
   @override
   State<StatefulWidget> createState() => _AntDividerState();
 }
 
-
-
 class _AntDividerState extends State<AntDivider> {
-
-  int leftFlex(){
+  int leftFlex() {
     switch (widget.contentPosition) {
       case ContentPosition.left:
         return 1;
@@ -37,7 +38,7 @@ class _AntDividerState extends State<AntDivider> {
     }
   }
 
-  int rightFlex(){
+  int rightFlex() {
     switch (widget.contentPosition) {
       case ContentPosition.left:
         return 3;
@@ -54,35 +55,23 @@ class _AntDividerState extends State<AntDivider> {
   Widget build(BuildContext context) {
     return widget.direction == DividerDirection.horizontal
         ? (widget.child == null)
-            ? Divider(
-                thickness: 1,
-              )
+            ? Divider(color: widget.color)
             : Row(
                 children: [
                   Expanded(
-                    flex: leftFlex(),
-                      child: Container(
-
-                    child: Divider(
-                      thickness: 1,
-                      endIndent: 16,
-                    ),
-                  )),
+                      flex: leftFlex(),
+                      child: Divider(endIndent: 16, color: widget.color)),
                   widget.child!,
                   Expanded(
                       flex: rightFlex(),
-                      child: Container(
-
-                    child: Divider(
-                      thickness: 1,
-                      indent: 16,
-                    ),
-                  )),
+                      child: Divider(indent: 16, color: widget.color)),
                 ],
               )
-        : VerticalDivider(
-            thickness: 2,
-      color: Colors.black,
+        : SizedBox(
+            height: widget.height ?? 10,
+            child: VerticalDivider(
+              color: widget.color,
+            ),
           );
   }
 }

@@ -86,7 +86,7 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
   Widget build(BuildContext context) {
     final AntThemeData theme = AntTheme.of(context);
 
-    StateStyle stateStyle = _AntButtonStyle(widget);
+    StateStyle stateStyle = _AntButtonStyle(widget,context);
     stateStyle = stateStyle.merge(widget.style);
     Style? style = stateStyle.resolve(materialStates);
 
@@ -94,13 +94,13 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
       if (widget.variant != null) {
         if (widget.variant == ButtonVariant.outlined) {
           return BorderSide(
-              color: style?.borderColor ?? Color(0xFFd9d9d9),
+              color: style?.borderColor ?? theme.colorBorder,
               width: style?.borderWidth ?? 1);
         }
       } else {
         if (widget.type == null) {
           return BorderSide(
-              color: style?.borderColor ?? Color(0xFFd9d9d9),
+              color: style?.borderColor ?? theme.colorBorder,
               width: style?.borderWidth ?? 1);
         }
       }
@@ -147,8 +147,8 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
 }
 
 class _AntButtonStyle extends StateStyle {
-  const _AntButtonStyle(this.button);
-
+  const _AntButtonStyle(this.button, this.context);
+  final BuildContext context;
   final AntButton button;
 
   bool get isIconButton => button.icon != null && button.text == null;
@@ -190,9 +190,10 @@ class _AntButtonStyle extends StateStyle {
   }
 
   Color? get buttonBackgroundColor {
+    AntThemeData themeData = AntTheme.of(context);
     Color? result = Colors.transparent;
     if (button.type == ButtonType.primary) {
-      result = Color(0xFF1777ff);
+      result = themeData.colorPrimary;
       if (button.color != null) {
         result = button.color;
       }
@@ -209,15 +210,16 @@ class _AntButtonStyle extends StateStyle {
   }
 
   Color? get buttonBorderColor {
+    AntThemeData themeData = AntTheme.of(context);
     Color? result;
     if (button.variant == ButtonVariant.outlined) {
-      result = Color(0xFFd9d9d9);
+      result = themeData.colorBorder;
       if (button.color != null) {
         return button.color;
       }
     }
     if (button.type == null) {
-      result = Color(0xFFd9d9d9);
+      result = themeData.colorBorder;
       if (button.color != null) {
         return button.color;
       }

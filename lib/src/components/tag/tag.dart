@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
-enum AntTagType { success, processing, error, warning }
+import '../theme/theme.dart';
 
-Color defaultColor = Color(0xffD9D9D9);
+enum AntTagType { success, processing, error, warning }
 
 class AntTag extends StatefulWidget {
   const AntTag({
@@ -38,7 +38,8 @@ class AntTag extends StatefulWidget {
 class _AntTagState extends State<AntTag> with MaterialStateMixin {
   @override
   Widget build(BuildContext context) {
-    StateStyle style = _AntTagStyle(tag: widget);
+    AntThemeData themeData = AntTheme.of(context);
+    StateStyle style = _AntTagStyle(tag: widget, context: context);
     style = style.merge(widget.style);
 
     Widget? child = widget.child;
@@ -71,12 +72,12 @@ class _AntTagState extends State<AntTag> with MaterialStateMixin {
                   ? Icon(
                       widget.closeIcon!.icon,
                       size: widget.closeIcon!.size ?? 12,
-                      color: widget.closeIcon!.color ?? defaultColor,
+                      color: widget.closeIcon!.color ?? themeData.colorBorder,
                     )
                   : Icon(
                       Icons.close,
                       size: 12,
-                      color: defaultColor,
+                      color: themeData.colorBorder,
                     ),
             )
         ],
@@ -86,24 +87,26 @@ class _AntTagState extends State<AntTag> with MaterialStateMixin {
 }
 
 class _AntTagStyle extends StateStyle {
-  const _AntTagStyle({required this.tag});
+  const _AntTagStyle({required this.context, required this.tag});
 
+  final BuildContext context;
   final AntTag tag;
 
   Color? computedColor() {
+    AntThemeData themeData = AntTheme.of(context);
     if (tag.color != null) {
       return tag.color;
     }
     if (tag.type != null) {
       switch (tag.type) {
         case AntTagType.success:
-          return Colors.green;
+          return themeData.colorSuccess;
         case AntTagType.processing:
-          return Colors.blue;
+          return themeData.colorPrimary;
         case AntTagType.error:
-          return Colors.red;
+          return themeData.colorError;
         case AntTagType.warning:
-          return Colors.yellow;
+          return themeData.colorWarning;
         default:
           return null;
       }
@@ -123,6 +126,7 @@ class _AntTagStyle extends StateStyle {
   }
 
   Color? backgroundColor() {
+    AntThemeData themeData = AntTheme.of(context);
     Color? color = computedColor();
     if (tag.type != null) {
       return color?.withOpacity(0.25);
@@ -130,10 +134,11 @@ class _AntTagStyle extends StateStyle {
     if (color != null) {
       return color;
     }
-    return defaultColor.withOpacity(0.25);
+    return themeData.colorBorder.withOpacity(0.25);
   }
 
   StyleBorder? computedBorder() {
+    AntThemeData themeData = AntTheme.of(context);
     if (tag.bordered != true) {
       return null;
     }
@@ -144,7 +149,7 @@ class _AntTagStyle extends StateStyle {
     if (tag.type != null) {
       return StyleBorder(color: color, width: 1, style: BorderStyle.solid);
     }
-    return StyleBorder(color: defaultColor, width: 1, style: BorderStyle.solid);
+    return StyleBorder(color: themeData.colorBorder, width: 1, style: BorderStyle.solid);
   }
 
   @override

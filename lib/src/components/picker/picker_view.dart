@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trionesdev_antd_mobile/antd.dart';
+import '../theme/theme.dart';
 import './picker.dart';
 
 typedef OnOk = void Function(List<PickerOption?> value);
@@ -68,8 +70,9 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
   @override
   Widget build(BuildContext context) {
     print(MediaQuery.of(context).size.height);
-
+    AntThemeData theme = AntTheme.of(context);
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           decoration: BoxDecoration(
@@ -85,7 +88,7 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
                 padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
                 child: Text(
                   "取消",
-                  style: TextStyle(color: Color(0xFF1777ff)),
+                  style: TextStyle(color: theme.colorPrimary),
                 ),
               ),
               onTap: () {
@@ -100,7 +103,7 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
             GestureDetector(
               child: Container(
                 padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
-                child: Text("确定", style: TextStyle(color: Color(0xFF1777ff))),
+                child: Text("确定", style: TextStyle(color: theme.colorPrimary)),
               ),
               onTap: () {
                 widget.onOk?.call(_value);
@@ -110,7 +113,6 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
         ),
         Expanded(child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-          print(constraints.maxHeight);
           viewHeight = constraints.maxHeight;
           return Stack(
             alignment: Alignment.center,
@@ -139,6 +141,7 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
               IgnorePointer(
                 ignoring: true,
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Expanded(
                         child: Container(

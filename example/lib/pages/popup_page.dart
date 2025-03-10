@@ -17,8 +17,8 @@ class _PopupPageState extends State<PopupPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            AntButton(onPressed: () {
-              AntPopup.show(context: context);
+            AntButton(text: 'show',onPressed: () {
+              AntPopup.show(context: context,maxHeight: 400);
               // showDatePicker(context: context, firstDate: DateTime(2024), lastDate: DateTime(2025));
             },)
           ],

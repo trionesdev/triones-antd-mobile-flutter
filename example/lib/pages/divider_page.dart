@@ -30,7 +30,7 @@ class _DividerPageState extends State<DividerPage> {
               AntDivider(contentPosition: ContentPosition.right,child: Text("分割线"),),
             ]),),
             DemoBlock(title: "垂直分割线",child: Column(children: [
-              Row(children: [Text("link"), VerticalDivider(), Text("link")])
+              Row(children: [Text("link",), AntDivider(direction: DividerDirection.vertical,), Text("link")]),
             ]))
           ],
         ),

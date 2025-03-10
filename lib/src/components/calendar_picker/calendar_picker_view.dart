@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:trionesdev_antd_mobile/antd.dart';
+
+import '../theme/theme.dart';
 
 typedef OnSelectedDateCallback = void Function(DateTime? date);
 
@@ -25,6 +28,7 @@ class _AntCalendarPickerViewState extends State<AntCalendarPickerView> {
 
   @override
   Widget build(BuildContext context) {
+    AntThemeData themeData = AntTheme.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -41,7 +45,7 @@ class _AntCalendarPickerViewState extends State<AntCalendarPickerView> {
                   padding:
                       EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
                   child:
-                      Text("确定", style: TextStyle(color: Color(0xFF1777ff))),
+                      Text("确定", style: TextStyle(color: themeData.colorPrimary)),
                 ),
                 onTap: () {
                   widget.onOk?.call(_selectedDate);
@@ -342,13 +346,14 @@ class AntCalendarDateCellState extends State<AntCalendarDateCell> {
 
   @override
   Widget build(BuildContext context) {
+    AntThemeData themeData = AntTheme.of(context);
     return GestureDetector(
       onTap: () {
         widget.onSelected?.call(widget.date);
       },
       child: Container(
         decoration: BoxDecoration(
-          color: selected() ? Color(0xFF1777ff) : Colors.white,
+          color: selected() ? themeData.colorPrimary : Colors.white,
           borderRadius: BorderRadius.circular(6),
         ),
         child: Center(

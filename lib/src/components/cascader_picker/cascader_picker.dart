@@ -28,6 +28,8 @@ class AntCascaderPicker {
   }) {
     AntPopup.show(
         context: context,
+        minHeight: minHeight,
+        maxHeight: maxHeight,
         child: AntCascaderPickerView(
           itemHeight: itemHeight,
           options: options,

@@ -38,6 +38,8 @@ class _PickerPageState extends State<PickerPage> {
                       AntPicker.show(
                           context: context,
                           columns: _columns,
+                          title: Text("选择日期"),
+                          maxHeight: 400,
                           onOk: (value) {
                             print(value);
                           });
@@ -53,6 +55,7 @@ class _PickerPageState extends State<PickerPage> {
                       title: Text("选择日期"),
                       columns: _columns,
                       value: ["Fri", "pm"],
+                      maxHeight: 400,
                       onOk: (value) {
                         print(value);
                       });

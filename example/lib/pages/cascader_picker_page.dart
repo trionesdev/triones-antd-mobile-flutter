@@ -49,6 +49,7 @@ class _CascaderPickerPageState extends State<CascaderPickerPage> {
                   AntCascaderPicker.show(
                       context: context,
                       options: _options,
+                      maxHeight: 400,
                       onOk: (value) {
                         print(value);
                       });
@@ -63,6 +64,7 @@ class _CascaderPickerPageState extends State<CascaderPickerPage> {
                       context: context,
                       value: ["jiangsu","taizhou"],
                       options: _options,
+                      maxHeight: 400,
                       onOk: (value) {
                         print(value);
                       });
@@ -77,6 +79,7 @@ class _CascaderPickerPageState extends State<CascaderPickerPage> {
                       context: context,
                       value: ["hebei"],
                       options: _options,
+                      maxHeight: 400,
                       onOk: (value) {
                         print(value);
                       });

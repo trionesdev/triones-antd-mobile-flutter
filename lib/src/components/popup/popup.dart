@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:trionesdev_antd_mobile/antd.dart';
+
+import '../theme/theme.dart';
 
 class AntPopup {
   static void show(
@@ -12,12 +15,13 @@ class AntPopup {
         backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(),
         builder: (context) {
+          AntThemeData themeData = AntTheme.of(context);
           return Container(
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
+                  topLeft: Radius.circular(themeData.borderRadius),
+                  topRight: Radius.circular(themeData.borderRadius),
                 ),
               ),
               constraints: BoxConstraints(

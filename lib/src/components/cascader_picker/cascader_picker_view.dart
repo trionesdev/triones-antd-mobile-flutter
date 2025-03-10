@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:trionesdev_antd_mobile/antd.dart';
 
+import '../theme/theme.dart';
 import 'cascader_picker.dart';
 
 typedef OnOk = void Function(List<CascaderPickerOption?>? value);
@@ -135,12 +137,13 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
 
   @override
   Widget build(BuildContext context) {
+    AntThemeData themeData = AntTheme.of(context);
     return Column(
       children: [
         Container(
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: Colors.grey, width: 0.5),
+              bottom: BorderSide(color: themeData.colorBorder, width: 0.5),
             ),
           ),
           padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
@@ -151,7 +154,7 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
                 padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
                 child: Text(
                   "取消",
-                  style: TextStyle(color: Color(0xFF1777ff)),
+                  style: TextStyle(color: themeData.colorPrimary),
                 ),
               ),
               onTap: () {
@@ -166,7 +169,8 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
             GestureDetector(
               child: Container(
                 padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
-                child: Text("确定", style: TextStyle(color: Color(0xFF1777ff))),
+                child:
+                    Text("确定", style: TextStyle(color: themeData.colorPrimary)),
               ),
               onTap: () {
                 List<CascaderPickerOption?>? result = _columns.map((column) {
@@ -200,7 +204,7 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
                     border: (index == _activeIndex)
                         ? Border(
                             bottom:
-                                BorderSide(color: Color(0xFF1777ff), width: 1),
+                                BorderSide(color: themeData.colorPrimary, width: 1),
                           )
                         : null,
                   ),
@@ -210,7 +214,7 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
                     _columns[index].value?.label ?? '请选择',
                     style: TextStyle(
                         color:
-                            (index == _activeIndex) ? Color(0xFF1777ff) : null),
+                            (index == _activeIndex) ? themeData.colorPrimary : null),
                   ),
                 ),
               );
@@ -329,6 +333,7 @@ class _AntCascaderPickerViewColumnState
 
   @override
   Widget build(BuildContext context) {
+    AntThemeData themeData = AntTheme.of(context);
     return ListView.builder(
         itemExtent: widget.itemHeight,
         controller: _controller,
@@ -352,12 +357,12 @@ class _AntCascaderPickerViewColumnState
                       child: Text(
                     widget.options?[index].label ?? "",
                     style: TextStyle(
-                        color: selected(index) ? Color(0xFF1777ff) : null),
+                        color: selected(index) ? themeData.colorPrimary : null),
                   )),
                   if (selected(index))
                     Icon(
                       Icons.check,
-                      color: Color(0xFF1777ff),
+                      color: themeData.colorPrimary,
                     )
                 ],
               ),
