@@ -7,19 +7,51 @@ import 'package:flutter/material.dart' as material;
 
 class AntThemeData with Diagnosticable {
   factory AntThemeData(
-      {Color? colorPrimary,
+      {Color? colorTextBase,
+      Color? colorTextPlaceholder,
+      Color? colorBgBase,
+      Color? colorInfo,
+      Color? colorLink,
+      double? controlHeight,
+      double? borderRadiusLG,
+      double? borderRadiusOuter,
+      double? borderRadiusSM,
+      double? borderRadiusXS,
+      Color? colorPrimary,
       Color? colorSuccess,
       Color? colorWarning,
-        Color? colorError,
-        Color? colorBorder,
+      Color? colorError,
+      Color? colorBorder,
       double? borderRadius}) {
+    borderRadius ??= 6;
+    colorBgBase ??= Color(0xFFFFFFFF);
+    colorError ??= Color(0xffff4d4f);
+    colorInfo ??= Color(0xFF1890ff);
+    colorLink ??= Color(0xFF1677ff);
     colorPrimary ??= Color(0xFF1677FF);
     colorSuccess ??= Color(0xff52c41a);
     colorWarning ??= Color(0xfffaad14);
-    colorWarning ??= Color(0xffff4d4f);
+    colorTextBase ??= Color(0xff000000);
+    controlHeight ??= 32;
+    borderRadiusLG ??= 8;
+    borderRadiusOuter ??= 4;
+    borderRadiusSM ??= 4;
+    borderRadiusXS ??= 2;
+
     colorBorder ??= Color(0xffd9d9d9);
-    borderRadius ??= 6;
+    colorTextPlaceholder ??= Color.fromRGBO(0, 0, 0, 0.25);
+
     return AntThemeData.raw(
+      colorTextBase: colorTextBase,
+      colorTextPlaceholder: colorTextPlaceholder,
+      colorBgBase: colorBgBase,
+      colorInfo: colorInfo,
+      colorLink: colorLink,
+      controlHeight: controlHeight,
+      borderRadiusLG: borderRadiusLG,
+      borderRadiusOuter: borderRadiusOuter,
+      borderRadiusSM: borderRadiusSM,
+      borderRadiusXS: borderRadiusXS,
       colorPrimary: colorPrimary,
       colorSuccess: colorSuccess,
       colorWarning: colorWarning,
@@ -30,6 +62,16 @@ class AntThemeData with Diagnosticable {
   }
 
   const AntThemeData.raw({
+    required this.colorTextBase,
+    required this.colorTextPlaceholder,
+    required this.colorBgBase,
+    required this.colorInfo,
+    required this.colorLink,
+    required this.controlHeight,
+    required this.borderRadiusLG,
+    required this.borderRadiusOuter,
+    required this.borderRadiusSM,
+    required this.borderRadiusXS,
     required this.colorPrimary,
     required this.colorSuccess,
     required this.colorWarning,
@@ -38,12 +80,23 @@ class AntThemeData with Diagnosticable {
     required this.borderRadius,
   });
 
+  final double borderRadius;
+  final Color colorBgBase;
+  final Color colorError;
+  final Color colorInfo;
+  final Color colorLink;
   final Color colorPrimary;
   final Color colorSuccess;
+  final Color colorTextBase;
   final Color colorWarning;
-  final Color colorError;
+  final double controlHeight;
+
+  final double borderRadiusLG;
+  final double borderRadiusOuter;
+  final double borderRadiusSM;
+  final double borderRadiusXS;
   final Color colorBorder;
-  final double borderRadius;
+  final Color colorTextPlaceholder;
 
   factory AntThemeData.fallback() => AntThemeData(colorPrimary: null);
 

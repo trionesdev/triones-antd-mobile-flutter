@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'style_element.dart';
+import 'style_property.dart';
 
 @immutable
 class Style with Diagnosticable {
