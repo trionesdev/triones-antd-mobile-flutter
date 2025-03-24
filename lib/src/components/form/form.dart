@@ -4,11 +4,24 @@ import 'package:trionesdev_antd_mobile/antd.dart';
 
 enum FormLayout { horizontal, vertical }
 
+class Col {
+  const Col({this.flex, this.span});
+
+  final double? flex;
+  final int? span;
+}
+
 class AntForm extends StatefulWidget {
   const AntForm(
-      {super.key, this.layout = FormLayout.horizontal, required this.children});
+      {super.key,
+      this.layout = FormLayout.horizontal,
+      required this.children,
+      this.labelCol,
+      this.wrapperCol});
 
   final FormLayout? layout;
+  final Col? labelCol;
+  final Col? wrapperCol;
 
   final List<Widget> children;
 
@@ -34,6 +47,10 @@ class AntFormState extends State<AntForm> {
   final Set<AntFormItemState<dynamic>> _fields = <AntFormItemState<dynamic>>{};
 
   FormLayout? get layout => widget.layout;
+
+  Col? get labelCol => widget.labelCol;
+
+  Col? get wrapperCol => widget.wrapperCol;
 
   void _fieldDidChange() {
     _forceRebuild();
@@ -190,6 +207,8 @@ class AntFormItem<T> extends StatefulWidget {
   final FormLayout? layout;
   final NamePath? name;
   final Widget? label;
+  final Col? labelCol;
+  final Col? wrapperCol;
   final Widget? child;
   final FormItemBuilder<T> builder;
   final FormItemSetter<T>? onSaved;
@@ -211,7 +230,9 @@ class AntFormItem<T> extends StatefulWidget {
       required this.builder,
       this.onSaved,
       this.required,
-      this.style});
+      this.style,
+      this.labelCol,
+      this.wrapperCol});
 
   @override
   State<StatefulWidget> createState() => AntFormItemState<T>();
@@ -231,6 +252,22 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       return widget.layout;
     } else {
       return AntForm.maybeOf(context)?.layout;
+    }
+  }
+
+  Col? get labelCol {
+    if (widget.labelCol != null) {
+      return widget.labelCol;
+    } else {
+      return AntForm.maybeOf(context)?.labelCol;
+    }
+  }
+
+  Col? get wrapperCol {
+    if (widget.wrapperCol != null) {
+      return widget.wrapperCol;
+    } else {
+      return AntForm.maybeOf(context)?.wrapperCol;
     }
   }
 
@@ -294,6 +331,42 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     super.initState();
   }
 
+  Widget _labelCol(Widget fieldLabel) {
+    if (labelCol?.flex != null) {
+      return SizedBox(
+        width: labelCol!.flex,
+        child: fieldLabel,
+      );
+    } else if (labelCol?.span != null) {
+      return Expanded(flex: labelCol!.span!, child: fieldLabel);
+    } else if (wrapperCol?.flex != null) {
+      return Expanded(
+        child: fieldLabel,
+      );
+    } else if (wrapperCol?.span != null) {
+      return Expanded(flex: 24 - wrapperCol!.span!, child: fieldLabel);
+    } else {
+      return fieldLabel;
+    }
+  }
+
+  Widget _wrapperCol(Widget fieldInput) {
+    if (wrapperCol?.flex != null) {
+      return SizedBox(
+        width: wrapperCol!.flex,
+        child: fieldInput,
+      );
+    } else if (wrapperCol?.span != null) {
+      return Expanded(flex: wrapperCol!.span!, child: fieldInput);
+    } else if (labelCol?.flex != null) {
+      return Expanded(child: fieldInput);
+    } else if (labelCol?.span != null) {
+      return Expanded(flex: 24 - labelCol!.span!, child: fieldInput);
+    } else {
+      return Expanded(child: fieldInput);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     AntForm.maybeOf(context)?._register(this);
@@ -314,7 +387,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       Row fieldLabel = Row(
         children: fieldLabelChildren,
       );
-      fieldItemChildren.add(fieldLabel);
+      fieldItemChildren.add(_labelCol(fieldLabel));
     }
     if (widget.builder != null) {
       var child = widget.builder(this);
@@ -333,9 +406,8 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: filedInputChildren,
       );
-      Widget filedInput = layout == FormLayout.horizontal
-          ? Expanded(child: fieldItem)
-          : fieldItem;
+      Widget filedInput =
+          layout == FormLayout.horizontal ? _wrapperCol(fieldItem) : fieldItem;
       fieldItemChildren.add(filedInput);
     }
 
