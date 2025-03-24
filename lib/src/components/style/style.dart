@@ -13,6 +13,14 @@ class Style with Diagnosticable {
     // background
     this.backgroundColor,
     this.backgroundImage,
+
+    // margin
+    this.margin,
+    this.marginTop,
+    this.marginBottom,
+    this.marginLeft,
+    this.marginRight,
+
     // padding
     this.padding,
     this.paddingTop,
@@ -59,6 +67,13 @@ class Style with Diagnosticable {
   // background
   final Color? backgroundColor;
   final Color? backgroundImage;
+
+  // margin
+  final StyleMargin? margin;
+  final double? marginTop;
+  final double? marginBottom;
+  final double? marginLeft;
+  final double? marginRight;
 
   // padding
   final StylePadding? padding;
@@ -113,6 +128,14 @@ class Style with Diagnosticable {
       width: source.width ?? width,
       backgroundColor: source.backgroundColor ?? backgroundColor,
       backgroundImage: source.backgroundImage ?? backgroundImage,
+
+      //margin
+      margin: source.margin ?? margin,
+      marginTop: source.marginTop ?? marginTop,
+      marginBottom: source.marginBottom ?? marginBottom,
+      marginLeft: source.marginLeft ?? marginLeft,
+      marginRight: source.marginRight ?? marginRight,
+
       //padding
       padding: source.padding ?? padding,
       paddingTop: source.paddingTop ?? paddingTop,
@@ -244,11 +267,24 @@ class Style with Diagnosticable {
         borderRadius: computedBorderRadius);
   }
 
+  EdgeInsetsGeometry get computedMargin {
+    double top = marginTop ?? margin?.top ?? 0;
+    double bottom = marginBottom ?? margin?.bottom ?? 0;
+    double left = marginLeft ?? margin?.left ?? 0;
+    double right = marginRight ?? margin?.right ?? 0;
+    return EdgeInsets.only(
+      top: top,
+      bottom: bottom,
+      left: left,
+      right: right,
+    );
+  }
+
   EdgeInsetsGeometry get computedPadding {
     double top = paddingTop ?? padding?.top ?? 0;
     double bottom = paddingBottom ?? padding?.bottom ?? 0;
-    double left = paddingBottom ?? padding?.left ?? 0;
-    double right = paddingBottom ?? padding?.right ?? 0;
+    double left = paddingLeft ?? padding?.left ?? 0;
+    double right = paddingRight ?? padding?.right ?? 0;
     return EdgeInsets.only(
       top: top,
       bottom: bottom,

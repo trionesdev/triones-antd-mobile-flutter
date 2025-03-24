@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 
-class StylePadding {
-  const StylePadding({this.top, this.bottom, this.left, this.right});
+class StyleMargin {
+  const StyleMargin({this.top, this.bottom, this.left, this.right});
 
-  static StylePadding all(double value) {
-    return StylePadding(
+  static StyleMargin all(double value) {
+    return StyleMargin(
       top: value,
       bottom: value,
       left: value,
@@ -18,8 +18,17 @@ class StylePadding {
   final double? right;
 }
 
-class StyleMargin {
-  const StyleMargin({this.top, this.bottom, this.left, this.right});
+class StylePadding {
+  const StylePadding({this.top, this.bottom, this.left, this.right});
+
+  static StylePadding all(double value) {
+    return StylePadding(
+      top: value,
+      bottom: value,
+      left: value,
+      right: value,
+    );
+  }
 
   final double? top;
   final double? bottom;

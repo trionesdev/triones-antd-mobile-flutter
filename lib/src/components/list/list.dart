@@ -13,14 +13,14 @@ class AntList extends StatefulWidget {
       this.itemRender,
       this.children,
       this.style,
-      this.scrollController});
+      this.controller});
 
   final StateStyle? style;
   final List<Widget>? children;
   final Widget? separator;
   final List<dynamic>? dataSource;
   final ListItemRenderCallback? itemRender;
-  final ScrollController? scrollController;
+  final ScrollController? controller;
 
   @override
   State<StatefulWidget> createState() => _AntListState();
@@ -53,7 +53,7 @@ class _AntListState extends State<AntList> with MaterialStateMixin {
       decoration: stateStyle.resolve(materialStates)?.decoration,
       padding: stateStyle.resolve(materialStates)?.computedPadding,
       child: ListView(
-        controller: widget.scrollController,
+        controller: widget.controller,
         children: children,
 
       ),

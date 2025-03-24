@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
+import 'package:trionesdev_antd_mobile/antd.dart';
 
 enum FormLayout { horizontal, vertical }
 
@@ -196,6 +197,7 @@ class AntFormItem<T> extends StatefulWidget {
   final FormItemValidator<T>? validator;
   final String? restorationId;
   final bool? required;
+  final StateStyle? style;
 
   const AntFormItem(
       {super.key,
@@ -208,7 +210,8 @@ class AntFormItem<T> extends StatefulWidget {
       this.label,
       required this.builder,
       this.onSaved,
-      this.required});
+      this.required,
+      this.style});
 
   @override
   State<StatefulWidget> createState() => AntFormItemState<T>();
@@ -295,6 +298,9 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
   Widget build(BuildContext context) {
     AntForm.maybeOf(context)?._register(this);
 
+    StateStyle stateStyle = _AntFormItemStyle();
+    stateStyle = stateStyle.merge(widget.style);
+
     List<Widget> fieldItemChildren = [];
     if (widget.label != null) {
       List<Widget> fieldLabelChildren = [];
@@ -334,14 +340,16 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     }
 
     return Container(
-      margin: EdgeInsets.only(bottom: 8),
+      decoration: stateStyle.resolve(<WidgetState>{})?.decoration,
+      padding: stateStyle.resolve(<WidgetState>{})?.computedPadding,
+      margin: stateStyle.resolve(<WidgetState>{})?.computedMargin,
       child: layout == FormLayout.horizontal
           ? Row(
-        children: fieldItemChildren,
-      )
+              children: fieldItemChildren,
+            )
           : Column(
-        children: fieldItemChildren,
-      ),
+              children: fieldItemChildren,
+            ),
     );
     // return child;
   }
@@ -353,5 +361,14 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
   void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
     registerForRestoration(_errorText, 'error_text');
     // registerForRestoration(_hasInteractedByUser, 'has_interacted_by_user');
+  }
+}
+
+class _AntFormItemStyle extends StateStyle {
+  const _AntFormItemStyle();
+
+  @override
+  Style get style {
+    return Style(margin: StyleMargin(bottom: 8));
   }
 }
