@@ -407,7 +407,8 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       List<Widget> fieldLabelChildren = [];
       if (widget.required == true) {
         fieldLabelChildren.add(Container(
-          padding: EdgeInsets.only(right: 4),
+          width: 0,
+          transform: Matrix4.translationValues(-8.0, 0.0, 0.0),
           child: Text(
             "*",
             style: TextStyle(color: material.Colors.red),
@@ -415,11 +416,14 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
         ));
       }
       fieldLabelChildren.add(widget.label!);
-      Row fieldLabel = Row(
-        mainAxisAlignment: labelAlign == LabelAlign.left
-            ? MainAxisAlignment.start
-            : MainAxisAlignment.end,
-        children: fieldLabelChildren,
+      Widget fieldLabel = Container(
+        // padding: EdgeInsets.only(left: 8),
+        child: Row(
+          mainAxisAlignment: labelAlign == LabelAlign.left
+              ? MainAxisAlignment.start
+              : MainAxisAlignment.end,
+          children: fieldLabelChildren,
+        ),
       );
       fieldItemChildren.add(_labelCol(fieldLabel));
     }
@@ -428,7 +432,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       List<Widget> filedInputChildren = [child];
       if (errorText != null) {
         filedInputChildren.add(Container(
-          padding: EdgeInsets.only(left: 16, right: 16, top: 0),
+          // padding: EdgeInsets.only(left: 16, right: 16, top: 0),
           child: Text(
             errorText!,
             style: TextStyle(color: material.Colors.red),
@@ -480,6 +484,8 @@ class _AntFormItemStyle extends StateStyle {
 
   @override
   Style get style {
-    return Style(margin: StyleMargin(bottom: 8));
+    return Style(
+        padding: StylePadding(left: 8, right: 8),
+        margin: StyleMargin(bottom: 8));
   }
 }

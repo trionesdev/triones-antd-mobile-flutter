@@ -5,6 +5,7 @@ class AntTextArea extends StatefulWidget {
   const AntTextArea({
     super.key,
     this.placeholder,
+    this.minLines,
     this.maxLines,
     this.prefix,
     this.suffix,
@@ -18,6 +19,7 @@ class AntTextArea extends StatefulWidget {
   });
 
   final double? height;
+  final int? minLines;
   final int? maxLines;
   final String? placeholder;
   final Widget? prefix;
@@ -74,16 +76,13 @@ class _AntTextAreaState extends State<AntTextArea> with MaterialStateMixin {
     StateStyle style = _AntTextAreaStyle();
     style = style.merge(widget.style);
 
-
-
-
-
     return Container(
       decoration:
           widget.decoration ?? style.resolve(materialStates)?.decoration,
-      height: widget.height,
+      // height: widget.height,
       padding: style.resolve(materialStates)?.computedPadding,
       child: TextField(
+        minLines: widget.minLines,
         maxLines: widget.maxLines  ,
         controller: _controller,
         focusNode: _focusNode,

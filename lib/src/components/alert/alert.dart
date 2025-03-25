@@ -18,7 +18,7 @@ class AntAlert extends StatefulWidget {
       this.message,
       this.description,
       this.icon,
-      this.type,
+      this.type = AlertType.info,
       this.onClose,
       this.style,
       this.decoration,
