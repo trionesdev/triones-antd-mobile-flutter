@@ -12,6 +12,15 @@ class StyleMargin {
     );
   }
 
+  static StyleMargin symmetric({double? vertical, double? horizontal}) {
+    return StyleMargin(
+      top: vertical,
+      bottom: vertical,
+      left: horizontal,
+      right: horizontal,
+    );
+  }
+
   final double? top;
   final double? bottom;
   final double? left;
@@ -27,6 +36,15 @@ class StylePadding {
       bottom: value,
       left: value,
       right: value,
+    );
+  }
+
+  static StylePadding symmetric({double? vertical, double? horizontal}) {
+    return StylePadding(
+      top: vertical,
+      bottom: vertical,
+      left: horizontal,
+      right: horizontal,
     );
   }
 

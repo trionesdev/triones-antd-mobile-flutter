@@ -1,3 +1,4 @@
+import 'package:antd_flutter_example/pages/alert_page.dart';
 import 'package:antd_flutter_example/pages/app_bar_page.dart';
 import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/calendar_picker_page.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
         '/modal': (context) => ModalPage(),
         '/toast': (context) => ToastPage(),
         '/divider': (context) => DividerPage(),
+        '/alert': (context) => AlertPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -204,6 +206,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Divider 分割线'),
             onTap: () {
               Navigator.pushNamed(context, '/divider');
+            },
+          ),
+          material.ListTile(
+            title: Text('Alert 告警提示'),
+            onTap: () {
+              Navigator.pushNamed(context, '/alert');
             },
           ),
         ],

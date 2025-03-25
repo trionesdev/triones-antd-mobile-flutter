@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
-enum InputType {
-  text,
-  password,
-}
-
-typedef OnFocus = void Function();
-typedef OnBlur = void Function();
-
-class AntInput extends StatefulWidget {
-  const AntInput({
+class AntTextArea extends StatefulWidget {
+  const AntTextArea({
     super.key,
     this.placeholder,
-    this.type = InputType.text,
+    this.maxLines,
     this.prefix,
     this.suffix,
     this.value,
@@ -26,28 +18,28 @@ class AntInput extends StatefulWidget {
   });
 
   final double? height;
+  final int? maxLines;
   final String? placeholder;
-  final InputType? type;
   final Widget? prefix;
   final Widget? suffix;
   final String? value;
   final Function? onChange;
   final BoxDecoration? decoration;
   final StateStyle? style;
-  final OnBlur? onBlur;
-  final OnFocus? onFocus;
+  final Function? onBlur;
+  final Function? onFocus;
 
   @override
-  State<StatefulWidget> createState() => _InputState();
+  State<StatefulWidget> createState() => _AntTextAreaState();
 }
 
-class _InputState extends State<AntInput> with MaterialStateMixin {
+class _AntTextAreaState extends State<AntTextArea> with MaterialStateMixin {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   bool passwordVisible = true;
 
   @override
-  void didUpdateWidget(AntInput oldWidget) {
+  void didUpdateWidget(AntTextArea oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
       if (widget.value != _controller.text) {
@@ -79,41 +71,12 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    StateStyle style = _AntInputStyle();
+    StateStyle style = _AntTextAreaStyle();
     style = style.merge(widget.style);
 
-    double? iconSize() {
-      if (widget.height != null) {
-        double size = widget.height! * 7 / 10;
-        if (size <= 40) {
-          return size;
-        }
-      }
-      return null;
-    }
 
-    Widget? suffixIcon;
-    if (widget.type == InputType.password || widget.suffix != null) {
-      suffixIcon = Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          if (widget.type == InputType.password)
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  passwordVisible = !passwordVisible;
-                });
-              },
-              child: Icon(
-                passwordVisible ? Icons.visibility_off : Icons.visibility,
-                size: iconSize(),
-              ),
-            ),
-          if (widget.suffix != null) widget.suffix!,
-        ],
-      );
-    }
+
+
 
     return Container(
       decoration:
@@ -121,16 +84,13 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
       height: widget.height,
       padding: style.resolve(materialStates)?.computedPadding,
       child: TextField(
+        maxLines: widget.maxLines  ,
         controller: _controller,
         focusNode: _focusNode,
-        obscureText: widget.type == InputType.password && passwordVisible,
         cursorColor: Colors.black,
         style: TextStyle(fontSize: style.resolve(materialStates)?.fontSize),
         decoration: InputDecoration(
           prefixIcon: widget.prefix,
-
-          // 前缀图标
-          suffixIcon: suffixIcon,
           hintText: widget.placeholder,
           hintStyle: TextStyle(color: Colors.grey),
           // 提示文本
@@ -153,8 +113,8 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
   }
 }
 
-class _AntInputStyle extends StateStyle {
-  const _AntInputStyle();
+class _AntTextAreaStyle extends StateStyle {
+  const _AntTextAreaStyle();
 
   @override
   Style get style {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 import '../theme/theme.dart';
-import './picker.dart';
 
 typedef OnOk = void Function(List<PickerOption?> value);
 typedef OnCancel = void Function();

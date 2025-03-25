@@ -55,7 +55,7 @@ class AntThemeData with Diagnosticable {
       colorPrimary: colorPrimary,
       colorSuccess: colorSuccess,
       colorWarning: colorWarning,
-      colorError: colorWarning,
+      colorError: colorError,
       colorBorder: colorBorder,
       borderRadius: borderRadius,
     );

@@ -4,6 +4,8 @@ import 'package:trionesdev_antd_mobile/antd.dart';
 
 enum FormLayout { horizontal, vertical }
 
+enum LabelAlign { left, right }
+
 class Col {
   const Col({this.flex, this.span});
 
@@ -12,14 +14,23 @@ class Col {
 }
 
 class AntForm extends StatefulWidget {
-  const AntForm(
-      {super.key,
-      this.layout = FormLayout.horizontal,
-      required this.children,
-      this.labelCol,
-      this.wrapperCol});
+  const AntForm({
+    super.key,
+    this.spacing,
+    this.rowSpacing,
+    this.columnSpacing,
+    this.layout = FormLayout.horizontal,
+    required this.children,
+    this.labelCol,
+    this.wrapperCol,
+    this.labelAlign = LabelAlign.left,
+  });
 
+  final double? spacing;
+  final double? rowSpacing;
+  final double? columnSpacing;
   final FormLayout? layout;
+  final LabelAlign? labelAlign;
   final Col? labelCol;
   final Col? wrapperCol;
 
@@ -48,9 +59,15 @@ class AntFormState extends State<AntForm> {
 
   FormLayout? get layout => widget.layout;
 
+  double? get rowSpacing => widget.rowSpacing;
+
+  double? get columnSpacing => widget.columnSpacing;
+
   Col? get labelCol => widget.labelCol;
 
   Col? get wrapperCol => widget.wrapperCol;
+
+  LabelAlign? get labelAlign => widget.labelAlign;
 
   void _fieldDidChange() {
     _forceRebuild();
@@ -159,6 +176,7 @@ class AntFormState extends State<AntForm> {
             formState: this,
             generation: _generation,
             child: Column(
+              spacing: widget.spacing ?? 0,
               children: widget.children,
             )));
   }
@@ -209,6 +227,7 @@ class AntFormItem<T> extends StatefulWidget {
   final Widget? label;
   final Col? labelCol;
   final Col? wrapperCol;
+  final LabelAlign? labelAlign;
   final Widget? child;
   final FormItemBuilder<T> builder;
   final FormItemSetter<T>? onSaved;
@@ -232,7 +251,8 @@ class AntFormItem<T> extends StatefulWidget {
       this.required,
       this.style,
       this.labelCol,
-      this.wrapperCol});
+      this.wrapperCol,
+      this.labelAlign});
 
   @override
   State<StatefulWidget> createState() => AntFormItemState<T>();
@@ -268,6 +288,14 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       return widget.wrapperCol;
     } else {
       return AntForm.maybeOf(context)?.wrapperCol;
+    }
+  }
+
+  LabelAlign? get labelAlign {
+    if (widget.labelAlign != null) {
+      return widget.labelAlign;
+    } else {
+      return AntForm.maybeOf(context)?.labelAlign;
     }
   }
 
@@ -378,13 +406,19 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     if (widget.label != null) {
       List<Widget> fieldLabelChildren = [];
       if (widget.required == true) {
-        fieldLabelChildren.add(Text(
-          widget.required == true ? "*" : "",
-          style: TextStyle(color: material.Colors.red),
+        fieldLabelChildren.add(Container(
+          padding: EdgeInsets.only(right: 4),
+          child: Text(
+            "*",
+            style: TextStyle(color: material.Colors.red),
+          ),
         ));
       }
       fieldLabelChildren.add(widget.label!);
       Row fieldLabel = Row(
+        mainAxisAlignment: labelAlign == LabelAlign.left
+            ? MainAxisAlignment.start
+            : MainAxisAlignment.end,
         children: fieldLabelChildren,
       );
       fieldItemChildren.add(_labelCol(fieldLabel));
@@ -417,9 +451,14 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       margin: stateStyle.resolve(<WidgetState>{})?.computedMargin,
       child: layout == FormLayout.horizontal
           ? Row(
+              spacing: AntForm.maybeOf(context)?.rowSpacing ?? 8,
               children: fieldItemChildren,
             )
           : Column(
+              crossAxisAlignment: labelAlign == LabelAlign.left
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.end,
+              spacing: AntForm.maybeOf(context)?.columnSpacing ?? 8,
               children: fieldItemChildren,
             ),
     );
