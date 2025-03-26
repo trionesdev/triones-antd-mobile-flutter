@@ -23,6 +23,15 @@ class _SwitchPageState extends State<SwitchPage>{
                 AntSwitch(onChange: (bool value) {  },)
               ],
             ),
+            ),
+            DemoBlock(title: "三种大小",child: Column(
+              spacing: 10,
+              children: [
+                AntSwitch(size: SwitchSize.small,onChange: (bool value) {  },),
+                AntSwitch(size: SwitchSize.middle,onChange: (bool value) {  },),
+                AntSwitch(size: SwitchSize.large,onChange: (bool value) {  },),
+              ],
+            ),
             )
           ],
         ),
