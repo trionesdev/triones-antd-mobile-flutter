@@ -4,37 +4,55 @@ import 'package:trionesdev_antd_mobile/src/components/picker/picker_view_column.
 import 'package:trionesdev_antd_mobile/src/components/picker/types.dart';
 import '../theme/theme.dart';
 
-
-class AntPickerView extends StatefulWidget {
-  const AntPickerView(
+class AntPickerMultiView extends StatefulWidget {
+  const AntPickerMultiView(
       {super.key,
-      this.options,
+      this.columns,
       this.onOk,
       this.onCancel,
       this.value,
       this.title,
-      this.itemHeight = 34});
+      this.itemHeight = 34,
+      this.onColumnSelected});
 
   final Widget? title;
-  final List<PickerOption>? options;
+  final List<List<PickerOption>>? columns;
   final List<String>? value;
   final Function? onCancel;
   final ValueChanged<List<PickerOption?>>? onOk;
   final double? itemHeight;
+  final void Function(PickerOption? value, int index)? onColumnSelected;
 
   @override
-  State<StatefulWidget> createState() => _AntPickerViewState();
+  State<StatefulWidget> createState() => _AntPickerMultiViewState();
 }
 
-class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
+class _AntPickerMultiViewState extends State<AntPickerMultiView>
+    with MaterialStateMixin {
   double viewHeight = 0;
-  PickerOption? _value = null;
+  List<PickerOption?> _value = [];
 
   @override
   void initState() {
     super.initState();
     setState(() {
-
+      _value = List.filled(widget.columns?.length ?? 0, null);
+      if (widget.value != null) {
+        for (int i = 0; i < (widget.columns?.length ?? 0); i++) {
+          if (widget.value?[i] != null) {
+            _value[i] = widget.columns![i].firstWhere((option) {
+              return option.value == widget.value?[i];
+            });
+          } else {
+            _value[i] = widget.columns![i].first;
+          }
+        }
+      } else {
+        for (int i = 0; i < (widget.columns?.length ?? 0); i++) {
+          _value[i] = widget.columns![i].first;
+        }
+      }
+      print(_value);
     });
   }
 
@@ -103,17 +121,24 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
               Container(
                 padding: const EdgeInsets.only(left: 8, right: 8),
                 width: MediaQuery.of(context).size.width,
-                child: Expanded(
-                    child: AntPickerViewColumn(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children:
+                      (widget.columns ?? []).asMap().keys.map((columnIndex) {
+                    return Expanded(
+                        child: AntPickerViewColumn(
                       itemHeight: widget.itemHeight,
-                      options: widget.options,
+                      options: widget.columns![columnIndex],
                       onSelected: (option) {
                         setState(() {
-                          _value = option;
+                          _value[columnIndex] = option!;
+                          widget.onColumnSelected?.call(option, columnIndex);
                         });
                       },
                       value: _getOptionByValue(columnIndex),
-                    )),
+                    ));
+                  }).toList(),
+                ),
               ),
               IgnorePointer(
                 ignoring: true,
@@ -164,4 +189,3 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
     );
   }
 }
-
