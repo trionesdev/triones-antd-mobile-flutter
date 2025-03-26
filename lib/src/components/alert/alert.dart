@@ -79,6 +79,7 @@ class _AntAlertState extends State<AntAlert> with MaterialStateMixin {
                 child: Column(
                   children: [
                     Container(
+                      alignment: Alignment.centerLeft,
                       child: widget.message,
                     ),
                     if (widget.description != null)

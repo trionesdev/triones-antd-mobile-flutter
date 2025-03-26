@@ -5,7 +5,7 @@ class AntTextArea extends StatefulWidget {
   const AntTextArea({
     super.key,
     this.placeholder,
-    this.minLines,
+    this.minLines=2,
     this.maxLines,
     this.prefix,
     this.suffix,
