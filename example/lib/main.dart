@@ -13,6 +13,7 @@ import 'package:antd_flutter_example/pages/picker_page.dart';
 import 'package:antd_flutter_example/pages/popup_page.dart';
 import 'package:antd_flutter_example/pages/search_bar_page.dart';
 import 'package:antd_flutter_example/pages/space_page.dart';
+import 'package:antd_flutter_example/pages/switch_page.dart';
 import 'package:antd_flutter_example/pages/tab_bar_page.dart';
 import 'package:antd_flutter_example/pages/tag_page.dart';
 import 'package:antd_flutter_example/pages/toast_page.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
         '/toast': (context) => ToastPage(),
         '/divider': (context) => DividerPage(),
         '/alert': (context) => AlertPage(),
+        '/switch': (context) => SwitchPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -212,6 +214,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Alert 告警提示'),
             onTap: () {
               Navigator.pushNamed(context, '/alert');
+            },
+          ),
+          material.ListTile(
+            title: Text('Switch 开关'),
+            onTap: () {
+              Navigator.pushNamed(context, '/switch');
             },
           ),
         ],

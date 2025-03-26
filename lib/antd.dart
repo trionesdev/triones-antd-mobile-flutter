@@ -28,3 +28,4 @@ export 'src/components/toast/toast.dart';
 export 'src/components/toast/toast_view.dart';
 export 'src/components/divider/divider.dart';
 export 'src/components/alert/alert.dart';
+export 'src/components/switch/switch.dart';
