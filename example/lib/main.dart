@@ -1,5 +1,6 @@
 import 'package:antd_flutter_example/pages/alert_page.dart';
 import 'package:antd_flutter_example/pages/app_bar_page.dart';
+import 'package:antd_flutter_example/pages/badge_page.dart';
 import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/calendar_picker_page.dart';
 import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         '/alert': (context) => AlertPage(),
         '/switch': (context) => SwitchPage(),
         '/mask': (context) => MaskPage(),
+        '/badge': (context) => BadgePage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -228,6 +230,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Mask 背景蒙层'),
             onTap: () {
               Navigator.pushNamed(context, '/mask');
+            },
+          ),
+          material.ListTile(
+            title: Text('Badge 徽标'),
+            onTap: () {
+              Navigator.pushNamed(context, '/badge');
             },
           ),
         ],
