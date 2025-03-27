@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 import 'package:trionesdev_antd_mobile/src/components/picker/picker_view_column.dart';
-import 'package:trionesdev_antd_mobile/src/components/picker/types.dart';
 import '../theme/theme.dart';
-
 
 class AntPickerView extends StatefulWidget {
   const AntPickerView(
@@ -17,9 +15,9 @@ class AntPickerView extends StatefulWidget {
 
   final Widget? title;
   final List<PickerOption>? options;
-  final List<String>? value;
+  final String? value;
   final Function? onCancel;
-  final ValueChanged<List<PickerOption?>>? onOk;
+  final ValueChanged<PickerOption?>? onOk;
   final double? itemHeight;
 
   @override
@@ -33,19 +31,14 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
   @override
   void initState() {
     super.initState();
-    setState(() {
-
-    });
+    setState(() {});
   }
 
-  PickerOption? _getOptionByValue(int columnIndex) {
-    if (widget.columns != null && widget.value != null) {
-      if (widget.columns!.length > columnIndex &&
-          widget.value!.length > columnIndex) {
-        return widget.columns![columnIndex].firstWhere((option) {
-          return option.value == widget.value![columnIndex];
-        });
-      }
+  PickerOption? _getOptionByValue() {
+    if (widget.options != null && widget.value != null) {
+      return widget.options?.firstWhere((option) {
+        return option.value == widget.value;
+      });
     }
     return null;
   }
@@ -69,10 +62,7 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
             GestureDetector(
               child: Container(
                 padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
-                child: Text(
-                  "取消",
-                  style: TextStyle(color: theme.colorPrimary),
-                ),
+                child: Text("取消"),
               ),
               onTap: () {
                 widget.onCancel?.call();
@@ -103,17 +93,16 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
               Container(
                 padding: const EdgeInsets.only(left: 8, right: 8),
                 width: MediaQuery.of(context).size.width,
-                child: Expanded(
-                    child: AntPickerViewColumn(
-                      itemHeight: widget.itemHeight,
-                      options: widget.options,
-                      onSelected: (option) {
-                        setState(() {
-                          _value = option;
-                        });
-                      },
-                      value: _getOptionByValue(columnIndex),
-                    )),
+                child: AntPickerViewColumn(
+                  itemHeight: widget.itemHeight,
+                  options: widget.options,
+                  onSelected: (option) {
+                    setState(() {
+                      _value = option;
+                    });
+                  },
+                  value: _getOptionByValue(),
+                ),
               ),
               IgnorePointer(
                 ignoring: true,
@@ -164,4 +153,3 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
     );
   }
 }
-

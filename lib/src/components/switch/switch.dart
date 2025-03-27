@@ -92,10 +92,8 @@ class _AntSwitchState extends State<AntSwitch>
       onTap: () {
         setState(() {
           _checked = !_checked;
-          if (widget.onChange != null) {
-            widget.onChange!(_checked);
-          }
         });
+        widget.onChange?.call(_checked);
         _animationController.animateTo(_checked ? 1 : 0);
       },
       child: AnimatedContainer(

@@ -8,6 +8,7 @@ import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
 import 'package:antd_flutter_example/pages/list_page.dart';
+import 'package:antd_flutter_example/pages/mask_page.dart';
 import 'package:antd_flutter_example/pages/modal_page.dart';
 import 'package:antd_flutter_example/pages/picker_page.dart';
 import 'package:antd_flutter_example/pages/popup_page.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         '/divider': (context) => DividerPage(),
         '/alert': (context) => AlertPage(),
         '/switch': (context) => SwitchPage(),
+        '/mask': (context) => MaskPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -220,6 +222,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Switch 开关'),
             onTap: () {
               Navigator.pushNamed(context, '/switch');
+            },
+          ),
+          material.ListTile(
+            title: Text('Mask 背景蒙层'),
+            onTap: () {
+              Navigator.pushNamed(context, '/mask');
             },
           ),
         ],

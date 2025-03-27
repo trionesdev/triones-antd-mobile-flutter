@@ -89,7 +89,6 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
                 padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
                 child: Text(
                   "取消",
-                  style: TextStyle(color: theme.colorPrimary),
                 ),
               ),
               onTap: () {

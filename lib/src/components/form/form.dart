@@ -153,7 +153,7 @@ class AntFormState extends State<AntForm> {
         List<dynamic> paths = field.name!.value;
         for (int i = 0; i < paths.length; i++) {
           if (i < paths.length - 1) {
-            fieldValues[paths[i]] = {};
+            fieldValues[paths[i]] ??= {};
             fieldValues = fieldValues[paths[i]];
           } else {
             fieldValues[paths[i]] = field.value;
