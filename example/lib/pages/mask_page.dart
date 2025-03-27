@@ -32,14 +32,11 @@ class _MaskPageState extends State<MaskPage> {
                       AntMask.show(
                           context: context,
                           clickMaskClose: true,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              width: 100,
-                              height: 100,
-                              color: Colors.white,
-                              child: Text("背景蒙层"),
-                            ),
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            color: Colors.white,
+                            child: Text("背景蒙层"),
                           ));
                     },
                   ),
@@ -57,11 +54,10 @@ class _MaskPageState extends State<MaskPage> {
                       AntMask.show(
                           context: context,
                           clickMaskClose: true,
-                          child: Container(
-                            height: 100,
-                            width: 100,
-                            color: Colors.white,
-                            child: Text("全屏展示"),
+                          child: AntPageContainer(
+                            appBar: AntAppBar(
+                              title: Text("全屏"),
+                            ),
                           ));
                     },
                   ),

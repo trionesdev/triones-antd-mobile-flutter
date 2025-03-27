@@ -16,7 +16,7 @@ class AntMaskRoute extends PopupRoute {
   Color? get barrierColor => Colors.black38;
 
   @override
-  bool get barrierDismissible => false;
+  bool get barrierDismissible => true;
 
   @override
   String? get barrierLabel => null;
@@ -31,25 +31,24 @@ class AntMaskRoute extends PopupRoute {
       color: Colors.transparent,
       child: GestureDetector(
         onTap: () {
-          onMaskClick?.call();
-          print("mask clicked");
+          print("ss");
           if (clickMaskClose == true) {
-            // Navigator.of(context).pop();
+            Navigator.of(context).pop();
           }
+          onMaskClick?.call();
         },
         child: Container(
-            color: Colors.black54,
-            height: double.infinity,
-            width: double.infinity,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                child: child,
-              ),
-            )),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+          ),
+          child: GestureDetector(
+            onTap: () {
+              // print("dfff");
+            },
+            child: child,
+          ),
+        ),
       ),
     );
   }
