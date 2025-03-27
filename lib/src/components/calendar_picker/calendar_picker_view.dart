@@ -3,15 +3,10 @@ import 'package:trionesdev_antd_mobile/antd.dart';
 
 import '../theme/theme.dart';
 
-typedef OnSelectedDateCallback = void Function(DateTime? date);
-
-typedef OnOk = void Function(DateTime? value);
-typedef OnCancel = void Function();
-
 class AntCalendarPickerView extends StatefulWidget {
   const AntCalendarPickerView({super.key, this.onOk, this.value});
   final DateTime? value;
-  final OnOk? onOk;
+  final ValueChanged<DateTime?>? onOk;
 
   @override
   State<StatefulWidget> createState() => _AntCalendarPickerViewState();
@@ -71,7 +66,7 @@ class AntCalendarView extends StatefulWidget {
   const AntCalendarView({super.key, this.value, this.onSelected});
 
   final DateTime? value;
-  final OnSelectedDateCallback? onSelected;
+  final ValueSetter<DateTime>? onSelected;
 
   @override
   State<StatefulWidget> createState() => _AntCalendarViewState();
@@ -196,7 +191,7 @@ class AntCalendarMouthView extends StatefulWidget {
 
   final DateTime? month;
   final DateTime? selectedDate;
-  final OnSelectedDateCallback? onSelected;
+  final ValueChanged<DateTime>? onSelected;
   final OnMouthViewRendered? onRendered;
 
   @override
@@ -324,7 +319,7 @@ class AntCalendarDateCell extends StatefulWidget {
   final DateTime? selectedDate;
   final DateTime date;
   final DateTime mouth;
-  final OnSelectedDateCallback? onSelected;
+  final ValueSetter<DateTime>? onSelected;
 
   @override
   State<StatefulWidget> createState() => AntCalendarDateCellState();

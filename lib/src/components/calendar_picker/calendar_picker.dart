@@ -7,7 +7,7 @@ class AntCalendarPicker {
   static void show({
     required BuildContext context,
     DateTime? value,
-    OnOk? onOk,
+    ValueChanged<DateTime?>? onOk,
   }) {
     AntPopup.show(
         context: context,

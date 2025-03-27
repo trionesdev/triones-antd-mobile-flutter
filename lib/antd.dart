@@ -24,6 +24,7 @@ export 'src/components/picker/picker.dart';
 export 'src/components/picker/types.dart';
 export 'src/components/cascader_picker/cascader_picker.dart';
 export 'src/components/calendar_picker/calendar_picker.dart';
+export 'src/components/calendar_picker/calendar_picker_view.dart';
 export 'src/components/modal/modal.dart';
 export 'src/components/toast/toast.dart';
 export 'src/components/toast/toast_route.dart';
