@@ -33,3 +33,4 @@ export 'src/components/alert/alert.dart';
 export 'src/components/switch/switch.dart';
 export 'src/components/mask/mask.dart';
 export 'src/components/badge/badge.dart';
+export 'src/components/avatar/avatar.dart';
