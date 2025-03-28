@@ -19,6 +19,7 @@ import 'package:antd_flutter_example/pages/switch_page.dart';
 import 'package:antd_flutter_example/pages/tab_bar_page.dart';
 import 'package:antd_flutter_example/pages/tag_page.dart';
 import 'package:antd_flutter_example/pages/toast_page.dart';
+import 'package:antd_flutter_example/pages/upload_page.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
@@ -58,6 +59,8 @@ class MyApp extends StatelessWidget {
         '/switch': (context) => SwitchPage(),
         '/mask': (context) => MaskPage(),
         '/badge': (context) => BadgePage(),
+        '/upload': (context) => UploadPage(),
+        '/image-upload': (context) => ImageUpload(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -236,6 +239,18 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Badge 徽标'),
             onTap: () {
               Navigator.pushNamed(context, '/badge');
+            },
+          ),
+          material.ListTile(
+            title: Text('Upload 上传'),
+            onTap: () {
+              Navigator.pushNamed(context, '/upload');
+            },
+          ),
+          material.ListTile(
+            title: Text('ImageUpload 图片上传'),
+            onTap: () {
+              Navigator.pushNamed(context, '/image-upload');
             },
           ),
         ],
