@@ -33,9 +33,6 @@ class _ImagesWallState extends State<ImagesWall> {
   final List<Image> _images = [];
 
   void addImages(List<XFile> images) {
-    images[0].readAsBytes().then((onValue) {
-      print(File.fromRawPath(onValue).toString());
-    });
 
     if (widget.uploadRequest != null) {
       images.forEach((image) async {
