@@ -22,12 +22,17 @@ class _ImageUploadPageState extends State<ImagesWallPage> {
           children: [
             DemoBlock(
               title: "基本使用",
-              child: Column(children: [
-                ImagesWall()
-              ],),
+              child: Column(
+                children: [ImagesWall()],
+              ),
             ),
             DemoBlock(
-              title: "基本使用",
+              title: "赋值",
+              child: ImagesWall(
+                value: [
+                  "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                ],
+              ),
             )
           ],
         ),

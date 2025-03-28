@@ -1,46 +1,78 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/src/components/images_wall/images_preview.dart';
 import 'package:trionesdev_antd_mobile/src/components/theme/theme.dart';
 
 class ImagesWall extends StatefulWidget {
   const ImagesWall(
-      {super.key, this.value, this.maxCount, this.disabled = false});
+      {super.key,
+      this.value,
+      this.maxCount,
+      this.disabled = false,
+      this.crossAxisCount = 5,
+      this.onChange,
+      this.uploadRequest});
 
   final List<String>? value;
+  final ValueChanged<List<String>>? onChange;
   final int? maxCount;
+  final int? crossAxisCount;
   final bool? disabled;
+  final Future<String?> Function(File value, String? fileName)? uploadRequest;
 
   @override
   State<StatefulWidget> createState() => _ImagesWallState();
 }
 
 class _ImagesWallState extends State<ImagesWall> {
-  List<Image> _images = [];
+  final List<Image> _images = [];
 
   void addImages(List<XFile> images) {
-    setState(() {
-      if (kIsWeb) {
-        _images.addAll(images.map((item) {
-          return Image.network(
-            item.path,
-            fit: BoxFit.cover,
-          );
-        }));
-      } else {
-        _images.addAll(images.map((item) {
-          return Image.file(
-            File(item.path),
-            fit: BoxFit.cover,
-          );
-        }));
-      }
+    images[0].readAsBytes().then((onValue) {
+      print(File.fromRawPath(onValue).toString());
     });
+
+    if (widget.uploadRequest != null) {
+      images.forEach((image) async {
+        var fileName = image.name;
+        image.readAsBytes().then((bytes) async {
+          final String? url =
+              await widget.uploadRequest!(File.fromRawPath(bytes), fileName);
+          if (url != null) {
+            setState(() {
+              _images.add(Image.network(
+                url,
+                fit: BoxFit.cover,
+              ));
+            });
+          }
+        });
+      });
+    } else {
+      setState(() {
+        if (kIsWeb) {
+          _images.addAll(images.map((item) {
+            print(File(item.path).readAsBytesSync());
+            return Image.network(
+              item.path,
+              fit: BoxFit.cover,
+            );
+          }));
+        } else {
+          _images.addAll(images.map((item) {
+            return Image.file(
+              File(item.path),
+              fit: BoxFit.cover,
+            );
+          }));
+        }
+      });
+    }
   }
 
   Future<void> selectImageFromGallery(bool multi) async {
@@ -64,6 +96,44 @@ class _ImagesWallState extends State<ImagesWall> {
     }
   }
 
+  void generateImages() {
+    _images.clear();
+    for (int i = 0; i < widget.value!.length; i++) {
+      if (kIsWeb) {
+        _images.add(Image.network(
+          widget.value!.elementAtOrNull(i)!,
+          fit: BoxFit.cover,
+        ));
+      } else {
+        _images.add(Image.file(
+          File(widget.value!.elementAtOrNull(i)!),
+          fit: BoxFit.cover,
+        ));
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.value != null) {
+      generateImages();
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant ImagesWall oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!ListEquality().equals(oldWidget.value ?? [], widget.value ?? [])) {
+      generateImages();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     AntThemeData antThemeData = AntTheme.of(context);
@@ -77,7 +147,20 @@ class _ImagesWallState extends State<ImagesWall> {
             children: [
               AspectRatio(
                 aspectRatio: 1,
-                child: _images.elementAt(i),
+                child: GestureDetector(
+                  onTap: () {
+                    AntMask.show(
+                        context: context,
+                        child: ImagesPreview(
+                          images: _images,
+                          initialIndex: i,
+                        ));
+                  },
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    child: _images.elementAtOrNull(i),
+                  ),
+                ),
               ),
               if (!widget.disabled!)
                 Positioned(
@@ -176,16 +259,14 @@ class _ImagesWallState extends State<ImagesWall> {
       ));
     }
 
-    return Container(
-      child: GridView(
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
-            childAspectRatio: 1,
-            crossAxisSpacing: 2,
-            mainAxisSpacing: 2),
-        children: widgets,
-      ),
+    return GridView(
+      shrinkWrap: true,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: widget.crossAxisCount!,
+          childAspectRatio: 1,
+          crossAxisSpacing: 2,
+          mainAxisSpacing: 2),
+      children: widgets,
     );
   }
 }
