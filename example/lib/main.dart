@@ -7,7 +7,7 @@ import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
 import 'package:antd_flutter_example/pages/divider_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
-import 'package:antd_flutter_example/pages/image_upload_page.dart';
+import 'package:antd_flutter_example/pages/images_wall_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
 import 'package:antd_flutter_example/pages/list_page.dart';
 import 'package:antd_flutter_example/pages/mask_page.dart';
@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
         '/mask': (context) => MaskPage(),
         '/badge': (context) => BadgePage(),
         '/upload': (context) => UploadPage(),
-        '/image-upload': (context) => ImageUploadPage(),
+        '/images-wall': (context) => ImagesWallPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -249,9 +249,9 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           material.ListTile(
-            title: Text('ImageUpload 图片上传'),
+            title: Text('ImagesWall 图片墙'),
             onTap: () {
-              Navigator.pushNamed(context, '/image-upload');
+              Navigator.pushNamed(context, '/images-wall');
             },
           ),
         ],

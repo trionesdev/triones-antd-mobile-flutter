@@ -35,4 +35,4 @@ export 'src/components/mask/mask.dart';
 export 'src/components/badge/badge.dart';
 export 'src/components/avatar/avatar.dart';
 export 'src/components/upload/upload.dart';
-export 'src/components/image_upload/image_upload.dart';
+export 'src/components/images_wall/images_wall.dart';
