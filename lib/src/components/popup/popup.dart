@@ -6,6 +6,7 @@ import '../theme/theme.dart';
 class AntPopup {
   static void show(
       {required BuildContext context,
+      Color? color = Colors.white,
       double? minHeight,
       double? maxHeight,
       Widget? child}) {
@@ -18,7 +19,7 @@ class AntPopup {
           AntThemeData themeData = AntTheme.of(context);
           return Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: color,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(themeData.borderRadius),
                   topRight: Radius.circular(themeData.borderRadius),

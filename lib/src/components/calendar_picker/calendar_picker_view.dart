@@ -241,6 +241,7 @@ class _AntCalendarMouthViewState extends State<AntCalendarMouthView> {
 
   @override
   void didUpdateWidget(AntCalendarMouthView oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (widget.month != oldWidget.month) {
       print('更新月份');
       setState(() {

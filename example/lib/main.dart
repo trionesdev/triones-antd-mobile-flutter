@@ -7,6 +7,7 @@ import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
 import 'package:antd_flutter_example/pages/divider_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
+import 'package:antd_flutter_example/pages/image_upload_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
 import 'package:antd_flutter_example/pages/list_page.dart';
 import 'package:antd_flutter_example/pages/mask_page.dart';
@@ -60,7 +61,7 @@ class MyApp extends StatelessWidget {
         '/mask': (context) => MaskPage(),
         '/badge': (context) => BadgePage(),
         '/upload': (context) => UploadPage(),
-        '/image-upload': (context) => ImageUpload(),
+        '/image-upload': (context) => ImageUploadPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
