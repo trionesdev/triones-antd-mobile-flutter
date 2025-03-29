@@ -3,6 +3,7 @@ import 'package:antd_flutter_example/pages/alert_page.dart';
 import 'package:antd_flutter_example/pages/app_bar_page.dart';
 import 'package:antd_flutter_example/pages/badge_page.dart';
 import 'package:antd_flutter_example/pages/button_page.dart';
+import 'package:antd_flutter_example/pages/calendar_datetime_picker_page.dart';
 import 'package:antd_flutter_example/pages/calendar_picker_page.dart';
 import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
 import 'package:antd_flutter_example/pages/divider_page.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         '/picker': (context) => PickerPage(),
         '/cascader-picker': (context) => CascaderPickerPage(),
         '/calendar-picker': (context) => CalendarPickerPage(),
+        '/calendar-datetime-picker': (context) => CalendarDatetimePickerPage(),
         '/modal': (context) => ModalPage(),
         '/toast': (context) => ToastPage(),
         '/divider': (context) => DividerPage(),
@@ -200,6 +202,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('CalendarPicker 日历选择器'),
             onTap: () {
               Navigator.pushNamed(context, '/calendar-picker');
+            },
+          ),
+          material.ListTile(
+            title: Text('CalendarDatetimePicker 日历时间选择器'),
+            onTap: () {
+              Navigator.pushNamed(context, '/calendar-datetime-picker');
             },
           ),
           material.ListTile(

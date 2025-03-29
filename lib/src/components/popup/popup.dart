@@ -7,12 +7,12 @@ class AntPopup {
   static void show(
       {required BuildContext context,
       Color? color = Colors.white,
-      double? minHeight,
+      double? minHeight=300,
       double? maxHeight,
       Widget? child}) {
     showModalBottomSheet(
         context: context,
-        isScrollControlled: false,
+        isScrollControlled: true,
         backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(),
         builder: (context) {

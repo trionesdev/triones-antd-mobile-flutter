@@ -7,13 +7,13 @@ import '../theme/theme.dart';
 class AntPickerMultiView extends StatefulWidget {
   const AntPickerMultiView(
       {super.key,
-      this.columns,
-      this.onOk,
-      this.onCancel,
-      this.value,
-      this.title,
-      this.itemHeight = 34,
-      this.onColumnSelected});
+        this.columns,
+        this.onOk,
+        this.onCancel,
+        this.value,
+        this.title,
+        this.itemHeight = 34,
+        this.onColumnSelected});
 
   final Widget? title;
   final List<List<AntPickerOption>>? columns;
@@ -29,7 +29,7 @@ class AntPickerMultiView extends StatefulWidget {
 
 class _AntPickerMultiViewState extends State<AntPickerMultiView>
     with MaterialStateMixin {
-  double viewHeight = 0;
+  // double viewHeight = 0;
   List<AntPickerOption?> _value = [];
 
   @override
@@ -83,7 +83,7 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
           ),
           padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
           child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             GestureDetector(
               child: Container(
                 padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
@@ -98,8 +98,8 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
             if (widget.title != null)
               Expanded(
                   child: Center(
-                child: widget.title!,
-              )),
+                    child: widget.title!,
+                  )),
             GestureDetector(
               child: Container(
                 padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
@@ -113,77 +113,77 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
         ),
         Expanded(child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-          viewHeight = constraints.maxHeight;
-          return Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 8, right: 8),
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children:
+              // viewHeight = constraints.maxHeight;
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:
                       (widget.columns ?? []).asMap().keys.map((columnIndex) {
-                    return Expanded(
-                        child: AntPickerViewColumn(
-                      itemHeight: widget.itemHeight,
-                      options: widget.columns![columnIndex],
-                      onSelected: (option) {
-                        setState(() {
-                          _value[columnIndex] = option!;
-                          widget.onColumnSelected?.call(option, columnIndex);
-                        });
-                      },
-                      value: _getOptionByValue(columnIndex),
-                    ));
-                  }).toList(),
-                ),
-              ),
-              IgnorePointer(
-                ignoring: true,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Expanded(
-                        child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                            Colors.white,
-                            Colors.white.withAlpha(0)
-                          ])),
-                    )),
-                    Container(
-                      height: widget.itemHeight,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          // color: Colors.grey
-                          border: Border(
-                              top: BorderSide(color: Colors.grey, width: 0.5),
-                              bottom:
-                                  BorderSide(color: Colors.grey, width: 0.5))),
+                        return Expanded(
+                            child: AntPickerViewColumn(
+                              itemHeight: widget.itemHeight,
+                              options: widget.columns![columnIndex],
+                              onSelected: (option) {
+                                setState(() {
+                                  _value[columnIndex] = option!;
+                                  widget.onColumnSelected?.call(option, columnIndex);
+                                });
+                              },
+                              value: _getOptionByValue(columnIndex),
+                            ));
+                      }).toList(),
                     ),
-                    Expanded(
-                        child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter,
-                              colors: [
-                            Colors.white,
-                            Colors.white.withAlpha(0)
-                          ])),
-                    ))
-                  ],
-                ),
-              )
-            ],
-          );
-        }))
+                  ),
+                  IgnorePointer(
+                    ignoring: true,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.white,
+                                        Colors.white.withAlpha(0)
+                                      ])),
+                            )),
+                        Container(
+                          height: widget.itemHeight,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            // color: Colors.grey
+                              border: Border(
+                                  top: BorderSide(color: Colors.grey, width: 0.5),
+                                  bottom:
+                                  BorderSide(color: Colors.grey, width: 0.5))),
+                        ),
+                        Expanded(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      colors: [
+                                        Colors.white,
+                                        Colors.white.withAlpha(0)
+                                      ])),
+                            ))
+                      ],
+                    ),
+                  )
+                ],
+              );
+            }))
       ],
     );
   }
