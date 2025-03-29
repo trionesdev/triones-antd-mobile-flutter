@@ -197,7 +197,7 @@ class _ImagesWallState extends State<ImagesWall> {
               label: Text('从相册选择'),
               onPressed: () {
                 Navigator.of(context).pop();
-                selectImageFromGallery(false);
+                selectImageFromGallery(true);
               },
             ),
             AntActionType(

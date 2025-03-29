@@ -14,7 +14,7 @@ class _ImageUploadPageState extends State<ImagesWallPage> {
   Widget build(BuildContext context) {
     return AntPageContainer(
       appBar: AntAppBar(
-        title: Text("ImageUpload 图片上传"),
+        title: Text("ImagesWall 图片墙"),
       ),
       body: SingleChildScrollView(
         child: Column(
