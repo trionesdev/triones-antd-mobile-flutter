@@ -22,7 +22,7 @@ class _AlertPageState extends State<AlertPage> {
             DemoBlock(
               title: "基本使用",
               child: AntAlert(
-                type: AlertType.success,
+                type: AntAlertType.success,
                 message: Text("Success Text"),
               ),
             ),
@@ -30,19 +30,19 @@ class _AlertPageState extends State<AlertPage> {
               title: "四种样式",
               child: Column(spacing: 10,children: [
                 AntAlert(
-                  type: AlertType.success,
+                  type: AntAlertType.success,
                   message: Text("Success Text"),
                 ),
                 AntAlert(
-                  type: AlertType.info,
+                  type: AntAlertType.info,
                   message: Text("Info Text"),
                 ),
                 AntAlert(
-                  type: AlertType.warning,
+                  type: AntAlertType.warning,
                   message: Text("Warning Text"),
                 ),
                 AntAlert(
-                  type: AlertType.error,
+                  type: AntAlertType.error,
                   message: Text("Error Text"),
                 ),
               ],),
@@ -50,7 +50,7 @@ class _AlertPageState extends State<AlertPage> {
             DemoBlock(
               title: "可关闭的警告提示",
               child: AntAlert(
-                type: AlertType.warning,
+                type: AntAlertType.warning,
                 closable: true,
                 message: Text(softWrap: true,"Warning Text Warning Text Warning TextW arning Text Warning Text Warning TextWarning Text"),
               ),
@@ -61,13 +61,13 @@ class _AlertPageState extends State<AlertPage> {
                 spacing: 10,
                 children: [
                   AntAlert(
-                    type: AlertType.warning,
+                    type: AntAlertType.warning,
                     closable: true,
                     showIcon: true,
                     message: Text(softWrap: true,"Warning Text Warning Text Warning TextW arning Text Warning Text Warning TextWarning Text"),
                   ),
                   AntAlert(
-                    type: AlertType.warning,
+                    type: AntAlertType.warning,
                     closable: true,
                     showIcon: true,
                     message: Text(softWrap: true,"Warning Text Warning Text Warning TextW arning Text Warning Text Warning TextWarning Text"),

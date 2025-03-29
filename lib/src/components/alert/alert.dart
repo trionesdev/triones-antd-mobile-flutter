@@ -4,7 +4,7 @@ import 'package:trionesdev_antd_mobile/antd.dart';
 
 import '../theme/theme.dart';
 
-enum AlertType {
+enum AntAlertType {
   info,
   success,
   warning,
@@ -18,7 +18,7 @@ class AntAlert extends StatefulWidget {
       this.message,
       this.description,
       this.icon,
-      this.type = AlertType.info,
+      this.type = AntAlertType.info,
       this.onClose,
       this.style,
       this.decoration,
@@ -29,7 +29,7 @@ class AntAlert extends StatefulWidget {
   final Text? description;
   final Widget? icon;
   final bool? showIcon;
-  final AlertType? type;
+  final AntAlertType? type;
   final Function? onClose;
   final StateStyle? style;
   final BoxDecoration? decoration;
@@ -41,14 +41,14 @@ class AntAlert extends StatefulWidget {
 class _AntAlertState extends State<AntAlert> with MaterialStateMixin {
   Widget? icon() {
     switch (widget.type) {
-      case AlertType.info:
-        return Icon(Icons.info);
-      case AlertType.success:
-        return Icon(Icons.check_circle);
-      case AlertType.warning:
-        return Icon(Icons.warning);
-      case AlertType.error:
-        return Icon(Icons.error);
+      case AntAlertType.info:
+        return Icon(Icons.info,color: AntTheme.of(context).colorPrimary,);
+      case AntAlertType.success:
+        return Icon(Icons.check_circle,color: AntTheme.of(context).colorSuccess,);
+      case AntAlertType.warning:
+        return Icon(Icons.warning,color: AntTheme.of(context).colorWarning,);
+      case AntAlertType.error:
+        return Icon(Icons.error,color: AntTheme.of(context).colorError,);
       default:
         return null;
     }
@@ -114,13 +114,13 @@ class _AntAlertStyle extends StateStyle {
 
   Color? color() {
     switch (alert.type) {
-      case AlertType.info:
+      case AntAlertType.info:
         return AntTheme.of(context).colorPrimary;
-      case AlertType.success:
+      case AntAlertType.success:
         return AntTheme.of(context).colorSuccess;
-      case AlertType.warning:
+      case AntAlertType.warning:
         return AntTheme.of(context).colorWarning;
-      case AlertType.error:
+      case AntAlertType.error:
         return AntTheme.of(context).colorError;
       default:
         return null;

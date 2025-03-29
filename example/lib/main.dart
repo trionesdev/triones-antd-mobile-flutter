@@ -1,3 +1,4 @@
+import 'package:antd_flutter_example/pages/actions_sheet_page.dart';
 import 'package:antd_flutter_example/pages/alert_page.dart';
 import 'package:antd_flutter_example/pages/app_bar_page.dart';
 import 'package:antd_flutter_example/pages/badge_page.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
         '/badge': (context) => BadgePage(),
         '/upload': (context) => UploadPage(),
         '/images-wall': (context) => ImagesWallPage(),
+        '/actions-sheet': (context) => ActionsSheetPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -252,6 +254,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('ImagesWall 图片墙'),
             onTap: () {
               Navigator.pushNamed(context, '/images-wall');
+            },
+          ),
+          material.ListTile(
+            title: Text('ActionsSheet 操作页'),
+            onTap: () {
+              Navigator.pushNamed(context, '/actions-sheet');
             },
           ),
         ],

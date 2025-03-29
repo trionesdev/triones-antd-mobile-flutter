@@ -54,7 +54,6 @@ class _ImagesWallState extends State<ImagesWall> {
       setState(() {
         if (kIsWeb) {
           _images.addAll(images.map((item) {
-            print(File(item.path).readAsBytesSync());
             return Image.network(
               item.path,
               fit: BoxFit.cover,
@@ -193,52 +192,22 @@ class _ImagesWallState extends State<ImagesWall> {
             (widget.maxCount != null && _images.length < widget.maxCount!))) {
       widgets.add(GestureDetector(
         onTap: () {
-          AntPopup.show(
-              context: context,
-              // maxHeight: 300,
-              minHeight: 30,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.black12,
-                    borderRadius: BorderRadius.horizontal(
-                        left: Radius.circular(antThemeData.borderRadius),
-                        right: Radius.circular(antThemeData.borderRadius))),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 4,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(color: Colors.white),
-                      width: double.infinity,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              Navigator.of(context).pop();
-                              selectImageFromCamera();
-                            },
-                            child: Text("相机"),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              selectImageFromGallery(false);
-                            },
-                            child: Text("相册"),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(color: Colors.white),
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Text("取消"),
-                    )
-                  ],
-                ),
-              ));
+          AntActionsSheet.show(context: context, actions: [
+            AntActionType(
+              label: Text('从相册选择'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                selectImageFromGallery(false);
+              },
+            ),
+            AntActionType(
+              label: Text('拍摄照片'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                selectImageFromCamera();
+              },
+            ),
+          ]);
         },
         child: Container(
           decoration: BoxDecoration(

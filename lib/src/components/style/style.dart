@@ -190,8 +190,6 @@ class Style with Diagnosticable {
     );
   }
 
-
-
   BoxDecoration get decoration {
     return BoxDecoration(
         color: backgroundColor,

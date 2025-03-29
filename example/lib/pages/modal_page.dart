@@ -71,6 +71,7 @@ class _ModalPageState extends State<ModalPage> {
                             type: ButtonType.primary,
                             text: "在线阅读",
                             onPressed: () {
+                              Navigator.of(context).pop();
                               print("在线阅读");
                             },
                           ),
@@ -78,6 +79,7 @@ class _ModalPageState extends State<ModalPage> {
                             block: true,
                             text: "下载文件",
                             onPressed: () {
+                              Navigator.of(context).pop();
                               print("下载文件");
                             },
                           ),
@@ -85,6 +87,7 @@ class _ModalPageState extends State<ModalPage> {
                             block: true,
                             text: "分享",
                             onPressed: () {
+                              Navigator.of(context).pop();
                               print("分享");
                             },
                           )
