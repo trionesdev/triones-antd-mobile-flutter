@@ -3,12 +3,12 @@ import 'package:trionesdev_antd_mobile/antd.dart';
 
 import 'cascader_picker_view.dart';
 
-class CascaderPickerOption {
+class AntCascaderPickerOption {
   final String? label;
   final String? value;
-  final List<CascaderPickerOption>? children;
+  final List<AntCascaderPickerOption>? children;
 
-  const CascaderPickerOption({
+  const AntCascaderPickerOption({
     this.label,
     this.value,
     this.children,
@@ -21,10 +21,10 @@ class AntCascaderPicker {
     double? minHeight,
     double? maxHeight,
     double? itemHeight = 34,
-    List<CascaderPickerOption>? options,
+    List<AntCascaderPickerOption>? options,
     List<String>? value,
-    OnOk? onOk,
-    OnCancel? onCancel,
+    ValueChanged<List<AntCascaderPickerOption?>?>? onOk,
+    Function? onCancel,
   }) {
     AntPopup.show(
         context: context,

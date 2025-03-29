@@ -10,27 +10,27 @@ class CascaderPickerPage extends StatefulWidget {
 }
 
 class _CascaderPickerPageState extends State<CascaderPickerPage> {
-  final List<CascaderPickerOption> _options = [
-    CascaderPickerOption(label: "江苏", value: "jiangsu", children: [
-      CascaderPickerOption(label: "泰州", value: "taizhou", children: [
-        CascaderPickerOption(label: "泰兴", value: "taixing"),
-        CascaderPickerOption(label: "靖江", value: "靖江"),
+  final List<AntCascaderPickerOption> _options = [
+    AntCascaderPickerOption(label: "江苏", value: "jiangsu", children: [
+      AntCascaderPickerOption(label: "泰州", value: "taizhou", children: [
+        AntCascaderPickerOption(label: "泰兴", value: "taixing"),
+        AntCascaderPickerOption(label: "靖江", value: "靖江"),
       ]),
-      CascaderPickerOption(label: "苏州", value: "suzhou"),
-      CascaderPickerOption(label: "无锡", value: "wuxi"),
+      AntCascaderPickerOption(label: "苏州", value: "suzhou"),
+      AntCascaderPickerOption(label: "无锡", value: "wuxi"),
     ]),
-    CascaderPickerOption(label: "山东", value: "shandong"),
-    CascaderPickerOption(label: "浙江", value: "zhejiang"),
-    CascaderPickerOption(label: "上海", value: "shanghai"),
-    CascaderPickerOption(label: "广东", value: "guangdong"),
-    CascaderPickerOption(label: "福建", value: "fujian"),
-    CascaderPickerOption(label: "云南", value: "yunan"),
-    CascaderPickerOption(label: "贵州", value: "guizhou"),
-    CascaderPickerOption(label: "四川", value: "sichuan"),
-    CascaderPickerOption(label: "湖南", value: "hunan"),
-    CascaderPickerOption(label: "湖北", value: "hubei"),
-    CascaderPickerOption(label: "河南", value: "heinan"),
-    CascaderPickerOption(label: "河北", value: "hebei"),
+    AntCascaderPickerOption(label: "山东", value: "shandong"),
+    AntCascaderPickerOption(label: "浙江", value: "zhejiang"),
+    AntCascaderPickerOption(label: "上海", value: "shanghai"),
+    AntCascaderPickerOption(label: "广东", value: "guangdong"),
+    AntCascaderPickerOption(label: "福建", value: "fujian"),
+    AntCascaderPickerOption(label: "云南", value: "yunan"),
+    AntCascaderPickerOption(label: "贵州", value: "guizhou"),
+    AntCascaderPickerOption(label: "四川", value: "sichuan"),
+    AntCascaderPickerOption(label: "湖南", value: "hunan"),
+    AntCascaderPickerOption(label: "湖北", value: "hubei"),
+    AntCascaderPickerOption(label: "河南", value: "heinan"),
+    AntCascaderPickerOption(label: "河北", value: "hebei"),
   ];
 
   @override

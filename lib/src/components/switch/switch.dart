@@ -4,7 +4,7 @@ import 'package:trionesdev_antd_mobile/src/components/theme/theme.dart';
 
 import '../../../antd.dart';
 
-enum SwitchSize { small, middle, large }
+enum AntSwitchSize { small, middle, large }
 
 class AntSwitch extends StatefulWidget {
   const AntSwitch({
@@ -14,14 +14,14 @@ class AntSwitch extends StatefulWidget {
     this.onChange,
     this.style,
     this.disabled = false,
-    this.size = SwitchSize.middle,
+    this.size = AntSwitchSize.middle,
   });
 
   final bool? disabled;
   final bool? defaultChecked;
   final bool? checked;
   final ValueChanged<bool>? onChange;
-  final SwitchSize? size;
+  final AntSwitchSize? size;
   final StateStyle? style;
 
   @override
@@ -44,11 +44,11 @@ class _AntSwitchState extends State<AntSwitch>
 
   double get width {
     switch (widget.size) {
-      case SwitchSize.small:
+      case AntSwitchSize.small:
         return 28;
-      case SwitchSize.middle:
+      case AntSwitchSize.middle:
         return 44;
-      case SwitchSize.large:
+      case AntSwitchSize.large:
         return 60;
       default:
         return 44;
@@ -57,11 +57,11 @@ class _AntSwitchState extends State<AntSwitch>
 
   double get height {
     switch (widget.size) {
-      case SwitchSize.small:
+      case AntSwitchSize.small:
         return 16;
-      case SwitchSize.middle:
+      case AntSwitchSize.middle:
         return 22;
-      case SwitchSize.large:
+      case AntSwitchSize.large:
         return 30;
       default:
         return 22;

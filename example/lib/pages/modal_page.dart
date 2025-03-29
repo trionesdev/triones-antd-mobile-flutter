@@ -68,7 +68,7 @@ class _ModalPageState extends State<ModalPage> {
                         actions: [
                           AntButton(
                             block: true,
-                            type: ButtonType.primary,
+                            type: AntButtonType.primary,
                             text: "在线阅读",
                             onPressed: () {
                               Navigator.of(context).pop();

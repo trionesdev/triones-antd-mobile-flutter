@@ -16,12 +16,12 @@ class AntPickerMultiView extends StatefulWidget {
       this.onColumnSelected});
 
   final Widget? title;
-  final List<List<PickerOption>>? columns;
+  final List<List<AntPickerOption>>? columns;
   final List<String>? value;
   final Function? onCancel;
-  final ValueChanged<List<PickerOption?>>? onOk;
+  final ValueChanged<List<AntPickerOption?>>? onOk;
   final double? itemHeight;
-  final void Function(PickerOption? value, int index)? onColumnSelected;
+  final void Function(AntPickerOption? value, int index)? onColumnSelected;
 
   @override
   State<StatefulWidget> createState() => _AntPickerMultiViewState();
@@ -30,7 +30,7 @@ class AntPickerMultiView extends StatefulWidget {
 class _AntPickerMultiViewState extends State<AntPickerMultiView>
     with MaterialStateMixin {
   double viewHeight = 0;
-  List<PickerOption?> _value = [];
+  List<AntPickerOption?> _value = [];
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
     });
   }
 
-  PickerOption? _getOptionByValue(int columnIndex) {
+  AntPickerOption? _getOptionByValue(int columnIndex) {
     if (widget.columns != null && widget.value != null) {
       if (widget.columns!.length > columnIndex &&
           widget.value!.length > columnIndex) {

@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-enum DividerDirection { horizontal, vertical }
+enum AntDividerDirection { horizontal, vertical }
 
-enum ContentPosition { left, right, center }
+enum AntContentPosition { left, right, center }
 
 class AntDivider extends StatefulWidget {
   const AntDivider(
       {super.key,
-      this.direction = DividerDirection.horizontal,
+      this.direction = AntDividerDirection.horizontal,
       this.child,
-      this.contentPosition = ContentPosition.center,
+      this.contentPosition = AntContentPosition.center,
       this.height,
       this.color});
 
-  final DividerDirection? direction;
-  final ContentPosition? contentPosition;
+  final AntDividerDirection? direction;
+  final AntContentPosition? contentPosition;
   final Widget? child;
   final double? height;
   final Color? color;
@@ -27,11 +27,11 @@ class AntDivider extends StatefulWidget {
 class _AntDividerState extends State<AntDivider> {
   int leftFlex() {
     switch (widget.contentPosition) {
-      case ContentPosition.left:
+      case AntContentPosition.left:
         return 1;
-      case ContentPosition.right:
+      case AntContentPosition.right:
         return 3;
-      case ContentPosition.center:
+      case AntContentPosition.center:
         return 2;
       default:
         return 1;
@@ -40,11 +40,11 @@ class _AntDividerState extends State<AntDivider> {
 
   int rightFlex() {
     switch (widget.contentPosition) {
-      case ContentPosition.left:
+      case AntContentPosition.left:
         return 3;
-      case ContentPosition.right:
+      case AntContentPosition.right:
         return 1;
-      case ContentPosition.center:
+      case AntContentPosition.center:
         return 2;
       default:
         return 1;
@@ -53,7 +53,7 @@ class _AntDividerState extends State<AntDivider> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.direction == DividerDirection.horizontal
+    return widget.direction == AntDividerDirection.horizontal
         ? (widget.child == null)
             ? Divider(color: widget.color)
             : Row(

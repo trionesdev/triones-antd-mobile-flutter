@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-typedef TabBarChangeCallback = void Function(String id);
+typedef AntTabBarChangeCallback = void Function(String id);
 
 class AntTabBar extends StatefulWidget {
   const AntTabBar(
@@ -24,7 +24,7 @@ class AntTabBar extends StatefulWidget {
   final List<AntTabBarItem>? items;
   final String? activeId;
   final String? defaultActiveId;
-  final TabBarChangeCallback? onChange;
+  final AntTabBarChangeCallback? onChange;
 
   static AntTabBarState? maybeOf(BuildContext context) {
     _AntTabBarScope? scope =

@@ -122,7 +122,7 @@ class _SearchBarState extends State<AntSearchBar> with MaterialStateMixin {
             (widget.onlyShowClearWhenFocus == false))) {
       children.add(AntButton(
         text: widget.cancelText ?? '取消',
-        type: ButtonType.text,
+        type: AntButtonType.text,
         onPressed: () {
           if (widget.clearOnCancel == true) {
             setState(() {

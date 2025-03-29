@@ -8,9 +8,9 @@ class AntPicker {
     double? minHeight,
     double? maxHeight,
     Widget? title,
-    List<PickerOption>? options,
+    List<AntPickerOption>? options,
     String? value,
-    ValueChanged<PickerOption?>? onOk,
+    ValueChanged<AntPickerOption?>? onOk,
     Function? onCancel,
     double? itemHeight = 34}) {
     AntPopup.show(
@@ -37,11 +37,11 @@ class AntPicker {
     double? minHeight,
     double? maxHeight,
     Widget? title,
-    List<List<PickerOption>>? options,
+    List<List<AntPickerOption>>? options,
     List<String>? value,
-    ValueChanged<List<PickerOption?>>? onOk,
+    ValueChanged<List<AntPickerOption?>>? onOk,
     Function? onCancel,
-    void Function(PickerOption? value, int index)? onColumnSelected,
+    void Function(AntPickerOption? value, int index)? onColumnSelected,
     double? itemHeight = 34}) {
     AntPopup.show(
         context: context,

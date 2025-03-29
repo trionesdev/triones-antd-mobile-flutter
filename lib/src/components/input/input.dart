@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
-enum InputType {
+enum AntInputType {
   text,
   password,
 }
-
-typedef OnFocus = void Function();
-typedef OnBlur = void Function();
 
 class AntInput extends StatefulWidget {
   const AntInput({
     super.key,
     this.placeholder,
-    this.type = InputType.text,
+    this.type = AntInputType.text,
     this.prefix,
     this.suffix,
     this.value,
@@ -27,15 +24,15 @@ class AntInput extends StatefulWidget {
 
   final double? height;
   final String? placeholder;
-  final InputType? type;
+  final AntInputType? type;
   final Widget? prefix;
   final Widget? suffix;
   final String? value;
   final Function? onChange;
   final BoxDecoration? decoration;
   final StateStyle? style;
-  final OnBlur? onBlur;
-  final OnFocus? onFocus;
+  final VoidCallback? onBlur;
+  final VoidCallback? onFocus;
 
   @override
   State<StatefulWidget> createState() => _InputState();
@@ -93,12 +90,12 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     }
 
     Widget? suffixIcon;
-    if (widget.type == InputType.password || widget.suffix != null) {
+    if (widget.type == AntInputType.password || widget.suffix != null) {
       suffixIcon = Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          if (widget.type == InputType.password)
+          if (widget.type == AntInputType.password)
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -123,7 +120,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
       child: TextField(
         controller: _controller,
         focusNode: _focusNode,
-        obscureText: widget.type == InputType.password && passwordVisible,
+        obscureText: widget.type == AntInputType.password && passwordVisible,
         cursorColor: Colors.black,
         style: TextStyle(fontSize: style.resolve(materialStates)?.fontSize),
         decoration: InputDecoration(

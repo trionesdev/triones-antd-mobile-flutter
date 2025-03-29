@@ -4,14 +4,11 @@ import 'package:trionesdev_antd_mobile/antd.dart';
 import '../theme/theme.dart';
 import 'cascader_picker.dart';
 
-typedef OnOk = void Function(List<CascaderPickerOption?>? value);
-typedef OnCancel = void Function();
-
 class TabItem {
   final String tabKey;
   final String? label;
-  final CascaderPickerOption? value;
-  final List<CascaderPickerOption>? options;
+  final AntCascaderPickerOption? value;
+  final List<AntCascaderPickerOption>? options;
 
   const TabItem({
     required this.tabKey,
@@ -22,8 +19,8 @@ class TabItem {
 }
 
 class CascaderPickerColumn {
-  final CascaderPickerOption? value;
-  final List<CascaderPickerOption>? options;
+  final AntCascaderPickerOption? value;
+  final List<AntCascaderPickerOption>? options;
 
   const CascaderPickerColumn({
     this.value,
@@ -42,10 +39,10 @@ class AntCascaderPickerView extends StatefulWidget {
     this.itemHeight = 34,
   });
 
-  final List<CascaderPickerOption>? options;
+  final List<AntCascaderPickerOption>? options;
   final List<String>? value;
-  final OnCancel? onCancel;
-  final OnOk? onOk;
+  final VoidCallback? onCancel;
+  final ValueChanged<List<AntCascaderPickerOption?>?>? onOk;
   final Widget? title;
   final double? itemHeight;
 
@@ -57,11 +54,11 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
   int _activeIndex = 0;
   double viewHeight = 0;
 
-  List<CascaderPickerOption> _options = [];
+  List<AntCascaderPickerOption> _options = [];
   List<CascaderPickerColumn> _columns = [];
 
-  CascaderPickerOption? findOptionByValue(
-      List<CascaderPickerOption>? options, String? value) {
+  AntCascaderPickerOption? findOptionByValue(
+      List<AntCascaderPickerOption>? options, String? value) {
     print(options);
     print(value);
     if (value == null || options == null || options.isEmpty) {
@@ -75,16 +72,16 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
     return null;
   }
 
-  CascaderPickerOption? findOptionByValues(
-      List<CascaderPickerOption>? options, List<String>? values) {
+  AntCascaderPickerOption? findOptionByValues(
+      List<AntCascaderPickerOption>? options, List<String>? values) {
     if (values == null ||
         values.isEmpty ||
         options == null ||
         options.isEmpty) {
       return null;
     }
-    List<CascaderPickerOption>? levelOptions = options;
-    CascaderPickerOption? matchOption;
+    List<AntCascaderPickerOption>? levelOptions = options;
+    AntCascaderPickerOption? matchOption;
     for (int i = 0; i < values.length; i++) {
       matchOption = findOptionByValue(levelOptions, values.elementAtOrNull(i));
       levelOptions = matchOption?.children;
@@ -100,8 +97,8 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
       return [CascaderPickerColumn(options: _options)];
     }
     List<CascaderPickerColumn> columns = [];
-    CascaderPickerOption? value;
-    List<CascaderPickerOption>? options = _options;
+    AntCascaderPickerOption? value;
+    List<AntCascaderPickerOption>? options = _options;
     for (int i = 0; i < values.length; i++) {
       value = findOptionByValue(options, values.elementAtOrNull(i));
       CascaderPickerColumn column = CascaderPickerColumn(
@@ -173,7 +170,7 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
                     Text("确定", style: TextStyle(color: themeData.colorPrimary)),
               ),
               onTap: () {
-                List<CascaderPickerOption?>? result = _columns.map((column) {
+                List<AntCascaderPickerOption?>? result = _columns.map((column) {
                   return column.value;
                 }).toList();
                 widget.onOk?.call(result);
@@ -203,8 +200,8 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
                   decoration: BoxDecoration(
                     border: (index == _activeIndex)
                         ? Border(
-                            bottom:
-                                BorderSide(color: themeData.colorPrimary, width: 1),
+                            bottom: BorderSide(
+                                color: themeData.colorPrimary, width: 1),
                           )
                         : null,
                   ),
@@ -213,8 +210,9 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
                   child: Text(
                     _columns[index].value?.label ?? '请选择',
                     style: TextStyle(
-                        color:
-                            (index == _activeIndex) ? themeData.colorPrimary : null),
+                        color: (index == _activeIndex)
+                            ? themeData.colorPrimary
+                            : null),
                   ),
                 ),
               );
@@ -261,8 +259,6 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
   }
 }
 
-typedef OnSelected = void Function(CascaderPickerOption? option);
-
 class AntCascaderPickerViewColumn extends StatefulWidget {
   const AntCascaderPickerViewColumn(
       {super.key,
@@ -271,9 +267,9 @@ class AntCascaderPickerViewColumn extends StatefulWidget {
       this.value,
       this.itemHeight = 34});
 
-  final List<CascaderPickerOption>? options;
-  final OnSelected? onSelected;
-  final CascaderPickerOption? value;
+  final List<AntCascaderPickerOption>? options;
+  final ValueChanged<AntCascaderPickerOption?>? onSelected;
+  final AntCascaderPickerOption? value;
   final double? itemHeight;
 
   @override
@@ -288,7 +284,7 @@ class _AntCascaderPickerViewColumnState
     return widget.value?.value == widget.options?[index].value;
   }
 
-  int selectedIndex(CascaderPickerOption? value) {
+  int selectedIndex(AntCascaderPickerOption? value) {
     if (value == null) {
       return -1;
     }
@@ -300,7 +296,7 @@ class _AntCascaderPickerViewColumnState
     return -1;
   }
 
-  double scrollOffsetByValue(CascaderPickerOption? value) {
+  double scrollOffsetByValue(AntCascaderPickerOption? value) {
     int index = selectedIndex(value);
     if (index == -1) {
       return 0;

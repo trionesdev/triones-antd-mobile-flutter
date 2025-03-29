@@ -7,33 +7,21 @@ class AntToast {
     required BuildContext context,
     Widget? content,
     Icon? icon,
-    ToastPosition? position,
+    AntToastPosition? position,
     int? duration = 2000,
     Function? afterClose,
   }) {
-    // final overlay = Overlay.of(context);
-    // final overlayEntry = OverlayEntry(builder: (context) {
-    //   // return Material(color: Colors.transparent,child: Align(child: Text("sss"),),);
-    //   return AntToastView(
-    //     icon: icon,
-    //     content: content,
-    //     position: position,
-    //   );
-    // });
-    // overlay.insert(overlayEntry);
-    // // automatic remove Toast
-    // Future.delayed(Duration(milliseconds: duration ?? 2000)).then((_) {
-    //   overlayEntry.remove();
-    //   afterClose?.call();
-    // });
-
-    Navigator.push(context, AntToastRoute(
-      icon: icon,
-      content: content,
-      position: position,
-    ));
+    Navigator.push(
+        context,
+        AntToastRoute(
+          icon: icon,
+          content: content,
+          position: position,
+        ));
     Future.delayed(Duration(milliseconds: duration ?? 2000)).then((_) {
-      Navigator.of(context).pop();
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
       afterClose?.call();
     });
   }

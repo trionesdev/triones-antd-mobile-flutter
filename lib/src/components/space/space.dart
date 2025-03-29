@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 
 import '../style/state_style.dart';
 
-enum SpaceDirection { vertical, horizontal }
+enum AntSpaceDirection { vertical, horizontal }
 
 class AntSpace extends StatefulWidget {
   const AntSpace(
       {super.key,
       this.style,
       this.decoration,
-      this.direction = SpaceDirection.horizontal,
+      this.direction = AntSpaceDirection.horizontal,
       this.children,
       this.spacing=2});
 
   final StateStyle? style;
   final BoxDecoration? decoration;
-  final SpaceDirection? direction;
+  final AntSpaceDirection? direction;
   final List<Widget>? children;
   final double? spacing;
 
@@ -36,7 +36,7 @@ class _AntSpaceState extends State<AntSpace> {
     // style.merge(widget.style);
 
     Widget child = widget.children != null
-        ? widget.direction == SpaceDirection.vertical
+        ? widget.direction == AntSpaceDirection.vertical
             ? Column(
                 spacing: widget.spacing ?? 0,
                 children: widget.children!,

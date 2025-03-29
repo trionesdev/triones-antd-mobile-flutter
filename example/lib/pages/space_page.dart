@@ -41,7 +41,7 @@ class _SpacePageState extends State<SpacePage> {
                 children: [
                   AntSpace(
                       spacing: 10,
-                      direction: SpaceDirection.vertical,
+                      direction: AntSpaceDirection.vertical,
                       children: [
                         AntButton(
                           text: "Button",

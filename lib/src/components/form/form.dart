@@ -2,9 +2,9 @@ import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
-enum FormLayout { horizontal, vertical }
+enum AntFormLayout { horizontal, vertical }
 
-enum LabelAlign { left, right }
+enum AntLabelAlign { left, right }
 
 class Col {
   const Col({this.flex, this.span});
@@ -19,18 +19,18 @@ class AntForm extends StatefulWidget {
     this.spacing,
     this.rowSpacing,
     this.columnSpacing,
-    this.layout = FormLayout.horizontal,
+    this.layout = AntFormLayout.horizontal,
     required this.children,
     this.labelCol,
     this.wrapperCol,
-    this.labelAlign = LabelAlign.left,
+    this.labelAlign = AntLabelAlign.left,
   });
 
   final double? spacing;
   final double? rowSpacing;
   final double? columnSpacing;
-  final FormLayout? layout;
-  final LabelAlign? labelAlign;
+  final AntFormLayout? layout;
+  final AntLabelAlign? labelAlign;
   final Col? labelCol;
   final Col? wrapperCol;
 
@@ -57,7 +57,7 @@ class AntFormState extends State<AntForm> {
   List<Map<String, dynamic>> errorFields = [];
   final Set<AntFormItemState<dynamic>> _fields = <AntFormItemState<dynamic>>{};
 
-  FormLayout? get layout => widget.layout;
+  AntFormLayout? get layout => widget.layout;
 
   double? get rowSpacing => widget.rowSpacing;
 
@@ -67,7 +67,7 @@ class AntFormState extends State<AntForm> {
 
   Col? get wrapperCol => widget.wrapperCol;
 
-  LabelAlign? get labelAlign => widget.labelAlign;
+  AntLabelAlign? get labelAlign => widget.labelAlign;
 
   void _fieldDidChange() {
     _forceRebuild();
@@ -222,12 +222,12 @@ typedef FormItemValidator<T> = String? Function(T? value);
 typedef FormItemSetter<T> = void Function(T? newValue);
 
 class AntFormItem<T> extends StatefulWidget {
-  final FormLayout? layout;
+  final AntFormLayout? layout;
   final NamePath? name;
   final Widget? label;
   final Col? labelCol;
   final Col? wrapperCol;
-  final LabelAlign? labelAlign;
+  final AntLabelAlign? labelAlign;
   final Widget? child;
   final FormItemBuilder<T> builder;
   final FormItemSetter<T>? onSaved;
@@ -267,7 +267,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
 
   NamePath? get name => widget.name;
 
-  FormLayout? get layout {
+  AntFormLayout? get layout {
     if (widget.layout != null) {
       return widget.layout;
     } else {
@@ -291,7 +291,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     }
   }
 
-  LabelAlign? get labelAlign {
+  AntLabelAlign? get labelAlign {
     if (widget.labelAlign != null) {
       return widget.labelAlign;
     } else {
@@ -419,7 +419,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       Widget fieldLabel = Container(
         // padding: EdgeInsets.only(left: 8),
         child: Row(
-          mainAxisAlignment: labelAlign == LabelAlign.left
+          mainAxisAlignment: labelAlign == AntLabelAlign.left
               ? MainAxisAlignment.start
               : MainAxisAlignment.end,
           children: fieldLabelChildren,
@@ -445,7 +445,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
         children: filedInputChildren,
       );
       Widget filedInput =
-          layout == FormLayout.horizontal ? _wrapperCol(fieldItem) : fieldItem;
+          layout == AntFormLayout.horizontal ? _wrapperCol(fieldItem) : fieldItem;
       fieldItemChildren.add(filedInput);
     }
 
@@ -453,13 +453,13 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       decoration: stateStyle.resolve(<WidgetState>{})?.decoration,
       padding: stateStyle.resolve(<WidgetState>{})?.computedPadding,
       margin: stateStyle.resolve(<WidgetState>{})?.computedMargin,
-      child: layout == FormLayout.horizontal
+      child: layout == AntFormLayout.horizontal
           ? Row(
               spacing: AntForm.maybeOf(context)?.rowSpacing ?? 8,
               children: fieldItemChildren,
             )
           : Column(
-              crossAxisAlignment: labelAlign == LabelAlign.left
+              crossAxisAlignment: labelAlign == AntLabelAlign.left
                   ? CrossAxisAlignment.start
                   : CrossAxisAlignment.end,
               spacing: AntForm.maybeOf(context)?.columnSpacing ?? 8,

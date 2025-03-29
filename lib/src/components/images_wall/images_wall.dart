@@ -16,13 +16,15 @@ class ImagesWall extends StatefulWidget {
       this.disabled = false,
       this.crossAxisCount = 5,
       this.onChange,
-      this.uploadRequest});
+      this.uploadRequest,
+      this.multiSelect});
 
   final List<String>? value;
   final ValueChanged<List<String>>? onChange;
   final int? maxCount;
   final int? crossAxisCount;
   final bool? disabled;
+  final bool? multiSelect;
   final Future<String?> Function(File value, String? fileName)? uploadRequest;
 
   @override
@@ -33,7 +35,6 @@ class _ImagesWallState extends State<ImagesWall> {
   final List<Image> _images = [];
 
   void addImages(List<XFile> images) {
-
     if (widget.uploadRequest != null) {
       images.forEach((image) async {
         var fileName = image.name;
@@ -197,7 +198,7 @@ class _ImagesWallState extends State<ImagesWall> {
               label: Text('从相册选择'),
               onPressed: () {
                 Navigator.of(context).pop();
-                selectImageFromGallery(true);
+                selectImageFromGallery(widget.multiSelect!);
               },
             ),
             AntActionType(

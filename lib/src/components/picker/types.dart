@@ -1,6 +1,6 @@
-class PickerOption {
+class AntPickerOption {
   String? label;
   String? value;
 
-  PickerOption({this.label, this.value});
+  AntPickerOption({this.label, this.value});
 }

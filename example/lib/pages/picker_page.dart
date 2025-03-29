@@ -10,51 +10,51 @@ class PickerPage extends StatefulWidget {
 }
 
 class _PickerPageState extends State<PickerPage> {
-  final List<PickerOption> _options1 = [
-    PickerOption(label: "周一", value: "Mon"),
-    PickerOption(label: "周二", value: "Tues"),
-    PickerOption(label: "周三", value: "Wed"),
-    PickerOption(label: "周四", value: "Thur"),
-    PickerOption(label: "周五", value: "Fri"),
+  final List<AntPickerOption> _options1 = [
+    AntPickerOption(label: "周一", value: "Mon"),
+    AntPickerOption(label: "周二", value: "Tues"),
+    AntPickerOption(label: "周三", value: "Wed"),
+    AntPickerOption(label: "周四", value: "Thur"),
+    AntPickerOption(label: "周五", value: "Fri"),
   ];
 
-  final List<List<PickerOption>> _columns = [
+  final List<List<AntPickerOption>> _columns = [
     [
-      PickerOption(label: "周一", value: "Mon"),
-      PickerOption(label: "周二", value: "Tues"),
-      PickerOption(label: "周三", value: "Wed"),
-      PickerOption(label: "周四", value: "Thur"),
-      PickerOption(label: "周五", value: "Fri"),
+      AntPickerOption(label: "周一", value: "Mon"),
+      AntPickerOption(label: "周二", value: "Tues"),
+      AntPickerOption(label: "周三", value: "Wed"),
+      AntPickerOption(label: "周四", value: "Thur"),
+      AntPickerOption(label: "周五", value: "Fri"),
     ],
     [
-      PickerOption(label: "上午", value: "am"),
-      PickerOption(label: "下午", value: "pm"),
+      AntPickerOption(label: "上午", value: "am"),
+      AntPickerOption(label: "下午", value: "pm"),
     ],
   ];
 
-  List<PickerOption> _optionsJiangSu = [
-    PickerOption(label: "南京", value: "nanjing"),
-    PickerOption(label: "苏州", value: "suzhou"),
+  List<AntPickerOption> _optionsJiangSu = [
+    AntPickerOption(label: "南京", value: "nanjing"),
+    AntPickerOption(label: "苏州", value: "suzhou"),
   ];
 
-  final List<PickerOption> _optionsZheJiang = [
-    PickerOption(label: "杭州", value: "hangzhou"),
-    PickerOption(label: "宁波", value: "ningbo"),
+  final List<AntPickerOption> _optionsZheJiang = [
+    AntPickerOption(label: "杭州", value: "hangzhou"),
+    AntPickerOption(label: "宁波", value: "ningbo"),
   ];
 
-  final List<PickerOption> _optionsHeNan = [
-    PickerOption(label: "开封", value: "kaifeng")
+  final List<AntPickerOption> _optionsHeNan = [
+    AntPickerOption(label: "开封", value: "kaifeng")
   ];
 
-  List<List<PickerOption>> _options2 = [
+  List<List<AntPickerOption>> _options2 = [
     [
-      PickerOption(label: "江苏", value: "jiangsu"),
-      PickerOption(label: "浙江", value: "zhejiang"),
-      PickerOption(label: "河南", value: "heinan"),
+      AntPickerOption(label: "江苏", value: "jiangsu"),
+      AntPickerOption(label: "浙江", value: "zhejiang"),
+      AntPickerOption(label: "河南", value: "heinan"),
     ],
     [
-      PickerOption(label: "南京", value: "nanjing"),
-      PickerOption(label: "苏州", value: "suzhou"),
+      AntPickerOption(label: "南京", value: "nanjing"),
+      AntPickerOption(label: "苏州", value: "suzhou"),
     ]
   ];
 

@@ -27,9 +27,9 @@ class _SwitchPageState extends State<SwitchPage>{
             DemoBlock(title: "三种大小",child: Column(
               spacing: 10,
               children: [
-                AntSwitch(size: SwitchSize.small,onChange: (bool value) {  },),
-                AntSwitch(size: SwitchSize.middle,onChange: (bool value) {  },),
-                AntSwitch(size: SwitchSize.large,onChange: (bool value) {  },),
+                AntSwitch(size: AntSwitchSize.small,onChange: (bool value) {  },),
+                AntSwitch(size: AntSwitchSize.middle,onChange: (bool value) {  },),
+                AntSwitch(size: AntSwitchSize.large,onChange: (bool value) {  },),
               ],
             ),
             )

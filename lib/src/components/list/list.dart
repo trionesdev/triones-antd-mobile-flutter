@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
-typedef ListItemRenderCallback = Widget Function(
+typedef AntListItemRenderCallback = Widget Function(
     BuildContext context, dynamic item, int index);
 
 class AntList extends StatefulWidget {
@@ -19,7 +19,7 @@ class AntList extends StatefulWidget {
   final List<Widget>? children;
   final Widget? separator;
   final List<dynamic>? dataSource;
-  final ListItemRenderCallback? itemRender;
+  final AntListItemRenderCallback? itemRender;
   final ScrollController? controller;
 
   @override

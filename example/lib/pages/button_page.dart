@@ -26,7 +26,7 @@ class _ButtonPageState extends State<ButtonPage> {
               runSpacing: 4.0,
               children: [
                 AntButton(
-                  type: ButtonType.primary,
+                  type: AntButtonType.primary,
                   text: 'Primary',
                   onPressed: () {
                     print('ElevatedButton');
@@ -39,14 +39,14 @@ class _ButtonPageState extends State<ButtonPage> {
                   },
                 ),
                 AntButton(
-                  type: ButtonType.text,
+                  type: AntButtonType.text,
                   text: 'Text',
                   onPressed: () {
                     print('ElevatedButton');
                   },
                 ),
                 AntButton(
-                  type: ButtonType.link,
+                  type: AntButtonType.link,
                   text: 'Link',
                   onPressed: () {
                     print('ElevatedButton');
@@ -65,13 +65,13 @@ class _ButtonPageState extends State<ButtonPage> {
                   AntButton(
                     text: 'Primary',
                     color: Color(0xff000000),
-                    variant: ButtonVariant.solid,
+                    variant: AntButtonVariant.solid,
                     onPressed: () {
                       print('ElevatedButton');
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.outlined,
+                    variant: AntButtonVariant.outlined,
                     color: Color(0xff000000),
                     text: 'Outlined',
                     onPressed: () {
@@ -79,7 +79,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.filled,
+                    variant: AntButtonVariant.filled,
                     color: Color(0xff000000),
                     text: 'Filled',
                     onPressed: () {
@@ -87,7 +87,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.text,
+                    variant: AntButtonVariant.text,
                     color: Color(0xff000000),
                     text: 'Text',
                     onPressed: () {
@@ -95,7 +95,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.link,
+                    variant: AntButtonVariant.link,
                     color: Color(0xff000000),
                     text: 'Link',
                     onPressed: () {
@@ -106,14 +106,14 @@ class _ButtonPageState extends State<ButtonPage> {
                 Wrap(spacing: 4, runSpacing: 4, children: [
                   AntButton(
                     text: 'Primary',
-                    variant: ButtonVariant.solid,
+                    variant: AntButtonVariant.solid,
                     color: Color(0xff1677FF),
                     onPressed: () {
                       print('ElevatedButton');
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.outlined,
+                    variant: AntButtonVariant.outlined,
                     color: Color(0xff1677FF),
                     text: 'Outlined',
                     onPressed: () {
@@ -121,7 +121,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.filled,
+                    variant: AntButtonVariant.filled,
                     color: Color(0xff1677FF),
                     text: 'Filled',
                     onPressed: () {
@@ -129,7 +129,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.text,
+                    variant: AntButtonVariant.text,
                     color: Color(0xff1677FF),
                     text: 'Text',
                     onPressed: () {
@@ -137,7 +137,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.link,
+                    variant: AntButtonVariant.link,
                     color: Color(0xff1677FF),
                     text: 'Link',
                     onPressed: () {
@@ -148,14 +148,14 @@ class _ButtonPageState extends State<ButtonPage> {
                 Wrap(spacing: 4, runSpacing: 4, children: [
                   AntButton(
                     text: 'Primary',
-                    variant: ButtonVariant.solid,
+                    variant: AntButtonVariant.solid,
                     color: Color(0xffFF4D4F),
                     onPressed: () {
                       print('ElevatedButton');
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.outlined,
+                    variant: AntButtonVariant.outlined,
                     color: Color(0xffFF4D4F),
                     text: 'Outlined',
                     onPressed: () {
@@ -163,7 +163,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.filled,
+                    variant: AntButtonVariant.filled,
                     color: Color(0xffFF4D4F),
                     text: 'Filled',
                     onPressed: () {
@@ -171,7 +171,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.text,
+                    variant: AntButtonVariant.text,
                     color: Color(0xffFF4D4F),
                     text: 'Text',
                     onPressed: () {
@@ -179,7 +179,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.link,
+                    variant: AntButtonVariant.link,
                     color: Color(0xffFF4D4F),
                     text: 'Link',
                     onPressed: () {
@@ -190,14 +190,14 @@ class _ButtonPageState extends State<ButtonPage> {
                 Wrap(spacing: 4, runSpacing: 4, children: [
                   AntButton(
                     text: 'Primary',
-                    variant: ButtonVariant.solid,
+                    variant: AntButtonVariant.solid,
                     color: Color(0xffEB2F96),
                     onPressed: () {
                       print('ElevatedButton');
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.outlined,
+                    variant: AntButtonVariant.outlined,
                     color: Color(0xffEB2F96),
                     text: 'Outlined',
                     onPressed: () {
@@ -205,7 +205,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.filled,
+                    variant: AntButtonVariant.filled,
                     color: Color(0xffEB2F96),
                     text: 'Filled',
                     onPressed: () {
@@ -213,7 +213,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.text,
+                    variant: AntButtonVariant.text,
                     color: Color(0xffEB2F96),
                     text: 'Text',
                     onPressed: () {
@@ -221,7 +221,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     },
                   ),
                   AntButton(
-                    variant: ButtonVariant.link,
+                    variant: AntButtonVariant.link,
                     color: Color(0xffEB2F96),
                     text: 'Link',
                     onPressed: () {
@@ -243,14 +243,14 @@ class _ButtonPageState extends State<ButtonPage> {
                   children: [
                     AntButton(
                       text: 'Large',
-                      size: ButtonSize.large,
+                      size: AntButtonSize.large,
                       color: Color(0xffEB2F96),
                       onPressed: () {
                         print('ElevatedButton');
                       },
                     ),
                     AntButton(
-                      size: ButtonSize.large,
+                      size: AntButtonSize.large,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -258,8 +258,8 @@ class _ButtonPageState extends State<ButtonPage> {
                       },
                     ),
                     AntButton(
-                      shape: ButtonShape.circle,
-                      size: ButtonSize.large,
+                      shape: AntButtonShape.circle,
+                      size: AntButtonSize.large,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -290,7 +290,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     ),
                     AntButton(
                       color: Color(0xffEB2F96),
-                      shape: ButtonShape.circle,
+                      shape: AntButtonShape.circle,
                       icon: Icon(Icons.add),
                       onPressed: () {
                         print('ElevatedButton');
@@ -298,14 +298,14 @@ class _ButtonPageState extends State<ButtonPage> {
                     ),
                     AntButton(
                       text: 'Small',
-                      size: ButtonSize.small,
+                      size: AntButtonSize.small,
                       color: Color(0xffEB2F96),
                       onPressed: () {
                         print('ElevatedButton');
                       },
                     ),
                     AntButton(
-                      size: ButtonSize.small,
+                      size: AntButtonSize.small,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -313,8 +313,8 @@ class _ButtonPageState extends State<ButtonPage> {
                       },
                     ),
                     AntButton(
-                      size: ButtonSize.small,
-                      shape: ButtonShape.circle,
+                      size: AntButtonSize.small,
+                      shape: AntButtonShape.circle,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -333,14 +333,14 @@ class _ButtonPageState extends State<ButtonPage> {
               children: [
                 Wrap(spacing: 4, runSpacing: 4, children: [
                   AntButton(
-                    shape: ButtonShape.circle,
+                    shape: AntButtonShape.circle,
                     icon: Icon(Icons.add),
                     onPressed: () {
                       print('ElevatedButton');
                     },
                   ),
                   AntButton(
-                    shape: ButtonShape.round,
+                    shape: AntButtonShape.round,
                     icon: Icon(Icons.add),
                   )
                 ]),
@@ -350,23 +350,14 @@ class _ButtonPageState extends State<ButtonPage> {
                   children: [
                     AntButton(
                       text: 'Middle',
-                      shape: ButtonShape.circle,
+                      shape: AntButtonShape.circle,
                       color: Color(0xffEB2F96),
                       onPressed: () {
                         print('ElevatedButton');
                       },
                     ),
                     AntButton(
-                      shape: ButtonShape.round,
-                      color: Color(0xffEB2F96),
-                      icon: Icon(Icons.add),
-                      onPressed: () {
-                        print('ElevatedButton');
-                      },
-                    ),
-                    AntButton(
-                      shape: ButtonShape.circle,
-                      size: ButtonSize.small,
+                      shape: AntButtonShape.round,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -374,8 +365,8 @@ class _ButtonPageState extends State<ButtonPage> {
                       },
                     ),
                     AntButton(
-                      shape: ButtonShape.circle,
-                      size: ButtonSize.middle,
+                      shape: AntButtonShape.circle,
+                      size: AntButtonSize.small,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -383,8 +374,17 @@ class _ButtonPageState extends State<ButtonPage> {
                       },
                     ),
                     AntButton(
-                      shape: ButtonShape.circle,
-                      size: ButtonSize.large,
+                      shape: AntButtonShape.circle,
+                      size: AntButtonSize.middle,
+                      color: Color(0xffEB2F96),
+                      icon: Icon(Icons.add),
+                      onPressed: () {
+                        print('ElevatedButton');
+                      },
+                    ),
+                    AntButton(
+                      shape: AntButtonShape.circle,
+                      size: AntButtonSize.large,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -394,7 +394,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     AntButton(
                       text: 'Middle',
                       icon: Icon(Icons.add),
-                      shape: ButtonShape.circle,
+                      shape: AntButtonShape.circle,
                       color: Color(0xffEB2F96),
                       onPressed: () {
                         print('ElevatedButton');

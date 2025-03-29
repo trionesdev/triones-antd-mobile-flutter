@@ -9,9 +9,9 @@ class AntPickerViewColumn extends StatefulWidget {
         this.value,
         this.itemHeight = 34});
 
-  final List<PickerOption>? options;
-  final ValueChanged<PickerOption?>? onSelected;
-  final PickerOption? value;
+  final List<AntPickerOption>? options;
+  final ValueChanged<AntPickerOption?>? onSelected;
+  final AntPickerOption? value;
   final double? itemHeight;
 
   @override

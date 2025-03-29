@@ -70,7 +70,7 @@ class _FormPageState extends State<FormPage> {
                           return AntInput(
                             value: field.value,
                             onChange: field.didChange,
-                            type: InputType.password,
+                            type: AntInputType.password,
                             placeholder: '请输入密码',
                             prefix: Icon(Icons.lock),
                           );
@@ -103,7 +103,7 @@ class _FormPageState extends State<FormPage> {
                   ],
                 ),
               ),
-              AntForm(key: _formKey2, layout: FormLayout.vertical, children: [
+              AntForm(key: _formKey2, layout: AntFormLayout.vertical, children: [
                 AntFormItem(
                     label: Text("用户名"),
                     name: NamePath(['username']),
@@ -136,7 +136,7 @@ class _FormPageState extends State<FormPage> {
                 title: "col flex",
                 child: AntForm(
                     key: _formKey3,
-                    layout: FormLayout.horizontal,
+                    layout: AntFormLayout.horizontal,
                     children: [
                       AntFormItem(
                           label: Text("用户名"),
@@ -161,7 +161,7 @@ class _FormPageState extends State<FormPage> {
                 title: "col span",
                 child: AntForm(
                     key: _formKey4,
-                    layout: FormLayout.horizontal,
+                    layout: AntFormLayout.horizontal,
                     children: [
                       AntFormItem(
                           label: Text("用户名"),

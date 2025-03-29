@@ -29,7 +29,7 @@ class _InputPageState extends State<InputPage> {
             child: Column(
               children: [
                 AntInput(
-                  type: InputType.password,
+                  type: AntInputType.password,
                   placeholder: "请输入内容",
                   // height: 24,
                 ),

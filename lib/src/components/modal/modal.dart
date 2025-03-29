@@ -53,9 +53,9 @@ class AntModal {
             actions: [
               AntButton(
                 block: true,
-                type: ButtonType.primary,
+                type: AntButtonType.primary,
                 text: confirmText ?? "知道了",
-                size: ButtonSize.large,
+                size: AntButtonSize.large,
                 onPressed: () {
                   Navigator.of(context).pop();
                   onConfirm?.call();
@@ -93,7 +93,7 @@ class AntModal {
                   Expanded(
                       child: AntButton(
                     text: cancelText ?? "取消",
-                    type: ButtonType.text,
+                    type: AntButtonType.text,
                     onPressed: () {
                       Navigator.of(context).pop();
                       onCancel?.call();
@@ -102,7 +102,7 @@ class AntModal {
                   Expanded(
                       child: AntButton(
                     text: confirmText ?? "确定",
-                    type: ButtonType.text,
+                    type: AntButtonType.text,
                     color: themeData.colorPrimary,
                     onPressed: () {
                       Navigator.of(context).pop();

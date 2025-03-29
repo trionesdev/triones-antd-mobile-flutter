@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
-enum ToastPosition { top, bottom, center }
+enum AntToastPosition { top, bottom, center }
 
 class AntToastRoute extends PopupRoute {
   AntToastRoute({
     this.style,
     this.content,
     this.icon,
-    this.position = ToastPosition.center,
+    this.position = AntToastPosition.center,
   });
 
   final StateStyle? style;
   final Icon? icon;
   final Widget? content;
-  final ToastPosition? position;
+  final AntToastPosition? position;
 
   Widget? contentRender() {
     if (content is Text) {
@@ -34,9 +34,9 @@ class AntToastRoute extends PopupRoute {
   }
 
   Alignment alignment() {
-    if (position == ToastPosition.top) {
+    if (position == AntToastPosition.top) {
       return Alignment(0.0, -0.8);
-    } else if (position == ToastPosition.bottom) {
+    } else if (position == AntToastPosition.bottom) {
       return Alignment(0.0, 0.8);
     } else {
       return Alignment.center;

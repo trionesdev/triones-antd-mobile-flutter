@@ -14,27 +14,48 @@ class _DividerPageState extends State<DividerPage> {
   @override
   Widget build(BuildContext context) {
     return AntPageContainer(
-      appBar: AntAppBar(
-        title: const Text("Divider"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          spacing: 10,
-          children: [
-            DemoBlock(title: "基本使用",child: Column(children: [
-              AntDivider()
-            ]),),
-            DemoBlock(title: "带内容的分割线",child: Column(children: [
-              AntDivider(child: Text("分割线"),),
-              AntDivider(contentPosition: ContentPosition.left,child: Text("分割线"),),
-              AntDivider(contentPosition: ContentPosition.right,child: Text("分割线"),),
-            ]),),
-            DemoBlock(title: "垂直分割线",child: Column(children: [
-              Row(children: [Text("link",), AntDivider(direction: DividerDirection.vertical,), Text("link")]),
-            ]))
-          ],
+        appBar: AntAppBar(
+          title: const Text("Divider"),
         ),
-      )
-    );
+        body: SingleChildScrollView(
+          child: Column(
+            spacing: 10,
+            children: [
+              DemoBlock(
+                title: "基本使用",
+                child: Column(children: [AntDivider()]),
+              ),
+              DemoBlock(
+                title: "带内容的分割线",
+                child: Column(children: [
+                  AntDivider(
+                    child: Text("分割线"),
+                  ),
+                  AntDivider(
+                    contentPosition: AntContentPosition.left,
+                    child: Text("分割线"),
+                  ),
+                  AntDivider(
+                    contentPosition: AntContentPosition.right,
+                    child: Text("分割线"),
+                  ),
+                ]),
+              ),
+              DemoBlock(
+                  title: "垂直分割线",
+                  child: Column(children: [
+                    Row(children: [
+                      Text(
+                        "link",
+                      ),
+                      AntDivider(
+                        direction: AntDividerDirection.vertical,
+                      ),
+                      Text("link")
+                    ]),
+                  ]))
+            ],
+          ),
+        ));
   }
 }

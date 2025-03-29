@@ -67,7 +67,7 @@ class _ToastPageState extends State<ToastPage> {
                   onPressed: () {
                     AntToast.show(
                         context: context,
-                        position: ToastPosition.top,
+                        position: AntToastPosition.top,
                         content: Text("顶部显示"));
                   },
                 ),
@@ -76,7 +76,7 @@ class _ToastPageState extends State<ToastPage> {
                   onPressed: () {
                     AntToast.show(
                         context: context,
-                        position: ToastPosition.bottom,
+                        position: AntToastPosition.bottom,
                         content: Text("底部显示"));
                   },
                 ),

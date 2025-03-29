@@ -14,10 +14,10 @@ class AntPickerView extends StatefulWidget {
       this.itemHeight = 34});
 
   final Widget? title;
-  final List<PickerOption>? options;
+  final List<AntPickerOption>? options;
   final String? value;
   final Function? onCancel;
-  final ValueChanged<PickerOption?>? onOk;
+  final ValueChanged<AntPickerOption?>? onOk;
   final double? itemHeight;
 
   @override
@@ -26,7 +26,7 @@ class AntPickerView extends StatefulWidget {
 
 class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
   double viewHeight = 0;
-  PickerOption? _value = null;
+  AntPickerOption? _value = null;
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
     setState(() {});
   }
 
-  PickerOption? _getOptionByValue() {
+  AntPickerOption? _getOptionByValue() {
     if (widget.options != null && widget.value != null) {
       return widget.options?.firstWhere((option) {
         return option.value == widget.value;

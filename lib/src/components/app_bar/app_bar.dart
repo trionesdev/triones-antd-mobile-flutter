@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../antd.dart';
 
-typedef OnBack = void Function(BuildContext context);
-
 class AntAppBar extends StatefulWidget implements PreferredSizeWidget {
   AntAppBar(
       {super.key,
@@ -25,7 +23,7 @@ class AntAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Widget? title;
   final bool? back;
   final Widget? backIcon;
-  final OnBack? onBack;
+  final Function(BuildContext context)? onBack;
   final List<Widget>? left;
   final List<Widget>? right;
   final BoxDecoration? decoration;
@@ -61,7 +59,7 @@ class _AntAppBarState extends State<AntAppBar> {
       List<Widget> leftWidgets = [];
       if (widget.back == true) {
         leftWidgets.add(AntButton(
-          type: ButtonType.text,
+          type: AntButtonType.text,
           icon: widget.backIcon ?? Icon(Icons.arrow_back),
           onPressed: () {
             if (widget.onBack != null) {
@@ -100,7 +98,8 @@ class _AntAppBarState extends State<AntAppBar> {
       widgets.add(widget.child!);
     }
 
-    return SafeArea(child: Container(
+    return SafeArea(
+        child: Container(
       decoration: widget.decoration,
       height: widget.preferredSize.height,
       child: Column(
