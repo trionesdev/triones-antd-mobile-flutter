@@ -4,10 +4,10 @@ import 'package:trionesdev_antd_mobile/src/components/picker/types.dart';
 class AntPickerViewColumn extends StatefulWidget {
   const AntPickerViewColumn(
       {super.key,
-        this.options,
-        this.onSelected,
-        this.value,
-        this.itemHeight = 34});
+      this.options,
+      this.onSelected,
+      this.value,
+      this.itemHeight = 34});
 
   final List<AntPickerOption>? options;
   final ValueChanged<AntPickerOption?>? onSelected;
@@ -20,7 +20,7 @@ class AntPickerViewColumn extends StatefulWidget {
 
 class _AntPickerViewColumnState extends State<AntPickerViewColumn> {
   FixedExtentScrollController _controller =
-  FixedExtentScrollController(initialItem: 2);
+      FixedExtentScrollController(initialItem: 2);
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _AntPickerViewColumnState extends State<AntPickerViewColumn> {
     int initItemIndex = 0;
     if (widget.value != null) {
       initItemIndex = widget.options
-          ?.indexWhere((element) => element.value == widget.value?.value) ??
+              ?.indexWhere((element) => element.value == widget.value?.value) ??
           0;
     }
     _controller = FixedExtentScrollController(initialItem: initItemIndex);
@@ -36,6 +36,7 @@ class _AntPickerViewColumnState extends State<AntPickerViewColumn> {
 
   @override
   void didUpdateWidget(AntPickerViewColumn oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (oldWidget.value != widget.value) {
       if (widget.value != null) {
         _controller.jumpToItem(widget.options?.indexWhere(

@@ -9,15 +9,14 @@ import 'package:trionesdev_antd_mobile/src/components/images_wall/images_preview
 import 'package:trionesdev_antd_mobile/src/components/theme/theme.dart';
 
 class ImagesWall extends StatefulWidget {
-  const ImagesWall(
-      {super.key,
-      this.value,
-      this.maxCount,
-      this.disabled = false,
-      this.crossAxisCount = 5,
-      this.onChange,
-      this.uploadRequest,
-      this.multiSelect});
+  const ImagesWall({super.key,
+    this.value,
+    this.maxCount,
+    this.disabled = false,
+    this.crossAxisCount = 5,
+    this.onChange,
+    this.uploadRequest,
+    this.multiSelect = true});
 
   final List<String>? value;
   final ValueChanged<List<String>>? onChange;
@@ -40,7 +39,7 @@ class _ImagesWallState extends State<ImagesWall> {
         var fileName = image.name;
         image.readAsBytes().then((bytes) async {
           final String? url =
-              await widget.uploadRequest!(File.fromRawPath(bytes), fileName);
+          await widget.uploadRequest!(File.fromRawPath(bytes), fileName);
           if (url != null) {
             setState(() {
               _images.add(Image.network(

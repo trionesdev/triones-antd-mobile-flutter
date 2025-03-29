@@ -12,7 +12,7 @@ class AntPopup {
       Widget? child}) {
     showModalBottomSheet(
         context: context,
-        isScrollControlled: true,
+        isScrollControlled: false,
         backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(),
         builder: (context) {
