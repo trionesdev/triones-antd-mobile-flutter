@@ -21,6 +21,7 @@ import 'package:antd_flutter_example/pages/space_page.dart';
 import 'package:antd_flutter_example/pages/switch_page.dart';
 import 'package:antd_flutter_example/pages/tab_bar_page.dart';
 import 'package:antd_flutter_example/pages/tag_page.dart';
+import 'package:antd_flutter_example/pages/timeline_page.dart';
 import 'package:antd_flutter_example/pages/toast_page.dart';
 import 'package:antd_flutter_example/pages/upload_page.dart';
 import 'package:flutter/material.dart' as material;
@@ -31,7 +32,6 @@ import 'package:trionesdev_antd_mobile/antd.dart';
 void main() {
   // debugPaintSizeEnabled = true;
   runApp(const MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -69,6 +69,7 @@ class MyApp extends StatelessWidget {
         '/upload': (context) => UploadPage(),
         '/images-wall': (context) => ImagesWallPage(),
         '/actions-sheet': (context) => ActionsSheetPage(),
+        '/timeline': (context) => TimelinePage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -271,6 +272,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('ActionsSheet 操作页'),
             onTap: () {
               Navigator.pushNamed(context, '/actions-sheet');
+            },
+          ),
+          material.ListTile(
+            title: Text('Timeline 时间轴'),
+            onTap: () {
+              Navigator.pushNamed(context, '/timeline');
             },
           ),
         ],

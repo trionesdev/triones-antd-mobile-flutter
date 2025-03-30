@@ -4,6 +4,7 @@ export 'src/components/theme/theme_data.dart';
 export 'src/components/style/style.dart';
 export 'src/components/style/state_style.dart';
 export 'src/components/style/style_property.dart';
+
 export 'src/components/ant.dart';
 export 'src/components/app/app.dart';
 export 'src/components/button/button.dart';
@@ -39,4 +40,6 @@ export 'src/components/avatar/avatar.dart';
 export 'src/components/upload/upload.dart';
 export 'src/components/images_wall/images_wall.dart';
 export 'src/components/actions_sheet/actions_sheet.dart';
+export 'src/components/timeline/timeline.dart';
+
 export 'src/components/util/utils.dart';
