@@ -19,7 +19,11 @@ class _TimelinePageState extends State<TimelinePage>{
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            DemoBlock(title: "基本用法",child: AntTimeline(),)
+            DemoBlock(title: "基本用法",child: AntTimeline(
+              items: List.generate(10, (index){
+                return AntTimelineItemType(latest: index==9);
+              }),
+            ),)
           ],
         ),
       ),
