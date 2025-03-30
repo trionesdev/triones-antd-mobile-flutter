@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 import '../../../antd.dart';
 import '../calendar_picker/calendar_view.dart';
@@ -35,6 +37,9 @@ class _AntCalendarDatetimePickerViewState
       children: [
         Container(
           padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+          decoration: BoxDecoration(
+              border:
+                  Border(bottom: BorderSide(color: Colors.grey, width: 0.5))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -49,7 +54,7 @@ class _AntCalendarDatetimePickerViewState
                       });
                     },
                     child: Text(_selectedDate != null
-                        ? '${_selectedDate!.year}-${_selectedDate!.month}-${_selectedDate!.day}'
+                        ? DateFormat("yyyy-MM-dd").format(_selectedDate!)
                         : '请选择日期'),
                   ),
                   GestureDetector(
@@ -59,7 +64,7 @@ class _AntCalendarDatetimePickerViewState
                       });
                     },
                     child: Container(
-                      child: Text('${_selectedDate!.hour}:${_selectedDate!.minute}'),
+                      child: Text(DateFormat("HH:mm").format(_selectedDate!)),
                     ),
                   )
                 ],
@@ -103,22 +108,29 @@ class _AntCalendarDatetimePickerViewState
               AntPickerViewMultiColumns(
                 columns: [
                   List.generate(24, (index) {
-                    return AntPickerOption(value: '$index', label: '$index');
+                    return AntPickerOption(
+                        value: '$index', label: DatetimeUtils.twoDigits(index));
                   }),
                   List.generate(60, (index) {
-                    return AntPickerOption(value: '$index', label: '$index');
+                    return AntPickerOption(
+                        value: '$index', label: DatetimeUtils.twoDigits(index));
                   }),
                 ],
                 itemHeight: 34,
-                value: ['${_selectedDate?.hour ?? 0}', '${_selectedDate?.minute ?? 0}'],
+                value: [
+                  '${_selectedDate?.hour ?? 0}',
+                  '${_selectedDate?.minute ?? 0}'
+                ],
                 onColumnSelected: (value, index) {
                   if (index == 0) {
                     setState(() {
-                      _selectedDate = _selectedDate?.copyWith(hour: int.parse(value!.value!));
+                      _selectedDate = _selectedDate?.copyWith(
+                          hour: int.parse(value!.value!));
                     });
                   } else {
                     setState(() {
-                      _selectedDate = _selectedDate?.copyWith(minute: int.parse(value!.value!));
+                      _selectedDate = _selectedDate?.copyWith(
+                          minute: int.parse(value!.value!));
                     });
                   }
                 },

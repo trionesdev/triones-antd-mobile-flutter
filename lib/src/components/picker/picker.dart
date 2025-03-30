@@ -12,11 +12,14 @@ class AntPicker {
     String? value,
     ValueChanged<AntPickerOption?>? onOk,
     Function? onCancel,
-    double? itemHeight = 34}) {
+    double? itemHeight = 34,
+    bool? isScrollControlled = false,
+  }) {
     AntPopup.show(
         context: context,
         minHeight: minHeight,
         maxHeight: maxHeight,
+        isScrollControlled: isScrollControlled,
         child: AntPickerView(
           itemHeight: itemHeight,
           title: title,
@@ -42,11 +45,14 @@ class AntPicker {
     ValueChanged<List<AntPickerOption?>>? onOk,
     Function? onCancel,
     void Function(AntPickerOption? value, int index)? onColumnSelected,
-    double? itemHeight = 34}) {
+    double? itemHeight = 34,
+    bool? isScrollControlled = false,
+  }) {
     AntPopup.show(
         context: context,
         minHeight: minHeight,
         maxHeight: maxHeight,
+        isScrollControlled: isScrollControlled,
         child: AntPickerMultiView(
           itemHeight: itemHeight,
           title: title,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
 import '../theme/theme.dart';
@@ -34,7 +35,7 @@ class _AntCalendarPickerViewState extends State<AntCalendarPickerView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(_selectedDate != null
-                  ? '${_selectedDate!.year}-${_selectedDate!.month}-${_selectedDate!.day}'
+                  ? DateFormat("yyyy-MM-dd").format(_selectedDate!)
                   : '请选择日期'),
               GestureDetector(
                 child: Container(

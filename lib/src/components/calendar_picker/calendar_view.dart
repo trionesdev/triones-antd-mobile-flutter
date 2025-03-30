@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../antd.dart';
 import '../theme/theme.dart';
@@ -67,7 +68,6 @@ class _AntCalendarViewState extends State<AntCalendarView> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      print("eee==" + constraints.maxHeight.toString());
       return SingleChildScrollView(
         child: Column(
           // mainAxisSize: MainAxisSize.min,
@@ -75,7 +75,7 @@ class _AntCalendarViewState extends State<AntCalendarView> {
             Container(
               height: 32,
               padding: EdgeInsets.all(4),
-              child: Text('${_currentMouth?.year}-${_currentMouth?.month}'),
+              child: Text(DateFormat("yyyy-MM").format(_currentMouth!)),
             ),
             Container(
               height: 32,
@@ -84,8 +84,8 @@ class _AntCalendarViewState extends State<AntCalendarView> {
                 children: ["一", "二", "三", "四", "五", "六", "日"].map((weekday) {
                   return Expanded(
                       child: Center(
-                        child: Text(weekday),
-                      ));
+                    child: Text(weekday),
+                  ));
                 }).toList(),
               ),
             ),
@@ -137,7 +137,8 @@ class _AntCalendarViewState extends State<AntCalendarView> {
                             setState(() {
                               _pageHeight = height;
                             });
-                            widget.onRendered?.call(height!+_mouthHeight+_weekHeight);
+                            widget.onRendered
+                                ?.call(height! + _mouthHeight + _weekHeight);
                           }
                         },
                       ));
@@ -233,7 +234,7 @@ class _AntCalendarMouthViewState extends State<AntCalendarMouthView> {
         return;
       }
       final RenderBox renderBox = renderObject as RenderBox;
-      double height = (renderBox.size.width / 7) * (_dates.length / 7)+4;
+      double height = (renderBox.size.width / 7) * (_dates.length / 7) + 4;
       widget.onRendered?.call(height);
     });
 
