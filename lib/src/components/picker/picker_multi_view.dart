@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
-import 'package:trionesdev_antd_mobile/src/components/picker/picker_view_column.dart';
-import 'package:trionesdev_antd_mobile/src/components/picker/types.dart';
+import 'package:trionesdev_antd_mobile/src/components/picker/picker_view_multi_columns.dart';
+
 import '../theme/theme.dart';
 
 class AntPickerMultiView extends StatefulWidget {
@@ -56,18 +56,6 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
     });
   }
 
-  AntPickerOption? _getOptionByValue(int columnIndex) {
-    if (widget.columns != null && widget.value != null) {
-      if (widget.columns!.length > columnIndex &&
-          widget.value!.length > columnIndex) {
-        return widget.columns![columnIndex].firstWhere((option) {
-          return option.value == widget.value![columnIndex];
-        });
-      }
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     print(MediaQuery.of(context).size.height);
@@ -114,74 +102,13 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
         Expanded(child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               // viewHeight = constraints.maxHeight;
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children:
-                      (widget.columns ?? []).asMap().keys.map((columnIndex) {
-                        return Expanded(
-                            child: AntPickerViewColumn(
-                              itemHeight: widget.itemHeight,
-                              options: widget.columns![columnIndex],
-                              onSelected: (option) {
-                                setState(() {
-                                  _value[columnIndex] = option!;
-                                  widget.onColumnSelected?.call(option, columnIndex);
-                                });
-                              },
-                              value: _getOptionByValue(columnIndex),
-                            ));
-                      }).toList(),
-                    ),
-                  ),
-                  IgnorePointer(
-                    ignoring: true,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Expanded(
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Colors.white,
-                                        Colors.white.withAlpha(0)
-                                      ])),
-                            )),
-                        Container(
-                          height: widget.itemHeight,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            // color: Colors.grey
-                              border: Border(
-                                  top: BorderSide(color: Colors.grey, width: 0.5),
-                                  bottom:
-                                  BorderSide(color: Colors.grey, width: 0.5))),
-                        ),
-                        Expanded(
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      begin: Alignment.bottomCenter,
-                                      end: Alignment.topCenter,
-                                      colors: [
-                                        Colors.white,
-                                        Colors.white.withAlpha(0)
-                                      ])),
-                            ))
-                      ],
-                    ),
-                  )
-                ],
+              return AntPickerViewMultiColumns(
+                columns: widget.columns,
+                itemHeight: widget.itemHeight,
+                value: widget.value,
+                onColumnSelected: (value, index) {
+                  widget.onColumnSelected?.call(value, index);
+                },
               );
             }))
       ],

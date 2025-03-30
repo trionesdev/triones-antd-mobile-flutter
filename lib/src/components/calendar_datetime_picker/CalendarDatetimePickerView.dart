@@ -19,17 +19,16 @@ class _AntCalendarDatetimePickerViewState
     extends State<AntCalendarDatetimePickerView> {
   DateTime? _selectedDate;
   int _showIndex = 0;
-  double? _height =500;
+  double? _height = 500;
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.value;
+    _selectedDate = widget.value ?? DateTime.now();
   }
 
   @override
   Widget build(BuildContext context) {
-
     AntThemeData themeData = AntTheme.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -60,7 +59,7 @@ class _AntCalendarDatetimePickerViewState
                       });
                     },
                     child: Container(
-                      child: Text("11:22"),
+                      child: Text('${_selectedDate!.hour}:${_selectedDate!.minute}'),
                     ),
                   )
                 ],
@@ -88,21 +87,41 @@ class _AntCalendarDatetimePickerViewState
                 value: _selectedDate,
                 onSelected: (date) {
                   setState(() {
-                    _selectedDate = date;
+                    _selectedDate = _selectedDate?.copyWith(
+                      year: date.year,
+                      month: date.month,
+                      day: date.day,
+                    );
                   });
                 },
                 onRendered: (double? value) {
                   setState(() {
-                    _height= value;
+                    _height = value;
                   });
                 },
               ),
               AntPickerViewMultiColumns(
                 columns: [
-                  [AntPickerOption(value: "1", label: "1")],
-                  [AntPickerOption(value: "2", label: "2")]
+                  List.generate(24, (index) {
+                    return AntPickerOption(value: '$index', label: '$index');
+                  }),
+                  List.generate(60, (index) {
+                    return AntPickerOption(value: '$index', label: '$index');
+                  }),
                 ],
                 itemHeight: 34,
+                value: ['${_selectedDate?.hour ?? 0}', '${_selectedDate?.minute ?? 0}'],
+                onColumnSelected: (value, index) {
+                  if (index == 0) {
+                    setState(() {
+                      _selectedDate = _selectedDate?.copyWith(hour: int.parse(value!.value!));
+                    });
+                  } else {
+                    setState(() {
+                      _selectedDate = _selectedDate?.copyWith(minute: int.parse(value!.value!));
+                    });
+                  }
+                },
                 height: _height,
               )
             ],

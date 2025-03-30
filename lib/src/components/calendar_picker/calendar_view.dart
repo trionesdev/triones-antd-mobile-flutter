@@ -4,7 +4,8 @@ import '../../../antd.dart';
 import '../theme/theme.dart';
 
 class AntCalendarView extends StatefulWidget {
-  const AntCalendarView({super.key, this.value, this.onSelected,  this.onRendered});
+  const AntCalendarView(
+      {super.key, this.value, this.onSelected, this.onRendered});
 
   final DateTime? value;
   final ValueSetter<DateTime>? onSelected;
@@ -20,6 +21,8 @@ class _AntCalendarViewState extends State<AntCalendarView> {
   List<DateTime> _mouths = [];
   PageController _controller = PageController();
   double? _pageHeight = 300;
+  double _mouthHeight = 32;
+  double _weekHeight = 32;
 
   List<DateTime> generateMouths(DateTime dateTime) {
     return [
@@ -64,60 +67,84 @@ class _AntCalendarViewState extends State<AntCalendarView> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      print(constraints.maxHeight);
-      return AnimatedContainer(
-        height: _pageHeight,
-        duration: Duration(milliseconds: 200),
-        child: PageView.builder(
-          // physics: const NeverScrollableScrollPhysics(),
-          controller: _controller,
-          scrollDirection: Axis.vertical,
-          onPageChanged: (index) {
-            print(_mouths);
-            print('当前页：$index');
-            if (index == 0) {
-              setState(() {
-                DateTime firstMouth = _mouths.first;
-                _currentMouth = firstMouth;
-                _mouths = generateMouths(firstMouth);
-                _controller.jumpToPage(1);
-              });
-            } else if (index == _mouths.length - 1) {
-              setState(() {
-                DateTime lastMouth = _mouths.last;
-                _currentMouth = lastMouth;
-                _mouths = generateMouths(lastMouth);
-                _controller.jumpToPage(1);
-              });
-            }
-          },
-          itemCount: _mouths.length,
-          itemBuilder: (context, index) {
-            return SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                child: AntCalendarMouthView(
-                  month: _mouths[index],
-                  selectedDate: _selectedDate,
-                  onSelected: (date) {
-                    widget.onSelected?.call(date);
+      print("eee==" + constraints.maxHeight.toString());
+      return SingleChildScrollView(
+        child: Column(
+          // mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 32,
+              padding: EdgeInsets.all(4),
+              child: Text('${_currentMouth?.year}-${_currentMouth?.month}'),
+            ),
+            Container(
+              height: 32,
+              padding: EdgeInsets.all(4),
+              child: Row(
+                children: ["一", "二", "三", "四", "五", "六", "日"].map((weekday) {
+                  return Expanded(
+                      child: Center(
+                        child: Text(weekday),
+                      ));
+                }).toList(),
+              ),
+            ),
+            AnimatedContainer(
+              height: _pageHeight,
+              duration: Duration(milliseconds: 200),
+              child: PageView.builder(
+                // physics: const NeverScrollableScrollPhysics(),
+                controller: _controller,
+                scrollDirection: Axis.vertical,
+                onPageChanged: (index) {
+                  print(_mouths);
+                  print('当前页：$index');
+                  if (index == 0) {
                     setState(() {
-                      _selectedDate = date;
+                      DateTime firstMouth = _mouths.first;
+                      _currentMouth = firstMouth;
+                      _mouths = generateMouths(firstMouth);
+                      _controller.jumpToPage(1);
                     });
-                    if (date!.month != _currentMouth!.month) {
-                      mouthChange(date);
-                    }
-                  },
-                  onRendered: (height) {
-                    print('高度22 $height $_pageHeight');
-                    if (_pageHeight != height) {
-                      setState(() {
-                        _pageHeight = height;
-                      });
-                      widget.onRendered?.call(height);
-                    }
-                  },
-                ));
-          },
+                  } else if (index == _mouths.length - 1) {
+                    setState(() {
+                      DateTime lastMouth = _mouths.last;
+                      _currentMouth = lastMouth;
+                      _mouths = generateMouths(lastMouth);
+                      _controller.jumpToPage(1);
+                    });
+                  }
+                },
+                itemCount: _mouths.length,
+                itemBuilder: (context, index) {
+                  return SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: AntCalendarMouthView(
+                        month: _mouths[index],
+                        selectedDate: _selectedDate,
+                        onSelected: (date) {
+                          widget.onSelected?.call(date);
+                          setState(() {
+                            _selectedDate = date;
+                          });
+                          if (date.month != _currentMouth!.month) {
+                            mouthChange(date);
+                          }
+                        },
+                        onRendered: (height) {
+                          print('高度22 $height $_pageHeight');
+                          if (_pageHeight != height) {
+                            setState(() {
+                              _pageHeight = height;
+                            });
+                            widget.onRendered?.call(height!+_mouthHeight+_weekHeight);
+                          }
+                        },
+                      ));
+                },
+              ),
+            ),
+          ],
         ),
       );
     });
@@ -127,26 +154,25 @@ class _AntCalendarViewState extends State<AntCalendarView> {
 class AntCalendarMouthView extends StatefulWidget {
   const AntCalendarMouthView(
       {super.key,
-        this.month,
-        this.onSelected,
-        this.selectedDate,
-        this.onRendered});
+      this.month,
+      this.onSelected,
+      this.selectedDate,
+      this.onRendered});
 
   final DateTime? month;
   final DateTime? selectedDate;
   final ValueChanged<DateTime>? onSelected;
-  final OnMouthViewRendered? onRendered;
+  final ValueChanged<double?>? onRendered;
 
   @override
   State<StatefulWidget> createState() => _AntCalendarMouthViewState();
 }
 
-typedef OnMouthViewRendered = void Function(double? height);
-
 class _AntCalendarMouthViewState extends State<AntCalendarMouthView> {
   DateTime? _month;
   double? _height;
   final _key = GlobalKey();
+  List<DateTime> _dates = [];
 
   List<DateTime> generateMonthDates(DateTime? date) {
     if (date == null) {
@@ -158,7 +184,7 @@ class _AntCalendarMouthViewState extends State<AntCalendarMouthView> {
     int beforeDayCount = firstDay.weekday - 1;
     if (beforeDayCount > 0) {
       beforeDates = List.generate(beforeDayCount,
-              (i) => firstDay.subtract(Duration(days: (beforeDayCount - i))));
+          (i) => firstDay.subtract(Duration(days: (beforeDayCount - i))));
     }
     final lastDay = DateTime(date.year, date.month + 1, 0);
     List<DateTime> afterDates = [];
@@ -168,18 +194,25 @@ class _AntCalendarMouthViewState extends State<AntCalendarMouthView> {
           afterDayCount, (i) => lastDay.add(Duration(days: i + 1)));
     }
     List<DateTime> mouthDates =
-    List.generate(lastDay.day, (i) => firstDay.add(Duration(days: i)));
+        List.generate(lastDay.day, (i) => firstDay.add(Duration(days: i)));
     return [...beforeDates, ...mouthDates, ...afterDates];
+  }
+
+  void onMouthChange() {
+    setState(() {
+      if (widget.month != null) {
+        _month = widget.month!;
+      } else {
+        _month = DateTime.now();
+      }
+      _dates = generateMonthDates(_month);
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    if (widget.month != null) {
-      _month = widget.month!;
-    } else {
-      _month = DateTime.now();
-    }
+    onMouthChange();
   }
 
   @override
@@ -187,78 +220,52 @@ class _AntCalendarMouthViewState extends State<AntCalendarMouthView> {
     super.didUpdateWidget(oldWidget);
     if (widget.month != oldWidget.month) {
       print('更新月份');
-      setState(() {
-        _month = widget.month!;
-      });
+      onMouthChange();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final dates = generateMonthDates(_month);
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderObject? renderObject =
-      _key.currentContext?.findRenderObject();
+          _key.currentContext?.findRenderObject();
       if (renderObject == null) {
         return;
       }
       final RenderBox renderBox = renderObject as RenderBox;
-      if(_height != renderBox.size.height){
-        _height = renderBox.size.height;
-        print('高度 $_height');
-        widget.onRendered?.call(_height);
-      }
+      double height = (renderBox.size.width / 7) * (_dates.length / 7)+4;
+      widget.onRendered?.call(height);
     });
 
-    return Column(
-      key: _key,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: EdgeInsets.all(4),
-          child: Text('${_month?.year}-${_month?.month}'),
+    return GridView.builder(
+        key: _key,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 7,
+          childAspectRatio: 1,
         ),
-        Container(
-          padding: EdgeInsets.all(4),
-          child: Row(
-            children: ["一", "二", "三", "四", "五", "六", "日"].map((weekday) {
-              return Expanded(
-                  child: Center(
-                    child: Text(weekday),
-                  ));
-            }).toList(),
-          ),
-        ),
-        GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 7,
-            ),
-            itemCount: dates.length,
-            itemBuilder: (context, index) {
-              return AntCalendarDateCell(
-                mouth: _month!,
-                date: dates[index],
-                selectedDate: widget.selectedDate,
-                onSelected: (date) {
-                  widget.onSelected?.call(date);
-                },
-              );
-            })
-      ],
-    );
+        itemCount: _dates.length,
+        itemBuilder: (context, index) {
+          return AntCalendarDateCell(
+            mouth: _month!,
+            date: _dates[index],
+            selectedDate: widget.selectedDate,
+            onSelected: (date) {
+              widget.onSelected?.call(date);
+            },
+          );
+        });
   }
 }
 
 class AntCalendarDateCell extends StatefulWidget {
   const AntCalendarDateCell(
       {super.key,
-        required this.date,
-        required this.mouth,
-        this.selectedDate,
-        this.onSelected});
+      required this.date,
+      required this.mouth,
+      this.selectedDate,
+      this.onSelected});
 
   final DateTime? selectedDate;
   final DateTime date;
@@ -278,7 +285,7 @@ class AntCalendarDateCellState extends State<AntCalendarDateCell> {
 
   bool overCurrentMonth() {
     return widget.date
-        .isBefore(DateTime(widget.mouth.year, widget.mouth.month, 1)) ||
+            .isBefore(DateTime(widget.mouth.year, widget.mouth.month, 1)) ||
         widget.date
             .isAfter(DateTime(widget.mouth.year, widget.mouth.month + 1, 0));
   }

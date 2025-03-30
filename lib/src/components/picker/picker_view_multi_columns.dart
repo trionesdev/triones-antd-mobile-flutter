@@ -80,16 +80,16 @@ class _AntPickerViewMultiColumnsState extends State<AntPickerViewMultiColumns> {
             children: (widget.columns ?? []).asMap().keys.map((columnIndex) {
               return Expanded(
                   child: AntPickerViewColumn(
-                    itemHeight: widget.itemHeight,
-                    options: widget.columns![columnIndex],
-                    onSelected: (option) {
-                      setState(() {
-                        _value[columnIndex] = option!;
-                        widget.onColumnSelected?.call(option, columnIndex);
-                      });
-                    },
-                    value: _getOptionByValue(columnIndex),
-                  ));
+                itemHeight: widget.itemHeight,
+                options: widget.columns![columnIndex],
+                onSelected: (option) {
+                  setState(() {
+                    _value[columnIndex] = option!;
+                    widget.onColumnSelected?.call(option, columnIndex);
+                  });
+                },
+                value: _getOptionByValue(columnIndex),
+              ));
             }).toList(),
           ),
         ),
@@ -100,31 +100,31 @@ class _AntPickerViewMultiColumnsState extends State<AntPickerViewMultiColumns> {
             children: [
               Expanded(
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Colors.white, Colors.white.withAlpha(0)])),
-                  )),
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.white, Colors.white.withAlpha(0)])),
+              )),
               Container(
                 height: widget.itemHeight,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  // color: Colors.grey
+                    // color: Colors.grey
                     border: Border(
                         top: BorderSide(color: Colors.grey, width: 0.5),
                         bottom: BorderSide(color: Colors.grey, width: 0.5))),
               ),
               Expanded(
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [Colors.white, Colors.white.withAlpha(0)])),
-                  ))
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [Colors.white, Colors.white.withAlpha(0)])),
+              ))
             ],
           ),
         )

@@ -11,6 +11,8 @@ class AntCalendarPicker {
   }) {
     AntPopup.show(
         context: context,
+        maxHeight: 1000,
+
         child: AntCalendarPickerView(
           value: value,
           onOk: (date) {
