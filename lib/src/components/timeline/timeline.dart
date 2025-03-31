@@ -101,7 +101,7 @@ class AntTimelineItem extends StatelessWidget {
                   child: latest! ? null : lineIcon,
                 ),
                 Positioned(
-                    top: 0,
+                    top: 4,
                     child: Container(
                       color: Colors.white,
                       alignment: Alignment.topCenter,
@@ -110,7 +110,11 @@ class AntTimelineItem extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(child: content ?? Container())
+          Expanded(
+              child: Container(
+            constraints: BoxConstraints(minHeight: 34),
+            child: content,
+          ))
         ],
       ),
     );
