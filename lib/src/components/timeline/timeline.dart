@@ -90,6 +90,7 @@ class AntTimelineItem extends StatelessWidget {
         children: [
           Container(
             width: lineColumnWidth,
+            constraints: BoxConstraints(minWidth: lineColumnWidth??40),
             height: double.infinity,
             alignment: Alignment.topCenter,
             child: Stack(
