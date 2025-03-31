@@ -24,7 +24,7 @@ class ImagesWall extends StatefulWidget {
   final int? crossAxisCount;
   final bool? disabled;
   final bool? multiSelect;
-  final Future<String?> Function(File value, String? fileName)? uploadRequest;
+  final Future<String?> Function(List<int> fileContent, String? fileName)? uploadRequest;
 
   @override
   State<StatefulWidget> createState() => _ImagesWallState();
@@ -38,8 +38,7 @@ class _ImagesWallState extends State<ImagesWall> {
       images.forEach((image) async {
         var fileName = image.name;
         image.readAsBytes().then((bytes) async {
-          final String? url =
-          await widget.uploadRequest!(File.fromRawPath(bytes), fileName);
+          final String? url = await widget.uploadRequest!(bytes, fileName);
           if (url != null) {
             setState(() {
               _images.add(Image.network(
