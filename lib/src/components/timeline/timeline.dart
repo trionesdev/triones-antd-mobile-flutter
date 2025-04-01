@@ -4,8 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 import 'package:trionesdev_antd_mobile/src/components/theme/theme.dart';
 
-class AntTimelineItemType {
-  AntTimelineItemType({this.icon, this.content, this.latest, this.lineType});
+class AntTimelineItemRecord {
+  AntTimelineItemRecord({this.icon, this.content, this.latest, this.lineType});
 
   final Widget? icon;
   final Widget? content;
@@ -22,7 +22,7 @@ enum AntTimelineItemLineType {
 class AntTimeline extends StatefulWidget {
   const AntTimeline({super.key, this.items, this.lineColumnWidth = 40});
 
-  final List<AntTimelineItemType>? items;
+  final List<AntTimelineItemRecord>? items;
   final double lineColumnWidth;
 
   @override

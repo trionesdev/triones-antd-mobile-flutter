@@ -12,13 +12,15 @@ class AntSpace extends StatefulWidget {
       this.decoration,
       this.direction = AntSpaceDirection.horizontal,
       this.children,
-      this.spacing=2});
+      this.spacing = 2,
+      this.split});
 
   final StateStyle? style;
   final BoxDecoration? decoration;
   final AntSpaceDirection? direction;
   final List<Widget>? children;
   final double? spacing;
+  final Widget? split;
 
   @override
   State<StatefulWidget> createState() => _AntSpaceState();
@@ -30,6 +32,19 @@ class _AntSpaceState extends State<AntSpace> {
     super.initState();
   }
 
+  List<Widget> _buildChildren() {
+    List<Widget> children = [];
+    for (int i = 0; i < widget.children!.length; i++) {
+      children.add(widget.children![i]);
+      if (i < widget.children!.length - 1) {
+        if (widget.split != null) {
+          children.add(widget.split!);
+        }
+      }
+    }
+    return children;
+  }
+
   @override
   Widget build(BuildContext context) {
     _AntSpaceStyle style = _AntSpaceStyle();
@@ -39,11 +54,11 @@ class _AntSpaceState extends State<AntSpace> {
         ? widget.direction == AntSpaceDirection.vertical
             ? Column(
                 spacing: widget.spacing ?? 0,
-                children: widget.children!,
+                children: _buildChildren(),
               )
             : Wrap(
                 spacing: widget.spacing ?? 0,
-                children: widget.children!,
+                children: _buildChildren(),
               )
         : Container();
     return Container(
@@ -56,5 +71,4 @@ class _AntSpaceState extends State<AntSpace> {
 
 class _AntSpaceStyle extends StateStyle {
   const _AntSpaceStyle();
-
 }
