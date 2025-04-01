@@ -57,7 +57,9 @@ class _AntSpaceState extends State<AntSpace> {
                 children: _buildChildren(),
               )
             : Wrap(
+                runAlignment: WrapAlignment.center,
                 spacing: widget.spacing ?? 0,
+                runSpacing: widget.spacing ?? 0,
                 children: _buildChildren(),
               )
         : Container();

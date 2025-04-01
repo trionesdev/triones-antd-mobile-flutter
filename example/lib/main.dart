@@ -1,6 +1,7 @@
 import 'package:antd_flutter_example/pages/actions_sheet_page.dart';
 import 'package:antd_flutter_example/pages/alert_page.dart';
 import 'package:antd_flutter_example/pages/app_bar_page.dart';
+import 'package:antd_flutter_example/pages/avatar_page.dart';
 import 'package:antd_flutter_example/pages/badge_page.dart';
 import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/calendar_datetime_picker_page.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: AntThemeData(),
       routes: {
+        '/avatar': (context) => AvatarPage(),
         '/button': (context) => ButtonPage(),
         '/input': (context) => InputPage(),
         '/form': (context) => FormPage(),
@@ -124,6 +126,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: ListView(
         children: [
+          material.ListTile(
+            title: Text('Avatar 头像'),
+            onTap: () {
+              Navigator.pushNamed(context, '/avatar');
+            },
+          ),
           material.ListTile(
             title: Text('Button 按钮'),
             onTap: () {
