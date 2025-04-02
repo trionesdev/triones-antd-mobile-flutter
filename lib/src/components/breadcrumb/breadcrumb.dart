@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class AntBreadcrumbItemRecord {
-  AntBreadcrumbItemRecord({this.title});
+  AntBreadcrumbItemRecord({this.title,this.onTap});
 
   String? title;
   void Function()? onTap;

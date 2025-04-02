@@ -4,6 +4,12 @@ import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import '../theme/theme_data.dart';
 
+enum AntThemeMode {
+  system,
+  light,
+  dark,
+}
+
 class AntApp extends StatelessWidget {
   const AntApp(
       {super.key,
@@ -14,6 +20,17 @@ class AntApp extends StatelessWidget {
       this.onGenerateRoute,
       this.navigatorKey,
       this.initialRoute});
+
+  const AntApp.router({
+    super.key,
+    this.title,
+    this.theme,
+    this.home,
+    required this.routes,
+    this.onGenerateRoute,
+    this.navigatorKey,
+    this.initialRoute,
+  });
 
   final String? title;
   final AntThemeData? theme;
