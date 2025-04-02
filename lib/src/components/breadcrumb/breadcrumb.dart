@@ -47,14 +47,14 @@ class _AntBreadcrumbState extends State<AntBreadcrumb> {
   @override
   void initState() {
     super.initState();
-    if (isSkiaWeb) {
+    if (kIsWeb) {
       _scrollController = ScrollController();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isSkiaWeb) {
+    if (kIsWeb) {
       return Scrollbar(
           controller: _scrollController,
           child: SingleChildScrollView(
