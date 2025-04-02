@@ -52,11 +52,15 @@ class _AntListState extends State<AntList> with MaterialStateMixin {
     return Container(
       decoration: stateStyle.resolve(materialStates)?.decoration,
       padding: stateStyle.resolve(materialStates)?.computedPadding,
-      child: ListView(
-        controller: widget.controller,
-        children: children,
-
-      ),
+      child: children.isNotEmpty
+          ? ListView(
+              controller: widget.controller,
+              children: children,
+            )
+          : Container(
+              constraints: const BoxConstraints(maxHeight: 100),
+              child: AntEmpty(),
+            ),
     );
   }
 }

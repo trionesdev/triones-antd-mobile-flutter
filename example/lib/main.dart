@@ -3,11 +3,13 @@ import 'package:antd_flutter_example/pages/alert_page.dart';
 import 'package:antd_flutter_example/pages/app_bar_page.dart';
 import 'package:antd_flutter_example/pages/avatar_page.dart';
 import 'package:antd_flutter_example/pages/badge_page.dart';
+import 'package:antd_flutter_example/pages/breadcrumb_page.dart';
 import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/calendar_datetime_picker_page.dart';
 import 'package:antd_flutter_example/pages/calendar_picker_page.dart';
 import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
 import 'package:antd_flutter_example/pages/divider_page.dart';
+import 'package:antd_flutter_example/pages/empty_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
 import 'package:antd_flutter_example/pages/images_wall_page.dart';
@@ -72,6 +74,8 @@ class MyApp extends StatelessWidget {
         '/images-wall': (context) => ImagesWallPage(),
         '/actions-sheet': (context) => ActionsSheetPage(),
         '/timeline': (context) => TimelinePage(),
+        '/empty': (context) => EmptyPage(),
+        '/breadcrumb': (context) => BreadcrumbPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -286,6 +290,18 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Timeline 时间轴'),
             onTap: () {
               Navigator.pushNamed(context, '/timeline');
+            },
+          ),
+          material.ListTile(
+            title: Text('Empty 空状态'),
+            onTap: () {
+              Navigator.pushNamed(context, '/empty');
+            },
+          ),
+          material.ListTile(
+            title: Text('Breadcrumb 面包屑'),
+            onTap: () {
+              Navigator.pushNamed(context, '/breadcrumb');
             },
           ),
         ],

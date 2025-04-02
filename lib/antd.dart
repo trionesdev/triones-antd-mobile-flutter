@@ -38,10 +38,12 @@ export 'src/components/alert/alert.dart';
 export 'src/components/switch/switch.dart';
 export 'src/components/mask/mask.dart';
 export 'src/components/badge/badge.dart';
-export 'src/components/avatar/avatar.dart';
 export 'src/components/upload/upload.dart';
 export 'src/components/images_wall/images_wall.dart';
 export 'src/components/actions_sheet/actions_sheet.dart';
 export 'src/components/timeline/timeline.dart';
+export 'src/components/breadcrumb/breadcrumb.dart';
+export 'src/components/empty/empty.dart';
+
 
 export 'src/components/util/utils.dart';
