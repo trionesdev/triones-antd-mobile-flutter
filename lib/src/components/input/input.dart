@@ -74,20 +74,20 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     super.dispose();
   }
 
+  double? iconSize() {
+    if (widget.height != null) {
+      double size = widget.height! * 7 / 10;
+      if (size <= 40) {
+        return size;
+      }
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     StateStyle style = _AntInputStyle();
     style = style.merge(widget.style);
-
-    double? iconSize() {
-      if (widget.height != null) {
-        double size = widget.height! * 7 / 10;
-        if (size <= 40) {
-          return size;
-        }
-      }
-      return null;
-    }
 
     Widget? suffixIcon;
     if (widget.type == AntInputType.password || widget.suffix != null) {

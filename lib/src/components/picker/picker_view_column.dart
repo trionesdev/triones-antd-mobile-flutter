@@ -20,7 +20,7 @@ class AntPickerViewColumn extends StatefulWidget {
 
 class _AntPickerViewColumnState extends State<AntPickerViewColumn> {
   FixedExtentScrollController _controller =
-      FixedExtentScrollController(initialItem: 2);
+      FixedExtentScrollController(initialItem: 0);
 
   @override
   void initState() {

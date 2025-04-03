@@ -19,14 +19,24 @@ class AntCalendarDatetimePickerView extends StatefulWidget {
 
 class _AntCalendarDatetimePickerViewState
     extends State<AntCalendarDatetimePickerView> {
-  DateTime? _selectedDate;
+  ValueNotifier<DateTime?> _selectedDateTime = ValueNotifier(null);
   int _showIndex = 0;
   double? _height = 500;
+  final List<List<AntPickerOption>> _timeOptions = [
+    List.generate(24, (index) {
+      return AntPickerOption(
+          value: '$index', label: DatetimeUtils.twoDigits(index));
+    }),
+    List.generate(60, (index) {
+      return AntPickerOption(
+          value: '$index', label: DatetimeUtils.twoDigits(index));
+    })
+  ];
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.value ?? DateTime.now();
+    _selectedDateTime = ValueNotifier(widget.value ?? DateTime.now());
   }
 
   @override
@@ -44,31 +54,18 @@ class _AntCalendarDatetimePickerViewState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                  child: Row(
-                spacing: 4,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _showIndex = 0;
-                      });
-                    },
-                    child: Text(_selectedDate != null
-                        ? DateFormat("yyyy-MM-dd").format(_selectedDate!)
-                        : '请选择日期'),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _showIndex = 1;
-                      });
-                    },
-                    child: Container(
-                      child: Text(DateFormat("HH:mm").format(_selectedDate!)),
-                    ),
-                  )
-                ],
-              )),
+                  child: ValueListenableBuilder(
+                      valueListenable: _selectedDateTime,
+                      builder: (context, value, child) {
+                        return _Label(
+                          selectedDateTime: value,
+                          onIndexChange: (index) {
+                            setState(() {
+                              _showIndex = index;
+                            });
+                          },
+                        );
+                      })),
               GestureDetector(
                 child: Container(
                   padding:
@@ -77,7 +74,7 @@ class _AntCalendarDatetimePickerViewState
                       style: TextStyle(color: themeData.colorPrimary)),
                 ),
                 onTap: () {
-                  widget.onOk?.call(_selectedDate);
+                  widget.onOk?.call(_selectedDateTime?.value);
                 },
               )
             ],
@@ -89,10 +86,10 @@ class _AntCalendarDatetimePickerViewState
             index: _showIndex,
             children: [
               AntCalendarView(
-                value: _selectedDate,
+                value: _selectedDateTime.value,
                 onSelected: (date) {
                   setState(() {
-                    _selectedDate = _selectedDate?.copyWith(
+                    _selectedDateTime.value = _selectedDateTime.value?.copyWith(
                       year: date.year,
                       month: date.month,
                       day: date.day,
@@ -106,37 +103,81 @@ class _AntCalendarDatetimePickerViewState
                 },
               ),
               AntPickerViewMultiColumns(
-                columns: [
-                  List.generate(24, (index) {
-                    return AntPickerOption(
-                        value: '$index', label: DatetimeUtils.twoDigits(index));
-                  }),
-                  List.generate(60, (index) {
-                    return AntPickerOption(
-                        value: '$index', label: DatetimeUtils.twoDigits(index));
-                  }),
-                ],
+                columns: _timeOptions,
                 itemHeight: 34,
                 value: [
-                  '${_selectedDate?.hour ?? 0}',
-                  '${_selectedDate?.minute ?? 0}'
+                  '${_selectedDateTime.value?.hour ?? 0}',
+                  '${_selectedDateTime.value?.minute ?? 0}'
                 ],
                 onColumnSelected: (value, index) {
                   if (index == 0) {
-                    setState(() {
-                      _selectedDate = _selectedDate?.copyWith(
-                          hour: int.parse(value!.value!));
-                    });
+                    _selectedDateTime.value = _selectedDateTime.value
+                        ?.copyWith(hour: int.parse(value!.value!));
                   } else {
-                    setState(() {
-                      _selectedDate = _selectedDate?.copyWith(
-                          minute: int.parse(value!.value!));
-                    });
+                    _selectedDateTime.value = _selectedDateTime.value
+                        ?.copyWith(minute: int.parse(value!.value!));
                   }
                 },
                 height: _height,
               )
             ],
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class _Label extends StatefulWidget {
+  const _Label({this.onIndexChange, this.selectedDateTime});
+
+  final DateTime? selectedDateTime;
+  final Function(int index)? onIndexChange;
+
+  @override
+  State<StatefulWidget> createState() => _LabelState();
+}
+
+class _LabelState extends State<_Label> {
+  DateTime _selectedDateTime = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDateTime = widget.selectedDateTime ?? DateTime.now();
+  }
+
+  @override
+  void didUpdateWidget(covariant _Label oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedDateTime != widget.selectedDateTime) {
+      setState(() {
+        _selectedDateTime = widget.selectedDateTime ?? DateTime.now();
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 4,
+      children: [
+        GestureDetector(
+          onTap: () {
+            widget.onIndexChange?.call(0);
+          },
+          child: Text(_selectedDateTime != null
+              ? DateFormat("yyyy-MM-dd").format(_selectedDateTime!)
+              : '请选择日期'),
+        ),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              widget.onIndexChange?.call(1);
+            });
+          },
+          child: Container(
+            child: Text(DateFormat("HH:mm").format(_selectedDateTime!)),
           ),
         )
       ],

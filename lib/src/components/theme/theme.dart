@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 
 import '../../../antd.dart';
 
+const Duration kThemeAnimationDuration = Duration(milliseconds: 200);
+
 class AntTheme extends StatelessWidget{
 
 

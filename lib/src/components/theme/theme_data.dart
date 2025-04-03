@@ -6,23 +6,25 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as material;
 
 class AntThemeData with Diagnosticable {
-  factory AntThemeData(
-      {Color? colorTextBase,
-      Color? colorTextPlaceholder,
-      Color? colorBgBase,
-      Color? colorInfo,
-      Color? colorLink,
-      double? controlHeight,
-      double? borderRadiusLG,
-      double? borderRadiusOuter,
-      double? borderRadiusSM,
-      double? borderRadiusXS,
-      Color? colorPrimary,
-      Color? colorSuccess,
-      Color? colorWarning,
-      Color? colorError,
-      Color? colorBorder,
-      double? borderRadius}) {
+  factory AntThemeData({
+    Color? colorTextBase,
+    Color? colorTextPlaceholder,
+    Color? colorBgBase,
+    Color? colorInfo,
+    Color? colorLink,
+    double? controlHeight,
+    double? borderRadiusLG,
+    double? borderRadiusOuter,
+    double? borderRadiusSM,
+    double? borderRadiusXS,
+    Color? colorPrimary,
+    Color? colorSuccess,
+    Color? colorWarning,
+    Color? colorError,
+    Color? colorBorder,
+    double? borderRadius,
+    Brightness? brightness,
+  }) {
     borderRadius ??= 6;
     colorBgBase ??= Color(0xFFFFFFFF);
     colorError ??= Color(0xffff4d4f);
@@ -40,6 +42,7 @@ class AntThemeData with Diagnosticable {
 
     colorBorder ??= Color(0xffd9d9d9);
     colorTextPlaceholder ??= Color.fromRGBO(0, 0, 0, 0.25);
+    brightness ??= Brightness.light;
 
     return AntThemeData.raw(
       colorTextBase: colorTextBase,
@@ -58,6 +61,7 @@ class AntThemeData with Diagnosticable {
       colorError: colorError,
       colorBorder: colorBorder,
       borderRadius: borderRadius,
+      brightness: brightness,
     );
   }
 
@@ -78,6 +82,7 @@ class AntThemeData with Diagnosticable {
     required this.colorError,
     required this.colorBorder,
     required this.borderRadius,
+    required this.brightness,
   });
 
   final double borderRadius;
@@ -97,6 +102,8 @@ class AntThemeData with Diagnosticable {
   final double borderRadiusXS;
   final Color colorBorder;
   final Color colorTextPlaceholder;
+
+  final Brightness brightness;
 
   factory AntThemeData.fallback() => AntThemeData(colorPrimary: null);
 

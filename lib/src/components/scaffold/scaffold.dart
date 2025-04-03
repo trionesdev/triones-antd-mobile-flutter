@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+class AntScaffoldMessengerState extends ScaffoldMessengerState{}
+
 class AntScaffold extends StatefulWidget {
   const AntScaffold(
       {super.key,
