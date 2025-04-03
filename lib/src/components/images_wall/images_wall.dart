@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +8,10 @@ import 'package:trionesdev_antd_mobile/antd.dart';
 import 'package:trionesdev_antd_mobile/src/components/images_wall/images_preview.dart';
 
 class AntImageRecord {
-  AntImageRecord({this.status = AntImageStatus.done, this.image,this.fileName});
+  AntImageRecord(
+      {this.uid, this.status = AntImageStatus.done, this.image, this.fileName});
 
+  String? uid;
   AntImageStatus? status;
   Image? image;
   String? fileName;
@@ -48,38 +50,51 @@ class AntImagesWall extends StatefulWidget {
 
 class _AntImagesWallState extends State<AntImagesWall> {
   final List<AntImageRecord> _images = [];
+  var uuid = Uuid();
 
   void addImages(List<XFile> images) {
-    List<AntImageRecord> _imagesBatch = [];
-    if (kIsWeb) {
-      _imagesBatch.addAll(images.map((item) {
-        return AntImageRecord(
-            image: Image.network(
-              item.path,
-              fit: BoxFit.cover,
-            ),fileName: item.name);
-      }));
-    } else {
-      _imagesBatch.addAll(images.map((item) {
-        return AntImageRecord(
-            image: Image.file(
-              File(item.path),
-              fit: BoxFit.cover,
-            ),fileName: item.name);
-      }));
+    if (images.isEmpty) {
+      return;
     }
-    setState(() {
-
-    });
-    if (widget.uploadRequest != null) {
-      _imagesBatch.forEach((image) async {
-        var fileName = image.fileName;
-        image.readAsBytes().then((bytes) async {
-          final String? url = await widget.uploadRequest!(bytes, fileName);
-          if (url != null) {}
-        });
+    var uid = uuid.v4();
+    images.forEach((image) {
+      setState(() {
+        if (kIsWeb) {
+          _images.add(AntImageRecord(
+              uid: uid,
+              image: Image.network(
+                image.path,
+                fit: BoxFit.cover,
+              ),
+              fileName: image.name,status: AntImageStatus.uploading));
+        } else {
+          _images.add(AntImageRecord(
+              uid: uid,
+              image: Image.file(
+                File(image.path),
+                fit: BoxFit.cover,
+              ),
+              fileName: image.name,status: AntImageStatus.uploading));
+        }
       });
-    }
+
+      if (widget.uploadRequest != null) {
+        image.readAsBytes().then((bytes) async {
+          widget.uploadRequest!(bytes, image.name)
+              .then((url) {
+                setState(() {
+                  _images.firstWhereOrNull((element) => element.uid == uid)?.status = AntImageStatus.done;
+                  _images.firstWhereOrNull((element) => element.uid == uid)?.image = Image.network(url!);
+                });
+          })
+              .catchError(() {
+                setState(() {
+                  _images.firstWhereOrNull((element) => element.uid == uid)?.status = AntImageStatus.error;
+                });
+          });
+        });
+      }
+    });
   }
 
   Future<void> selectImageFromGallery(bool multi) async {
