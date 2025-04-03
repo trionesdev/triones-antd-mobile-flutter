@@ -142,6 +142,9 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
             widget.onChange!(value);
           }
         },
+        onTapOutside: (event) {
+          _focusNode.unfocus();
+        },
         onEditingComplete: () {
           print("input c:" + _controller.text);
         },
