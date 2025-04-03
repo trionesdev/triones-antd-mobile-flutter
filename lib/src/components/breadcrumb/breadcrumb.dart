@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AntBreadcrumbItemRecord {
-  AntBreadcrumbItemRecord({this.title,this.onTap});
+  AntBreadcrumbItemRecord({this.title, this.onTap});
 
   String? title;
   void Function()? onTap;
@@ -48,6 +48,14 @@ class _AntBreadcrumbState extends State<AntBreadcrumb> {
     super.initState();
     if (kIsWeb) {
       _scrollController = ScrollController();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (kIsWeb) {
+      _scrollController.dispose();
     }
   }
 
