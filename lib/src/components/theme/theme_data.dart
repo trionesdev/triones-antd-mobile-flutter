@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as material;
 
+@immutable
 class AntThemeData with Diagnosticable {
   factory AntThemeData({
     Color? colorTextBase,
@@ -105,7 +106,15 @@ class AntThemeData with Diagnosticable {
 
   final Brightness brightness;
 
-  factory AntThemeData.fallback() => AntThemeData(colorPrimary: null);
+  factory AntThemeData.light() => AntThemeData(
+    brightness: Brightness.light,
+  );
+
+  factory AntThemeData.dark() => AntThemeData(
+    brightness: Brightness.dark,
+  );
+
+  factory AntThemeData.fallback() => AntThemeData.light();
 
   static AntThemeData localize(
       AntThemeData? baseTheme, AntThemeData? localTextGeometry) {

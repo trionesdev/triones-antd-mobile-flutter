@@ -6,14 +6,13 @@ typedef AntListItemRenderCallback = Widget Function(
     BuildContext context, dynamic item, int index);
 
 class AntList extends StatefulWidget {
-  const AntList(
-      {super.key,
-      this.separator,
-      this.dataSource,
-      this.itemRender,
-      this.children,
-      this.style,
-      this.controller});
+  const AntList({super.key,
+    this.separator,
+    this.dataSource,
+    this.itemRender,
+    this.children,
+    this.style,
+    this.controller});
 
   final StateStyle? style;
   final List<Widget>? children;
@@ -50,17 +49,25 @@ class _AntListState extends State<AntList> with MaterialStateMixin {
       }
     }
     return Container(
-      decoration: stateStyle.resolve(materialStates)?.decoration,
-      padding: stateStyle.resolve(materialStates)?.computedPadding,
+      decoration: stateStyle
+          .resolve(materialStates)
+          ?.decoration,
+      padding: stateStyle
+          .resolve(materialStates)
+          ?.computedPadding,
       child: children.isNotEmpty
           ? ListView(
-              controller: widget.controller,
-              children: children,
-            )
+        controller: widget.controller,
+        children: children,
+      )
           : Container(
-              constraints: const BoxConstraints(maxHeight: 100),
-              child: AntEmpty(),
-            ),
+        width: double.infinity,
+        decoration: stateStyle
+            .resolve(materialStates)
+            ?.decoration,
+        constraints: const BoxConstraints(maxHeight: 100),
+        child: AntEmpty(),
+      ),
     );
   }
 }
@@ -70,6 +77,12 @@ class _AntListStyle extends StateStyle {
 
   final BuildContext context;
   final AntList list;
+
+  @override
+  Style get style {
+    return Style(
+      backgroundColor: Colors.white,);
+  }
 }
 
 class AntListItem extends StatefulWidget {
@@ -86,7 +99,7 @@ class AntListItem extends StatefulWidget {
   State<StatefulWidget> createState() => _AntListItemState();
 }
 
-class _AntListItemState extends State<AntListItem> {
+class _AntListItemState extends State<AntListItem> with MaterialStateMixin {
   @override
   void initState() {
     super.initState();
@@ -112,8 +125,12 @@ class _AntListItemState extends State<AntListItem> {
         widget.onTap?.call();
       },
       child: Container(
-        decoration: stateStyle.resolve(const <WidgetState>{})?.decoration,
-        padding: stateStyle.resolve(const <WidgetState>{})?.computedPadding,
+        decoration: stateStyle
+            .resolve(materialStates)
+            ?.decoration,
+        padding: stateStyle
+            .resolve(materialStates)
+            ?.computedPadding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           spacing: 2,
@@ -134,10 +151,10 @@ class _AntListItemStyle extends StateStyle {
   Style get style {
     return Style(
         padding: StylePadding(
-      top: 8,
-      bottom: 8,
-      left: 8,
-      right: 8,
-    ));
+          top: 8,
+          bottom: 8,
+          left: 8,
+          right: 8,
+        ));
   }
 }

@@ -11,6 +11,9 @@ class AntEmpty extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
+      decoration: const BoxDecoration(
+        color: Color(0xffffffff),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
