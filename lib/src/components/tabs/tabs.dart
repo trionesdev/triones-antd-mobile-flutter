@@ -259,6 +259,7 @@ class _AntTabItemStyle extends StateStyle {
     AntThemeData themeData = AntTheme.of(context);
     return Style(
         color: active ? themeData.colorPrimary : null,
+        backgroundColor: Colors.white,
         padding: StylePadding.symmetric(vertical: 8, horizontal: 8),
         borderBottom: active
             ? StyleBorder(
