@@ -26,8 +26,7 @@ class AntGrid extends StatefulWidget {
 
 class AntGridState extends State<AntGrid> {
   int _generation = 0;
-  double gridWidth = 0;
-  GlobalKey globalKey = GlobalKey();
+  double _gridWidth = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +36,7 @@ class AntGridState extends State<AntGrid> {
             generation: _generation,
             child: LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
-              print(constraints.maxWidth);
-              gridWidth = constraints.maxWidth;
+              _gridWidth = constraints.maxWidth;
               return Container(
                 decoration: widget.decoration,
                 padding: EdgeInsets.only(
@@ -82,23 +80,19 @@ class AntGridItem extends StatefulWidget {
 class _AntGridItemState extends State<AntGridItem> {
   double get itemWidth {
     final AntGridState gridState = AntGrid.of(context);
-    final double gridWidth = gridState.gridWidth;
+    final double gridWidth = gridState._gridWidth;
 
     final columns = gridState.widget.columns!;
     final gap = gridState.widget.gap!;
     final span = widget.span!;
-    print(
-        {"gridWidth": gridWidth, "columns": columns, "gap": gap, "span": span});
 
     double width =
         ((gridWidth - ((columns) * gap)) / columns) * span + (span - 1) * gap;
-    print(width);
     return width;
   }
 
   @override
   Widget build(BuildContext context) {
-    print(itemWidth);
     return Container(
       width: itemWidth,
       decoration: widget.decoration,
