@@ -23,15 +23,20 @@ class _ImageUploadPageState extends State<ImagesWallPage> {
             DemoBlock(
               title: "基本使用",
               child: Column(
-                children: [ImagesWall()],
+                children: [AntImagesWall()],
               ),
             ),
             DemoBlock(
               title: "赋值",
-              child: ImagesWall(
+              child: AntImagesWall(
                 value: [
-                  "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                  AntImageRecord(
+                      path: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+                      status: AntImageStatus.done)
                 ],
+                onChange: (value) {
+
+                },
               ),
             )
           ],
