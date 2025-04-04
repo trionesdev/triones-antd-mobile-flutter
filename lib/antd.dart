@@ -45,6 +45,7 @@ export 'src/components/timeline/timeline.dart';
 export 'src/components/breadcrumb/breadcrumb.dart';
 export 'src/components/empty/empty.dart';
 export 'src/components/loading/loading.dart';
+export 'src/components/tabs/tabs.dart';
 
 
 export 'src/components/util/utils.dart';

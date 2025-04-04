@@ -46,7 +46,7 @@ class _AntCalendarDatetimePickerViewState
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+          padding: EdgeInsets.only(left: 16, right: 16),
           decoration: BoxDecoration(
               border:
                   Border(bottom: BorderSide(color: Colors.grey, width: 0.5))),
@@ -58,6 +58,7 @@ class _AntCalendarDatetimePickerViewState
                       valueListenable: _selectedDateTime,
                       builder: (context, value, child) {
                         return _Label(
+                          index: _showIndex,
                           selectedDateTime: value,
                           onIndexChange: (index) {
                             setState(() {
@@ -129,8 +130,10 @@ class _AntCalendarDatetimePickerViewState
 }
 
 class _Label extends StatefulWidget {
-  const _Label({this.onIndexChange, this.selectedDateTime});
+  const _Label(
+      {this.onIndexChange, this.selectedDateTime, required this.index});
 
+  final int index;
   final DateTime? selectedDateTime;
   final Function(int index)? onIndexChange;
 
@@ -160,15 +163,20 @@ class _LabelState extends State<_Label> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      spacing: 4,
+      spacing: 2,
       children: [
         GestureDetector(
           onTap: () {
             widget.onIndexChange?.call(0);
           },
-          child: Text(_selectedDateTime != null
-              ? DateFormat("yyyy-MM-dd").format(_selectedDateTime!)
-              : '请选择日期'),
+          child: Container(
+            decoration:
+                widget.index == 0 ? BoxDecoration(color: Colors.grey) : null,
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            child: Text(_selectedDateTime != null
+                ? DateFormat("yyyy-MM-dd").format(_selectedDateTime!)
+                : '请选择日期'),
+          ),
         ),
         GestureDetector(
           onTap: () {
@@ -177,7 +185,10 @@ class _LabelState extends State<_Label> {
             });
           },
           child: Container(
-            child: Text(DateFormat("HH:mm").format(_selectedDateTime!)),
+            decoration:
+                widget.index == 1 ? BoxDecoration(color: Colors.grey) : null,
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            child: Text(DateFormat("HH:mm").format(_selectedDateTime)),
           ),
         )
       ],

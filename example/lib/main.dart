@@ -23,6 +23,7 @@ import 'package:antd_flutter_example/pages/search_bar_page.dart';
 import 'package:antd_flutter_example/pages/space_page.dart';
 import 'package:antd_flutter_example/pages/switch_page.dart';
 import 'package:antd_flutter_example/pages/tab_bar_page.dart';
+import 'package:antd_flutter_example/pages/tabs_page.dart';
 import 'package:antd_flutter_example/pages/tag_page.dart';
 import 'package:antd_flutter_example/pages/timeline_page.dart';
 import 'package:antd_flutter_example/pages/toast_page.dart';
@@ -76,6 +77,7 @@ class MyApp extends StatelessWidget {
         '/timeline': (context) => TimelinePage(),
         '/empty': (context) => EmptyPage(),
         '/breadcrumb': (context) => BreadcrumbPage(),
+        '/tabs': (context) => TabsPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -302,6 +304,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Breadcrumb 面包屑'),
             onTap: () {
               Navigator.pushNamed(context, '/breadcrumb');
+            },
+          ),
+          material.ListTile(
+            title: Text('Tabs 标签页'),
+            onTap: () {
+              Navigator.pushNamed(context, '/tabs');
             },
           ),
         ],
