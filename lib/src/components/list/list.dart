@@ -12,9 +12,11 @@ class AntList extends StatefulWidget {
     this.itemRender,
     this.children,
     this.style,
-    this.controller});
+    this.controller,
+    this.loading = false});
 
   final StateStyle? style;
+  final bool loading;
   final List<Widget>? children;
   final Widget? separator;
   final List<dynamic>? dataSource;
@@ -48,26 +50,32 @@ class _AntListState extends State<AntList> with MaterialStateMixin {
         }
       }
     }
-    return Container(
-      decoration: stateStyle
-          .resolve(materialStates)
-          ?.decoration,
-      padding: stateStyle
-          .resolve(materialStates)
-          ?.computedPadding,
-      child: children.isNotEmpty
-          ? ListView(
-        controller: widget.controller,
-        children: children,
-      )
-          : Container(
-        width: double.infinity,
-        decoration: stateStyle
-            .resolve(materialStates)
-            ?.decoration,
-        constraints: const BoxConstraints(maxHeight: 100),
-        child: AntEmpty(),
-      ),
+    return Stack(
+      children: [
+        Container(
+          decoration: stateStyle
+              .resolve(materialStates)
+              ?.decoration,
+          padding: stateStyle
+              .resolve(materialStates)
+              ?.computedPadding,
+          child: children.isNotEmpty
+              ? ListView(
+            controller: widget.controller,
+            children: children,
+          )
+              : Container(
+            width: double.infinity,
+            decoration: stateStyle
+                .resolve(materialStates)
+                ?.decoration,
+            child: AntEmpty(),
+          ),
+        ),
+        if (widget.loading) Positioned.fill(child: Align(
+          child: AntSpinLoading(),
+        ))
+      ],
     );
   }
 }
@@ -81,7 +89,8 @@ class _AntListStyle extends StateStyle {
   @override
   Style get style {
     return Style(
-      backgroundColor: Colors.white,);
+      backgroundColor: Colors.white,
+    );
   }
 }
 

@@ -363,9 +363,7 @@ class _AntImageWallItemState extends State<AntImageWallItem> {
                 child: Container(
                   color: Colors.black26,
                   child: Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.grey,
-                    ),
+                    child: AntSpinLoading(),
                   ),
                 ),
               ),
