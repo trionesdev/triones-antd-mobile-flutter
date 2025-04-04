@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
 class AntTabItemRecord {
@@ -11,18 +10,38 @@ class AntTabItemRecord {
   Widget? content;
 }
 
+class AntTabStyles {
+  StateStyle? tab;
+  StateStyle? activeTab;
+  StateStyle? body;
+}
+
 class AntTabs extends StatefulWidget {
-  const AntTabs({super.key, this.items, this.stretch = true, this.activeKey});
+  const AntTabs(
+      {super.key,
+      this.items,
+      this.stretch = true,
+      this.activeKey,
+      this.style,
+      this.styles,
+      this.decoration,
+      this.itemRender,
+      this.tabDecoration});
 
   final String? activeKey;
   final List<AntTabItemRecord>? items;
   final bool stretch;
+  final BoxDecoration? decoration;
+  final BoxDecoration? tabDecoration;
+  final StateStyle? style;
+  final AntTabStyles? styles;
+  final Widget Function(AntTabItemRecord item)? itemRender;
 
   @override
   State<StatefulWidget> createState() => _AntTabsState();
 }
 
-class _AntTabsState extends State<AntTabs> {
+class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
   late ScrollController _scrollController;
   List<AntTabItemRecord> _items = [];
   late String? _activeKey;
@@ -39,6 +58,9 @@ class _AntTabsState extends State<AntTabs> {
       return AntTabItem(
         item: item,
         activeKey: _activeKey,
+        style: widget.styles?.tab,
+        activeStyle: widget.styles?.activeTab,
+        bodyStyle: widget.styles?.body,
         onTab: (k) {
           setState(() {
             _activeKey = k;
@@ -101,10 +123,16 @@ class _AntTabsState extends State<AntTabs> {
   @override
   Widget build(BuildContext context) {
     AntThemeData themeData = AntTheme.of(context);
+    StateStyle stateStyle = _AntTabsStyle(context);
+    stateStyle = stateStyle.merge(widget.style);
     return Container(
+      width: double.infinity,
+      decoration:
+          widget.decoration ?? stateStyle.resolve(materialStates)?.decoration,
       child: Column(
         children: [
           Container(
+            width: double.infinity,
             decoration: BoxDecoration(
                 border:
                     Border(bottom: BorderSide(color: themeData.colorBorder))),
@@ -123,19 +151,63 @@ class _AntTabsState extends State<AntTabs> {
   }
 }
 
-class AntTabItem extends StatefulWidget {
-  const AntTabItem({super.key, this.item, this.activeKey, this.onTab});
+class _AntTabsStyle extends StateStyle {
+  _AntTabsStyle(this.context);
 
+  final BuildContext context;
+
+  @override
+  Style get style {
+    AntThemeData themeData = AntTheme.of(context);
+    return Style();
+  }
+}
+
+class AntTabItem extends StatefulWidget {
+  const AntTabItem(
+      {super.key,
+      this.item,
+      this.activeKey,
+      this.onTab,
+      this.style,
+      this.itemRender,
+      this.activeStyle,
+      this.bodyStyle,
+      this.decoration});
+
+  final StateStyle? style;
   final AntTabItemRecord? item;
   final String? activeKey;
+  final BoxDecoration? decoration;
   final Function(String? key)? onTab;
+  final Widget Function(AntTabItemRecord item, bool active)? itemRender;
+
+  final StateStyle? activeStyle;
+  final StateStyle? bodyStyle;
 
   @override
   State<StatefulWidget> createState() => _AntTabItemState();
 }
 
-class _AntTabItemState extends State<AntTabItem> {
+class _AntTabItemState extends State<AntTabItem> with MaterialStateMixin {
   bool _active = false;
+
+  Widget? _labelRender() {
+    AntThemeData themeData = AntTheme.of(context);
+    if (widget.itemRender != null) {
+      return widget.itemRender?.call(widget.item!, _active);
+    }
+    Widget? label = widget.item?.label;
+    if (_active && label != null && label is Text) {
+      return WidgetUtils.textMerge(
+          Text(
+            label.data ?? "",
+            style: TextStyle(color: themeData.colorPrimary),
+          ),
+          label);
+    }
+    return label;
+  }
 
   @override
   void initState() {
@@ -155,22 +227,44 @@ class _AntTabItemState extends State<AntTabItem> {
 
   @override
   Widget build(BuildContext context) {
-    AntThemeData themeData = AntTheme.of(context);
+    StateStyle stateStyle = _AntTabItemStyle(context, _active);
+    stateStyle = stateStyle.merge(widget.style);
     return GestureDetector(
       onTap: () {
         widget.onTab?.call(widget.item!.key);
       },
       child: Container(
-        decoration: BoxDecoration(
-            border: _active
-                ? Border(
-                    bottom: BorderSide(color: themeData.colorPrimary, width: 1))
-                : null),
-        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        child: Center(
-          child: widget.item?.label,
-        ),
+        decoration: widget.decoration ??
+            (_active
+                ? stateStyle
+                    .merge(widget.activeStyle)
+                    .resolve(materialStates)
+                    ?.decoration
+                : stateStyle.resolve(materialStates)?.decoration),
+        padding: stateStyle.resolve(materialStates)?.computedPadding,
+        child: Center(child: _labelRender()),
       ),
     );
+  }
+}
+
+class _AntTabItemStyle extends StateStyle {
+  const _AntTabItemStyle(this.context, this.active);
+
+  final BuildContext context;
+  final bool active;
+
+  @override
+  Style get style {
+    AntThemeData themeData = AntTheme.of(context);
+    return Style(
+        color: active ? themeData.colorPrimary : null,
+        padding: StylePadding.symmetric(vertical: 8, horizontal: 8),
+        borderBottom: active
+            ? StyleBorder(
+                color: themeData.colorPrimary,
+                width: 1,
+                style: BorderStyle.solid)
+            : null);
   }
 }
