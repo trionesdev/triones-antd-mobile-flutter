@@ -21,6 +21,7 @@ import 'package:antd_flutter_example/pages/modal_page.dart';
 import 'package:antd_flutter_example/pages/picker_page.dart';
 import 'package:antd_flutter_example/pages/popup_page.dart';
 import 'package:antd_flutter_example/pages/radio_page.dart';
+import 'package:antd_flutter_example/pages/rate_page.dart';
 import 'package:antd_flutter_example/pages/search_bar_page.dart';
 import 'package:antd_flutter_example/pages/space_page.dart';
 import 'package:antd_flutter_example/pages/switch_page.dart';
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
         '/tabs': (context) => TabsPage(),
         '/radio': (context) => RadioPage(),
         '/checkbox': (context) => CheckboxPage(),
+        '/rate': (context) => RatePage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -326,6 +328,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Checkbox 复选框'),
             onTap: () {
               Navigator.pushNamed(context, '/checkbox');
+            },
+          ),
+          material.ListTile(
+            title: Text('Rate 评分'),
+            onTap: () {
+              Navigator.pushNamed(context, '/rate');
             },
           ),
         ],

@@ -1,10 +1,12 @@
 library;
 
+//region 风格配色
 export 'src/components/theme/theme_data.dart';
 export 'src/components/theme/theme.dart';
 export 'src/components/style/style.dart';
 export 'src/components/style/state_style.dart';
 export 'src/components/style/style_property.dart';
+//endregion
 
 export 'src/components/ant.dart';
 export 'src/components/app/app.dart';
@@ -48,6 +50,6 @@ export 'src/components/loading/loading.dart';
 export 'src/components/tabs/tabs.dart';
 export 'src/components/radio/radio.dart';
 export 'src/components/checkbox/checkbox.dart';
-
+export 'src/components/rate/rate.dart';
 
 export 'src/components/util/utils.dart';

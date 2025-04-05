@@ -14,7 +14,7 @@ class _CheckboxPageState extends State<CheckboxPage> {
   Widget build(BuildContext context) {
     return AntScaffold(
         appBar: AntAppBar(
-          title: Text("Radio 单选框"),
+          title: Text("Checkbox 复选框"),
         ),
         body: SingleChildScrollView(
           child: Column(
