@@ -5,7 +5,7 @@ class AntRate extends StatefulWidget {
       {super.key,
       this.count = 5,
       this.allowHalf = false,
-      this.defaultValue = 0,
+      this.defaultValue,
       this.value,
       this.onChange});
 
@@ -26,9 +26,11 @@ class AntRate extends StatefulWidget {
 }
 
 class _AntRateState extends State<AntRate> {
+  GlobalKey _key = GlobalKey();
   int _generation = 0;
-  bool _isDragging = false;
   double _value = 0;
+  RenderBox? _renderBox;
+  Offset? _localOffset = Offset(0, 0);
   Offset? _firstOffset;
   Offset? _lastOffset;
 
@@ -38,26 +40,44 @@ class _AntRateState extends State<AntRate> {
     rateItemStates.add(itemState);
   }
 
+  Offset? _getLocalPosition(Offset offset) {
+    if (_renderBox != null) {
+      return _renderBox!.globalToLocal(offset);
+    }
+    return null;
+  }
+
   void _setFirstOffset(Offset? offset) {
-    // print("first:"+offset?.toString());
     _firstOffset = offset;
   }
 
   void _setLastOffset(Offset? offset) {
-    // print("last:"+offset!.toString());
     _lastOffset = offset;
   }
 
   void _pointPositionChange(Offset offset) {
-    if (_firstOffset != null && offset.dx < _firstOffset!.dx) {
-      setState(() {
-        _value = 0;
-      });
-    }
-    if (_lastOffset != null && offset.dx > _lastOffset!.dx) {
-      setState(() {
-        _value = widget.count as double;
-      });
+    print(offset);
+    print(_localOffset);
+    // if (_firstOffset != null && offset.dx < _firstOffset!.dx) {
+    //   setState(() {
+    //     _value = 0;
+    //   });
+    // }
+    // if (_lastOffset != null && offset.dx > _lastOffset!.dx) {
+    //   setState(() {
+    //     _value = widget.count as double;
+    //   });
+    // }
+    if (_localOffset != null) {
+      if (offset.dx < _localOffset!.dx) {
+        setState(() {
+          _value = 0;
+        });
+      } else if (offset.dx > _localOffset!.dx) {
+        setState(() {
+          _value = widget.count as double;
+        });
+      }
     }
     if (rateItemStates.isNotEmpty) {
       for (var itemState in rateItemStates) {
@@ -68,15 +88,11 @@ class _AntRateState extends State<AntRate> {
 
   List<Widget> _generateChildren() {
     return List.generate(widget.count, (index) {
-      print(index);
       return _RateItem(
         index: index,
-        isFirst: index == 0,
-        isLast: index == widget.count - 1,
         allowHalf: widget.allowHalf,
         value: _value,
         onValueChange: (val) {
-          print(val);
           setState(() {
             _value = val;
           });
@@ -87,31 +103,35 @@ class _AntRateState extends State<AntRate> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _value = widget.value ?? widget.defaultValue ?? 0;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final RenderBox? renderBox =
+          _key.currentContext?.findRenderObject() as RenderBox?;
+      if (renderBox != null) {
+        _renderBox = renderBox;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      // padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: 8),
       child: GestureDetector(
-        // onPanStart: (details) {
-        //   print(details);
-        //   _isDragging = true;
-        // },
         onPanUpdate: (details) {
-          print(details);
-          // setState(() {
-          //   // _pointGlobalPosition = details.globalPosition;
-          // });
-          _pointPositionChange(details.globalPosition);
+          _pointPositionChange(
+              _renderBox!.globalToLocal(details.globalPosition));
         },
-        // onPanEnd: (details) {
-        //   print("onPanEnd");
-        //   print(details);
-        //   _isDragging = false;
-        // },
         child: _RateScope(
             generation: _generation,
             rateState: this,
             child: Row(
+              key: _key,
               children: _generateChildren(),
             )),
       ),
@@ -121,8 +141,7 @@ class _AntRateState extends State<AntRate> {
 
 class _RateScope extends InheritedWidget {
   const _RateScope(
-      {super.key,
-      required super.child,
+      {required super.child,
       required _AntRateState rateState,
       required int generation})
       : _rateState = rateState,
@@ -142,12 +161,8 @@ class _RateItem extends StatefulWidget {
     required this.allowHalf,
     this.value = 0,
     required this.onValueChange,
-    required this.isFirst,
-    required this.isLast,
   });
 
-  final bool isFirst;
-  final bool isLast;
   final int index;
   final bool allowHalf;
   final double value;
@@ -158,36 +173,37 @@ class _RateItem extends StatefulWidget {
 }
 
 class _RateItemState extends State<_RateItem> {
-  Offset? _offset;
+  _AntRateState? _rateState;
+  double _value = 0;
+  Offset? _globalOffset;
+  Offset? _localOffset;
   RenderBox? _renderBox;
 
   void _pointPositionChange(Offset offset) {
-    if (_offset != null && _renderBox != null) {
-      if (offset.dx > _offset!.dx &&
-          offset.dx <= _offset!.dx + _renderBox!.size.width &&
-          offset.dy > _offset!.dy &&
-          offset.dy <= _offset!.dy + _renderBox!.size.height) {
-        print("in:" + widget.index.toString());
-        if (widget.allowHalf) {
+    if (offset.dx > _localOffset!.dx &&
+        offset.dx <= _localOffset!.dx + _renderBox!.size.width &&
+        offset.dy > _localOffset!.dy &&
+        offset.dy <= _localOffset!.dy + _renderBox!.size.height) {
+      if (widget.allowHalf) {
+        if (_localOffset!.dx <= offset.dx &&
+            offset.dx <= (_localOffset!.dx + _renderBox!.size.width / 2)) {
+          widget.onValueChange.call(widget.index + 0.5);
         } else {
           widget.onValueChange.call(widget.index + 1);
         }
+      } else {
+        widget.onValueChange.call(widget.index + 1);
       }
     }
   }
 
   Widget _item() {
-    if (widget.value >= widget.index + 1) {
+    if (_value >= widget.index + 1) {
       return _DefaultFullIcon();
     } else {
-      if (widget.index < widget.value && widget.value < widget.index + 1) {
-        return _DefaultHalfIcon(widget.value - widget.index);
+      if (widget.index < _value && _value < widget.index + 1) {
+        return _DefaultHalfIcon(_value - widget.index);
       }
-      return _DefaultEmptyIcon();
-    }
-    if (widget.value >= (widget.index + 1)) {
-      return _DefaultFullIcon();
-    } else {
       return _DefaultEmptyIcon();
     }
   }
@@ -195,68 +211,83 @@ class _RateItemState extends State<_RateItem> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      _value = widget.value ?? 0;
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
       if (renderBox != null) {
         _renderBox = renderBox;
-        _offset = renderBox.localToGlobal(Offset.zero);
+        _globalOffset = renderBox.localToGlobal(Offset.zero);
+      }
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant _RateItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      setState(() {
+        _value = widget.value;
+      });
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+      if (renderBox != null) {
+        _renderBox = renderBox;
+        _globalOffset = renderBox.localToGlobal(Offset.zero);
+        _localOffset =
+            _rateState?._getLocalPosition(renderBox.localToGlobal(Offset.zero));
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    _AntRateState? rateState = AntRate.maybeOf(context);
-    rateState?._register(this);
-    print(_offset.toString());
-    if (widget.isFirst && _offset != null && _renderBox != null) {
-      rateState?._setFirstOffset(_offset);
-    }
-    if (widget.isLast && _offset != null && _renderBox != null) {
-      rateState?._setLastOffset(
-          Offset(_offset!.dx + _renderBox!.size.width, _offset!.dy));
-    }
+    _rateState = AntRate.maybeOf(context);
+    _rateState?._register(this);
     return GestureDetector(
       onTapUp: (details) {
         if (widget.allowHalf) {
-          if (_offset!.dx <= details.globalPosition.dx &&
-              details.globalPosition.dx <=
-                  (_offset!.dx + _renderBox!.size.width / 2)) {
-            //点击位置在左侧
-            print("ddd");
+          Offset? offset =
+              _rateState?._getLocalPosition(details.globalPosition); //转换成相对偏移量
+          if (offset != null) {
+            if (_localOffset!.dx <= offset!.dx &&
+                offset.dx <= (_localOffset!.dx + _renderBox!.size.width / 2)) {
+              //点击位置在左侧
 
-            if (widget.value <= widget.index) {
-              //当前值在当前位之前，则为当前半值
-              widget.onValueChange.call(widget.index + 0.5);
-            } else if (widget.index < widget.value &&
-                widget.value <= widget.index + 0.5) {
-              //当前值为当前位半值，则归0
-              widget.onValueChange.call(0);
-            } else if (widget.value > widget.index + 0.5) {
-              //当前值大于当前位半值，为当前半值
-              widget.onValueChange.call(widget.index + 0.5);
+              if (_value <= widget.index) {
+                //当前值在当前位之前，则为当前半值
+                widget.onValueChange.call(widget.index + 0.5);
+              } else if (widget.index < _value &&
+                  _value <= widget.index + 0.5) {
+                //当前值为当前位半值，则归0
+                widget.onValueChange.call(0);
+              } else if (_value > widget.index + 0.5) {
+                //当前值大于当前位半值，为当前半值
+                widget.onValueChange.call(widget.index + 0.5);
+              } else {
+                print("左侧其他情况");
+              }
             } else {
-              print("左侧其他情况");
-            }
-          } else {
-            //点击位置在右侧
-            if (widget.value > widget.index + 1) {
-              //原值大于当前满值，则为当前满值
-              widget.onValueChange.call(widget.index + 1);
-            } else if (widget.index + 0.5 < widget.value &&
-                widget.value <= widget.index + 1) {
-              //原值是当前满值，则归0
-              widget.onValueChange.call(0);
-            } else if (widget.value <= widget.index + 0.5) {
-              //原值小于当前半值，则为当前满值
-              widget.onValueChange.call(widget.index + 1);
-            } else {
-              print("右侧其他情况");
+              //点击位置在右侧
+              if (_value > widget.index + 1) {
+                //原值大于当前满值，则为当前满值
+                widget.onValueChange.call(widget.index + 1);
+              } else if (widget.index + 0.5 < _value &&
+                  _value <= widget.index + 1) {
+                //原值是当前满值，则归0
+                widget.onValueChange.call(0);
+              } else if (_value <= widget.index + 0.5) {
+                //原值小于当前半值，则为当前满值
+                widget.onValueChange.call(widget.index + 1);
+              } else {
+                print("右侧其他情况");
+              }
             }
           }
-          details.globalPosition;
         } else {
-          if (widget.value == widget.index + 1) {
+          if (_value == widget.index + 1) {
             widget.onValueChange.call(0);
           } else {
             widget.onValueChange.call(widget.index + 1);
@@ -273,11 +304,9 @@ class _RateItemState extends State<_RateItem> {
 class _DefaultFullIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Icon(
-        Icons.star,
-        color: Colors.yellow,
-      ),
+    return Icon(
+      Icons.star,
+      color: Colors.yellow,
     );
   }
 }
@@ -290,7 +319,21 @@ class _DefaultHalfIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Icon(Icons.star),
+      child: Stack(
+        children: [
+          _DefaultEmptyIcon(),
+          Positioned.fill(
+            left: 0,
+            child: FractionallySizedBox(
+              widthFactor: value,
+              alignment: Alignment.centerLeft,
+              child: ClipRRect(
+                child: _DefaultFullIcon(),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -298,11 +341,9 @@ class _DefaultHalfIcon extends StatelessWidget {
 class _DefaultEmptyIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Icon(
-        Icons.star,
-        color: Colors.grey,
-      ),
+    return Icon(
+      Icons.star,
+      color: Colors.grey,
     );
   }
 }

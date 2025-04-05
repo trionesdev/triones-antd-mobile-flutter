@@ -17,7 +17,8 @@ class _RatePageState extends State<RatePage>{
       children: [
         SizedBox(height: 100,),
         DemoBlock(title: "基本使用",child: AntRate(),),
-        DemoBlock(title: "半星",child: AntRate(allowHalf: true,),)
+        DemoBlock(title: "半星",child: AntRate(allowHalf: true,),),
+        DemoBlock(title: "指定值(可以是小数)",child: AntRate(allowHalf: true,value: 2.7,),)
       ],
     ),),
     );
