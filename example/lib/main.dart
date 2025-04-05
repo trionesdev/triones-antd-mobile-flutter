@@ -1,4 +1,4 @@
-import 'package:antd_flutter_example/pages/actions_sheet_page.dart';
+import 'package:antd_flutter_example/pages/action_sheet_page.dart';
 import 'package:antd_flutter_example/pages/alert_page.dart';
 import 'package:antd_flutter_example/pages/app_bar_page.dart';
 import 'package:antd_flutter_example/pages/avatar_page.dart';
@@ -19,6 +19,7 @@ import 'package:antd_flutter_example/pages/mask_page.dart';
 import 'package:antd_flutter_example/pages/modal_page.dart';
 import 'package:antd_flutter_example/pages/picker_page.dart';
 import 'package:antd_flutter_example/pages/popup_page.dart';
+import 'package:antd_flutter_example/pages/radio_page.dart';
 import 'package:antd_flutter_example/pages/search_bar_page.dart';
 import 'package:antd_flutter_example/pages/space_page.dart';
 import 'package:antd_flutter_example/pages/switch_page.dart';
@@ -73,11 +74,12 @@ class MyApp extends StatelessWidget {
         '/badge': (context) => BadgePage(),
         '/upload': (context) => UploadPage(),
         '/images-wall': (context) => ImagesWallPage(),
-        '/actions-sheet': (context) => ActionsSheetPage(),
+        '/action-sheet': (context) => ActionSheetPage(),
         '/timeline': (context) => TimelinePage(),
         '/empty': (context) => EmptyPage(),
         '/breadcrumb': (context) => BreadcrumbPage(),
         '/tabs': (context) => TabsPage(),
+        '/radio': (context) => RadioPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -283,9 +285,9 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           material.ListTile(
-            title: Text('ActionsSheet 操作页'),
+            title: Text('ActionSheet 操作面板'),
             onTap: () {
-              Navigator.pushNamed(context, '/actions-sheet');
+              Navigator.pushNamed(context, '/action-sheet');
             },
           ),
           material.ListTile(
@@ -310,6 +312,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Tabs 标签页'),
             onTap: () {
               Navigator.pushNamed(context, '/tabs');
+            },
+          ),
+          material.ListTile(
+            title: Text('Radio 单选框'),
+            onTap: () {
+              Navigator.pushNamed(context, '/radio');
             },
           ),
         ],

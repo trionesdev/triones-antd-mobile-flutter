@@ -10,7 +10,7 @@ class AntActionType {
   final Function? onPressed;
 }
 
-class AntActionsSheet {
+class AntActionSheet {
   static void show(
       {required BuildContext context,
       bool? closeOnMaskClick = false,
@@ -24,7 +24,7 @@ class AntActionsSheet {
         backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(),
         builder: (context) {
-          return AntActionsSheetView(
+          return AntActionSheetView(
             title: title,
             actions: actions,
             showCancelButton: showCancelButton,
@@ -34,8 +34,8 @@ class AntActionsSheet {
   }
 }
 
-class AntActionsSheetView extends StatefulWidget {
-  const AntActionsSheetView(
+class AntActionSheetView extends StatefulWidget {
+  const AntActionSheetView(
       {super.key,
       this.showCancelButton = true,
       this.itemStyle,
@@ -52,10 +52,10 @@ class AntActionsSheetView extends StatefulWidget {
   final BoxDecoration? decoration;
 
   @override
-  State<StatefulWidget> createState() => _AntActionsSheetViewState();
+  State<StatefulWidget> createState() => _AntActionSheetViewState();
 }
 
-class _AntActionsSheetViewState extends State<AntActionsSheetView>
+class _AntActionSheetViewState extends State<AntActionSheetView>
     with MaterialStateMixin {
   @override
   void dispose() {
@@ -65,7 +65,7 @@ class _AntActionsSheetViewState extends State<AntActionsSheetView>
 
   @override
   Widget build(BuildContext context) {
-    StateStyle stateStyle = _AntActionsSheetViewStyle(context: context);
+    StateStyle stateStyle = _AntActionSheetViewStyle(context: context);
 
     List<ActionItem> items = [];
     if (widget.actions != null) {
@@ -124,10 +124,10 @@ class _AntActionsSheetViewState extends State<AntActionsSheetView>
   }
 }
 
-class _AntActionsSheetViewStyle extends StateStyle {
+class _AntActionSheetViewStyle extends StateStyle {
   final BuildContext context;
 
-  _AntActionsSheetViewStyle({required this.context});
+  _AntActionSheetViewStyle({required this.context});
 
   @override
   Style get style {

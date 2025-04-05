@@ -1,11 +1,12 @@
 import 'dart:io';
-import 'package:uuid/uuid.dart';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 import 'package:trionesdev_antd_mobile/src/components/images_wall/images_preview.dart';
+import 'package:uuid/uuid.dart';
 
 class AntImageRecord {
   AntImageRecord(
@@ -246,7 +247,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
             (widget.maxCount != null && _images.length < widget.maxCount!))) {
       widgets.add(GestureDetector(
         onTap: () {
-          AntActionsSheet.show(context: context, actions: [
+          AntActionSheet.show(context: context, actions: [
             AntActionType(
               label: Text('从相册选择'),
               onPressed: () {

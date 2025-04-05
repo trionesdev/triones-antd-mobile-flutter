@@ -147,7 +147,6 @@ class AntFormState extends State<AntForm> {
     }
     Map<dynamic, dynamic> values = {};
     for (final AntFormItemState<dynamic> field in _fields) {
-      print(field.value);
       Map<dynamic, dynamic> fieldValues = values;
       if (field.name != null && field.name!.value.isNotEmpty) {
         List<dynamic> paths = field.name!.value;
@@ -167,9 +166,6 @@ class AntFormState extends State<AntForm> {
 
   @override
   Widget build(BuildContext context) {
-    // return Column(
-    //   children: widget.children,
-    // );
 
     return PopScope(
         child: _AntFormScope(
