@@ -8,6 +8,7 @@ import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/calendar_datetime_picker_page.dart';
 import 'package:antd_flutter_example/pages/calendar_picker_page.dart';
 import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
+import 'package:antd_flutter_example/pages/checkbox_page.dart';
 import 'package:antd_flutter_example/pages/divider_page.dart';
 import 'package:antd_flutter_example/pages/empty_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
         '/breadcrumb': (context) => BreadcrumbPage(),
         '/tabs': (context) => TabsPage(),
         '/radio': (context) => RadioPage(),
+        '/checkbox': (context) => CheckboxPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -318,6 +320,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Radio 单选框'),
             onTap: () {
               Navigator.pushNamed(context, '/radio');
+            },
+          ),
+          material.ListTile(
+            title: Text('Checkbox 复选框'),
+            onTap: () {
+              Navigator.pushNamed(context, '/checkbox');
             },
           ),
         ],

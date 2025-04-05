@@ -47,6 +47,7 @@ export 'src/components/empty/empty.dart';
 export 'src/components/loading/loading.dart';
 export 'src/components/tabs/tabs.dart';
 export 'src/components/radio/radio.dart';
+export 'src/components/checkbox/checkbox.dart';
 
 
 export 'src/components/util/utils.dart';
