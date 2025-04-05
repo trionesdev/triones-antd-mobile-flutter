@@ -21,7 +21,7 @@
 - [x] CalendarPicker 日历选择器
 - [x] CalendarDatetimePicker 日历时间选择器
 - [x] Radio 单选框
-- [ ] Rate 评分
+- [x] Rate 评分
 - [x] SearchBar 搜索框
 - [x] Switch 开关
 - [x] TextArea 文本域
