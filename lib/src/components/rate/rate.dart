@@ -7,8 +7,10 @@ class AntRate extends StatefulWidget {
       this.allowHalf = false,
       this.defaultValue,
       this.value,
-      this.onChange});
+      this.onChange, this.fullIcon, this.emptyIcon});
 
+  final Widget? fullIcon;
+  final Widget? emptyIcon;
   final double? defaultValue;
   final double? value;
   final int count;
@@ -31,8 +33,6 @@ class _AntRateState extends State<AntRate> {
   double _value = 0;
   RenderBox? _renderBox;
   Offset? _localOffset = Offset(0, 0);
-  Offset? _firstOffset;
-  Offset? _lastOffset;
 
   final Set<_RateItemState> rateItemStates = <_RateItemState>{};
 
@@ -47,27 +47,8 @@ class _AntRateState extends State<AntRate> {
     return null;
   }
 
-  void _setFirstOffset(Offset? offset) {
-    _firstOffset = offset;
-  }
-
-  void _setLastOffset(Offset? offset) {
-    _lastOffset = offset;
-  }
 
   void _pointPositionChange(Offset offset) {
-    print(offset);
-    print(_localOffset);
-    // if (_firstOffset != null && offset.dx < _firstOffset!.dx) {
-    //   setState(() {
-    //     _value = 0;
-    //   });
-    // }
-    // if (_lastOffset != null && offset.dx > _lastOffset!.dx) {
-    //   setState(() {
-    //     _value = widget.count as double;
-    //   });
-    // }
     if (_localOffset != null) {
       if (offset.dx < _localOffset!.dx) {
         setState(() {
@@ -75,7 +56,7 @@ class _AntRateState extends State<AntRate> {
         });
       } else if (offset.dx > _localOffset!.dx) {
         setState(() {
-          _value = widget.count as double;
+          _value = widget.count.toDouble();
         });
       }
     }
@@ -160,9 +141,11 @@ class _RateItem extends StatefulWidget {
     required this.index,
     required this.allowHalf,
     this.value = 0,
-    required this.onValueChange,
+    required this.onValueChange, this.fullIcon, this.emptyIcon,
   });
 
+  final Widget? fullIcon;
+  final Widget? emptyIcon;
   final int index;
   final bool allowHalf;
   final double value;
@@ -199,12 +182,12 @@ class _RateItemState extends State<_RateItem> {
 
   Widget _item() {
     if (_value >= widget.index + 1) {
-      return _DefaultFullIcon();
+      return widget.fullIcon ?? _DefaultFullIcon();
     } else {
       if (widget.index < _value && _value < widget.index + 1) {
-        return _DefaultHalfIcon(_value - widget.index);
+        return _DefaultHalfIcon(_value - widget.index,widget.fullIcon,widget.emptyIcon);
       }
-      return _DefaultEmptyIcon();
+      return widget.emptyIcon ?? _DefaultEmptyIcon();
     }
   }
 
@@ -219,6 +202,8 @@ class _RateItemState extends State<_RateItem> {
       if (renderBox != null) {
         _renderBox = renderBox;
         _globalOffset = renderBox.localToGlobal(Offset.zero);
+        _localOffset =
+            _rateState?._getLocalPosition(renderBox.localToGlobal(Offset.zero));
       }
     });
   }
@@ -307,28 +292,31 @@ class _DefaultFullIcon extends StatelessWidget {
     return Icon(
       Icons.star,
       color: Colors.yellow,
+      size: 32,
     );
   }
 }
 
 class _DefaultHalfIcon extends StatelessWidget {
-  const _DefaultHalfIcon(this.value);
+  const _DefaultHalfIcon(this.value, this.fullIcon, this.emptyIcon);
 
   final double value;
+  final Widget? fullIcon;
+  final Widget? emptyIcon;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Stack(
         children: [
-          _DefaultEmptyIcon(),
+          emptyIcon ?? _DefaultEmptyIcon(),
           Positioned.fill(
             left: 0,
             child: FractionallySizedBox(
               widthFactor: value,
               alignment: Alignment.centerLeft,
               child: ClipRRect(
-                child: _DefaultFullIcon(),
+                child: fullIcon ?? _DefaultFullIcon(),
               ),
             ),
           ),
@@ -344,6 +332,7 @@ class _DefaultEmptyIcon extends StatelessWidget {
     return Icon(
       Icons.star,
       color: Colors.grey,
+      size: 32,
     );
   }
 }
