@@ -3,16 +3,16 @@
 layout: home
 
 hero:
-  name: "My Awesome Project"
+  name: "TrionesDev Antd Flutter"
   text: "A VitePress Site"
   tagline: My great project tagline
   actions:
     - theme: brand
-      text: Markdown Examples
+      text: 快速开始
       link: /markdown-examples
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: 组件
+      link: /components/overview
 
 features:
   - title: Feature A

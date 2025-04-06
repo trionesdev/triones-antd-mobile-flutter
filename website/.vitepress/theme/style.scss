@@ -1,0 +1,33 @@
+:root {
+  --vp-layout-max-width: 2040px;
+  --vp-sidebar-width: 280px;
+}
+
+.VPSidebar {
+}
+
+.VPDoc.has-aside .content-container {
+  max-width: 1440px !important;
+}
+
+.triones-code {
+  display: flex;
+  max-height: 700px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+
+  &-block {
+    flex: 1 auto;
+    overflow: auto;
+  }
+
+  &-preview {
+    width: 375px;
+    iframe{
+      height: 100%;
+      width: 100%;
+      border: 0;
+    }
+  }
+
+}
