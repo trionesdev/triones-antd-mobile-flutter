@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
-// const base ='/triones-antd-mobile-flutter/';
-const base ='/';
+const base ='/triones-antd-mobile-flutter/';
+// const base ='/';
 const RE = /{([\d,-]+)}/
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
