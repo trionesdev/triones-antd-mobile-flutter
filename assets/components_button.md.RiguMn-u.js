@@ -423,4 +423,4 @@ class _ButtonPageState extends State&lt;ButtonPage&gt; {
         ]));
   }
 }
-</code></pre></div><div class="triones-code-preview"><iframe src="/triones-antd-mobile-flutter/web/index.html/#/button"></iframe></div></div>`,2)]))}const A=t(a,[["render",i]]);export{p as __pageData,A as default};
+</code></pre></div><div class="triones-code-preview"><iframe src="/triones-antd-mobile-flutter/web/index.html#/button"></iframe></div></div>`,2)]))}const A=t(a,[["render",i]]);export{p as __pageData,A as default};
