@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Runtime API Examples | TrionesDev Antd Flutter</title>
+    <meta name="description" content="Triones Antd Flutter Development website">
+    <meta name="generator" content="VitePress v1.6.3">
+    <link rel="preload stylesheet" href="/assets/style.DTDvBO00.css" as="style">
+    <link rel="preload stylesheet" href="/vp-icons.css" as="style">
+    
+    <script type="module" src="/assets/app.CaSJ6ZkR.js"></script>
+    <link rel="preload" href="/assets/inter-roman-latin.Di8DUHzh.woff2" as="font" type="font/woff2" crossorigin="">
+    <link rel="modulepreload" href="/assets/chunks/theme.Dp4EbTJG.js">
+    <link rel="modulepreload" href="/assets/chunks/framework.Dh1jimFm.js">
+    <link rel="modulepreload" href="/assets/api-examples.md.D4mRpSn1.lean.js">
+    <script id="check-dark-mode">(()=>{const e=localStorage.getItem("vitepress-theme-appearance")||"auto",a=window.matchMedia("(prefers-color-scheme: dark)").matches;(!e||e==="auto"?a:e==="dark")&&document.documentElement.classList.add("dark")})();</script>
+    <script id="check-mac-os">document.documentElement.classList.toggle("mac",/Mac|iPhone|iPod|iPad/i.test(navigator.platform));</script>
+  </head>
+  <body>
+    <div id="app"><div class="Layout" data-v-213a7167><!--[--><!--]--><!--[--><span tabindex="-1" data-v-cd45f0cd></span><a href="#VPContent" class="VPSkipLink visually-hidden" data-v-cd45f0cd>Skip to content</a><!--]--><!----><header class="VPNav" data-v-213a7167 data-v-8aa9d216><div class="VPNavBar" data-v-8aa9d216 data-v-243574f1><div class="wrapper" data-v-243574f1><div class="container" data-v-243574f1><div class="title" data-v-243574f1><div class="VPNavBarTitle" data-v-243574f1 data-v-14fc41d3><a class="title" href="/" data-v-14fc41d3><!--[--><!--]--><!----><span data-v-14fc41d3>TrionesDev Antd Flutter</span><!--[--><!--]--></a></div></div><div class="content" data-v-243574f1><div class="content-body" data-v-243574f1><!--[--><!--]--><div class="VPNavBarSearch search" data-v-243574f1><!----></div><nav aria-labelledby="main-nav-aria-label" class="VPNavBarMenu menu" data-v-243574f1 data-v-8c08d800><span id="main-nav-aria-label" class="visually-hidden" data-v-8c08d800> Main Navigation </span><!--[--><!--[--><a class="VPLink link VPNavBarMenuLink" href="/" tabindex="0" data-v-8c08d800 data-v-9ea582d5><!--[--><span data-v-9ea582d5>Home</span><!--]--></a><!--]--><!--[--><a class="VPLink link VPNavBarMenuLink" href="/markdown-examples.html" tabindex="0" data-v-8c08d800 data-v-9ea582d5><!--[--><span data-v-9ea582d5>组件</span><!--]--></a><!--]--><!--]--></nav><!----><div class="VPNavBarAppearance appearance" data-v-243574f1 data-v-8cce379a><button class="VPSwitch VPSwitchAppearance" type="button" role="switch" title aria-checked="false" data-v-8cce379a data-v-4f1a0049 data-v-ad02945a><span class="check" data-v-ad02945a><span class="icon" data-v-ad02945a><!--[--><span class="vpi-sun sun" data-v-4f1a0049></span><span class="vpi-moon moon" data-v-4f1a0049></span><!--]--></span></span></button></div><div class="VPSocialLinks VPNavBarSocialLinks social-links" data-v-243574f1 data-v-439d9a35 data-v-58fefd62><!--[--><a class="VPSocialLink no-icon" href="https://github.com/trionesdev/triones-antd-mobile-flutter" aria-label="github" target="_blank" rel="noopener" data-v-58fefd62 data-v-ea7a81dc><span class="vpi-social-github"></span></a><!--]--></div><div class="VPFlyout VPNavBarExtra extra" data-v-243574f1 data-v-9d72ad66 data-v-cc4aaf60><button type="button" class="button" aria-haspopup="true" aria-expanded="false" aria-label="extra navigation" data-v-cc4aaf60><span class="vpi-more-horizontal icon" data-v-cc4aaf60></span></button><div class="menu" data-v-cc4aaf60><div class="VPMenu" data-v-cc4aaf60 data-v-f4c54ed9><!----><!--[--><!--[--><!----><div class="group" data-v-9d72ad66><div class="item appearance" data-v-9d72ad66><p class="label" data-v-9d72ad66>Appearance</p><div class="appearance-action" data-v-9d72ad66><button class="VPSwitch VPSwitchAppearance" type="button" role="switch" title aria-checked="false" data-v-9d72ad66 data-v-4f1a0049 data-v-ad02945a><span class="check" data-v-ad02945a><span class="icon" data-v-ad02945a><!--[--><span class="vpi-sun sun" data-v-4f1a0049></span><span class="vpi-moon moon" data-v-4f1a0049></span><!--]--></span></span></button></div></div></div><div class="group" data-v-9d72ad66><div class="item social-links" data-v-9d72ad66><div class="VPSocialLinks social-links-list" data-v-9d72ad66 data-v-58fefd62><!--[--><a class="VPSocialLink no-icon" href="https://github.com/trionesdev/triones-antd-mobile-flutter" aria-label="github" target="_blank" rel="noopener" data-v-58fefd62 data-v-ea7a81dc><span class="vpi-social-github"></span></a><!--]--></div></div></div><!--]--><!--]--></div></div></div><!--[--><!--]--><button type="button" class="VPNavBarHamburger hamburger" aria-label="mobile navigation" aria-expanded="false" aria-controls="VPNavScreen" data-v-243574f1 data-v-63b4fb2b><span class="container" data-v-63b4fb2b><span class="top" data-v-63b4fb2b></span><span class="middle" data-v-63b4fb2b></span><span class="bottom" data-v-63b4fb2b></span></span></button></div></div></div></div><div class="divider" data-v-243574f1><div class="divider-line" data-v-243574f1></div></div></div><!----></header><div class="VPLocalNav empty fixed" data-v-213a7167 data-v-32b76a86><div class="container" data-v-32b76a86><!----><div class="VPLocalNavOutlineDropdown" style="--vp-vh:0px;" data-v-32b76a86 data-v-84a36ecd><button data-v-84a36ecd>Return to top</button><!----></div></div></div><!----><div class="VPContent" id="VPContent" data-v-213a7167 data-v-0f700d16><div class="VPDoc has-aside" data-v-0f700d16 data-v-27ae5f52><!--[--><!--]--><div class="container" data-v-27ae5f52><div class="aside" data-v-27ae5f52><div class="aside-curtain" data-v-27ae5f52></div><div class="aside-container" data-v-27ae5f52><div class="aside-content" data-v-27ae5f52><div class="VPDocAside" data-v-27ae5f52 data-v-f4af18d0><!--[--><!--]--><!--[--><!--]--><nav aria-labelledby="doc-outline-aria-label" class="VPDocAsideOutline" data-v-f4af18d0 data-v-dbb89753><div class="content" data-v-dbb89753><div class="outline-marker" data-v-dbb89753></div><div aria-level="2" class="outline-title" id="doc-outline-aria-label" role="heading" data-v-dbb89753>On this page</div><ul class="VPDocOutlineItem root" data-v-dbb89753 data-v-b0a449e0><!--[--><!--]--></ul></div></nav><!--[--><!--]--><div class="spacer" data-v-f4af18d0></div><!--[--><!--]--><!----><!--[--><!--]--><!--[--><!--]--></div></div></div></div><div class="content" data-v-27ae5f52><div class="content-container" data-v-27ae5f52><!--[--><!--]--><main class="main" data-v-27ae5f52><div style="position:relative;" class="vp-doc _api-examples" data-v-27ae5f52><div><h1 id="runtime-api-examples" tabindex="-1">Runtime API Examples <a class="header-anchor" href="#runtime-api-examples" aria-label="Permalink to &quot;Runtime API Examples&quot;">​</a></h1><p>This page demonstrates usage of some of the runtime APIs provided by VitePress.</p><p>The main <code>useData()</code> API can be used to access site, theme, and page data for the current page. It works in both <code>.md</code> and <code>.vue</code> files:</p><div class="triones-code"><div class="triones-code-block"><pre><code>&lt;script setup&gt;
+import { useData } from &#39;vitepress&#39;
+
+const { theme, page, frontmatter } = useData()
+&lt;/script&gt;
+
+## Results
+
+### Theme Data
+&lt;pre&gt;{
+  &quot;nav&quot;: [
+    {
+      &quot;text&quot;: &quot;Home&quot;,
+      &quot;link&quot;: &quot;/&quot;
+    },
+    {
+      &quot;text&quot;: &quot;组件&quot;,
+      &quot;link&quot;: &quot;/markdown-examples&quot;
+    }
+  ],
+  &quot;sidebar&quot;: {
+    &quot;/components/&quot;: [
+      {
+        &quot;text&quot;: &quot;组件总览&quot;,
+        &quot;link&quot;: &quot;/components/overview&quot;
+      },
+      {
+        &quot;text&quot;: &quot;通用&quot;,
+        &quot;items&quot;: [
+          {
+            &quot;text&quot;: &quot;Button 按钮&quot;,
+            &quot;link&quot;: &quot;/components/button&quot;
+          }
+        ]
+      },
+      {
+        &quot;text&quot;: &quot;布局&quot;,
+        &quot;items&quot;: [
+          {
+            &quot;text&quot;: &quot;Divider 分割线&quot;,
+            &quot;link&quot;: &quot;/components/divider&quot;
+          },
+          {
+            &quot;text&quot;: &quot;Grid 栅格&quot;,
+            &quot;link&quot;: &quot;/components/grid&quot;
+          }
+        ]
+      }
+    ]
+  },
+  &quot;socialLinks&quot;: [
+    {
+      &quot;icon&quot;: &quot;github&quot;,
+      &quot;link&quot;: &quot;https://github.com/trionesdev/triones-antd-mobile-flutter&quot;
+    }
+  ]
+}&lt;/pre&gt;
+
+### Page Data
+&lt;pre&gt;{
+  &quot;title&quot;: &quot;Runtime API Examples&quot;,
+  &quot;description&quot;: &quot;&quot;,
+  &quot;frontmatter&quot;: {
+    &quot;outline&quot;: &quot;deep&quot;
+  },
+  &quot;headers&quot;: [],
+  &quot;relativePath&quot;: &quot;api-examples.md&quot;,
+  &quot;filePath&quot;: &quot;api-examples.md&quot;
+}&lt;/pre&gt;
+
+### Page Frontmatter
+&lt;pre&gt;{
+  &quot;outline&quot;: &quot;deep&quot;
+}&lt;/pre&gt;
+</code></pre></div><div class="triones-code-preview"><iframe src=""></iframe></div></div><h2 id="results" tabindex="-1">Results <a class="header-anchor" href="#results" aria-label="Permalink to &quot;Results&quot;">​</a></h2><h3 id="theme-data" tabindex="-1">Theme Data <a class="header-anchor" href="#theme-data" aria-label="Permalink to &quot;Theme Data&quot;">​</a></h3><pre>{
+  &quot;nav&quot;: [
+    {
+      &quot;text&quot;: &quot;Home&quot;,
+      &quot;link&quot;: &quot;/&quot;
+    },
+    {
+      &quot;text&quot;: &quot;组件&quot;,
+      &quot;link&quot;: &quot;/markdown-examples&quot;
+    }
+  ],
+  &quot;sidebar&quot;: {
+    &quot;/components/&quot;: [
+      {
+        &quot;text&quot;: &quot;组件总览&quot;,
+        &quot;link&quot;: &quot;/components/overview&quot;
+      },
+      {
+        &quot;text&quot;: &quot;通用&quot;,
+        &quot;items&quot;: [
+          {
+            &quot;text&quot;: &quot;Button 按钮&quot;,
+            &quot;link&quot;: &quot;/components/button&quot;
+          }
+        ]
+      },
+      {
+        &quot;text&quot;: &quot;布局&quot;,
+        &quot;items&quot;: [
+          {
+            &quot;text&quot;: &quot;Divider 分割线&quot;,
+            &quot;link&quot;: &quot;/components/divider&quot;
+          },
+          {
+            &quot;text&quot;: &quot;Grid 栅格&quot;,
+            &quot;link&quot;: &quot;/components/grid&quot;
+          }
+        ]
+      }
+    ]
+  },
+  &quot;socialLinks&quot;: [
+    {
+      &quot;icon&quot;: &quot;github&quot;,
+      &quot;link&quot;: &quot;https://github.com/trionesdev/triones-antd-mobile-flutter&quot;
+    }
+  ]
+}</pre><h3 id="page-data" tabindex="-1">Page Data <a class="header-anchor" href="#page-data" aria-label="Permalink to &quot;Page Data&quot;">​</a></h3><pre>{
+  &quot;title&quot;: &quot;Runtime API Examples&quot;,
+  &quot;description&quot;: &quot;&quot;,
+  &quot;frontmatter&quot;: {
+    &quot;outline&quot;: &quot;deep&quot;
+  },
+  &quot;headers&quot;: [],
+  &quot;relativePath&quot;: &quot;api-examples.md&quot;,
+  &quot;filePath&quot;: &quot;api-examples.md&quot;
+}</pre><h3 id="page-frontmatter" tabindex="-1">Page Frontmatter <a class="header-anchor" href="#page-frontmatter" aria-label="Permalink to &quot;Page Frontmatter&quot;">​</a></h3><pre>{
+  &quot;outline&quot;: &quot;deep&quot;
+}</pre><h2 id="more" tabindex="-1">More <a class="header-anchor" href="#more" aria-label="Permalink to &quot;More&quot;">​</a></h2><p>Check out the documentation for the <a href="https://vitepress.dev/reference/runtime-api#usedata" target="_blank" rel="noreferrer">full list of runtime APIs</a>.</p></div></div></main><footer class="VPDocFooter" data-v-27ae5f52 data-v-d52afc74><!--[--><!--]--><!----><!----></footer><!--[--><!--]--></div></div></div><!--[--><!--]--></div></div><!----><!--[--><!--]--></div></div>
+    <script>window.__VP_HASH_MAP__=JSON.parse("{\"api-examples.md\":\"D4mRpSn1\",\"components_button.md\":\"CP_pi1Yi\",\"components_divider.md\":\"BTmuJetL\",\"components_grid.md\":\"Du3xw9wi\",\"components_overview.md\":\"eaIT3_OJ\",\"index.md\":\"BIGVDp_d\",\"markdown-examples.md\":\"CSKSCoey\"}");window.__VP_SITE_DATA__=JSON.parse("{\"lang\":\"en-US\",\"dir\":\"ltr\",\"title\":\"TrionesDev Antd Flutter\",\"description\":\"Triones Antd Flutter Development website\",\"base\":\"/\",\"head\":[],\"router\":{\"prefetchLinks\":true},\"appearance\":true,\"themeConfig\":{\"nav\":[{\"text\":\"Home\",\"link\":\"/\"},{\"text\":\"组件\",\"link\":\"/markdown-examples\"}],\"sidebar\":{\"/components/\":[{\"text\":\"组件总览\",\"link\":\"/components/overview\"},{\"text\":\"通用\",\"items\":[{\"text\":\"Button 按钮\",\"link\":\"/components/button\"}]},{\"text\":\"布局\",\"items\":[{\"text\":\"Divider 分割线\",\"link\":\"/components/divider\"},{\"text\":\"Grid 栅格\",\"link\":\"/components/grid\"}]}]},\"socialLinks\":[{\"icon\":\"github\",\"link\":\"https://github.com/trionesdev/triones-antd-mobile-flutter\"}]},\"locales\":{},\"scrollOffset\":134,\"cleanUrls\":false}");</script>
+    
+  </body>
+</html>
