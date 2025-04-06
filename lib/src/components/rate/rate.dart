@@ -7,7 +7,10 @@ class AntRate extends StatefulWidget {
       this.allowHalf = false,
       this.defaultValue,
       this.value,
-      this.onChange, this.fullIcon, this.emptyIcon});
+      this.onChange,
+      this.fullIcon,
+      this.emptyIcon,
+      this.iconSize = 32});
 
   final Widget? fullIcon;
   final Widget? emptyIcon;
@@ -15,6 +18,7 @@ class AntRate extends StatefulWidget {
   final double? value;
   final int count;
   final bool allowHalf;
+  final double iconSize;
   final Function(double val)? onChange;
 
   @override
@@ -47,7 +51,6 @@ class _AntRateState extends State<AntRate> {
     return null;
   }
 
-
   void _pointPositionChange(Offset offset) {
     if (_localOffset != null) {
       if (offset.dx < _localOffset!.dx) {
@@ -70,6 +73,7 @@ class _AntRateState extends State<AntRate> {
   List<Widget> _generateChildren() {
     return List.generate(widget.count, (index) {
       return _RateItem(
+        iconSize: widget.iconSize,
         index: index,
         allowHalf: widget.allowHalf,
         value: _value,
@@ -141,7 +145,10 @@ class _RateItem extends StatefulWidget {
     required this.index,
     required this.allowHalf,
     this.value = 0,
-    required this.onValueChange, this.fullIcon, this.emptyIcon,
+    required this.onValueChange,
+    this.fullIcon,
+    this.emptyIcon,
+    required this.iconSize,
   });
 
   final Widget? fullIcon;
@@ -150,6 +157,7 @@ class _RateItem extends StatefulWidget {
   final bool allowHalf;
   final double value;
   final Function(double val) onValueChange;
+  final double iconSize;
 
   @override
   State<StatefulWidget> createState() => _RateItemState();
@@ -182,12 +190,17 @@ class _RateItemState extends State<_RateItem> {
 
   Widget _item() {
     if (_value >= widget.index + 1) {
-      return widget.fullIcon ?? _DefaultFullIcon();
+      return widget.fullIcon ?? _DefaultFullIcon(iconSize: widget.iconSize);
     } else {
       if (widget.index < _value && _value < widget.index + 1) {
-        return _DefaultHalfIcon(_value - widget.index,widget.fullIcon,widget.emptyIcon);
+        return _DefaultHalfIcon(
+          value: _value - widget.index,
+          fullIcon: widget.fullIcon,
+          emptyIcon: widget.emptyIcon,
+          iconSize: widget.iconSize,
+        );
       }
-      return widget.emptyIcon ?? _DefaultEmptyIcon();
+      return widget.emptyIcon ?? _DefaultEmptyIcon(iconSize: widget.iconSize);
     }
   }
 
@@ -279,7 +292,9 @@ class _RateItemState extends State<_RateItem> {
           }
         }
       },
-      child: Container(
+      child: SizedBox(
+        width: widget.iconSize,
+        height: widget.iconSize,
         child: _item(),
       ),
     );
@@ -287,36 +302,51 @@ class _RateItemState extends State<_RateItem> {
 }
 
 class _DefaultFullIcon extends StatelessWidget {
+  const _DefaultFullIcon({required this.iconSize});
+
+  final double iconSize;
+
   @override
   Widget build(BuildContext context) {
     return Icon(
       Icons.star,
       color: Colors.yellow,
-      size: 32,
+      size: iconSize,
     );
   }
 }
 
 class _DefaultHalfIcon extends StatelessWidget {
-  const _DefaultHalfIcon(this.value, this.fullIcon, this.emptyIcon);
+  const _DefaultHalfIcon(
+      {required this.value,
+      this.fullIcon,
+      this.emptyIcon,
+      required this.iconSize});
 
   final double value;
   final Widget? fullIcon;
   final Widget? emptyIcon;
+  final double iconSize;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Stack(
         children: [
-          emptyIcon ?? _DefaultEmptyIcon(),
+          emptyIcon ??
+              _DefaultEmptyIcon(
+                iconSize: iconSize,
+              ),
           Positioned.fill(
             left: 0,
             child: FractionallySizedBox(
               widthFactor: value,
               alignment: Alignment.centerLeft,
               child: ClipRRect(
-                child: fullIcon ?? _DefaultFullIcon(),
+                child: fullIcon ??
+                    _DefaultFullIcon(
+                      iconSize: iconSize,
+                    ),
               ),
             ),
           ),
@@ -327,12 +357,16 @@ class _DefaultHalfIcon extends StatelessWidget {
 }
 
 class _DefaultEmptyIcon extends StatelessWidget {
+  const _DefaultEmptyIcon({required this.iconSize});
+
+  final double iconSize;
+
   @override
   Widget build(BuildContext context) {
     return Icon(
       Icons.star,
       color: Colors.grey,
-      size: 32,
+      size: iconSize,
     );
   }
 }
