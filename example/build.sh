@@ -1,0 +1,1 @@
+flutter build web --base_href=/triones-antd-mobile-flutter/web/
