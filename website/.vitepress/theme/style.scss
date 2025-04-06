@@ -11,6 +11,19 @@
 }
 
 
+@media (min-width: 1440px) {
+  .VPSidebar {
+    width: var(--vp-sidebar-width) !important;
+  }
+  .VPNavBar.has-sidebar .content {
+    padding-left: var(--vp-sidebar-width) !important;
+  }
+
+  .VPContent.has-sidebar {
+    padding-left: var(--vp-sidebar-width) !important;
+  }
+}
+
 @media (max-width: 1800px) {
   .VPDoc {
     .container {
