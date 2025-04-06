@@ -16,20 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          # if your docs needs submodules, uncomment the following line
-          # submodules: true
+      - run: npm install -g pnpm
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
 
       - name: Install Deps
         run: pnpm --dir website  install --frozen-lockfile
