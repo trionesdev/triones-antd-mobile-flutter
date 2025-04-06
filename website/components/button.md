@@ -1,6 +1,6 @@
 # Button 按钮
 
-```dart preview:web/index.html/#/button
+```dart preview:web/index.html#/button
 import 'package:antd_flutter_example/demo_block.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';

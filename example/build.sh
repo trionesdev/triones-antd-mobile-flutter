@@ -1,1 +1,2 @@
-flutter build web --base_href=/triones-antd-mobile-flutter/web/
+#!/bin/bash
+flutter build web --base-href "/triones-antd-mobile-flutter/web/"
