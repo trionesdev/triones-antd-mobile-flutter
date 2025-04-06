@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import Prism from 'prismjs';
 
 const base ='/triones-antd-mobile-flutter/';
 // const base ='/';
@@ -11,8 +12,8 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Home', link: '/' },
-      { text: '组件', link: '/markdown-examples' }
+      { text: '开始', link: '/docs/index' },
+      { text: '组件', link: '/components/overview' }
     ],
 
     sidebar: {
@@ -29,8 +30,25 @@ export default defineConfig({
           items:[
               { text: 'Divider 分割线', link: '/components/divider' },
               { text: 'Grid 栅格', link: '/components/grid' },
+              { text: 'Space 间距', link: '/components/space' },
+          ]
+        },
+        {
+          text:'导航',
+          items:[
+            { text: 'Breadcrumb 面包屑', link: '/components/breadcrumb' },
+          ]
+        },
+        {
+          text:'数据录入',
+          items:[
+            { text: 'Cascader 级联选择', link: '/components/cascader' },
+            { text: 'Checkbox 复选框', link: '/components/checkbox' },
           ]
         }
+      ],
+      '/docs/':[
+        { text: '关于', link: '/docs/index' },
       ]
     },
 
@@ -40,26 +58,23 @@ export default defineConfig({
   },
   markdown: {
     config: (md) => {
+      // console.log(md)
       md.renderer.rules.fence = (tokens, idx, options, env, self) => {
         const token = tokens[idx];
-        console.log(token)
-        console.log(idx)
-        console.log(options)
-        console.log(self)
-
 
         let url="";
         const lang = token.info.trim()
         const regex = /preview:\s*(\S+)/; // 匹配 "preview:" 后的非空字符
         const match = lang.match(regex);
         if (match){
-          console.log(match[1])
-          url=`${base}${match[1]}`;
+          url=`${base}web/index.html#${match[1]}`;
         }
 
+        //md.utils.escapeHtml(token.content)
+        const html = Prism.highlight(token.content, Prism.languages.javascript, 'javascript')
         return `<div class="triones-code">
             <div class="triones-code-block">
-            <pre><code>${md.utils.escapeHtml(token.content)}</code></pre>
+            <pre><code >${html}</code></pre>
             </div>
             <div class="triones-code-preview">
             <iframe src="${url}"/>

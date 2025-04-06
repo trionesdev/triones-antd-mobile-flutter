@@ -5,6 +5,7 @@
     "docs:preview": "vitepress preview"
   },
   "dependencies": {
+    "prismjs": "^1.30.0",
     "vitepress": "^1.6.3"
   },
   "devDependencies": {

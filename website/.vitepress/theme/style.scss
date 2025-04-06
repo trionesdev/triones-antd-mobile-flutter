@@ -10,6 +10,17 @@
   max-width: 1440px !important;
 }
 
+
+@media (max-width: 1800px) {
+  .VPDoc {
+    .container {
+      .aside {
+        display: none;
+      }
+    }
+  }
+}
+
 .triones-code {
   display: flex;
   max-height: 700px;
@@ -23,7 +34,10 @@
 
   &-preview {
     width: 375px;
-    iframe{
+    flex-shrink: 0;
+    border-left: 1px solid #d3d3d3;
+
+    iframe {
       height: 100%;
       width: 100%;
       border: 0;
