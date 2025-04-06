@@ -1,4 +1,4 @@
-import{_ as t,c as o,o as e,ae as r}from"./chunks/framework.Dh1jimFm.js";const p=JSON.parse('{"title":"Button 按钮","description":"","frontmatter":{},"headers":[],"relativePath":"components/button.md","filePath":"components/button.md"}'),a={name:"components/button.md"};function i(l,n,s,d,u,c){return e(),o("div",null,n[0]||(n[0]=[r(`<h1 id="button-按钮" tabindex="-1">Button 按钮 <a class="header-anchor" href="#button-按钮" aria-label="Permalink to &quot;Button 按钮&quot;">​</a></h1><div class="triones-code"><div class="triones-code-block"><pre><code>import &#39;package:antd_flutter_example/demo_block.dart&#39;;
+import{_ as t,c as o,o as e,ae as r}from"./chunks/framework.CJ_HZlMT.js";const p=JSON.parse('{"title":"Button 按钮","description":"","frontmatter":{},"headers":[],"relativePath":"components/button.md","filePath":"components/button.md"}'),a={name:"components/button.md"};function i(l,n,s,d,u,c){return e(),o("div",null,n[0]||(n[0]=[r(`<h1 id="button-按钮" tabindex="-1">Button 按钮 <a class="header-anchor" href="#button-按钮" aria-label="Permalink to &quot;Button 按钮&quot;">​</a></h1><div class="triones-code"><div class="triones-code-block"><pre><code>import &#39;package:antd_flutter_example/demo_block.dart&#39;;
 import &#39;package:flutter/material.dart&#39;;
 import &#39;package:trionesdev_antd_mobile/antd.dart&#39;;
 
@@ -423,4 +423,4 @@ class _ButtonPageState extends State&lt;ButtonPage&gt; {
         ]));
   }
 }
-</code></pre></div><div class="triones-code-preview"><iframe src="/web/index.html/#/button"></iframe></div></div>`,2)]))}const A=t(a,[["render",i]]);export{p as __pageData,A as default};
+</code></pre></div><div class="triones-code-preview"><iframe src="/triones-antd-mobile-flutter/web/index.html/#/button"></iframe></div></div>`,2)]))}const A=t(a,[["render",i]]);export{p as __pageData,A as default};
