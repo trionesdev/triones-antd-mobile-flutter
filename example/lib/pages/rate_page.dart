@@ -15,7 +15,6 @@ class _RatePageState extends State<RatePage>{
       appBar: AntAppBar(title: Text("Rate 评分"),),
     body: SingleChildScrollView(child: Column(
       children: [
-        SizedBox(height: 100,),
         DemoBlock(title: "基本使用",child: AntRate(),),
         DemoBlock(title: "半星",child: AntRate(allowHalf: true,),),
         DemoBlock(title: "指定值(可以是小数)",child: AntRate(allowHalf: true,value: 2.7,),)

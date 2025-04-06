@@ -14,6 +14,7 @@ import 'package:antd_flutter_example/pages/empty_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
 import 'package:antd_flutter_example/pages/images_wall_page.dart';
+import 'package:antd_flutter_example/pages/input_number_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
 import 'package:antd_flutter_example/pages/list_page.dart';
 import 'package:antd_flutter_example/pages/mask_page.dart';
@@ -84,6 +85,7 @@ class MyApp extends StatelessWidget {
         '/radio': (context) => RadioPage(),
         '/checkbox': (context) => CheckboxPage(),
         '/rate': (context) => RatePage(),
+        '/input-number': (context) => InputNumberPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -163,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           material.ListTile(
-            title: Text('AppBar '),
+            title: Text('AppBar 导航栏'),
             onTap: () {
               Navigator.pushNamed(context, '/app-bar');
             },
@@ -175,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           material.ListTile(
-            title: Text('TabBar'),
+            title: Text('TabBar 标签栏'),
             onTap: () {
               Navigator.pushNamed(context, '/tab-bar');
             },
@@ -334,6 +336,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Rate 评分'),
             onTap: () {
               Navigator.pushNamed(context, '/rate');
+            },
+          ),
+          material.ListTile(
+            title: Text('InputNumber 数字输入框'),
+            onTap: () {
+              Navigator.pushNamed(context, '/input-number');
             },
           ),
         ],

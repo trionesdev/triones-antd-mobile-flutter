@@ -121,7 +121,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
         controller: _controller,
         focusNode: _focusNode,
         obscureText: widget.type == AntInputType.password && passwordVisible,
-        cursorColor: Colors.black,
+        cursorColor: Colors.grey,
         style: TextStyle(fontSize: style.resolve(materialStates)?.fontSize),
         decoration: InputDecoration(
           prefixIcon: widget.prefix,

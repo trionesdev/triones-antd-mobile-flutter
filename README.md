@@ -36,6 +36,7 @@
 - [x] Mask 背景蒙层
 - [x] Timeline 时间轴
 - [x] Breadcrumb 面包屑
+- [x] InputNumber 数字输入框
 
 
 #### 互相吹捧，共同进步

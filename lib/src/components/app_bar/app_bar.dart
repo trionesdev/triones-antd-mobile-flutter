@@ -8,6 +8,7 @@ class AntAppBar extends StatefulWidget implements PreferredSizeWidget {
       this.title,
       this.back = true,
       this.backIcon,
+        this.backText,
       this.onBack,
       this.left,
       this.right,
@@ -23,6 +24,7 @@ class AntAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Widget? title;
   final bool? back;
   final Widget? backIcon;
+  final Widget? backText;
   final Function(BuildContext context)? onBack;
   final List<Widget>? left;
   final List<Widget>? right;
@@ -58,16 +60,18 @@ class _AntAppBarState extends State<AntAppBar> {
         widget.back == true) {
       List<Widget> leftWidgets = [];
       if (widget.back == true) {
-        leftWidgets.add(AntButton(
-          type: AntButtonType.text,
-          icon: widget.backIcon ?? Icon(Icons.arrow_back),
-          onPressed: () {
-            if (widget.onBack != null) {
-              widget.onBack!(context);
-            } else {
-              Navigator.of(context).pop();
+        leftWidgets.add(GestureDetector(
+          onTap: (){
+            if(widget.onBack!=null){
+              widget.onBack!.call(context);
+            }else{
+              Navigator.pop(context);
             }
           },
+          child: Row(children: [
+            widget.backIcon ?? Icon(Icons.arrow_back),
+            if(widget.backText!=null) widget.backText!
+          ],),
         ));
       }
       if (leftWidgets.isNotEmpty) {
