@@ -2,7 +2,7 @@
 
 ## 代码演示
 
-```dart preview/form
+```dart preview:/form
 import 'package:antd_flutter_example/demo_block.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
