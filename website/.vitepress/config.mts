@@ -12,7 +12,7 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: '开始', link: '/docs/index' },
+      { text: '开始', link: '/guide/index' },
       { text: '组件', link: '/components/overview' }
     ],
 
@@ -36,25 +36,39 @@ export default defineConfig({
         {
           text:'导航',
           items:[
+            { text: 'AppBar 导航栏', link: '/components/app-bar' },
+            { text: 'TabBar 标签栏', link: '/components/tab-bar' },
+            { text: 'Tabs 标签页', link: '/components/tabs' },
             { text: 'Breadcrumb 面包屑', link: '/components/breadcrumb' },
           ]
+        },
+        {
+            text:'信息展示',
+            items:[
+                {text:'Avatar 头像',link:'/components/avatar'}
+                ]
         },
         {
           text:'数据录入',
           items:[
             { text: 'Cascader 级联选择', link: '/components/cascader' },
             { text: 'Checkbox 复选框', link: '/components/checkbox' },
+            { text: 'Form  表单', link: '/components/form' },
           ]
         }
       ],
-      '/docs/':[
-        { text: '关于', link: '/docs/index' },
+      '/guide/':[
+        { text: '指南', link: '/guide/index' },
       ]
     },
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/trionesdev/triones-antd-mobile-flutter' }
-    ]
+    ],
+    footer: {
+      message: 'Released under the <a href="https://github.com/vuejs/vitepress/blob/main/LICENSE">MIT License</a>.',
+      copyright: 'Copyright © 2015-present <a href="https://www.trionesdev.com">TrionesDev</a>'
+    }
   },
   markdown: {
     config: (md) => {
@@ -74,7 +88,7 @@ export default defineConfig({
         const html = Prism.highlight(token.content, Prism.languages.javascript, 'javascript')
         return `<div class="triones-code">
             <div class="triones-code-block">
-            <pre><code >${html}</code></pre>
+            <pre><code>${html}</code></pre>
             </div>
             <div class="triones-code-preview">
             <iframe src="${url}"/>

@@ -6,8 +6,8 @@ enum AntFormLayout { horizontal, vertical }
 
 enum AntLabelAlign { left, right }
 
-class Col {
-  const Col({this.flex, this.span});
+class AntFormCol {
+  const AntFormCol({this.flex, this.span});
 
   final double? flex;
   final int? span;
@@ -31,8 +31,8 @@ class AntForm extends StatefulWidget {
   final double? columnSpacing;
   final AntFormLayout? layout;
   final AntLabelAlign? labelAlign;
-  final Col? labelCol;
-  final Col? wrapperCol;
+  final AntFormCol? labelCol;
+  final AntFormCol? wrapperCol;
 
   final List<Widget> children;
 
@@ -63,9 +63,9 @@ class AntFormState extends State<AntForm> {
 
   double? get columnSpacing => widget.columnSpacing;
 
-  Col? get labelCol => widget.labelCol;
+  AntFormCol? get labelCol => widget.labelCol;
 
-  Col? get wrapperCol => widget.wrapperCol;
+  AntFormCol? get wrapperCol => widget.wrapperCol;
 
   AntLabelAlign? get labelAlign => widget.labelAlign;
 
@@ -221,8 +221,8 @@ class AntFormItem<T> extends StatefulWidget {
   final AntFormLayout? layout;
   final NamePath? name;
   final Widget? label;
-  final Col? labelCol;
-  final Col? wrapperCol;
+  final AntFormCol? labelCol;
+  final AntFormCol? wrapperCol;
   final AntLabelAlign? labelAlign;
   final Widget? child;
   final FormItemBuilder<T> builder;
@@ -271,7 +271,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     }
   }
 
-  Col? get labelCol {
+  AntFormCol? get labelCol {
     if (widget.labelCol != null) {
       return widget.labelCol;
     } else {
@@ -279,7 +279,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     }
   }
 
-  Col? get wrapperCol {
+  AntFormCol? get wrapperCol {
     if (widget.wrapperCol != null) {
       return widget.wrapperCol;
     } else {

@@ -13,21 +13,21 @@ class _PagePageState extends State<PagePage> {
   Widget build(BuildContext context) {
     return AntPageContainer(
       bottomNavigationBar: AntTabBar(
-        items: [
+        children: [
           AntTabBarItem(
-            icon: Icons.home,
-            label: "首页",
-            id: 'index',
+            icon: Icon(Icons.home),
+            label: Text("首页"),
+            tabKey: 'index',
           ),
           AntTabBarItem(
-            icon: Icons.search,
-            label: "搜索",
-            id: 'search',
+            icon: Icon(Icons.search),
+            label: Text("搜索"),
+            tabKey: 'search',
           ),
           AntTabBarItem(
-            icon: Icons.person,
-            label: "我的",
-            id: 'my',
+            icon: Icon(Icons.person),
+            label: Text("我的"),
+            tabKey: 'my',
           ),
         ],
       ),

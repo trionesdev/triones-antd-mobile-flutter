@@ -15,19 +15,19 @@ class _TabBarPageState extends State<TabBarPage> {
         appBar: AntAppBar(
           title: Text("TabBar"),
         ),
-        bottomNavigationBar: AntTabBar(items: [
+        bottomNavigationBar: AntTabBar(children: [
           AntTabBarItem(
-              icon: Icons.home,
-              label: "首页",
-              id: 'index',
+              icon: Icon(Icons.home),
+              label: Text("首页"),
+              tabKey: 'index',
               activeColor: Color(0xff1677FF),
               onPressed: (String id) {
                 print(id);
               }),
           AntTabBarItem(
-            icon: Icons.search,
-            label: "搜索",
-            id: 'search',
+            icon: Icon(Icons.search),
+            label: Text("搜索"),
+            tabKey: 'search',
           )
         ]));
   }

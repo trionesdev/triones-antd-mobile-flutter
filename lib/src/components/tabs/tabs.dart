@@ -26,8 +26,9 @@ class AntTabs extends StatefulWidget {
       this.styles,
       this.decoration,
       this.itemRender,
-      this.tabDecoration});
+      this.tabDecoration, this.defaultActiveKey});
 
+  final String? defaultActiveKey;
   final String? activeKey;
   final List<AntTabItemRecord>? items;
   final bool stretch;

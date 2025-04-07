@@ -1,3 +1,8 @@
+# Form 表单
+
+## 代码演示
+
+```dart preview/form
 import 'package:antd_flutter_example/demo_block.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
@@ -81,7 +86,8 @@ class _FormPageState extends State<FormPage> {
                         AntButton(
                           text: "保存",
                           block: true,
-                          onPressed: () => {
+                          onPressed: () =>
+                          {
                             _formKey.currentState
                                 ?.validateFields()
                                 .then((values) => {print(values)})
@@ -91,7 +97,8 @@ class _FormPageState extends State<FormPage> {
                         AntButton(
                           text: "赋值",
                           block: true,
-                          onPressed: () => {
+                          onPressed: () =>
+                          {
                             _formKey.currentState?.setFieldsValue({
                               "age": 1,
                               "z": {"age": "1"}
@@ -124,7 +131,8 @@ class _FormPageState extends State<FormPage> {
                 AntButton(
                   text: "保存",
                   block: true,
-                  onPressed: () => {
+                  onPressed: () =>
+                  {
                     _formKey2.currentState
                         ?.validateFields()
                         .then((values) => {print(values)})
@@ -147,7 +155,7 @@ class _FormPageState extends State<FormPage> {
                             }
                             return null;
                           },
-                          labelCol: AntFormCol(flex: 100),
+                          labelCol: Col(flex: 100),
                           builder: (AntFormItemState<String> field) {
                             return AntInput(
                               value: field.value,
@@ -172,7 +180,7 @@ class _FormPageState extends State<FormPage> {
                             }
                             return null;
                           },
-                          wrapperCol: AntFormCol(span: 18),
+                          wrapperCol: Col(span: 18),
                           builder: (AntFormItemState<String> field) {
                             return AntInput(
                               value: field.value,
@@ -187,3 +195,36 @@ class _FormPageState extends State<FormPage> {
         ));
   }
 }
+
+```
+
+## API
+
+### AntForm
+
+| 属性            | 说明                                    | 类型              | 默认值          |
+|---------------|---------------------------------------|-----------------|--------------|
+| layout        | 表单布局，可选值为 horizontal（水平） vertical（垂直） | `AntFormLayout` | `horizontal` |
+| labelCol      | label 布局                              | `AntFormCol`    |              |
+| labelAlign    | label 对其方式                            | `AntLabelAlign` | `left`       |
+| wrapperCol    | 内容布局                                  | `AntFormCol`    |              |                                  | `AntFormCol`    |              |
+| spacing       | 间隔                                    | double          |              |                                  | `AntFormCol`    |              |
+| rowSpacing    | 行间隔                                   | double          |              |                                  | `AntFormCol`    |              |
+| columnSpacing | 列间隔                                   | double          |              |                                  | `AntFormCol`    |              |
+
+### AntFormItem
+
+| 属性           | 说明                                    | 类型                                          | 默认值          |
+|--------------|---------------------------------------|---------------------------------------------|--------------|
+| layout       | 表单布局，可选值为 horizontal（水平） vertical（垂直） | `AntFormLayout`                             | `horizontal` |
+| name         | name属性                                | `NamePath`                                  |              |
+| label        | 标签                                    | `Widget`                                    |              |
+| labelCol     | label 布局,会覆盖Form 的labelCol            | `AntFormCol`                                |              |
+| labelAlign   | label 对其方式,会覆盖Form的labelAlign         | `AntLabelAlign`                             | `left`       |
+| wrapperCol   | 内容布局                                  | `AntFormCol`                                |              |                                  
+| builder      | Item创建函数                              | Widget Function(AntFormItemState\<T> field) |              |                                        
+| onSaved      | 保存时回调                                 | void Function(T? newValue)                  |              |                                 
+| initialValue | 初始值                                   | dynamic                                     |              |                                
+| validator    | 验证函数                                  | String? Function(T? value)                  |              |                                
+| required     | 是否必填                                  | bool                                        |              |          |                                
+| child        | 子项                                    | Widget                                      |              |          |                                

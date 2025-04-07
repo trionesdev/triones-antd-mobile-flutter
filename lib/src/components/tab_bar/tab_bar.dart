@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:trionesdev_antd_mobile/antd.dart';
 
-typedef AntTabBarChangeCallback = void Function(String id);
 
 class AntTabBar extends StatefulWidget {
   const AntTabBar(
       {super.key,
       this.padding,
       this.height = 54,
-      this.items,
-      this.color = Colors.black,
-      this.activeColor = defaultActiveColor,
-      this.activeId,
-      this.defaultActiveId,
+      this.children,
+      this.color,
+      this.activeColor,
+      this.activeKey,
+      this.defaultActiveKey,
       this.onChange,
-      this.decoration});
+      this.decoration,
+      this.style});
 
-  static const Color defaultActiveColor = Color(0xff1677FF);
+  final StateStyle? style;
   final BoxDecoration? decoration;
-  final double? height;
   final EdgeInsetsGeometry? padding;
+  final double? height;
   final Color? color;
   final Color? activeColor;
-  final List<AntTabBarItem>? items;
-  final String? activeId;
-  final String? defaultActiveId;
-  final AntTabBarChangeCallback? onChange;
+  final String? activeKey;
+  final String? defaultActiveKey;
+  final Function(String key)? onChange;
+  final List<AntTabBarItem>? children;
 
   static AntTabBarState? maybeOf(BuildContext context) {
     _AntTabBarScope? scope =
@@ -41,17 +42,18 @@ class AntTabBar extends StatefulWidget {
   State<StatefulWidget> createState() => AntTabBarState();
 }
 
-class AntTabBarState extends State<AntTabBar> {
+class AntTabBarState extends State<AntTabBar> with MaterialStateMixin {
   int _generation = 0;
   final Set<AntTabBarItemState> _items = <AntTabBarItemState>{};
-  String? _currentActiveId;
+  String? _currentActiveKey;
 
   Color? get color {
     return widget.color;
   }
 
   Color? get activeColor {
-    return widget.activeColor;
+    AntThemeData themeData = AntTheme.of(context);
+    return widget.activeColor ?? themeData.colorPrimary;
   }
 
   void _itemDidChange() {
@@ -68,57 +70,69 @@ class AntTabBarState extends State<AntTabBar> {
     _items.add(item);
   }
 
-  bool isActive(String id) {
-    return _currentActiveId == id;
+  bool isActive(String tabKey) {
+    return _currentActiveKey == tabKey;
   }
 
-  void _setCurrentActiveId(String id) {
-    if (id == _currentActiveId) {
+  void _setCurrentActiveKey(String key) {
+    if (key == _currentActiveKey) {
       return;
     }
     setState(() {
-      _currentActiveId = id;
+      _currentActiveKey = key;
     });
     _itemDidChange();
-    widget.onChange?.call(id);
+    widget.onChange?.call(key);
   }
 
   @override
   void initState() {
     super.initState();
-    _currentActiveId =
-        (widget.activeId ?? widget.defaultActiveId) ?? widget.items?.first.id;
+    _currentActiveKey =
+        (widget.activeKey ?? widget.defaultActiveKey) ?? widget.children?.first.tabKey;
   }
 
   @override
   void didUpdateWidget(AntTabBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.activeId != widget.activeId) {
+    if (oldWidget.activeKey != widget.activeKey) {
       setState(() {
-        _currentActiveId = widget.activeId;
+        _currentActiveKey = widget.activeKey;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    StateStyle stateStyle = _AntTabBarStyle();
+    stateStyle = stateStyle.merge(widget.style);
+
     return PopScope(
         child: _AntTabBarScope(
             tabBarState: this,
             generation: _generation,
             child: Container(
-              decoration: widget.decoration,
+              decoration: widget.decoration ??
+                  stateStyle.resolve(materialStates)?.decoration,
               child: SafeArea(
                   child: BottomAppBar(
                 color: Colors.transparent,
                 height: widget.height!,
-                padding: widget.padding ?? EdgeInsets.only(top: 4, bottom: 4),
+                padding: widget.padding ??
+                    stateStyle.resolve(materialStates)?.computedPadding,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: widget.items ?? [],
+                  children: widget.children ?? [],
                 ),
               )),
             )));
+  }
+}
+
+class _AntTabBarStyle extends StateStyle {
+  @override
+  Style get style {
+    return Style(padding: StylePadding.symmetric(vertical: 4));
   }
 }
 
@@ -137,28 +151,26 @@ class _AntTabBarScope extends InheritedWidget {
       _generation != old._generation;
 }
 
-typedef TabBarItemTapCallback = void Function(String id);
-
 class AntTabBarItem extends StatefulWidget {
   const AntTabBarItem(
       {super.key,
-      required this.id,
+      required this.tabKey,
       this.child,
       this.icon,
       this.label,
       this.onPressed,
       this.color,
       this.activeColor,
-      this.stopPropagation});
+      this.stopPropagation=true});
 
-  final String id;
+  final String tabKey;
   final Widget? child;
-  final IconData? icon;
-  final String? label;
-  final TabBarItemTapCallback? onPressed;
+  final Widget? icon;
+  final Widget? label;
+  final Function(String key)? onPressed;
   final Color? color;
   final Color? activeColor;
-  final bool? stopPropagation;
+  final bool stopPropagation;
 
   @override
   State<StatefulWidget> createState() => AntTabBarItemState();
@@ -187,9 +199,40 @@ class AntTabBarItemState extends State<AntTabBarItem> {
     return null;
   }
 
+  bool get isActive {
+    AntTabBarState? tabBar = AntTabBar.maybeOf(context);
+    return tabBar?._currentActiveKey == widget.tabKey;
+  }
+
   void didChange() {
     AntTabBarState? tabBar = AntTabBar.maybeOf(context);
     tabBar?._itemDidChange();
+  }
+
+  Widget icon() {
+    if (widget.icon is Icon) {
+      Icon iconIcon = widget.icon as Icon;
+      return WidgetUtils.iconMerge(
+          Icon(
+            iconIcon.icon,
+            color: isActive ? activeColor : color,
+          ),
+          iconIcon);
+    }
+    return widget.icon!;
+  }
+
+  Widget label(){
+    if(widget.label is Text){
+      Text text = widget.label as Text;
+      return WidgetUtils.textMerge(
+          Text(
+            text.data ?? '',
+            style: TextStyle(fontSize: 12, color: isActive ? activeColor : color),
+          ),
+          text);
+    }
+    return widget.label!;
   }
 
   @override
@@ -199,29 +242,18 @@ class AntTabBarItemState extends State<AntTabBarItem> {
 
     List<Widget> children = [];
     if (widget.icon != null) {
-      children.add(Icon(
-        widget.icon! as IconData?,
-        color: tabBar!.isActive(widget.id) ? activeColor : color,
-      ));
+      children.add(icon());
     }
     if (widget.label != null) {
-      children.add(Text(
-        widget.label ?? '',
-        style: TextStyle(
-            fontSize: 10,
-            color: tabBar!.isActive(widget.id) ? activeColor : color),
-      ));
+      children.add(label());
     }
 
     return Flexible(
         flex: 1,
         child: GestureDetector(
           onTap: () {
-            if (widget.stopPropagation == true) {
-              return;
-            }
-            tabBar?._setCurrentActiveId(widget.id);
-            widget.onPressed?.call(widget.id);
+            tabBar?._setCurrentActiveKey(widget.tabKey);
+            widget.onPressed?.call(widget.tabKey);
           },
           child: widget.child ??
               Column(

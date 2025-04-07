@@ -1,6 +1,5 @@
 import 'package:antd_flutter_example/demo_block.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
 class AvatarPage  extends StatefulWidget{
