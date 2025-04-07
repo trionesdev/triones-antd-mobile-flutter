@@ -28,6 +28,7 @@ jobs:
         run: |-
           flutter pub get
           flutter build web --base-href "/triones-antd-mobile-flutter/web/"
+          echo pwd
           cp -r build/web/* ../website/public/web
 
       - name: Install pnpm
