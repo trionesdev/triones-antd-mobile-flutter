@@ -1,6 +1,7 @@
 
 name: Deploy Docs
-
+env:
+  FLUTTER_VERSION: "3.27.2"
 on:
   push:
     branches:
@@ -16,8 +17,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - run: npm install -g pnpm
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: $FLUTTER_VERSION
+      - run: flutter pub get
+      - name: Install Example
+        working-directory: example
+        run: |-
+          flutter pub get
+          flutter build web --base-href "/triones-antd-mobile-flutter/web/"
+          cp -r build/web/* ../website/public/web
 
+      - name: Install pnpm
+        working-directory: website
+        run: npm install -g pnpm
 
       - name: Install Deps
         run: pnpm --dir website  install --frozen-lockfile
