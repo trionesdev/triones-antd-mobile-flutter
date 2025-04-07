@@ -23,7 +23,7 @@ jobs:
 #          channel: stable
           flutter-version: 3.27.2
       - run: flutter pub get
-      - name: Install Example
+      - name: Install Example app
         working-directory: example
         run: |-
           flutter pub get
