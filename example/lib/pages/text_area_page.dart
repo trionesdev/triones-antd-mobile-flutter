@@ -1,10 +1,15 @@
 import 'package:flutter/widgets.dart';
 
 class TextAreaPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
+  const TextAreaPage({super.key});
 
+  @override
+  State<StatefulWidget> createState() => _TextAreaPageState();
+}
+
+class _TextAreaPageState extends State<TextAreaPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
 }

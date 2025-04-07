@@ -23,12 +23,14 @@ import 'package:antd_flutter_example/pages/picker_page.dart';
 import 'package:antd_flutter_example/pages/popup_page.dart';
 import 'package:antd_flutter_example/pages/radio_page.dart';
 import 'package:antd_flutter_example/pages/rate_page.dart';
+import 'package:antd_flutter_example/pages/scaffold_page.dart';
 import 'package:antd_flutter_example/pages/search_bar_page.dart';
 import 'package:antd_flutter_example/pages/space_page.dart';
 import 'package:antd_flutter_example/pages/switch_page.dart';
 import 'package:antd_flutter_example/pages/tab_bar_page.dart';
 import 'package:antd_flutter_example/pages/tabs_page.dart';
 import 'package:antd_flutter_example/pages/tag_page.dart';
+import 'package:antd_flutter_example/pages/text_area_page.dart';
 import 'package:antd_flutter_example/pages/timeline_page.dart';
 import 'package:antd_flutter_example/pages/toast_page.dart';
 import 'package:antd_flutter_example/pages/upload_page.dart';
@@ -52,6 +54,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: AntThemeData(),
       routes: {
+        '/scaffold':(context)=>ScaffoldPage(),
         '/avatar': (context) => AvatarPage(),
         '/button': (context) => ButtonPage(),
         '/input': (context) => InputPage(),
@@ -86,6 +89,7 @@ class MyApp extends StatelessWidget {
         '/checkbox': (context) => CheckboxPage(),
         '/rate': (context) => RatePage(),
         '/input-number': (context) => InputNumberPage(),
+        '/text-area': (context) => TextAreaPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -140,6 +144,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: ListView(
         children: [
+          material.ListTile(
+            title: Text('Scaffold 脚手架'),
+            onTap: () {
+              Navigator.pushNamed(context, '/scaffold');
+            },
+          ),
           material.ListTile(
             title: Text('Avatar 头像'),
             onTap: () {
@@ -342,6 +352,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('InputNumber 数字输入框'),
             onTap: () {
               Navigator.pushNamed(context, '/input-number');
+            },
+          ),
+          material.ListTile(
+            title: Text('TextArea 文本域'),
+            onTap: () {
+              Navigator.pushNamed(context, '/text-area');
             },
           ),
         ],

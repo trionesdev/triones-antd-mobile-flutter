@@ -4,8 +4,8 @@ layout: home
 
 hero:
   name: "Antd Flutter"
-  text: "TrionesDev Antd Flitter"
-  tagline: Antd风格的Flutter风格组件库
+  text: "Antd风格的Flutter风格组件库"
+  tagline: 轻松创建Antd风格的Flutter应用
   actions:
     - theme: brand
       text: 快速开始
@@ -15,11 +15,11 @@ hero:
       link: /components/overview
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: 易用
+    details: 像写前端一样定义Flutter样式
+  - title: 可定制
+    details: 可以高效地对组件外观进行调整或创造自己的主题
+  - title: 丰富
+    details: 基本包含了常用的组件
 ---
 

@@ -5,10 +5,13 @@
     "docs:preview": "vitepress preview"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "prismjs": "^1.30.0",
     "vitepress": "^1.6.3"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.16",
+    "@types/node": "^22.14.0",
     "sass": "^1.86.3"
   }
 }

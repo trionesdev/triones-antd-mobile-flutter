@@ -14,7 +14,7 @@ class _SwitchPageState extends State<SwitchPage>{
   @override
   Widget build(BuildContext context) {
     return AntPageContainer(
-      appBar: AntAppBar(title: Text("Switch"),),
+      appBar: AntAppBar(title: Text("Switch 开关"),),
       body: SingleChildScrollView(
         child: Column(
           children: [

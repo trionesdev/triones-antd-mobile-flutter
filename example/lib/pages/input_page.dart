@@ -14,7 +14,7 @@ class _InputPageState extends State<InputPage> {
   Widget build(BuildContext context) {
     return AntPageContainer(
         appBar: AntAppBar(
-          title: Text('Input'),
+          title: Text('Input 输入框'),
         ),
         body: SingleChildScrollView(
             child: Column(spacing: 10, children: [

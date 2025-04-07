@@ -22,6 +22,7 @@ class AntInput extends StatefulWidget {
     this.onFocus,
   });
 
+  final StateStyle? style;
   final double? height;
   final String? placeholder;
   final AntInputType? type;
@@ -30,7 +31,7 @@ class AntInput extends StatefulWidget {
   final String? value;
   final Function? onChange;
   final BoxDecoration? decoration;
-  final StateStyle? style;
+
   final VoidCallback? onBlur;
   final VoidCallback? onFocus;
 

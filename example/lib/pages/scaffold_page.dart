@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
-class PagePage extends StatefulWidget {
-  const PagePage({super.key});
+class ScaffoldPage extends StatefulWidget {
+  const ScaffoldPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _PagePageState();
+  State<StatefulWidget> createState() => _ScaffoldPageState();
 }
 
-class _PagePageState extends State<PagePage> {
+class _ScaffoldPageState extends State<ScaffoldPage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
+      appBar: AntAppBar(title: Text("Scaffold 脚手架"),),
       bottomNavigationBar: AntTabBar(
         children: [
           AntTabBarItem(

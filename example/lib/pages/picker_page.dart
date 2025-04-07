@@ -60,7 +60,7 @@ class _PickerPageState extends State<PickerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
         appBar: AntAppBar(title: Text('Picker')),
         body: SingleChildScrollView(
           child: Column(spacing: 10, children: [
