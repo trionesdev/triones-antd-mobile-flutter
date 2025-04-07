@@ -31,7 +31,6 @@ jobs:
           cp -r build/web/* ../website/public/web
 
       - name: Install pnpm
-        working-directory: .
         run: npm install -g pnpm
 
       - name: Install Dependencies
@@ -46,7 +45,6 @@ jobs:
 
       - name: Deploy Docs
         uses: JamesIves/github-pages-deploy-action@v4
-        working-directory: .
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           # This is the branch where the docs are deployed to
