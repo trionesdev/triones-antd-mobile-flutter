@@ -21,7 +21,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
 #          channel: stable
-          flutter-version: $FLUTTER_VERSION
+          flutter-version: 3.27.2
       - run: flutter pub get
       - name: Install Example
         working-directory: example
