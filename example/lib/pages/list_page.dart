@@ -33,7 +33,7 @@ class _ListPageState extends State<ListPage> {
                   height: 300,
                   child: AntList(
                     dataSource: list,
-                    itemRender: (context, item, index) {
+                    itemBuilder: (context, item, index) {
                       return AntListItem(
                         style: StateStyle(
                             style: const Style(

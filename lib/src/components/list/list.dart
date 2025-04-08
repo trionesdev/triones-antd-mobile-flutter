@@ -2,14 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
-typedef AntListItemRenderCallback = Widget Function(
-    BuildContext context, dynamic item, int index);
+typedef AntListItemBuilder<T> = Widget Function(BuildContext context, T item, int index)?;
 
-class AntList extends StatefulWidget {
+class AntList<T> extends StatefulWidget {
   const AntList({super.key,
     this.separator,
     this.dataSource,
-    this.itemRender,
+    this.itemBuilder,
     this.children,
     this.style,
     this.controller,
@@ -19,15 +18,15 @@ class AntList extends StatefulWidget {
   final bool loading;
   final List<Widget>? children;
   final Widget? separator;
-  final List<dynamic>? dataSource;
-  final AntListItemRenderCallback? itemRender;
+  final List<T>? dataSource;
+  final AntListItemBuilder<T>? itemBuilder;
   final ScrollController? controller;
 
   @override
-  State<StatefulWidget> createState() => _AntListState();
+  State<StatefulWidget> createState() => _AntListState<T>();
 }
 
-class _AntListState extends State<AntList> with MaterialStateMixin {
+class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
   @override
   void initState() {
     super.initState();
@@ -42,9 +41,9 @@ class _AntListState extends State<AntList> with MaterialStateMixin {
     if (widget.children != null) {
       children.addAll(widget.children!);
     }
-    if (widget.dataSource != null && widget.itemRender != null) {
+    if (widget.dataSource != null && widget.itemBuilder != null) {
       for (int i = 0; i < widget.dataSource!.length; i++) {
-        children.add(widget.itemRender!(context, widget.dataSource![i], i));
+        children.add(widget.itemBuilder!(context, widget.dataSource![i], i));
         if (widget.separator != null && i < widget.dataSource!.length - 1) {
           children.add(widget.separator!);
         }

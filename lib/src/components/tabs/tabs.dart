@@ -25,7 +25,7 @@ class AntTabs extends StatefulWidget {
       this.style,
       this.styles,
       this.decoration,
-      this.itemRender,
+      this.itemBuilder,
       this.tabDecoration, this.defaultActiveKey});
 
   final String? defaultActiveKey;
@@ -36,7 +36,7 @@ class AntTabs extends StatefulWidget {
   final BoxDecoration? tabDecoration;
   final StateStyle? style;
   final AntTabStyles? styles;
-  final Widget Function(AntTabItemRecord item)? itemRender;
+  final Widget Function(AntTabItemRecord item)? itemBuilder;
 
   @override
   State<StatefulWidget> createState() => _AntTabsState();
@@ -111,6 +111,17 @@ class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
       _items = widget.items ?? [];
       _activeKey = widget.activeKey ?? _items.elementAtOrNull(0)?.key;
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant AntTabs oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.items != oldWidget.items) {
+      setState(() {
+        _items = widget.items ?? [];
+        _activeKey = widget.activeKey ?? _items.elementAtOrNull(0)?.key;
+      });
+    }
   }
 
   @override
@@ -209,6 +220,7 @@ class _AntTabItemState extends State<AntTabItem> with MaterialStateMixin {
     }
     return label;
   }
+
 
   @override
   void initState() {
