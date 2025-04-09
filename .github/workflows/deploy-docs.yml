@@ -6,7 +6,7 @@ on:
   push:
     branches:
       # make sure this is the branch you are using
-      - develop
+      - main
 
 permissions:
   contents: write

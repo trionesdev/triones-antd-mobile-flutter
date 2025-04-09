@@ -51,6 +51,7 @@ export default defineConfig({
                         {text: 'Avatar 头像', link: '/components/avatar'},
                         {text: 'List 列表', link: '/components/list'},
                         {text: 'Tag 标签', link: '/components/tag'},
+                        {text: 'Timeline 时间轴', link: '/components/timeline'},
                     ]
                 },
                 {
