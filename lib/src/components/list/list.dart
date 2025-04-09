@@ -12,7 +12,7 @@ class AntList<T> extends StatefulWidget {
     this.children,
     this.style,
     this.controller,
-    this.loading = false});
+    this.loading = false,this.shrinkWrap = false,});
 
   final StateStyle? style;
   final bool loading;
@@ -21,6 +21,7 @@ class AntList<T> extends StatefulWidget {
   final List<T>? dataSource;
   final AntListItemBuilder<T>? itemBuilder;
   final ScrollController? controller;
+  final bool shrinkWrap;
 
   @override
   State<StatefulWidget> createState() => _AntListState<T>();
@@ -39,16 +40,23 @@ class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
 
     List<Widget> children = [];
     if (widget.children != null) {
-      children.addAll(widget.children!);
-    }
-    if (widget.dataSource != null && widget.itemBuilder != null) {
-      for (int i = 0; i < widget.dataSource!.length; i++) {
-        children.add(widget.itemBuilder!(context, widget.dataSource![i], i));
-        if (widget.separator != null && i < widget.dataSource!.length - 1) {
+      for (int i = 0; i < widget.children!.length; i++) {
+        children.add(widget.children![i]);
+        if (widget.separator != null && i < widget.children!.length - 1) {
           children.add(widget.separator!);
         }
       }
+    }else{
+      if (widget.dataSource != null && widget.itemBuilder != null) {
+        for (int i = 0; i < widget.dataSource!.length; i++) {
+          children.add(widget.itemBuilder!(context, widget.dataSource![i], i));
+          if (widget.separator != null && i < widget.dataSource!.length - 1) {
+            children.add(widget.separator!);
+          }
+        }
+      }
     }
+
     return Stack(
       children: [
         Container(
@@ -59,8 +67,9 @@ class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
               .resolve(materialStates)
               ?.computedPadding,
           child: children.isNotEmpty
-              ? ListView(
+              ?  ListView(
             controller: widget.controller,
+            shrinkWrap: widget.shrinkWrap,
             children: children,
           )
               : Container(

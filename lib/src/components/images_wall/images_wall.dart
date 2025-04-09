@@ -53,7 +53,7 @@ class AntImagesWall extends StatefulWidget {
   final ValueChanged<List<AntImageRecord>>? onChange;
   final int? maxCount;
   final int? crossAxisCount;
-  final bool? disabled;
+  final bool disabled;
   final bool? multiSelect;
   final Future<String?> Function(List<int> fileContent, String? fileName)?
       uploadRequest;
@@ -234,6 +234,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
       widgets.add(AntImageWallItem(
         image: _images.elementAt(i),
         images: _images,
+        disabled: widget.disabled,
         index: i,
         onRemove: (uid) {
           setState(() {

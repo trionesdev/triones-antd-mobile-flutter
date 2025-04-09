@@ -110,6 +110,7 @@ class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
     setState(() {
       _items = widget.items ?? [];
       _activeKey = widget.activeKey ?? _items.elementAtOrNull(0)?.key;
+      _index = getIndex(_activeKey);
     });
   }
 
@@ -182,7 +183,7 @@ class AntTabItem extends StatefulWidget {
       this.activeKey,
       this.onTab,
       this.style,
-      this.itemRender,
+      this.itemBuilder,
       this.activeStyle,
       this.bodyStyle,
       this.decoration});
@@ -192,7 +193,7 @@ class AntTabItem extends StatefulWidget {
   final String? activeKey;
   final BoxDecoration? decoration;
   final Function(String? key)? onTab;
-  final Widget Function(AntTabItemRecord item, bool active)? itemRender;
+  final Widget Function(AntTabItemRecord item, bool active)? itemBuilder;
 
   final StateStyle? activeStyle;
   final StateStyle? bodyStyle;
@@ -206,8 +207,8 @@ class _AntTabItemState extends State<AntTabItem> with MaterialStateMixin {
 
   Widget? _labelRender() {
     AntThemeData themeData = AntTheme.of(context);
-    if (widget.itemRender != null) {
-      return widget.itemRender?.call(widget.item!, _active);
+    if (widget.itemBuilder != null) {
+      return widget.itemBuilder?.call(widget.item!, _active);
     }
     Widget? label = widget.item?.label;
     if (_active && label != null && label is Text) {
