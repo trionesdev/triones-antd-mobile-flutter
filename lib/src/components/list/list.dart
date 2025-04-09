@@ -34,6 +34,11 @@ class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
   }
 
   @override
+  void didUpdateWidget(AntList<T> oldWidget){
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     StateStyle stateStyle = _AntListStyle(context, widget);
     stateStyle = stateStyle.merge(widget.style);
