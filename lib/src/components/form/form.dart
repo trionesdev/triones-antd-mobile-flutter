@@ -451,14 +451,14 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       margin: stateStyle.resolve(<WidgetState>{})?.computedMargin,
       child: layout == AntFormLayout.horizontal
           ? Row(
-              spacing: AntForm.maybeOf(context)?.rowSpacing ?? 8,
+              spacing: AntForm.maybeOf(context)?.rowSpacing ?? 0,
               children: fieldItemChildren,
             )
           : Column(
               crossAxisAlignment: labelAlign == AntLabelAlign.left
                   ? CrossAxisAlignment.start
                   : CrossAxisAlignment.end,
-              spacing: AntForm.maybeOf(context)?.columnSpacing ?? 8,
+              spacing: AntForm.maybeOf(context)?.columnSpacing ?? 0,
               children: fieldItemChildren,
             ),
     );
@@ -481,7 +481,7 @@ class _AntFormItemStyle extends StateStyle {
   @override
   Style get style {
     return Style(
-        padding: StylePadding(left: 8, right: 8),
+        // padding: StylePadding(left: 8, right: 8),
         margin: StyleMargin(bottom: 8));
   }
 }
