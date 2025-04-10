@@ -15,7 +15,6 @@ class _GridPageState extends State<GridPage> {
     return AntPageContainer(
       appBar: AntAppBar(
         title: Text('Grid 栅格'),
-        back: true,
       ),
       body: SingleChildScrollView(
         child: Column(

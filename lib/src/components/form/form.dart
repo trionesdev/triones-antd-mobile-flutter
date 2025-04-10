@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
@@ -164,9 +165,17 @@ class AntFormState extends State<AntForm> {
     // return Future.value(values);
   }
 
+  dynamic getFieldValue(NamePath name) {
+    AntFormItemState<dynamic>? field = _fields.firstWhereOrNull((element) {
+      return element.name == name;
+    });
+    if (field != null) {
+      return field._value;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return PopScope(
         child: _AntFormScope(
             formState: this,
@@ -334,7 +343,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     }
   }
 
-  void didChange(dynamic value) {
+  void didChange(T value) {
     setState(() {
       _value = value;
       // _hasInteractedByUser.value = true;
@@ -353,6 +362,9 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      _value = widget.initialValue;
+    });
   }
 
   Widget _labelCol(Widget fieldLabel) {
@@ -413,7 +425,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       }
       fieldLabelChildren.add(widget.label!);
       Widget fieldLabel = Container(
-        // padding: EdgeInsets.only(left: 8),
+        padding: EdgeInsets.only(left: 8),
         child: Row(
           mainAxisAlignment: labelAlign == AntLabelAlign.left
               ? MainAxisAlignment.start
@@ -428,20 +440,21 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       List<Widget> filedInputChildren = [child];
       if (errorText != null) {
         filedInputChildren.add(Container(
-          // padding: EdgeInsets.only(left: 16, right: 16, top: 0),
+          padding: EdgeInsets.only(left: 8, right: 8, top: 0),
           child: Text(
             errorText!,
-            style: TextStyle(color: material.Colors.red),
+            style: TextStyle(fontSize: 12,color: material.Colors.red),
           ),
         ));
       }
-// print(errorText);
+
       Widget fieldItem = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: filedInputChildren,
       );
-      Widget filedInput =
-          layout == AntFormLayout.horizontal ? _wrapperCol(fieldItem) : fieldItem;
+      Widget filedInput = layout == AntFormLayout.horizontal
+          ? _wrapperCol(fieldItem)
+          : fieldItem;
       fieldItemChildren.add(filedInput);
     }
 

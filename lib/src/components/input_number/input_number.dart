@@ -3,15 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
 class AntInputNumber extends StatefulWidget {
-  const AntInputNumber(
-      {super.key,
-      this.step = 1,
-      this.min,
-      this.max,
-      this.keyboard = true,
-      this.defaultValue = 0,
-      this.value,
-      this.onChange});
+  const AntInputNumber({super.key,
+    this.step = 1,
+    this.min,
+    this.max,
+    this.keyboard = true,
+    this.defaultValue = 0,
+    this.value,
+    this.iconSize = 20,
+    this.onChange});
 
   final double? defaultValue;
   final double? value;
@@ -19,6 +19,7 @@ class AntInputNumber extends StatefulWidget {
   final double? max;
   final double step;
   final bool keyboard;
+  final double iconSize;
   final Function(double val)? onChange;
 
   @override
@@ -85,7 +86,7 @@ class _AntInputNumberState extends State<AntInputNumber> {
             },
             child: Icon(
               Icons.remove,
-              size: 16,
+              size: widget.iconSize,
               color: _isMin ? Colors.grey : null,
             ),
           ),
@@ -122,7 +123,7 @@ class _AntInputNumberState extends State<AntInputNumber> {
             },
             child: Icon(
               Icons.add,
-              size: 16,
+              size: widget.iconSize,
               color: _isMax ? Colors.grey : null,
             ),
           )

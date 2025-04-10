@@ -12,7 +12,10 @@ class AntList<T> extends StatefulWidget {
     this.children,
     this.style,
     this.controller,
-    this.loading = false,this.shrinkWrap = false,});
+    this.loading = false, this.shrinkWrap = false,
+    this.pending,
+    this.physics,
+  });
 
   final StateStyle? style;
   final bool loading;
@@ -22,6 +25,8 @@ class AntList<T> extends StatefulWidget {
   final AntListItemBuilder<T>? itemBuilder;
   final ScrollController? controller;
   final bool shrinkWrap;
+  final EdgeInsetsGeometry? pending;
+  final ScrollPhysics? physics;
 
   @override
   State<StatefulWidget> createState() => _AntListState<T>();
@@ -34,7 +39,7 @@ class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
   }
 
   @override
-  void didUpdateWidget(AntList<T> oldWidget){
+  void didUpdateWidget(AntList<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
   }
 
@@ -51,7 +56,7 @@ class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
           children.add(widget.separator!);
         }
       }
-    }else{
+    } else {
       if (widget.dataSource != null && widget.itemBuilder != null) {
         for (int i = 0; i < widget.dataSource!.length; i++) {
           children.add(widget.itemBuilder!(context, widget.dataSource![i], i));
@@ -72,9 +77,11 @@ class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
               .resolve(materialStates)
               ?.computedPadding,
           child: children.isNotEmpty
-              ?  ListView(
+              ? ListView(
+            padding: widget.pending,
             controller: widget.controller,
             shrinkWrap: widget.shrinkWrap,
+            physics: widget.physics,
             children: children,
           )
               : Container(

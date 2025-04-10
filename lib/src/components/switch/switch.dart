@@ -68,7 +68,7 @@ class _AntSwitchState extends State<AntSwitch>
     }
   }
 
-  int get duration{
+  int get duration {
     return 300;
   }
 
@@ -83,6 +83,17 @@ class _AntSwitchState extends State<AntSwitch>
       vsync: this,
       value: _checked ? 1 : 0,
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant AntSwitch oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.checked != widget.checked) {
+      setState(() {
+        _checked = widget.checked!;
+      });
+      _animationController.animateTo(_checked ? 1 : 0);
+    }
   }
 
   @override

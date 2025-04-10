@@ -13,6 +13,7 @@ import 'package:antd_flutter_example/pages/divider_page.dart';
 import 'package:antd_flutter_example/pages/empty_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
+import 'package:antd_flutter_example/pages/image_page.dart';
 import 'package:antd_flutter_example/pages/images_wall_page.dart';
 import 'package:antd_flutter_example/pages/input_number_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
@@ -90,6 +91,7 @@ class MyApp extends StatelessWidget {
         '/rate': (context) => RatePage(),
         '/input-number': (context) => InputNumberPage(),
         '/text-area': (context) => TextAreaPage(),
+        '/image': (context) => ImagePage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -358,6 +360,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('TextArea 文本域'),
             onTap: () {
               Navigator.pushNamed(context, '/text-area');
+            },
+          ),
+          material.ListTile(
+            title: Text('Image 图片'),
+            onTap: () {
+              Navigator.pushNamed(context, '/image');
             },
           ),
         ],

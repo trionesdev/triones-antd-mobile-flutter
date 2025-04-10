@@ -14,6 +14,7 @@ class _FormPageState extends State<FormPage> {
   final _formKey2 = GlobalKey<AntFormState>();
   final _formKey3 = GlobalKey<AntFormState>();
   final _formKey4 = GlobalKey<AntFormState>();
+  final _formKey5 = GlobalKey<AntFormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +34,15 @@ class _FormPageState extends State<FormPage> {
                     AntFormItem(
                         label: Text("年龄"),
                         name: NamePath('age'),
-                        builder: (AntFormItemState<String> field) {
+                        builder: (AntFormItemState<int> field) {
                           return AntInput(
-                            value: field.value.toString(),
+                            value: field.value,
                             onChange: field.didChange,
                           );
                         }),
                     AntFormItem(
-                        label: Text("年龄x"),
-                        name: NamePath(['z', 'age']),
+                        label: Text("性别"),
+                        name: NamePath(['gender']),
                         builder: (AntFormItemState<String> field) {
                           return AntInput(
                             value: field.value,
@@ -103,35 +104,41 @@ class _FormPageState extends State<FormPage> {
                   ],
                 ),
               ),
-              AntForm(key: _formKey2, layout: AntFormLayout.vertical, children: [
-                AntFormItem(
-                    label: Text("用户名"),
-                    name: NamePath(['username']),
-                    validator: (value) {
-                      if (value == null) {
-                        return '请输入用户名';
-                      }
-                      return null;
-                    },
-                    builder: (AntFormItemState<String> field) {
-                      return AntInput(
-                        value: field.value,
-                        onChange: field.didChange,
-                        placeholder: '请输入用户名',
-                        prefix: Icon(Icons.person),
-                      );
-                    }),
-                AntButton(
-                  text: "保存",
-                  block: true,
-                  onPressed: () => {
-                    _formKey2.currentState
-                        ?.validateFields()
-                        .then((values) => {print(values)})
-                        .catchError((err) => {print(err)})
-                  },
-                )
-              ]),
+              DemoBlock(
+                title: "垂直布局",
+                child: AntForm(
+                    key: _formKey2,
+                    layout: AntFormLayout.vertical,
+                    children: [
+                      AntFormItem(
+                          label: Text("用户名"),
+                          name: NamePath(['username']),
+                          validator: (value) {
+                            if (value == null) {
+                              return '请输入用户名';
+                            }
+                            return null;
+                          },
+                          builder: (AntFormItemState<String> field) {
+                            return AntInput(
+                              value: field.value,
+                              onChange: field.didChange,
+                              placeholder: '请输入用户名',
+                              prefix: Icon(Icons.person),
+                            );
+                          }),
+                      AntButton(
+                        text: "保存",
+                        block: true,
+                        onPressed: () => {
+                          _formKey2.currentState
+                              ?.validateFields()
+                              .then((values) => {print(values)})
+                              .catchError((err) => {print(err)})
+                        },
+                      )
+                    ]),
+              ),
               DemoBlock(
                 title: "col flex",
                 child: AntForm(
@@ -181,7 +188,35 @@ class _FormPageState extends State<FormPage> {
                             );
                           }),
                     ]),
-              )
+              ),
+              DemoBlock(
+                title: "标签靠右",
+                child: AntForm(
+                  key: _formKey5,
+                  labelAlign: AntLabelAlign.right,
+                  labelCol: AntFormCol(flex: 50),
+                  children: [
+                    AntFormItem(
+                        label: Text("年龄"),
+                        name: NamePath('age'),
+                        builder: (AntFormItemState<int> field) {
+                          return AntInput(
+                            value: field.value,
+                            onChange: field.didChange,
+                          );
+                        }),
+                    AntFormItem(
+                        label: Text("性别"),
+                        name: NamePath(['gender']),
+                        builder: (AntFormItemState<String> field) {
+                          return AntInput(
+                            value: field.value,
+                            onChange: field.didChange,
+                          );
+                        }),
+                  ],
+                ),
+              ),
             ],
           ),
         ));
