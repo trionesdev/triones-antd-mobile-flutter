@@ -9,6 +9,7 @@ import 'package:antd_flutter_example/pages/calendar_datetime_picker_page.dart';
 import 'package:antd_flutter_example/pages/calendar_picker_page.dart';
 import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
 import 'package:antd_flutter_example/pages/checkbox_page.dart';
+import 'package:antd_flutter_example/pages/dialog_page.dart';
 import 'package:antd_flutter_example/pages/divider_page.dart';
 import 'package:antd_flutter_example/pages/empty_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
@@ -88,6 +89,7 @@ class MyApp extends StatelessWidget {
         '/tabs': (context) => TabsPage(),
         '/radio': (context) => RadioPage(),
         '/checkbox': (context) => CheckboxPage(),
+        '/dialog': (context) => DialogPage(),
         '/rate': (context) => RatePage(),
         '/input-number': (context) => InputNumberPage(),
         '/text-area': (context) => TextAreaPage(),
@@ -342,6 +344,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Checkbox 复选框'),
             onTap: () {
               Navigator.pushNamed(context, '/checkbox');
+            },
+          ),
+          material.ListTile(
+            title: Text('Dialog 对话框'),
+            onTap: () {
+              Navigator.pushNamed(context, '/dialog');
             },
           ),
           material.ListTile(

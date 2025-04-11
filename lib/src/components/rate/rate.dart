@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
 class AntRate extends StatefulWidget {
-  const AntRate(
-      {super.key,
-      this.count = 5,
-      this.allowHalf = false,
-      this.defaultValue,
-      this.value,
-      this.onChange,
-      this.fullIcon,
-      this.emptyIcon,
-      this.iconSize = 32});
+  const AntRate({super.key,
+    this.disabled = false,
+    this.count = 5,
+    this.allowHalf = false,
+    this.defaultValue,
+    this.value,
+    this.onChange,
+    this.fullIcon,
+    this.emptyIcon,
+    this.iconSize = 24});
 
+  final bool disabled;
   final Widget? fullIcon;
   final Widget? emptyIcon;
   final double? defaultValue;
@@ -26,7 +27,7 @@ class AntRate extends StatefulWidget {
 
   static _AntRateState? maybeOf(BuildContext context) {
     _RateScope? scope =
-        context.dependOnInheritedWidgetOfExactType<_RateScope>();
+    context.dependOnInheritedWidgetOfExactType<_RateScope>();
     return scope?._rateState;
   }
 }
@@ -73,6 +74,7 @@ class _AntRateState extends State<AntRate> {
   List<Widget> _generateChildren() {
     return List.generate(widget.count, (index) {
       return _RateItem(
+        disabled: widget.disabled,
         iconSize: widget.iconSize,
         index: index,
         allowHalf: widget.allowHalf,
@@ -95,7 +97,7 @@ class _AntRateState extends State<AntRate> {
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox? renderBox =
-          _key.currentContext?.findRenderObject() as RenderBox?;
+      _key.currentContext?.findRenderObject() as RenderBox?;
       if (renderBox != null) {
         _renderBox = renderBox;
       }
@@ -103,12 +105,21 @@ class _AntRateState extends State<AntRate> {
   }
 
   @override
+  void didUpdateWidget(covariant AntRate oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      setState(() {
+        _value = widget.value ?? widget.defaultValue ?? 0;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 8),
+      padding: EdgeInsets.symmetric(horizontal: 4),
       child: GestureDetector(
-        onPanUpdate: (details) {
+        onPanUpdate: widget.disabled ? null : (details) {
           _pointPositionChange(
               _renderBox!.globalToLocal(details.globalPosition));
         },
@@ -125,10 +136,9 @@ class _AntRateState extends State<AntRate> {
 }
 
 class _RateScope extends InheritedWidget {
-  const _RateScope(
-      {required super.child,
-      required _AntRateState rateState,
-      required int generation})
+  const _RateScope({required super.child,
+    required _AntRateState rateState,
+    required int generation})
       : _rateState = rateState,
         _generation = generation;
   final _AntRateState? _rateState;
@@ -142,6 +152,7 @@ class _RateScope extends InheritedWidget {
 
 class _RateItem extends StatefulWidget {
   const _RateItem({
+    this.disabled,
     required this.index,
     required this.allowHalf,
     this.value = 0,
@@ -151,6 +162,7 @@ class _RateItem extends StatefulWidget {
     required this.iconSize,
   });
 
+  final bool? disabled;
   final Widget? fullIcon;
   final Widget? emptyIcon;
   final int index;
@@ -245,10 +257,10 @@ class _RateItemState extends State<_RateItem> {
     _rateState = AntRate.maybeOf(context);
     _rateState?._register(this);
     return GestureDetector(
-      onTapUp: (details) {
+      onTapUp: (widget.disabled ?? false) ? null : (details) {
         if (widget.allowHalf) {
           Offset? offset =
-              _rateState?._getLocalPosition(details.globalPosition); //转换成相对偏移量
+          _rateState?._getLocalPosition(details.globalPosition); //转换成相对偏移量
           if (offset != null) {
             if (_localOffset!.dx <= offset!.dx &&
                 offset.dx <= (_localOffset!.dx + _renderBox!.size.width / 2)) {
@@ -317,11 +329,10 @@ class _DefaultFullIcon extends StatelessWidget {
 }
 
 class _DefaultHalfIcon extends StatelessWidget {
-  const _DefaultHalfIcon(
-      {required this.value,
-      this.fullIcon,
-      this.emptyIcon,
-      required this.iconSize});
+  const _DefaultHalfIcon({required this.value,
+    this.fullIcon,
+    this.emptyIcon,
+    required this.iconSize});
 
   final double value;
   final Widget? fullIcon;

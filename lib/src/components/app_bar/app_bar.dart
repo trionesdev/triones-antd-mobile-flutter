@@ -82,6 +82,7 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
       bottom: bottom,
       backgroundColor: themeData.colorPrimary,
       centerTitle: centerTitle,
+      flexibleSpace: Container(decoration: decoration),
     );
   }
 

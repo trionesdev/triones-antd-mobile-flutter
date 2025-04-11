@@ -17,16 +17,16 @@ class AntTabStyles {
 }
 
 class AntTabs extends StatefulWidget {
-  const AntTabs(
-      {super.key,
-      this.items,
-      this.stretch = true,
-      this.activeKey,
-      this.style,
-      this.styles,
-      this.decoration,
-      this.itemBuilder,
-      this.tabDecoration, this.defaultActiveKey});
+  const AntTabs({super.key,
+    this.items,
+    this.stretch = true,
+    this.defaultActiveKey,
+    this.activeKey,
+    this.style,
+    this.styles,
+    this.decoration,
+    this.itemBuilder,
+    this.tabDecoration});
 
   final String? defaultActiveKey;
   final String? activeKey;
@@ -43,9 +43,9 @@ class AntTabs extends StatefulWidget {
 }
 
 class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
-  late ScrollController _scrollController;
+  ScrollController? _scrollController;
   List<AntTabItemRecord> _items = [];
-  late String? _activeKey;
+  String? _activeKey;
   int _index = 0;
 
   int getIndex(String? key) {
@@ -63,6 +63,7 @@ class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
         activeStyle: widget.styles?.activeTab,
         bodyStyle: widget.styles?.body,
         onTab: (k) {
+          print(k);
           setState(() {
             _activeKey = k;
             _index = getIndex(k);
@@ -70,6 +71,7 @@ class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
         },
       );
     }).toList();
+
     Widget tabHeader;
     if (widget.stretch) {
       tabHeader = Row(
@@ -107,20 +109,26 @@ class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
     if (kIsWeb) {
       _scrollController = ScrollController();
     }
-    setState(() {
-      _items = widget.items ?? [];
-      _activeKey = widget.activeKey ?? _items.elementAtOrNull(0)?.key;
-      _index = getIndex(_activeKey);
-    });
+    _items = widget.items ?? [];
+    _activeKey = widget.activeKey ?? widget.defaultActiveKey ?? _items
+        .elementAtOrNull(0)
+        ?.key;
+    _index = getIndex(_activeKey);
   }
 
   @override
   void didUpdateWidget(covariant AntTabs oldWidget) {
+    print("~~~~~~~~~~~~~~~~");
     super.didUpdateWidget(oldWidget);
-    if (widget.items != oldWidget.items) {
+    if (widget.items != oldWidget.items ||
+        widget.activeKey != oldWidget.activeKey) {
       setState(() {
         _items = widget.items ?? [];
-        _activeKey = widget.activeKey ?? _items.elementAtOrNull(0)?.key;
+        _activeKey = widget.activeKey ?? widget.defaultActiveKey ?? _items
+            .elementAtOrNull(0)
+            ?.key;
+        _index = getIndex(_activeKey);
+        print((_activeKey ?? "") + ":" + _index.toString());
       });
     }
   }
@@ -129,7 +137,7 @@ class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
   void dispose() {
     super.dispose();
     if (kIsWeb) {
-      _scrollController.dispose();
+      _scrollController?.dispose();
     }
   }
 
@@ -141,23 +149,25 @@ class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
     return Container(
       width: double.infinity,
       decoration:
-          widget.decoration ?? stateStyle.resolve(materialStates)?.decoration,
+      widget.decoration ?? stateStyle
+          .resolve(materialStates)
+          ?.decoration,
       child: Column(
         children: [
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
                 border:
-                    Border(bottom: BorderSide(color: themeData.colorBorder))),
+                Border(bottom: BorderSide(color: themeData.colorBorder))),
             child: _generateTabs(),
           ),
           Expanded(
               child: IndexedStack(
-            index: _index,
-            children: _items.map((item) {
-              return item.content ?? Container();
-            }).toList(),
-          ))
+                index: _index,
+                children: _items.map((item) {
+                  return item.content ?? Container();
+                }).toList(),
+              ))
         ],
       ),
     );
@@ -177,16 +187,15 @@ class _AntTabsStyle extends StateStyle {
 }
 
 class AntTabItem extends StatefulWidget {
-  const AntTabItem(
-      {super.key,
-      this.item,
-      this.activeKey,
-      this.onTab,
-      this.style,
-      this.itemBuilder,
-      this.activeStyle,
-      this.bodyStyle,
-      this.decoration});
+  const AntTabItem({super.key,
+    this.item,
+    this.activeKey,
+    this.onTab,
+    this.style,
+    this.itemBuilder,
+    this.activeStyle,
+    this.bodyStyle,
+    this.decoration});
 
   final StateStyle? style;
   final AntTabItemRecord? item;
@@ -222,20 +231,20 @@ class _AntTabItemState extends State<AntTabItem> with MaterialStateMixin {
     return label;
   }
 
-
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _active = widget.item?.key == widget.activeKey;
-    });
+    _active = (widget.item?.key == widget.activeKey);
   }
 
   @override
   void didUpdateWidget(covariant AntTabItem oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.activeKey != oldWidget.activeKey) {
-      _active = widget.item?.key == widget.activeKey;
+    if (widget.item?.key == oldWidget.item?.key ||
+        widget.activeKey != oldWidget.activeKey) {
+      setState(() {
+        _active = widget.item?.key == widget.activeKey;
+      });
     }
   }
 
@@ -251,11 +260,15 @@ class _AntTabItemState extends State<AntTabItem> with MaterialStateMixin {
         decoration: widget.decoration ??
             (_active
                 ? stateStyle
-                    .merge(widget.activeStyle)
-                    .resolve(materialStates)
-                    ?.decoration
-                : stateStyle.resolve(materialStates)?.decoration),
-        padding: stateStyle.resolve(materialStates)?.computedPadding,
+                .merge(widget.activeStyle)
+                .resolve(materialStates)
+                ?.decoration
+                : stateStyle
+                .resolve(materialStates)
+                ?.decoration),
+        padding: stateStyle
+            .resolve(materialStates)
+            ?.computedPadding,
         child: Center(child: _labelRender()),
       ),
     );
@@ -277,9 +290,9 @@ class _AntTabItemStyle extends StateStyle {
         padding: StylePadding.symmetric(vertical: 8, horizontal: 8),
         borderBottom: active
             ? StyleBorder(
-                color: themeData.colorPrimary,
-                width: 1,
-                style: BorderStyle.solid)
+            color: themeData.colorPrimary,
+            width: 1,
+            style: BorderStyle.solid)
             : null);
   }
 }
