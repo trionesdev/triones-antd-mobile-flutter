@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:trionesdev_antd_mobile/antd.dart';
 
 class StyleMargin {
   const StyleMargin({this.top, this.bottom, this.left, this.right});
@@ -56,7 +57,6 @@ class StylePadding {
 
 class StyleBorder {
   const StyleBorder({this.color, this.width, this.style});
-
   final Color? color;
   final double? width;
   final BorderStyle? style;

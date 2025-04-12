@@ -1,38 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
-class AntRadioGroup extends StatefulWidget {
-  const AntRadioGroup(
+class AntRadioBaseGroup extends StatefulWidget {
+  const AntRadioBaseGroup(
       {super.key,
-      this.children,
+      // this.children,
       this.defaultValue,
       this.disabled = false,
       this.onChange,
       this.value,
-      this.iconSize});
+      this.iconSize,
+      this.child,
+      this.size});
 
   final dynamic defaultValue;
   final dynamic value;
   final bool disabled;
   final double? iconSize;
   final Function(dynamic val)? onChange;
-  final List<AntRadio>? children;
 
-  static AntRadioGroupState? maybeOf(BuildContext context) {
+  // final List<AntRadioBase>? children;
+  final Widget? child;
+  final AntRadioSize? size;
+
+  static AntRadioBaseGroupState? maybeOf(BuildContext context) {
     final _AntRadioGroupScope? scope =
         context.dependOnInheritedWidgetOfExactType<_AntRadioGroupScope>();
     return scope?._radioGroupState;
   }
 
   @override
-  State<StatefulWidget> createState() => AntRadioGroupState();
+  State<StatefulWidget> createState() => AntRadioBaseGroupState();
 }
 
-class AntRadioGroupState extends State<AntRadioGroup> {
+class AntRadioBaseGroupState extends State<AntRadioBaseGroup> {
   int _generation = 0;
   dynamic _value;
 
-  final Set<_AntRadioState> _radioStates = <_AntRadioState>{};
+  final Set<RadioStateMixin> _radioStates = <RadioStateMixin>{};
 
   double? get _iconSize {
     return widget.iconSize;
@@ -48,14 +53,14 @@ class AntRadioGroupState extends State<AntRadioGroup> {
     });
   }
 
-  void _register(_AntRadioState radio) {
+  void _register(RadioStateMixin radio) {
     _radioStates.add(radio);
     if (radio.widget.value == _value) {
       radio._groupValueChange(_value);
     }
   }
 
-  void _unregister(_AntRadioState radio) {
+  void _unregister(RadioStateMixin radio) {
     _radioStates.remove(radio);
   }
 
@@ -73,16 +78,37 @@ class AntRadioGroupState extends State<AntRadioGroup> {
     _forceRebuild();
   }
 
+  int index(dynamic val) {
+    for (int i = 0; i < _radioStates.length; i++) {
+      if (_radioStates.elementAtOrNull(i)?.widget.value == val) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
+  int get activeIndex {
+    for (int i = 0; i < _radioStates.length; i++) {
+      if (_radioStates.elementAtOrNull(i)?._checked == true) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _value = widget.value ?? widget.defaultValue;
+    _value = widget.value ?? widget.defaultValue;
+
+    /// 在父级组件渲染完成后，更新状态，避免构建冲突，对于注册之后的子组件更新状态
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _forceRebuild();
     });
   }
 
   @override
-  void didUpdateWidget(covariant AntRadioGroup oldWidget) {
+  void didUpdateWidget(covariant AntRadioBaseGroup oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
       _didValueChange(widget.value);
@@ -95,9 +121,7 @@ class AntRadioGroupState extends State<AntRadioGroup> {
         child: _AntRadioGroupScope(
       radioGroupState: this,
       generation: _generation,
-      child: Column(
-        children: widget.children ?? [],
-      ),
+      child: widget.child!,
     ));
   }
 }
@@ -105,14 +129,14 @@ class AntRadioGroupState extends State<AntRadioGroup> {
 class _AntRadioGroupScope extends InheritedWidget {
   const _AntRadioGroupScope(
       {required super.child,
-      required AntRadioGroupState radioGroupState,
+      required AntRadioBaseGroupState radioGroupState,
       required int generation})
       : _radioGroupState = radioGroupState,
         _generation = generation;
-  final AntRadioGroupState _radioGroupState;
+  final AntRadioBaseGroupState _radioGroupState;
   final int _generation;
 
-  AntRadioGroup get radioGroup => _radioGroupState.widget;
+  AntRadioBaseGroup get radioGroup => _radioGroupState.widget;
 
   @override
   bool updateShouldNotify(covariant _AntRadioGroupScope oldWidget) {
@@ -120,42 +144,34 @@ class _AntRadioGroupScope extends InheritedWidget {
   }
 }
 
-class AntRadio extends StatefulWidget {
-  const AntRadio(
-      {super.key,
-      this.label,
-      this.block = false,
-      this.checked,
-      this.defaultChecked = false,
-      this.disabled,
-      this.checkedIcon,
-      this.uncheckedIcon,
-      this.onChange,
-      this.onTap,
-      this.value,
-      this.iconSize});
+abstract class AntRadioBase extends StatefulWidget {
+  const AntRadioBase(
+      {super.key, this.value, this.label, this.disabled = false});
 
-  final Widget? label;
-  final bool block;
-  final bool? checked;
-  final bool defaultChecked;
-  final bool? disabled;
-  final Widget? checkedIcon;
-  final Widget? uncheckedIcon;
-  final Function(bool val)? onChange;
-  final Function? onTap;
   final dynamic value;
-  final double? iconSize;
-
-  @override
-  State<StatefulWidget> createState() => _AntRadioState();
+  final Widget? label;
+  final bool disabled;
 }
 
-class _AntRadioState extends State<AntRadio> {
-  late bool _checked = false;
+mixin RadioStateMixin<T extends AntRadioBase> on State<T> {
+  bool _checked = false;
 
-  double get _iconSize {
-    return widget.iconSize ?? AntRadioGroup.maybeOf(context)?._iconSize ?? 22;
+  int get childrenCount {
+    return AntRadioBaseGroup.maybeOf(context)?._radioStates.length ?? 0;
+  }
+
+  int get index {
+    return AntRadioBaseGroup.maybeOf(context)?.index(widget.value) ?? -1;
+  }
+
+  int get activeIndex {
+    return AntRadioBaseGroup.maybeOf(context)?.activeIndex ?? -1;
+  }
+
+  bool get _disabled {
+    return widget.disabled ??
+        AntRadioBaseGroup.maybeOf(context)?._disabled ??
+        false;
   }
 
   void _groupValueChange(dynamic val) {
@@ -172,6 +188,48 @@ class _AntRadioState extends State<AntRadio> {
         });
       }
     }
+  }
+
+  @override
+  void deactivate() {
+    AntRadioBaseGroup.maybeOf(context)?._unregister(this);
+    super.deactivate();
+  }
+}
+
+class AntRadio extends AntRadioBase {
+  const AntRadio(
+      {super.key,
+      super.label,
+      this.block = false,
+      this.checked,
+      this.defaultChecked = false,
+      super.disabled,
+      this.checkedIcon,
+      this.uncheckedIcon,
+      this.onChange,
+      this.onTap,
+      super.value,
+      this.iconSize});
+
+  final bool block;
+  final bool? checked;
+  final bool defaultChecked;
+  final Widget? checkedIcon;
+  final Widget? uncheckedIcon;
+  final Function(bool val)? onChange;
+  final Function? onTap;
+  final double? iconSize;
+
+  @override
+  State<StatefulWidget> createState() => _AntRadioState();
+}
+
+class _AntRadioState extends State<AntRadio> with RadioStateMixin {
+  double get _iconSize {
+    return widget.iconSize ??
+        AntRadioBaseGroup.maybeOf(context)?._iconSize ??
+        22;
   }
 
   Widget icon() {
@@ -196,12 +254,6 @@ class _AntRadioState extends State<AntRadio> {
     }
   }
 
-  bool get _disabled {
-    return widget.disabled ??
-        AntRadioGroup.maybeOf(context)?._disabled ??
-        false;
-  }
-
   void changeChecked(bool val) {
     setState(() {
       _checked = val;
@@ -220,14 +272,9 @@ class _AntRadioState extends State<AntRadio> {
   }
 
   @override
-  void deactivate() {
-    AntRadioGroup.maybeOf(context)?._unregister(this);
-    super.deactivate();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    AntRadioGroupState? radioGroupState = AntRadioGroup.maybeOf(context);
+    AntRadioBaseGroupState? radioGroupState =
+        AntRadioBaseGroup.maybeOf(context);
     radioGroupState?._register(this);
     return GestureDetector(
       onTap: () {
@@ -291,6 +338,201 @@ class _DefaultUnCheckedIcon extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(90)),
           border: Border.all(color: themeData.colorBorder, width: 1)),
+    );
+  }
+}
+
+class AntRadioGroup extends StatelessWidget {
+  const AntRadioGroup({
+    super.key,
+    this.children = const [],
+    this.defaultValue,
+    this.value,
+    this.disabled = false,
+    this.onChange,
+  });
+
+  final List<AntRadio> children;
+  final dynamic defaultValue;
+  final dynamic value;
+  final bool disabled;
+  final Function(dynamic val)? onChange;
+
+  @override
+  Widget build(BuildContext context) {
+    return AntRadioBaseGroup(
+      defaultValue: defaultValue,
+      value: value,
+      disabled: disabled,
+      onChange: onChange,
+      child: Column(
+        children: children,
+      ),
+    );
+  }
+}
+
+class AntRadioButton extends AntRadioBase {
+  const AntRadioButton({super.key, super.label, super.value});
+
+  @override
+  State<StatefulWidget> createState() => _AntRadioButtonState();
+}
+
+class _AntRadioButtonState extends State<AntRadioButton>
+    with RadioStateMixin, MaterialStateMixin {
+  Widget? get labelWidget {
+    AntThemeData themeData = AntTheme.of(context);
+    if (widget.label is Text) {
+      Text text = widget.label as Text;
+      if (_checked) {
+        return WidgetUtils.textMerge(
+            Text(
+              text.data ?? "",
+              style: TextStyle(color: themeData.colorPrimary),
+            ),
+            text);
+      }
+      return text;
+    }
+    return widget.label;
+  }
+
+  double? get height {
+    AntRadioBaseGroupState? radioGroupState = AntRadioBaseGroup.maybeOf(context);
+    switch(radioGroupState?.widget.size){
+      case AntRadioSize.large:
+        return 40;
+      case AntRadioSize.middle:
+        return 32;
+      case AntRadioSize.small:
+        return 24;
+      default:
+        return 32;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    AntRadioBaseGroupState? radioGroupState =
+        AntRadioBaseGroup.maybeOf(context);
+    radioGroupState?._register(this);
+
+    StateStyle stateStyle = AntRadioButtonStyle(
+        context, _checked, index, activeIndex, childrenCount);
+
+    return GestureDetector(
+      onTap: () {
+        if (_disabled) {
+          return;
+        }
+        if (radioGroupState != null) {
+          if (!_checked) {
+            radioGroupState._didValueChange(widget.value);
+          }
+          return;
+        }
+        setState(() {
+          _checked = !_checked;
+        });
+      },
+      child: Container(
+        decoration: stateStyle.resolve(materialStates)?.decoration,
+        padding: stateStyle.resolve(materialStates)?.computedPadding,
+        height: height,
+        alignment: Alignment.center,
+        child: labelWidget,
+      ),
+    );
+  }
+}
+
+class AntRadioButtonStyle extends StateStyle {
+  AntRadioButtonStyle(this.context, this.checked, this.index, this.activeIndex,
+      this.childrenCount)
+      : super();
+  final BuildContext context;
+
+  final bool checked;
+  final int index;
+  final int activeIndex;
+  final int childrenCount;
+
+  @override
+  Style get style {
+    AntThemeData themeData = AntTheme.of(context);
+    bool isFirst = index == 0;
+    bool isLast = index == childrenCount - 1;
+
+    Color borderColor =
+        checked ? themeData.colorPrimary : themeData.colorBorder;
+    bool showLeft = isFirst || activeIndex == index;
+    bool showRight = (isFirst && activeIndex != index + 1) ||
+        isLast ||
+        activeIndex == index ||
+        (!isFirst && activeIndex != index + 1);
+    return Style(
+        padding: StylePadding.symmetric(horizontal: 8),
+        borderTop:
+            StyleBorder(color: borderColor, width: 1, style: BorderStyle.solid),
+        borderBottom:
+            StyleBorder(color: borderColor, width: 1, style: BorderStyle.solid),
+        borderLeft: showLeft
+            ? StyleBorder(
+                color: borderColor, width: 1, style: BorderStyle.solid)
+            : null,
+        borderRight: showRight
+            ? StyleBorder(
+                color: borderColor, width: 1, style: BorderStyle.solid)
+            : null,
+        borderTopLeftRadius: isFirst ? themeData.borderRadius : null,
+        borderBottomLeftRadius: isFirst ? themeData.borderRadius : null,
+        borderTopRightRadius: isLast ? themeData.borderRadius : null,
+        borderBottomRightRadius: isLast ? themeData.borderRadius : null);
+  }
+}
+
+enum AntRadioSize {
+  small,
+  middle,
+  large,
+}
+
+class AntRadioButtonGroup extends StatelessWidget {
+  const AntRadioButtonGroup(
+      {super.key,
+      required this.children,
+      this.defaultValue,
+      this.value,
+      this.disabled = false,
+      this.onChange,
+      this.size = AntRadioSize.middle});
+
+  final List<AntRadioButton> children;
+  final dynamic defaultValue;
+  final dynamic value;
+  final bool disabled;
+  final Function(dynamic val)? onChange;
+  final AntRadioSize? size;
+
+  @override
+  Widget build(BuildContext context) {
+    return AntRadioBaseGroup(
+      defaultValue: defaultValue,
+      value: value,
+      disabled: disabled,
+      onChange: onChange,
+      size: size,
+      child: Row(
+        children: children.map((item) {
+          return Expanded(child: item);
+        }).toList(),
+      ),
     );
   }
 }
