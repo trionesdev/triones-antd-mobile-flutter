@@ -12,7 +12,7 @@ class ButtonPage extends StatefulWidget {
 class _ButtonPageState extends State<ButtonPage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
         appBar: AntAppBar(
           title: Text('Button'),
         ),

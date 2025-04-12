@@ -12,7 +12,7 @@ class AlertPage extends StatefulWidget {
 class _AlertPageState extends State<AlertPage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
       appBar: AntAppBar(
         title: const Text('Alert'),
       ),

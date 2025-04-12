@@ -18,7 +18,7 @@ class _FormPageState extends State<FormPage> {
 
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
         backgroundColor: Colors.white,
         appBar: AntAppBar(
           title: Text('Form'),

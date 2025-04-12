@@ -13,7 +13,7 @@ class AppBarPage extends StatefulWidget {
 class _AppBarPageState extends State<AppBarPage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
       appBar: AntAppBar(
         title: Text("AppBar 导航栏"),
       ),

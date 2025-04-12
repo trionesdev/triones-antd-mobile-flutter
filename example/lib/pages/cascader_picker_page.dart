@@ -35,7 +35,7 @@ class _CascaderPickerPageState extends State<CascaderPickerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
       appBar: AntAppBar(
         title: const Text('CascaderPicker'),
       ),

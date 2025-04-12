@@ -12,7 +12,7 @@ class GridPage extends StatefulWidget {
 class _GridPageState extends State<GridPage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
       appBar: AntAppBar(
         title: Text('Grid 栅格'),
       ),

@@ -13,7 +13,7 @@ class ModalPage extends StatefulWidget {
 class _ModalPageState extends State<ModalPage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
         appBar: AntAppBar(
           title: const Text('Modal'),
         ),

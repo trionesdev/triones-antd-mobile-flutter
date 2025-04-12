@@ -12,7 +12,7 @@ class SpacePage extends StatefulWidget {
 class _SpacePageState extends State<SpacePage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
       appBar: AntAppBar(
         title: const Text("Space"),
       ),

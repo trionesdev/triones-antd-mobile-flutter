@@ -14,7 +14,7 @@ class ToastPage extends StatefulWidget {
 class _ToastPageState extends State<ToastPage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
         appBar: AntAppBar(
           title: const Text('Toast'),
         ),

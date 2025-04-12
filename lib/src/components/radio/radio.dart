@@ -78,13 +78,13 @@ class AntRadioBaseGroupState extends State<AntRadioBaseGroup> {
     _forceRebuild();
   }
 
-  int index(dynamic val) {
+  int index(RadioStateMixin state) {
     for (int i = 0; i < _radioStates.length; i++) {
-      if (_radioStates.elementAtOrNull(i)?.widget.value == val) {
+      if (_radioStates.elementAtOrNull(i) == state) {
         return i;
       }
     }
-    return 0;
+    return -1;
   }
 
   int get activeIndex {
@@ -93,7 +93,7 @@ class AntRadioBaseGroupState extends State<AntRadioBaseGroup> {
         return i;
       }
     }
-    return 0;
+    return -1;
   }
 
   @override
@@ -161,7 +161,7 @@ mixin RadioStateMixin<T extends AntRadioBase> on State<T> {
   }
 
   int get index {
-    return AntRadioBaseGroup.maybeOf(context)?.index(widget.value) ?? -1;
+    return AntRadioBaseGroup.maybeOf(context)?.index(this) ?? -1;
   }
 
   int get activeIndex {

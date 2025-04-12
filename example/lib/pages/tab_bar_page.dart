@@ -11,7 +11,7 @@ class TabBarPage extends StatefulWidget {
 class _TabBarPageState extends State<TabBarPage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
         appBar: AntAppBar(
           title: Text("TabBar"),
         ),

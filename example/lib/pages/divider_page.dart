@@ -13,7 +13,7 @@ class DividerPage extends StatefulWidget {
 class _DividerPageState extends State<DividerPage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
         appBar: AntAppBar(
           title: const Text("Divider"),
         ),

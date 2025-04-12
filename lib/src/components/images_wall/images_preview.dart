@@ -24,7 +24,7 @@ class _ImagesPreviewState extends State<ImagesPreview> {
 
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
       appBar: AntAppBar(
         toolbarHeight: 40,
       ),
