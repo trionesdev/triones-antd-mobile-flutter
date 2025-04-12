@@ -4,19 +4,26 @@ import 'package:trionesdev_antd_mobile/antd.dart';
 enum AntDialogViewType { alert, confirm }
 
 class AntDialogView extends StatelessWidget {
-  const AntDialogView(
-      {super.key,
-      this.content,
-      this.decoration,
-      this.onConfirm,
-      this.type = AntDialogViewType.alert,
-      this.onCancel});
+  const AntDialogView({
+    super.key,
+    this.type = AntDialogViewType.alert,
+    this.maxWidth,
+    this.content,
+    this.decoration,
+    this.onConfirm,
+    this.onCancel,
+    this.cancelText,
+    this.confirmText,
+  });
 
   final AntDialogViewType? type;
+  final double? maxWidth;
   final Widget? content;
   final BoxDecoration? decoration;
   final Function? onConfirm;
   final Function? onCancel;
+  final String? cancelText;
+  final String? confirmText;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +34,7 @@ class AntDialogView extends StatelessWidget {
         decoration:
             decoration ?? stateStyle.resolve(<WidgetState>{})?.decoration,
         constraints: BoxConstraints(
-          maxWidth: 500,
+          maxWidth: maxWidth ?? 500,
         ),
         width: MediaQuery.of(context).size.width * 0.9,
         child: Column(
@@ -51,7 +58,7 @@ class AntDialogView extends StatelessWidget {
                   alignment: Alignment.center,
                   padding: EdgeInsets.all(12),
                   child: Text(
-                    "我知道了",
+                    confirmText ?? "我知道了",
                     style:
                         TextStyle(fontSize: 16, color: themeData.colorPrimary),
                   ),
@@ -72,7 +79,7 @@ class AntDialogView extends StatelessWidget {
                               border: Border(
                                   right: BorderSide(
                                       color: themeData.colorBorder, width: 1))),
-                          child: Text("取消",
+                          child: Text(cancelText ?? "取消",
                               style: TextStyle(
                                   fontSize: 16, color: themeData.colorPrimary)),
                         ))),
@@ -84,7 +91,7 @@ class AntDialogView extends StatelessWidget {
                         child: Container(
                           alignment: Alignment.center,
                           padding: EdgeInsets.all(12),
-                          child: Text("确定",
+                          child: Text(confirmText ?? "确定",
                               style: TextStyle(
                                   fontSize: 16, color: themeData.colorPrimary)),
                         ))),
