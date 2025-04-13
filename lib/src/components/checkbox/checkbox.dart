@@ -226,6 +226,14 @@ class _AntCheckboxState extends State<AntCheckbox> {
   }
 
   @override
+  void didUpdateWidget(covariant AntCheckbox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.checked != oldWidget.checked) {
+      changeChecked(widget.checked!);
+    }
+  }
+
+  @override
   void deactivate() {
     AntCheckboxGroup.maybeOf(context)?._unregister(this);
     super.deactivate();
@@ -241,16 +249,15 @@ class _AntCheckboxState extends State<AntCheckbox> {
         if (_disabled) {
           return;
         }
+        _checked = !_checked;
         if (checkboxGroupState != null) {
-          checkboxGroupState._didItemValueChange(widget.value, !_checked);
+          checkboxGroupState._didItemValueChange(widget.value, _checked);
         }
-        setState(() {
-          _checked = !_checked;
-        });
+        changeChecked(_checked);
       },
       child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(4),
+        // width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 4),
         child: Row(
           spacing: 4,
           children: [icon(), label()],

@@ -21,7 +21,8 @@ class AntForm extends StatefulWidget {
     this.rowSpacing,
     this.columnSpacing,
     this.layout = AntFormLayout.horizontal,
-    required this.children,
+    this.children,
+    this.child,
     this.labelCol,
     this.wrapperCol,
     this.labelAlign = AntLabelAlign.left,
@@ -35,7 +36,8 @@ class AntForm extends StatefulWidget {
   final AntFormCol? labelCol;
   final AntFormCol? wrapperCol;
 
-  final List<Widget> children;
+  final List<Widget>? children;
+  final Widget? child;
 
   static AntFormState? maybeOf(BuildContext context) {
     final _AntFormScope? scope =
@@ -180,10 +182,7 @@ class AntFormState extends State<AntForm> {
         child: _AntFormScope(
             formState: this,
             generation: _generation,
-            child: Column(
-              spacing: widget.spacing ?? 0,
-              children: widget.children,
-            )));
+            child: widget.child ?? Container()));
   }
 }
 
