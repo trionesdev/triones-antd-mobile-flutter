@@ -8,6 +8,12 @@ class Style with Diagnosticable {
   const Style({
     this.height,
     this.width,
+    this.minWidth,
+    this.minHeight,
+    this.maxWidth,
+    this.maxHeight,
+
+    // text
     this.color,
     this.fontSize,
     // background
@@ -63,6 +69,11 @@ class Style with Diagnosticable {
   final double? fontSize;
   final double? height;
   final double? width;
+
+  final double? minWidth;
+  final double? minHeight;
+  final double? maxWidth;
+  final double? maxHeight;
 
   // background
   final Color? backgroundColor;
@@ -126,6 +137,11 @@ class Style with Diagnosticable {
       fontSize: source.fontSize ?? fontSize,
       height: source.height ?? height,
       width: source.width ?? width,
+      minWidth: source.minWidth ?? minWidth,
+      minHeight: source.minHeight ?? minHeight,
+      maxWidth: source.maxWidth ?? maxWidth,
+      maxHeight: source.maxHeight ?? maxHeight,
+
       backgroundColor: source.backgroundColor ?? backgroundColor,
       backgroundImage: source.backgroundImage ?? backgroundImage,
 
@@ -177,8 +193,6 @@ class Style with Diagnosticable {
     );
     return mergedStyle;
   }
-
-
 
   BorderRadius get computedBorderRadius {
     return BorderRadius.only(
@@ -263,6 +277,19 @@ class Style with Diagnosticable {
                   BorderStyle.none,
             )),
         borderRadius: computedBorderRadius);
+  }
+
+  BoxDecoration get computedDecoration {
+    return decoration;
+  }
+
+  BoxConstraints get computedConstraints {
+    return BoxConstraints(
+      maxWidth: maxWidth ?? double.infinity,
+      minHeight: minHeight ?? double.infinity,
+      minWidth: minWidth ?? double.infinity,
+      maxHeight: maxHeight ?? double.infinity,
+    );
   }
 
   EdgeInsetsGeometry get computedMargin {

@@ -9,6 +9,7 @@ import 'package:antd_flutter_example/pages/calendar_datetime_picker_page.dart';
 import 'package:antd_flutter_example/pages/calendar_picker_page.dart';
 import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
 import 'package:antd_flutter_example/pages/checkbox_page.dart';
+import 'package:antd_flutter_example/pages/collapse_page.dart';
 import 'package:antd_flutter_example/pages/dialog_page.dart';
 import 'package:antd_flutter_example/pages/divider_page.dart';
 import 'package:antd_flutter_example/pages/empty_page.dart';
@@ -94,6 +95,7 @@ class MyApp extends StatelessWidget {
         '/input-number': (context) => InputNumberPage(),
         '/text-area': (context) => TextAreaPage(),
         '/image': (context) => ImagePage(),
+        '/collapse': (context) => CollapsePage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -374,6 +376,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Image 图片'),
             onTap: () {
               Navigator.pushNamed(context, '/image');
+            },
+          ),
+          material.ListTile(
+            title: Text('Collapse 折叠面板'),
+            onTap: () {
+              Navigator.pushNamed(context, '/collapse');
             },
           ),
         ],

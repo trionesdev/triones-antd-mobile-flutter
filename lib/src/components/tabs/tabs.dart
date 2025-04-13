@@ -118,7 +118,6 @@ class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
 
   @override
   void didUpdateWidget(covariant AntTabs oldWidget) {
-    print("~~~~~~~~~~~~~~~~");
     super.didUpdateWidget(oldWidget);
     if (widget.items != oldWidget.items ||
         widget.activeKey != oldWidget.activeKey) {

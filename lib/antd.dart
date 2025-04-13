@@ -52,5 +52,6 @@ export 'src/components/dialog/dialog.dart';
 export 'src/components/rate/rate.dart';
 export 'src/components/input_number/input_number.dart';
 export 'src/components/image/image.dart';
+export 'src/components/collapse/collapse.dart';
 
 export 'src/components/util/utils.dart';
