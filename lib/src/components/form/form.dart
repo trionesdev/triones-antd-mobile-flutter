@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart' as material;
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
@@ -39,6 +39,12 @@ class AntForm extends StatefulWidget {
   final List<Widget>? children;
   final Widget? child;
 
+  static void watch(
+      BuildContext context, NamePath name, Function(dynamic val) callback) {
+    AntFormState? formState = AntForm.maybeOf(context);
+    formState?._registerWatch(name, callback);
+  }
+
   static AntFormState? maybeOf(BuildContext context) {
     final _AntFormScope? scope =
         context.dependOnInheritedWidgetOfExactType<_AntFormScope>();
@@ -56,8 +62,10 @@ class AntForm extends StatefulWidget {
 
 class AntFormState extends State<AntForm> {
   int _generation = 0;
+  Map<dynamic, dynamic>? _formValues = {};
   bool _hasInteractedByUser = false;
   List<Map<String, dynamic>> errorFields = [];
+  final Map<NamePath, Function(dynamic val)> _watches = {};
   final Set<AntFormItemState<dynamic>> _fields = <AntFormItemState<dynamic>>{};
 
   AntFormLayout? get layout => widget.layout;
@@ -72,7 +80,18 @@ class AntFormState extends State<AntForm> {
 
   AntLabelAlign? get labelAlign => widget.labelAlign;
 
-  void _fieldDidChange() {
+  void _registerWatch(NamePath path, Function(dynamic val) callback) {
+    _watches[NamePath(path)] = callback;
+  }
+
+  void _watchFieldChange(NamePath? path, dynamic value) {
+    if (path != null) {
+      _watches[path]?.call(value);
+    }
+  }
+
+  void _fieldDidChange(NamePath? path, dynamic value) {
+    _watchFieldChange(path, value);
     _forceRebuild();
   }
 
@@ -82,8 +101,22 @@ class AntFormState extends State<AntForm> {
     });
   }
 
+  /// 如果子项是后注册的，判断是否需要填充设置的值
+  void _formValuesSet(AntFormItemState<dynamic> field) {
+    if (field.name == null) {
+      return;
+    }
+    Map<String, dynamic> pathMap = MapUtils.flattenMap(_formValues ?? {});
+    if (pathMap.containsKey(field.name?.jsonValue)) {
+      field._formDidChange(pathMap[field.name?.jsonValue]);
+    } else {
+      MapUtils.setPathValue(_formValues, field.name!.value, field.value);
+    }
+  }
+
   void _register(AntFormItemState<dynamic> field) {
     _fields.add(field);
+    _formValuesSet(field);
   }
 
   void _unregister(AntFormItemState<dynamic> field) {
@@ -99,23 +132,24 @@ class AntFormState extends State<AntForm> {
   void reset() {
     for (final AntFormItemState<dynamic> field in _fields) {
       field.reset();
+      _watchFieldChange(field.name, field.initialValue);
     }
     _hasInteractedByUser = false;
-    _fieldDidChange();
   }
 
   void setFieldsValue(Map<dynamic, dynamic>? values) {
-    print(values);
+    _formValues = values ?? {};
     Map<String, dynamic> pathMap = MapUtils.flattenMap(values ?? {});
 
     for (final AntFormItemState<dynamic> field in _fields) {
       if (field.name != null && field.name!.value.isNotEmpty) {
         if (pathMap.containsKey(field.name!.value.join("."))) {
           var value = pathMap[field.name!.value.join(".")];
-          field.didChange(value);
+          field._formDidChange(value);
         }
       }
     }
+    _forceRebuild();
   }
 
   bool _validate() {
@@ -209,6 +243,10 @@ class NamePath {
   }
 
   List<dynamic> get value => _namePaths;
+
+  String get jsonValue => _namePaths.map((item) {
+        return item.toString();
+      }).join(".");
 }
 
 typedef FormItemBuilder<T> = Widget Function(AntFormItemState<T> field);
@@ -253,13 +291,15 @@ class AntFormItem<T> extends StatefulWidget {
 }
 
 class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
-  late dynamic _value = widget.initialValue;
+  T? _value;
   late final RestorableStringN _errorText = RestorableStringN(null);
   final RestorableBool _hasInteractedByUser = RestorableBool(false);
 
   dynamic get value => _value;
 
   NamePath? get name => widget.name;
+
+  T? get initialValue => widget.initialValue;
 
   AntFormLayout? get layout {
     if (widget.layout != null) {
@@ -336,15 +376,21 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     if (value == _value) {
       return;
     }
+    print("form item changed:" + value.toString());
     AntFormState? formState = AntForm.maybeOf(context);
     _value = value;
     _validate();
     if (formState != null) {
-      formState._fieldDidChange();
+      formState._fieldDidChange(widget.name, value);
       return;
     }
     setState(() {});
+  }
+
+  /// form 触发的边跟
+  void _formDidChange(T? value) {
     print("form item changed:" + value.toString());
+    _value = value;
   }
 
   @override
@@ -356,9 +402,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _value = widget.initialValue;
-    });
+    _value = widget.initialValue;
   }
 
   Widget _labelCol(Widget fieldLabel) {
@@ -413,7 +457,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
           transform: Matrix4.translationValues(-8.0, 0.0, 0.0),
           child: Text(
             "*",
-            style: TextStyle(color: material.Colors.red),
+            style: TextStyle(color: Colors.red),
           ),
         ));
       }
@@ -437,7 +481,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
           padding: EdgeInsets.only(left: 8, right: 8, top: 0),
           child: Text(
             errorText!,
-            style: TextStyle(fontSize: 12, color: material.Colors.red),
+            style: TextStyle(fontSize: 12, color: Colors.red),
           ),
         ));
       }

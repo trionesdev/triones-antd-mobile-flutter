@@ -49,18 +49,15 @@ class AntCheckboxGroupState extends State<AntCheckboxGroup> {
 
   void _register(_AntCheckboxState checkbox) {
     _checkboxStates.add(checkbox);
-    checkbox._groupValueChange(_value);
   }
 
   void _unregister(_AntCheckboxState checkbox) {
     _checkboxStates.remove(checkbox);
   }
 
-  void _didValueChange(List<dynamic>? val) {
-    setState(() {
-      _value = val ?? [];
-    });
-    widget.onChange?.call(_value);
+
+  void _didGroupValueInit(List<dynamic>? val) {
+    _value = val ?? [];
     if (_checkboxStates.isNotEmpty) {
       for (var checkboxState in _checkboxStates) {
         checkboxState._groupValueChange(_value);
@@ -69,31 +66,29 @@ class AntCheckboxGroupState extends State<AntCheckboxGroup> {
   }
 
   void _didItemValueChange(dynamic val, bool checked) {
-    setState(() {
-      if (checked) {
-        if (!_value.contains(val)) {
-          _value.add(val);
-        }
-      } else {
-        _value.remove(val);
+    if (checked) {
+      if (!_value.contains(val)) {
+        _value.add(val);
       }
-    });
+    } else {
+      _value.remove(val);
+    }
     widget.onChange?.call(_value);
     _forceRebuild();
   }
 
   @override
   void initState() {
+    _didGroupValueInit(widget.value ?? widget.defaultValue ?? []);
     super.initState();
-    _didValueChange(widget.value ?? widget.defaultValue ?? []);
   }
 
   @override
   void didUpdateWidget(covariant AntCheckboxGroup oldWidget) {
-    super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
-      _didValueChange(widget.value);
+      _didGroupValueInit(widget.value ?? widget.defaultValue ?? []);
     }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -169,13 +164,9 @@ class _AntCheckboxState extends State<AntCheckbox> {
 
   void _groupValueChange(List<dynamic> val) {
     if (val.contains(widget.value)) {
-      setState(() {
-        _checked = true;
-      });
+      _checked = true;
     } else {
-      setState(() {
-        _checked = false;
-      });
+      _checked = false;
     }
   }
 
@@ -254,6 +245,7 @@ class _AntCheckboxState extends State<AntCheckbox> {
         _checked = !_checked;
         if (checkboxGroupState != null) {
           checkboxGroupState._didItemValueChange(widget.value, _checked);
+          return;
         }
         changeChecked(_checked);
       },
