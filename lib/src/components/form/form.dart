@@ -106,25 +106,15 @@ class AntFormState extends State<AntForm> {
 
   void setFieldsValue(Map<dynamic, dynamic>? values) {
     print(values);
-
-    dynamic getValue(NamePath name, Map<dynamic, dynamic>? currentValues) {
-      Map<dynamic, dynamic>? currentValues2 = currentValues;
-      for (int i = 0; i < name.value.length; i++) {
-        if (i < name.value.length - 1) {
-          if (currentValues2![name.value[i]] == null) {
-            return null;
-          } else {
-            currentValues2 = currentValues2[name.value[i]];
-          }
-        } else {
-          return currentValues2![name.value[i]];
-        }
-      }
-    }
+    Map<String, dynamic> pathMap = MapUtils.flattenMap(values ?? {});
 
     for (final AntFormItemState<dynamic> field in _fields) {
-      var v = getValue(field.name!, values);
-      field.didChange(v);
+      if (field.name != null && field.name!.value.isNotEmpty) {
+        if (pathMap.containsKey(field.name!.value.join("."))) {
+          var value = pathMap[field.name!.value.join(".")];
+          field.didChange(value);
+        }
+      }
     }
   }
 
@@ -342,13 +332,18 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     }
   }
 
-  void didChange(T value) {
-    setState(() {
-      _value = value;
-      // _hasInteractedByUser.value = true;
-    });
-    AntForm.maybeOf(context)?._fieldDidChange();
+  void didChange(T? value) {
+    if (value == _value) {
+      return;
+    }
+    AntFormState? formState = AntForm.maybeOf(context);
+    _value = value;
     _validate();
+    if (formState != null) {
+      formState._fieldDidChange();
+      return;
+    }
+    setState(() {});
     print("form item changed:" + value.toString());
   }
 
@@ -442,7 +437,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
           padding: EdgeInsets.only(left: 8, right: 8, top: 0),
           child: Text(
             errorText!,
-            style: TextStyle(fontSize: 12,color: material.Colors.red),
+            style: TextStyle(fontSize: 12, color: material.Colors.red),
           ),
         ));
       }
