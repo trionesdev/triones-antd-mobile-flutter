@@ -4,6 +4,7 @@ import 'package:trionesdev_antd_mobile/antd.dart';
 class AntCheckboxGroup extends StatefulWidget {
   const AntCheckboxGroup({super.key,
     this.children,
+    this.child,
     this.defaultValue,
     this.disabled = false,
     this.onChange,
@@ -16,6 +17,7 @@ class AntCheckboxGroup extends StatefulWidget {
   final double? iconSize;
   final Function(List<dynamic>? val)? onChange;
   final List<AntCheckbox>? children;
+  final Widget? child;
 
   static AntCheckboxGroupState? maybeOf(BuildContext context) {
     final _AntCheckboxGroupScope? scope =
@@ -97,9 +99,7 @@ class AntCheckboxGroupState extends State<AntCheckboxGroup> {
         child: _AntCheckboxGroupScope(
           checkboxGroupState: this,
           generation: _generation,
-          child: Column(
-            children: widget.children ?? [],
-          ),
+          child: widget.child ?? Container(),
         ));
   }
 }
@@ -133,7 +133,7 @@ class AntCheckbox extends StatefulWidget {
     this.onChange,
     this.onTap,
     this.value,
-    this.iconSize});
+    this.iconSize, this.spacing = 4});
 
   final Widget? label;
   final bool block;
@@ -146,6 +146,7 @@ class AntCheckbox extends StatefulWidget {
   final Function? onTap;
   final dynamic value;
   final double? iconSize;
+  final double? spacing;
 
   @override
   State<StatefulWidget> createState() => _AntCheckboxState();
@@ -185,10 +186,13 @@ class _AntCheckboxState extends State<AntCheckbox> {
   }
 
   Widget label() {
+    var labelWidget = Container(
+      alignment: Alignment.centerLeft,
+      constraints: BoxConstraints(minHeight: 32,), child: widget.label,);
     if (widget.block) {
-      return Expanded(child: widget.label ?? Text(""));
+      return Expanded(child: labelWidget);
     } else {
-      return widget.label ?? Text("");
+      return labelWidget;
     }
   }
 
@@ -250,11 +254,17 @@ class _AntCheckboxState extends State<AntCheckbox> {
         changeChecked(_checked);
       },
       child: Container(
-        // width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 4),
         child: Row(
-          spacing: 4,
-          children: [icon(), label()],
+          spacing: widget.spacing ?? 0,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [Container(
+              constraints: BoxConstraints(
+                  minHeight: 32
+              ),
+              alignment: Alignment.center,
+              child: UnconstrainedBox(child: Container(child: icon(),),)),
+            if(widget.label != null ) label()
+          ],
         ),
       ),
     );
