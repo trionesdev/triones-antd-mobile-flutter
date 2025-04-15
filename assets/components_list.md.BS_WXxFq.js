@@ -20,7 +20,7 @@ import{_ as s,c as a,o as t,ae as p}from"./chunks/framework.CJ_HZlMT.js";const d
 
   @override
   Widget <span class="token function">build</span><span class="token punctuation">(</span><span class="token parameter">BuildContext context</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token function">AntPageContainer</span><span class="token punctuation">(</span>
+    <span class="token keyword">return</span> <span class="token function">AntScaffold</span><span class="token punctuation">(</span>
         <span class="token literal-property property">appBar</span><span class="token operator">:</span> <span class="token function">AntAppBar</span><span class="token punctuation">(</span>
           <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token keyword">const</span> <span class="token function">Text</span><span class="token punctuation">(</span><span class="token string">&quot;List&quot;</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
         <span class="token punctuation">)</span><span class="token punctuation">,</span>

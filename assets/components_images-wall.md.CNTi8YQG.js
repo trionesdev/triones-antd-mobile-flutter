@@ -12,7 +12,7 @@ import{_ as a,c as s,o as t,ae as p}from"./chunks/framework.CJ_HZlMT.js";const d
 <span class="token keyword">class</span> <span class="token class-name">_ImageUploadPageState</span> <span class="token keyword">extends</span> <span class="token class-name">State</span><span class="token operator">&lt;</span>ImagesWallPage<span class="token operator">&gt;</span> <span class="token punctuation">{</span>
   @override
   Widget <span class="token function">build</span><span class="token punctuation">(</span><span class="token parameter">BuildContext context</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token function">AntPageContainer</span><span class="token punctuation">(</span>
+    <span class="token keyword">return</span> <span class="token function">AntScaffold</span><span class="token punctuation">(</span>
       <span class="token literal-property property">appBar</span><span class="token operator">:</span> <span class="token function">AntAppBar</span><span class="token punctuation">(</span>
         <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token function">Text</span><span class="token punctuation">(</span><span class="token string">&quot;ImagesWall 图片墙&quot;</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
       <span class="token punctuation">)</span><span class="token punctuation">,</span>
