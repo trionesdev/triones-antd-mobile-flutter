@@ -7,6 +7,7 @@ import 'package:antd_flutter_example/pages/breadcrumb_page.dart';
 import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/calendar_datetime_picker_page.dart';
 import 'package:antd_flutter_example/pages/calendar_picker_page.dart';
+import 'package:antd_flutter_example/pages/card_page.dart';
 import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
 import 'package:antd_flutter_example/pages/checkbox_page.dart';
 import 'package:antd_flutter_example/pages/collapse_page.dart';
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
         '/picker': (context) => PickerPage(),
         '/cascader-picker': (context) => CascaderPickerPage(),
         '/calendar-picker': (context) => CalendarPickerPage(),
+        '/card': (context) => CardPage(),
         '/calendar-datetime-picker': (context) => CalendarDatetimePickerPage(),
         '/modal': (context) => ModalPage(),
         '/toast': (context) => ToastPage(),
@@ -244,6 +246,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('CalendarPicker 日历选择器'),
             onTap: () {
               Navigator.pushNamed(context, '/calendar-picker');
+            },
+          ),
+          material.ListTile(
+            title: Text('Card 卡片'),
+            onTap: () {
+              Navigator.pushNamed(context, '/card');
             },
           ),
           material.ListTile(
