@@ -92,6 +92,7 @@ class AntFormState extends State<AntForm> {
 
   void _fieldDidChange(NamePath? path, dynamic value) {
     _watchFieldChange(path, value);
+    MapUtils.setPathValue(_formValues, path?.value, value);
     _forceRebuild();
   }
 
@@ -110,7 +111,10 @@ class AntFormState extends State<AntForm> {
     if (pathMap.containsKey(field.name?.jsonValue)) {
       field._formDidChange(pathMap[field.name?.jsonValue]);
     } else {
-      MapUtils.setPathValue(_formValues, field.name!.value, field.value);
+      if(field.initialValue!=null){
+        MapUtils.setPathValue(_formValues, field.name!.value, field.initialValue);
+      }
+
     }
   }
 
@@ -291,7 +295,7 @@ class AntFormItem<T> extends StatefulWidget {
 }
 
 class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
-  T? _value;
+  late T? _value;
   late final RestorableStringN _errorText = RestorableStringN(null);
   final RestorableBool _hasInteractedByUser = RestorableBool(false);
 
@@ -379,11 +383,11 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     print("form item changed:" + value.toString());
     AntFormState? formState = AntForm.maybeOf(context);
     _value = value;
-    _validate();
     if (formState != null) {
       formState._fieldDidChange(widget.name, value);
       return;
     }
+    _validate();
     setState(() {});
   }
 

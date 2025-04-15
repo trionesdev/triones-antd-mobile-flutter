@@ -4,10 +4,12 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:flutter/widgets.dart';
 
 @immutable
 class AntThemeData with Diagnosticable {
   factory AntThemeData({
+    TargetPlatform? platform,
     Color? colorTextBase,
     Color? colorTextPlaceholder,
     Color? colorBgBase,
@@ -25,7 +27,12 @@ class AntThemeData with Diagnosticable {
     Color? colorBorder,
     double? borderRadius,
     Brightness? brightness,
+
   }) {
+    platform ??= defaultTargetPlatform;
+
+    final bool useInkSparkle = platform == TargetPlatform.android && !kIsWeb;
+
     borderRadius ??= 6;
     colorBgBase ??= Color(0xFFFFFFFF);
     colorError ??= Color(0xffff4d4f);
@@ -46,6 +53,7 @@ class AntThemeData with Diagnosticable {
     brightness ??= Brightness.light;
 
     return AntThemeData.raw(
+      platform: platform,
       colorTextBase: colorTextBase,
       colorTextPlaceholder: colorTextPlaceholder,
       colorBgBase: colorBgBase,
@@ -67,6 +75,7 @@ class AntThemeData with Diagnosticable {
   }
 
   const AntThemeData.raw({
+    required this.platform,
     required this.colorTextBase,
     required this.colorTextPlaceholder,
     required this.colorBgBase,
@@ -85,6 +94,7 @@ class AntThemeData with Diagnosticable {
     required this.borderRadius,
     required this.brightness,
   });
+  final TargetPlatform platform;
 
   final double borderRadius;
   final Color colorBgBase;
@@ -115,6 +125,11 @@ class AntThemeData with Diagnosticable {
   );
 
   factory AntThemeData.fallback() => AntThemeData.light();
+
+  static AntThemeData of(BuildContext context) {
+    // final _InheritedTheme? inheritedTheme = context.dependOnInheritedWidgetOfExactType<_InheritedTheme>();
+    return AntThemeData();
+  }
 
   static AntThemeData localize(
       AntThemeData? baseTheme, AntThemeData? localTextGeometry) {

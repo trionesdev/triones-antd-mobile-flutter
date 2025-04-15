@@ -22,8 +22,10 @@ class AntTheme extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return _InheritedTheme(
+      theme: this,
+      child: child,
+    );
   }
 
 }

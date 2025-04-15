@@ -10,6 +10,17 @@ enum AntThemeMode {
   dark,
 }
 
+material.ThemeMode toMaterialThemeMode(AntThemeMode value) {
+  switch (value) {
+    case AntThemeMode.system:
+      return material.ThemeMode.system;
+    case AntThemeMode.light:
+      return material.ThemeMode.light;
+    case AntThemeMode.dark:
+      return material.ThemeMode.dark;
+  }
+}
+
 class AntApp extends StatelessWidget {
   const AntApp({
     super.key,

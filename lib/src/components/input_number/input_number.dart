@@ -64,7 +64,7 @@ class _AntInputNumberState extends State<AntInputNumber> {
   void didUpdateWidget(covariant AntInputNumber oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
-      changeValue(widget.value ?? widget.defaultValue ?? 0);
+      _value = widget.value ?? widget.defaultValue ?? 0;
     }
   }
 
