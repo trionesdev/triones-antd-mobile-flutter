@@ -34,7 +34,9 @@ class AntButton extends StatefulWidget {
       this.variant,
       this.shape = AntButtonShape.round,
       this.size = AntButtonSize.middle,
-      this.style});
+      this.style,
+        this.child
+      });
 
   final AntButtonType? type;
   final bool? block;
@@ -48,6 +50,7 @@ class AntButton extends StatefulWidget {
   final AntButtonShape shape;
   final AntButtonSize size;
   final StateStyle? style;
+  final Widget? child;
 
   @override
   State<AntButton> createState() => _ButtonState();
@@ -81,6 +84,7 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
     }
     return null;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +122,20 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
           side: buttonBorderSide() ?? BorderSide.none);
     }
 
+    Widget _child(){
+      if(widget.child!=null){
+        return widget.child!;
+      }
+      if (widget.text != null){
+        return Text(
+          widget.text ?? '',
+          style: TextStyle(
+              color: style?.color, fontSize: style?.fontSize),
+        );
+      }
+      return Container();
+    }
+
     return Container(
       width: width,
       height: height,
@@ -135,12 +153,7 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (widget.icon != null) widget.icon!,
-                if (widget.text != null)
-                  Text(
-                    widget.text != null ? widget.text! : '',
-                    style: TextStyle(
-                        color: style?.color, fontSize: style?.fontSize),
-                  )
+                _child()
               ])),
     );
   }

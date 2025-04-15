@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 
 class WidgetUtils {
+  static List<Widget> join(List<Widget> widgets, Widget separator) {
+    List<Widget> result = [];
+    for (int i = 0; i < widgets.length; i++) {
+      result.add(widgets[i]);
+      if (i < widgets.length - 1) {
+        result.add(separator);
+      }
+    }
+    return result;
+  }
+
   static Text textMerge(Text target, Text source) {
     return Text(source.data ?? target.data ?? "",
         style: target.style?.merge(source.style),

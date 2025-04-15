@@ -242,6 +242,7 @@ class _AntCheckboxState extends State<AntCheckbox> {
     AntCheckboxGroup.maybeOf(context);
     checkboxGroupState?._register(this);
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         if (_disabled) {
           return;
