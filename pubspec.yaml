@@ -29,3 +29,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/empty.svg
+    - assets/images/default-image.svg
+    - assets/images/default-image.png
+    - assets/images/error-image.svg
+    - assets/images/error-image.png

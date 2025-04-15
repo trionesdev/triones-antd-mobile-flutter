@@ -49,6 +49,9 @@ export default defineConfig({
                     text: '信息展示',
                     items: [
                         {text: 'Avatar 头像', link: '/components/avatar'},
+                        {text: 'Card 卡片', link: '/components/card'},
+                        {text: 'Collapse 折叠面板', link: '/components/collapse'},
+                        {text: 'Image 图片', link: '/components/image'},
                         {text: 'List 列表', link: '/components/list'},
                         {text: 'Tag 标签', link: '/components/tag'},
                         {text: 'Timeline 时间轴', link: '/components/timeline'},

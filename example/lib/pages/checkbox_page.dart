@@ -65,14 +65,18 @@ class _CheckboxPageState extends State<CheckboxPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AntCheckbox(
-                        block: true,
-                        label: Container(
-                          color: Colors.grey,
-                          child: Text(
-                            "块级元素",
-                          ),
-                        )),
+                    Container(
+                      width: double.infinity,
+                      child: AntCheckbox(
+                          block: true,
+                          label: Container(
+
+                            color: Colors.grey,
+                            child: Text(
+                              "块级元素",
+                            ),
+                          )),
+                    ),
                     AntCheckbox(
                       label: Container(
                         color: Colors.grey,

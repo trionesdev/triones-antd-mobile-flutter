@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
 class AntCheckboxGroup extends StatefulWidget {
-  const AntCheckboxGroup(
-      {super.key,
-      this.children,
-      this.defaultValue,
-      this.disabled = false,
-      this.onChange,
-      this.value,
-      this.iconSize});
+  const AntCheckboxGroup({super.key,
+    this.children,
+    this.child,
+    this.defaultValue,
+    this.disabled = false,
+    this.onChange,
+    this.value,
+    this.iconSize});
 
   final List<dynamic>? defaultValue;
   final List<dynamic>? value;
@@ -17,10 +17,11 @@ class AntCheckboxGroup extends StatefulWidget {
   final double? iconSize;
   final Function(List<dynamic>? val)? onChange;
   final List<AntCheckbox>? children;
+  final Widget? child;
 
   static AntCheckboxGroupState? maybeOf(BuildContext context) {
     final _AntCheckboxGroupScope? scope =
-        context.dependOnInheritedWidgetOfExactType<_AntCheckboxGroupScope>();
+    context.dependOnInheritedWidgetOfExactType<_AntCheckboxGroupScope>();
     return scope?._checkboxGroupState;
   }
 
@@ -50,18 +51,15 @@ class AntCheckboxGroupState extends State<AntCheckboxGroup> {
 
   void _register(_AntCheckboxState checkbox) {
     _checkboxStates.add(checkbox);
-    checkbox._groupValueChange(_value);
   }
 
   void _unregister(_AntCheckboxState checkbox) {
     _checkboxStates.remove(checkbox);
   }
 
-  void _didValueChange(List<dynamic>? val) {
-    setState(() {
-      _value = val ?? [];
-    });
-    widget.onChange?.call(_value);
+
+  void _didGroupValueInit(List<dynamic>? val) {
+    _value = val ?? [];
     if (_checkboxStates.isNotEmpty) {
       for (var checkboxState in _checkboxStates) {
         checkboxState._groupValueChange(_value);
@@ -70,51 +68,46 @@ class AntCheckboxGroupState extends State<AntCheckboxGroup> {
   }
 
   void _didItemValueChange(dynamic val, bool checked) {
-    setState(() {
-      if (checked) {
-        if(!_value.contains(val)){
-          _value.add(val);
-        }
-      } else {
-        _value.remove(val);
+    if (checked) {
+      if (!_value.contains(val)) {
+        _value.add(val);
       }
-    });
+    } else {
+      _value.remove(val);
+    }
     widget.onChange?.call(_value);
     _forceRebuild();
   }
 
   @override
   void initState() {
+    _didGroupValueInit(widget.value ?? widget.defaultValue ?? []);
     super.initState();
-    _didValueChange(widget.value ?? widget.defaultValue ?? []);
   }
 
   @override
   void didUpdateWidget(covariant AntCheckboxGroup oldWidget) {
-    super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
-      _didValueChange(widget.value);
+      _didGroupValueInit(widget.value ?? widget.defaultValue ?? []);
     }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
         child: _AntCheckboxGroupScope(
-      checkboxGroupState: this,
-      generation: _generation,
-      child: Column(
-        children: widget.children ?? [],
-      ),
-    ));
+          checkboxGroupState: this,
+          generation: _generation,
+          child: widget.child ?? Container(),
+        ));
   }
 }
 
 class _AntCheckboxGroupScope extends InheritedWidget {
-  const _AntCheckboxGroupScope(
-      {required super.child,
-      required AntCheckboxGroupState checkboxGroupState,
-      required int generation})
+  const _AntCheckboxGroupScope({required super.child,
+    required AntCheckboxGroupState checkboxGroupState,
+    required int generation})
       : _checkboxGroupState = checkboxGroupState,
         _generation = generation;
   final AntCheckboxGroupState _checkboxGroupState;
@@ -129,19 +122,18 @@ class _AntCheckboxGroupScope extends InheritedWidget {
 }
 
 class AntCheckbox extends StatefulWidget {
-  const AntCheckbox(
-      {super.key,
-      this.label,
-      this.block = false,
-      this.checked,
-      this.defaultChecked = false,
-      this.disabled,
-      this.checkedIcon,
-      this.uncheckedIcon,
-      this.onChange,
-      this.onTap,
-      this.value,
-      this.iconSize});
+  const AntCheckbox({super.key,
+    this.label,
+    this.block = false,
+    this.checked,
+    this.defaultChecked = false,
+    this.disabled,
+    this.checkedIcon,
+    this.uncheckedIcon,
+    this.onChange,
+    this.onTap,
+    this.value,
+    this.iconSize, this.spacing = 4});
 
   final Widget? label;
   final bool block;
@@ -154,6 +146,7 @@ class AntCheckbox extends StatefulWidget {
   final Function? onTap;
   final dynamic value;
   final double? iconSize;
+  final double? spacing;
 
   @override
   State<StatefulWidget> createState() => _AntCheckboxState();
@@ -164,19 +157,17 @@ class _AntCheckboxState extends State<AntCheckbox> {
 
   double get _iconSize {
     return widget.iconSize ??
-        AntCheckboxGroup.maybeOf(context)?._iconSize ??
+        AntCheckboxGroup
+            .maybeOf(context)
+            ?._iconSize ??
         22;
   }
 
   void _groupValueChange(List<dynamic> val) {
     if (val.contains(widget.value)) {
-      setState(() {
-        _checked = true;
-      });
+      _checked = true;
     } else {
-      setState(() {
-        _checked = false;
-      });
+      _checked = false;
     }
   }
 
@@ -195,16 +186,21 @@ class _AntCheckboxState extends State<AntCheckbox> {
   }
 
   Widget label() {
+    var labelWidget = Container(
+      alignment: Alignment.centerLeft,
+      constraints: BoxConstraints(minHeight: 32,), child: widget.label,);
     if (widget.block) {
-      return Expanded(child: widget.label ?? Text(""));
+      return Expanded(child: labelWidget);
     } else {
-      return widget.label ?? Text("");
+      return labelWidget;
     }
   }
 
   bool get _disabled {
     return widget.disabled ??
-        AntCheckboxGroup.maybeOf(context)?._disabled ??
+        AntCheckboxGroup
+            .maybeOf(context)
+            ?._disabled ??
         false;
   }
 
@@ -215,14 +211,23 @@ class _AntCheckboxState extends State<AntCheckbox> {
     widget.onChange?.call(val);
   }
 
+  void handleInit() {
+    _checked = widget.checked ?? widget.defaultChecked;
+    widget.onChange?.call(_checked);
+  }
+
   @override
   void initState() {
+    handleInit();
     super.initState();
-    if (widget.checked != null) {
-      changeChecked(widget.checked!);
-    } else {
-      changeChecked(widget.defaultChecked);
+  }
+
+  @override
+  void didUpdateWidget(covariant AntCheckbox oldWidget) {
+    if (widget.checked != oldWidget.checked) {
+      handleInit();
     }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -234,26 +239,33 @@ class _AntCheckboxState extends State<AntCheckbox> {
   @override
   Widget build(BuildContext context) {
     AntCheckboxGroupState? checkboxGroupState =
-        AntCheckboxGroup.maybeOf(context);
+    AntCheckboxGroup.maybeOf(context);
     checkboxGroupState?._register(this);
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         if (_disabled) {
           return;
         }
+        _checked = !_checked;
         if (checkboxGroupState != null) {
-          checkboxGroupState._didItemValueChange(widget.value, !_checked);
+          checkboxGroupState._didItemValueChange(widget.value, _checked);
+          return;
         }
-        setState(() {
-          _checked = !_checked;
-        });
+        changeChecked(_checked);
       },
       child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(4),
         child: Row(
-          spacing: 4,
-          children: [icon(), label()],
+          spacing: widget.spacing ?? 0,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [Container(
+              constraints: BoxConstraints(
+                  minHeight: 32
+              ),
+              alignment: Alignment.center,
+              child: UnconstrainedBox(child: Container(child: icon(),),)),
+            if(widget.label != null ) label()
+          ],
         ),
       ),
     );

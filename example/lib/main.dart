@@ -7,12 +7,16 @@ import 'package:antd_flutter_example/pages/breadcrumb_page.dart';
 import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/calendar_datetime_picker_page.dart';
 import 'package:antd_flutter_example/pages/calendar_picker_page.dart';
+import 'package:antd_flutter_example/pages/card_page.dart';
 import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
 import 'package:antd_flutter_example/pages/checkbox_page.dart';
+import 'package:antd_flutter_example/pages/collapse_page.dart';
+import 'package:antd_flutter_example/pages/dialog_page.dart';
 import 'package:antd_flutter_example/pages/divider_page.dart';
 import 'package:antd_flutter_example/pages/empty_page.dart';
 import 'package:antd_flutter_example/pages/form_page.dart';
 import 'package:antd_flutter_example/pages/grid_page.dart';
+import 'package:antd_flutter_example/pages/image_page.dart';
 import 'package:antd_flutter_example/pages/images_wall_page.dart';
 import 'package:antd_flutter_example/pages/input_number_page.dart';
 import 'package:antd_flutter_example/pages/input_page.dart';
@@ -70,6 +74,7 @@ class MyApp extends StatelessWidget {
         '/picker': (context) => PickerPage(),
         '/cascader-picker': (context) => CascaderPickerPage(),
         '/calendar-picker': (context) => CalendarPickerPage(),
+        '/card': (context) => CardPage(),
         '/calendar-datetime-picker': (context) => CalendarDatetimePickerPage(),
         '/modal': (context) => ModalPage(),
         '/toast': (context) => ToastPage(),
@@ -87,9 +92,12 @@ class MyApp extends StatelessWidget {
         '/tabs': (context) => TabsPage(),
         '/radio': (context) => RadioPage(),
         '/checkbox': (context) => CheckboxPage(),
+        '/dialog': (context) => DialogPage(),
         '/rate': (context) => RatePage(),
         '/input-number': (context) => InputNumberPage(),
         '/text-area': (context) => TextAreaPage(),
+        '/image': (context) => ImagePage(),
+        '/collapse': (context) => CollapsePage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -241,6 +249,12 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           material.ListTile(
+            title: Text('Card 卡片'),
+            onTap: () {
+              Navigator.pushNamed(context, '/card');
+            },
+          ),
+          material.ListTile(
             title: Text('CalendarDatetimePicker 日历时间选择器'),
             onTap: () {
               Navigator.pushNamed(context, '/calendar-datetime-picker');
@@ -343,6 +357,12 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           material.ListTile(
+            title: Text('Dialog 对话框'),
+            onTap: () {
+              Navigator.pushNamed(context, '/dialog');
+            },
+          ),
+          material.ListTile(
             title: Text('Rate 评分'),
             onTap: () {
               Navigator.pushNamed(context, '/rate');
@@ -358,6 +378,18 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('TextArea 文本域'),
             onTap: () {
               Navigator.pushNamed(context, '/text-area');
+            },
+          ),
+          material.ListTile(
+            title: Text('Image 图片'),
+            onTap: () {
+              Navigator.pushNamed(context, '/image');
+            },
+          ),
+          material.ListTile(
+            title: Text('Collapse 折叠面板'),
+            onTap: () {
+              Navigator.pushNamed(context, '/collapse');
             },
           ),
         ],

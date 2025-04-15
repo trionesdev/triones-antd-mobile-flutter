@@ -13,7 +13,7 @@ class SwitchPage extends StatefulWidget{
 class _SwitchPageState extends State<SwitchPage>{
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
       appBar: AntAppBar(title: Text("Switch 开关"),),
       body: SingleChildScrollView(
         child: Column(

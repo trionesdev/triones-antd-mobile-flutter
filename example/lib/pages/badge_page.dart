@@ -12,7 +12,7 @@ class _BadgePageState extends State<BadgePage> {
   @override
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
       appBar: AntAppBar(
         title: Text("Badge 徽标"),
       ),

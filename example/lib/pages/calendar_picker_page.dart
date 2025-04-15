@@ -12,7 +12,7 @@ class CalendarPickerPage extends StatefulWidget {
 class _CalendarPickerPageState extends State<CalendarPickerPage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
       appBar: AntAppBar(
         title: Text("CalendarPicker"),
       ),

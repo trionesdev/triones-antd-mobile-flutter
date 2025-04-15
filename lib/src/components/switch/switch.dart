@@ -10,7 +10,7 @@ class AntSwitch extends StatefulWidget {
   const AntSwitch({
     super.key,
     this.defaultChecked = false,
-    this.checked = false,
+    this.checked,
     this.onChange,
     this.style,
     this.disabled = false,
@@ -68,21 +68,28 @@ class _AntSwitchState extends State<AntSwitch>
     }
   }
 
-  int get duration{
+  int get duration {
     return 300;
   }
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _checked = checked;
-    });
+    _checked = widget.checked ?? widget.defaultChecked ?? false;
     _animationController = AnimationController(
       duration: Duration(milliseconds: duration),
       vsync: this,
       value: _checked ? 1 : 0,
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant AntSwitch oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.checked != widget.checked) {
+      _checked = widget.checked ?? widget.defaultChecked ?? false;
+      _animationController.animateTo(_checked ? 1 : 0);
+    }
   }
 
   @override

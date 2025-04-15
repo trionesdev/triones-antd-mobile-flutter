@@ -70,6 +70,10 @@ class AntTabBarState extends State<AntTabBar> with MaterialStateMixin {
     _items.add(item);
   }
 
+  void _unregister(AntTabBarItemState item) {
+    _items.remove(item);
+  }
+
   bool isActive(String tabKey) {
     return _currentActiveKey == tabKey;
   }
@@ -233,6 +237,13 @@ class AntTabBarItemState extends State<AntTabBarItem> {
           text);
     }
     return widget.label!;
+  }
+
+  @override
+  void dispose() {
+    AntTabBarState? tabBar = AntTabBar.maybeOf(context);
+    tabBar?._unregister(this);
+    super.dispose();
   }
 
   @override

@@ -38,7 +38,7 @@ class _RadioPageState extends State<RadioPage> {
                   children: [
                     AntRadioGroup(
                       defaultValue: "1",
-                      onChange: (val){
+                      onChange: (val) {
                         print(val);
                       },
                       children: [
@@ -80,6 +80,35 @@ class _RadioPageState extends State<RadioPage> {
                         ),
                       ),
                     ),
+                  ],
+                ),
+              ),
+              DemoBlock(
+                title: "按钮样式",
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AntRadioButtonGroup(
+                      defaultValue: "hongkong",
+                      children: [
+                        AntRadioButton(
+                          label: Text("HongKong"),
+                          value: "hongkong",
+                        ),
+                        AntRadioButton(
+                          label: Text("ShangHai"),
+                          value: "shanghai",
+                        ),
+                        AntRadioButton(
+                          label: Text("NanJing"),
+                          value: "nanjing",
+                        ),
+                        AntRadioButton(
+                          label: Text("Suzhou"),
+                          value: "suzhou",
+                        ),
+                      ],
+                    )
                   ],
                 ),
               )

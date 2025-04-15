@@ -4,7 +4,9 @@ class AntSpinLoading extends StatefulWidget {
   const AntSpinLoading(
       {super.key, this.backgroundColor, this.color = Colors.grey});
 
+  /// 背景色
   final Color? backgroundColor;
+  /// 颜色
   final Color? color;
 
   @override

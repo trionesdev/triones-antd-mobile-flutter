@@ -14,7 +14,7 @@ class MaskPage extends StatefulWidget {
 class _MaskPageState extends State<MaskPage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
       appBar: AntAppBar(
         title: Text("Mask 背景蒙层"),
       ),
@@ -54,7 +54,7 @@ class _MaskPageState extends State<MaskPage> {
                       AntMask.show(
                           context: context,
                           clickMaskClose: true,
-                          child: AntPageContainer(
+                          child: AntScaffold(
                             appBar: AntAppBar(
                               title: Text("全屏"),
                             ),

@@ -12,7 +12,7 @@ class PopupPage extends StatefulWidget {
 class _PopupPageState extends State<PopupPage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
       appBar: AntAppBar(title: Text('Popup')),
       body: SingleChildScrollView(
         child: Column(

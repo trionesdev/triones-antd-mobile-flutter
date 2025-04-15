@@ -15,12 +15,14 @@ class AntTag extends StatefulWidget {
     this.closeIcon,
     this.style,
     this.child,
+    this.label,
     this.decoration,
     this.type,
     this.onClose,
   });
 
   final Widget? child;
+  final String? label;
   final Color? color;
   final Widget? icon;
   final bool? bordered;
@@ -36,22 +38,38 @@ class AntTag extends StatefulWidget {
 }
 
 class _AntTagState extends State<AntTag> with MaterialStateMixin {
+  Widget child(StateStyle style) {
+    if (widget.label != null) {
+      return Text(
+        widget.label!,
+        style: TextStyle(
+          color: style.resolve(materialStates)?.color,
+          fontSize: style.resolve(materialStates)?.fontSize,
+        ),
+      );
+    }
+    if (widget.child != null) {
+      if (widget.child is Text) {
+        Text textChild = widget.child as Text;
+        return WidgetUtils.textMerge(
+            Text(textChild.data!,
+                style: TextStyle(
+                  color: style.resolve(materialStates)?.color,
+                  fontSize: style.resolve(materialStates)?.fontSize,
+                )),
+            textChild);
+      }
+      return widget.child!;
+    }
+    return Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     AntThemeData themeData = AntTheme.of(context);
     StateStyle style = _AntTagStyle(tag: widget, context: context);
     style = style.merge(widget.style);
 
-    Widget? child = widget.child;
-    if (child != null && child is Text) {
-      child = Text(
-        child.data!,
-        style: TextStyle(
-          color: style.resolve(materialStates)?.color,
-          fontSize: style.resolve(materialStates)?.fontSize,
-        ).merge(child.style),
-      );
-    }
 
     return Container(
       decoration:
@@ -62,7 +80,7 @@ class _AntTagState extends State<AntTag> with MaterialStateMixin {
         spacing: 2,
         children: [
           if (widget.icon != null) widget.icon!,
-          if (widget.child != null) child!,
+          child(style),
           if (widget.closeable == true)
             GestureDetector(
               onTap: () {
@@ -149,7 +167,8 @@ class _AntTagStyle extends StateStyle {
     if (tag.type != null) {
       return StyleBorder(color: color, width: 1, style: BorderStyle.solid);
     }
-    return StyleBorder(color: themeData.colorBorder, width: 1, style: BorderStyle.solid);
+    return StyleBorder(
+        color: themeData.colorBorder, width: 1, style: BorderStyle.solid);
   }
 
   @override

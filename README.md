@@ -3,6 +3,8 @@
 ## 组件目录
 - [x] Scaffold 脚手架
 - [x] Button 按钮
+- [x] Collapse 折叠面板
+- [x] Dialog 对话框
 - [x] Divider 分割线
 - [x] Grid 栅格
 - [x] Space 间距
@@ -31,6 +33,7 @@
 - [x] Popup 弹出层
 - [x] Toast 请提示
 - [x] Badge 徽标
+- [x] Image 图片
 - [x] ImagesWall 图片墙
 - [x] Alert 告警提示
 - [x] Mask 背景蒙层

@@ -12,7 +12,7 @@ class ImagesWallPage extends StatefulWidget {
 class _ImageUploadPageState extends State<ImagesWallPage> {
   @override
   Widget build(BuildContext context) {
-    return AntPageContainer(
+    return AntScaffold(
       appBar: AntAppBar(
         title: Text("ImagesWall 图片墙"),
       ),
