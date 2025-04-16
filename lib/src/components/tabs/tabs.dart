@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
 
-class AntTabItemRecord {
-  AntTabItemRecord({this.key, this.label, this.content});
+class AntTabItem {
+  AntTabItem({required this.key, this.label, this.content});
 
-  String? key;
+  String key;
   Widget? label;
   Widget? content;
 }
@@ -17,65 +17,136 @@ class AntTabStyles {
 }
 
 class AntTabs extends StatefulWidget {
-  const AntTabs({super.key,
-    this.items,
-    this.stretch = true,
-    this.defaultActiveKey,
-    this.activeKey,
-    this.style,
-    this.styles,
-    this.decoration,
-    this.itemBuilder,
-    this.tabDecoration});
+  const AntTabs(
+      {super.key,
+      this.items,
+      this.stretch = true,
+      this.defaultActiveKey,
+      this.activeKey,
+      this.children,
+      this.style,
+      this.styles,
+      this.decoration,
+      this.itemBuilder,
+      this.tabDecoration});
 
   final String? defaultActiveKey;
   final String? activeKey;
-  final List<AntTabItemRecord>? items;
+  final List<AntTabItem>? items;
   final bool stretch;
+  final List<AntTab>? children;
   final BoxDecoration? decoration;
   final BoxDecoration? tabDecoration;
   final StateStyle? style;
   final AntTabStyles? styles;
-  final Widget Function(AntTabItemRecord item)? itemBuilder;
+  final Widget Function(AntTabItem item)? itemBuilder;
 
   @override
-  State<StatefulWidget> createState() => _AntTabsState();
+  State<StatefulWidget> createState() => AntTabsState();
+
+  static AntTabsState? maybeOf(BuildContext context) {
+    final _AntTabsScope? scope =
+        context.dependOnInheritedWidgetOfExactType<_AntTabsScope>();
+    return scope?._tabsState;
+  }
 }
 
-class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
+class AntTabsState extends State<AntTabs> with MaterialStateMixin {
   ScrollController? _scrollController;
-  List<AntTabItemRecord> _items = [];
+  List<AntTabItem> _items = [];
+  int _generation = 0;
   String? _activeKey;
   int _index = 0;
+  List<Widget> _tabs = [];
+  List<Widget> _contents = [];
 
-  int getIndex(String? key) {
-    return _items.indexWhere((item) {
-      return item.key == key;
+  final Set<AntTabState> _tabStates = <AntTabState>{};
+
+  void _forceRebuild() {
+    setState(() {
+      ++_generation;
     });
   }
 
-  Widget _generateTabs() {
-    List<Widget> tabs = _items.map((item) {
-      return AntTabItem(
-        item: item,
-        activeKey: _activeKey,
+  int getIndex(String? tabKey) {
+    for (int i = 0; i < _tabStates.length; i++) {
+      if (_tabStates.elementAtOrNull(i)?.widget.antKey == tabKey) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  int getStateIndex(AntTabState state) {
+    for (int i = 0; i < _tabStates.length; i++) {
+      if (_tabStates.elementAtOrNull(i) == state) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  void _didTabChange(AntTabState state) {
+    _activeKey = state.widget.antKey;
+    _index = getStateIndex(state);
+    _forceRebuild();
+    if (_tabStates.isNotEmpty) {
+      for (var state in _tabStates) {
+        state._tabsActiveTabChange(_activeKey);
+      }
+    }
+  }
+
+  List<Widget> _itemTabs() {
+    return _items.map((item) {
+      return AntTab(
+        antKey: item.key,
+        label: item.label,
         style: widget.styles?.tab,
         activeStyle: widget.styles?.activeTab,
         bodyStyle: widget.styles?.body,
-        onTab: (k) {
-          print(k);
-          setState(() {
-            _activeKey = k;
-            _index = getIndex(k);
-          });
-        },
       );
     }).toList();
+  }
 
+  List<Widget> _itemContents() {
+    return _items.map((item) {
+      return item.content ?? Container();
+    }).toList();
+  }
+
+  void _generateTabsFromItems() {
+    _items = widget.items ?? [];
+    _tabs = _itemTabs();
+    _contents = _itemContents();
+  }
+
+  void _generateTabsFromChildren() {
+    List<Widget> tabWidgets = [];
+    List<Widget> contentWidgets = [];
+    for (var child in widget.children!) {
+      tabWidgets.add(child);
+      contentWidgets.add(child.content ?? Container());
+    }
+    _tabs = tabWidgets;
+    _contents = contentWidgets;
+  }
+
+
+  void _register(AntTabState tabState) {
+    _tabStates.add(tabState);
+    tabState._tabsActiveTabChange(_activeKey);
+  }
+
+  void _unregister(AntTabState tabState) {
+    _tabStates.remove(tabState);
+  }
+
+  Widget _tabHeader() {
     Widget tabHeader;
     if (widget.stretch) {
       tabHeader = Row(
-        children: tabs.map((tab) {
+        children: _tabs.map((tab) {
           return Expanded(child: tab);
         }).toList(),
       );
@@ -88,19 +159,30 @@ class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
               controller: _scrollController,
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: tabs,
+                children: _tabs,
               ),
             ));
       } else {
         tabHeader = SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: tabs,
+            children: _tabs,
           ),
         );
       }
     }
     return tabHeader;
+  }
+
+  void init() {
+    if (widget.children != null && widget.children!.isNotEmpty) {
+      _generateTabsFromChildren();
+    } else if (widget.items != null && widget.items!.isNotEmpty) {
+      _generateTabsFromItems();
+    }
+
+    _activeKey = widget.activeKey ?? widget.defaultActiveKey;
+    // _index = getIndex(_activeKey);
   }
 
   @override
@@ -109,26 +191,19 @@ class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
     if (kIsWeb) {
       _scrollController = ScrollController();
     }
-    _items = widget.items ?? [];
-    _activeKey = widget.activeKey ?? widget.defaultActiveKey ?? _items
-        .elementAtOrNull(0)
-        ?.key;
-    _index = getIndex(_activeKey);
+    init();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _forceRebuild();
+    });
   }
 
   @override
   void didUpdateWidget(covariant AntTabs oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.items != oldWidget.items ||
-        widget.activeKey != oldWidget.activeKey) {
-      setState(() {
-        _items = widget.items ?? [];
-        _activeKey = widget.activeKey ?? widget.defaultActiveKey ?? _items
-            .elementAtOrNull(0)
-            ?.key;
-        _index = getIndex(_activeKey);
-        print((_activeKey ?? "") + ":" + _index.toString());
-      });
+        widget.activeKey != oldWidget.activeKey ||
+        widget.children != oldWidget.children) {
+      init();
     }
   }
 
@@ -145,31 +220,27 @@ class _AntTabsState extends State<AntTabs> with MaterialStateMixin {
     AntThemeData themeData = AntTheme.of(context);
     StateStyle stateStyle = _AntTabsStyle(context);
     stateStyle = stateStyle.merge(widget.style);
-    return Container(
-      width: double.infinity,
-      decoration:
-      widget.decoration ?? stateStyle
-          .resolve(materialStates)
-          ?.decoration,
-      child: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-                border:
-                Border(bottom: BorderSide(color: themeData.colorBorder))),
-            child: _generateTabs(),
-          ),
-          Expanded(
-              child: IndexedStack(
-                index: _index,
-                children: _items.map((item) {
-                  return item.content ?? Container();
-                }).toList(),
-              ))
-        ],
-      ),
-    );
+    return PopScope(
+        child: _AntTabsScope(
+            tabsState: this,
+            generation: _generation,
+            child: Container(
+              // width: double.infinity,
+              decoration: widget.decoration ??
+                  stateStyle.resolve(materialStates)?.decoration,
+              child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(color: themeData.colorBorder))),
+                    child: _tabHeader(),
+                  ),
+                  Expanded(
+                      child: IndexedStack(index: _index, children: _contents))
+                ],
+              ),
+            )));
   }
 }
 
@@ -185,40 +256,81 @@ class _AntTabsStyle extends StateStyle {
   }
 }
 
-class AntTabItem extends StatefulWidget {
-  const AntTabItem({super.key,
-    this.item,
-    this.activeKey,
-    this.onTab,
+class _AntTabsScope extends InheritedWidget {
+  const _AntTabsScope({
+    required super.child,
+    required AntTabsState tabsState,
+    required int generation,
+  })  : _tabsState = tabsState,
+        _generation = generation;
+
+  final int _generation;
+  final AntTabsState _tabsState;
+
+  @override
+  bool updateShouldNotify(covariant _AntTabsScope oldWidget) {
+    return _generation != oldWidget._generation;
+  }
+}
+
+class AntTab extends StatefulWidget {
+  const AntTab({
+    super.key,
     this.style,
-    this.itemBuilder,
+    required this.antKey,
+    this.label,
+    this.content,
+    this.onTab,
     this.activeStyle,
     this.bodyStyle,
-    this.decoration});
+    this.decoration,
+  });
 
   final StateStyle? style;
-  final AntTabItemRecord? item;
-  final String? activeKey;
+  final String antKey;
+
+  final Widget? label;
+  final Widget? content;
   final BoxDecoration? decoration;
-  final Function(String? key)? onTab;
-  final Widget Function(AntTabItemRecord item, bool active)? itemBuilder;
+  final Function(AntTabState? state)? onTab;
 
   final StateStyle? activeStyle;
   final StateStyle? bodyStyle;
 
   @override
-  State<StatefulWidget> createState() => _AntTabItemState();
+  State<StatefulWidget> createState() => AntTabState();
 }
 
-class _AntTabItemState extends State<AntTabItem> with MaterialStateMixin {
+class AntTabState extends State<AntTab> with MaterialStateMixin {
   bool _active = false;
+  _AntTabsScope? _ancestor;
+
+  int get index {
+    return AntTabs.maybeOf(context)?.getStateIndex(this) ?? -1;
+  }
+
+  void _tabsActiveTabChange(String? activeKey) {
+    if (activeKey == null) {
+      if (index == 0) {
+        setState(() {
+          _active = true;
+        });
+      }
+      return;
+    }
+    bool active = (widget.antKey == activeKey);
+
+    if (_active != active) {
+      setState(() {
+        _active = active;
+      });
+    }
+  }
 
   Widget? _labelRender() {
     AntThemeData themeData = AntTheme.of(context);
-    if (widget.itemBuilder != null) {
-      return widget.itemBuilder?.call(widget.item!, _active);
-    }
-    Widget? label = widget.item?.label;
+
+    Widget? label = widget.label;
     if (_active && label != null && label is Text) {
       return WidgetUtils.textMerge(
           Text(
@@ -233,41 +345,44 @@ class _AntTabItemState extends State<AntTabItem> with MaterialStateMixin {
   @override
   void initState() {
     super.initState();
-    _active = (widget.item?.key == widget.activeKey);
   }
 
   @override
-  void didUpdateWidget(covariant AntTabItem oldWidget) {
+  void dispose() {
+    _ancestor?._tabsState._unregister(this);
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant AntTab oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.item?.key == oldWidget.item?.key ||
-        widget.activeKey != oldWidget.activeKey) {
-      setState(() {
-        _active = widget.item?.key == widget.activeKey;
-      });
-    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _ancestor = context.dependOnInheritedWidgetOfExactType<_AntTabsScope>();
   }
 
   @override
   Widget build(BuildContext context) {
+    AntTabsState? tabsState = AntTabs.maybeOf(context);
+    tabsState?._register(this);
     StateStyle stateStyle = _AntTabItemStyle(context, _active);
     stateStyle = stateStyle.merge(widget.style);
     return GestureDetector(
       onTap: () {
-        widget.onTab?.call(widget.item!.key);
+        tabsState?._didTabChange(this);
       },
       child: Container(
         decoration: widget.decoration ??
             (_active
                 ? stateStyle
-                .merge(widget.activeStyle)
-                .resolve(materialStates)
-                ?.decoration
-                : stateStyle
-                .resolve(materialStates)
-                ?.decoration),
-        padding: stateStyle
-            .resolve(materialStates)
-            ?.computedPadding,
+                    .merge(widget.activeStyle)
+                    .resolve(materialStates)
+                    ?.decoration
+                : stateStyle.resolve(materialStates)?.decoration),
+        padding: stateStyle.resolve(materialStates)?.computedPadding,
         child: Center(child: _labelRender()),
       ),
     );
@@ -289,9 +404,9 @@ class _AntTabItemStyle extends StateStyle {
         padding: StylePadding.symmetric(vertical: 8, horizontal: 8),
         borderBottom: active
             ? StyleBorder(
-            color: themeData.colorPrimary,
-            width: 1,
-            style: BorderStyle.solid)
+                color: themeData.colorPrimary,
+                width: 1,
+                style: BorderStyle.solid)
             : null);
   }
 }
