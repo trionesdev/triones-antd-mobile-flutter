@@ -142,10 +142,10 @@ class AntCollapsePanel extends StatefulWidget {
       this.disabled,
       this.arrowIcon,
       this.content,
-      this.antKey,
+      required this.antKey,
       this.styles});
 
-  final String? antKey;
+  final String antKey;
   final Widget? title;
   final bool? disabled;
   final Widget Function(bool open)? arrowIcon;
@@ -204,6 +204,7 @@ class AntCollapsePanelState extends State<AntCollapsePanel>
       child: Column(
         children: [
           GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () {
               if (widget.disabled ?? false) {
                 return;
@@ -227,18 +228,19 @@ class AntCollapsePanelState extends State<AntCollapsePanel>
                   headerStyle.resolve(materialStates)?.computedDecoration,
               constraints:
                   headerStyle.resolve(materialStates)?.computedConstraints,
+              padding: headerStyle.resolve(materialStates)?.computedPadding,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [widget.title ?? Container(), _arrowIcon],
               ),
             ),
           ),
-          if (open)
-            Container(
-                width: double.infinity,
-                decoration:
-                    contentStyle.resolve(materialStates)?.computedDecoration,
-                child: widget.content)
+          Visibility(visible: _open,child: Container(
+              width: double.infinity,
+              decoration:
+              contentStyle.resolve(materialStates)?.computedDecoration,
+              child: widget.content))
+
         ],
       ),
     );
@@ -259,6 +261,7 @@ class AntCollapsePanelHeaderStyle extends StateStyle {
         width: 1,
         style: BorderStyle.solid,
       ),
+      padding: StylePadding.symmetric(horizontal: 8),
     );
   }
 }

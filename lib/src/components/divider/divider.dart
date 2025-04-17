@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../../antd.dart';
+
 enum AntDividerDirection { horizontal, vertical }
 
 enum AntContentPosition { left, right, center }
@@ -25,6 +27,13 @@ class AntDivider extends StatefulWidget {
 }
 
 class _AntDividerState extends State<AntDivider> {
+
+  Color get color {
+    return widget.color ?? AntTheme
+        .of(context)
+        .colorBorder;
+  }
+
   int leftFlex() {
     switch (widget.contentPosition) {
       case AntContentPosition.left:
@@ -55,22 +64,22 @@ class _AntDividerState extends State<AntDivider> {
   Widget build(BuildContext context) {
     return widget.direction == AntDividerDirection.horizontal
         ? (widget.child == null)
-        ? Divider(color: widget.color, thickness: widget.thickness,)
+        ? Divider(color: color, thickness: widget.thickness,)
         : Row(
       children: [
         Expanded(
             flex: leftFlex(),
-            child: Divider(endIndent: 16, color: widget.color)),
+            child: Divider(endIndent: 16, color: color)),
         widget.child!,
         Expanded(
             flex: rightFlex(),
-            child: Divider(indent: 16, color: widget.color)),
+            child: Divider(indent: 16, color: color)),
       ],
     )
         : SizedBox(
       height: widget.height ?? 10,
       child: VerticalDivider(
-        color: widget.color,
+        color: color,
       ),
     );
   }

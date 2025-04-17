@@ -4,6 +4,7 @@ import 'package:trionesdev_antd_mobile/antd.dart';
 enum AntInputType {
   text,
   password,
+  number
 }
 
 class AntInput extends StatefulWidget {
@@ -124,6 +125,13 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
         obscureText: widget.type == AntInputType.password && passwordVisible,
         cursorColor: Colors.grey,
         style: TextStyle(fontSize: style.resolve(materialStates)?.fontSize),
+        keyboardType: ((){
+          if (widget.type == AntInputType.number) {
+            return TextInputType.number;
+          } else {
+            return TextInputType.text;
+          }
+        })(),
         decoration: InputDecoration(
           prefixIcon: widget.prefix,
 
