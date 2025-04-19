@@ -30,7 +30,7 @@ class _ImageUploadPageState extends State<ImagesWallPage> {
               title: "赋值",
               child: AntImagesWall(
                 value: [
-                  AntImageRecord(
+                  AntImagesWallItemRecord(
                       path: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
                       status: AntImageStatus.done)
                 ],

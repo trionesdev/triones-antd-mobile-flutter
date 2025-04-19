@@ -25,6 +25,7 @@ class AntForm extends StatefulWidget {
     this.labelCol,
     this.wrapperCol,
     this.labelAlign = AntLabelAlign.left,
+
   });
 
   final double? spacing;
@@ -38,15 +39,9 @@ class AntForm extends StatefulWidget {
   final List<Widget>? children;
   final Widget? child;
 
-  static void watch(BuildContext context, NamePath name,
-      Function(dynamic val) callback) {
-    AntFormState? formState = AntForm.maybeOf(context);
-    formState?._registerWatch(name, callback);
-  }
-
   static AntFormState? maybeOf(BuildContext context) {
     final _AntFormScope? scope =
-    context.dependOnInheritedWidgetOfExactType<_AntFormScope>();
+        context.dependOnInheritedWidgetOfExactType<_AntFormScope>();
     return scope?._formState;
   }
 
@@ -64,7 +59,7 @@ class AntFormState extends State<AntForm> {
   Map<dynamic, dynamic>? _formValues = {};
   bool _hasInteractedByUser = false;
   List<Map<String, dynamic>> errorFields = [];
-  final Map<NamePath, Function(dynamic val)> _watches = {};
+  final Map<String, ValueNotifier> _watches = {};
   final Set<AntFormItemState<dynamic>> _fields = <AntFormItemState<dynamic>>{};
 
   AntFormLayout? get layout => widget.layout;
@@ -79,13 +74,22 @@ class AntFormState extends State<AntForm> {
 
   AntLabelAlign? get labelAlign => widget.labelAlign;
 
-  void _registerWatch(NamePath path, Function(dynamic val) callback) {
-    _watches[NamePath(path)] = callback;
+  ValueNotifier _registerWatch(NamePath path) {
+    var notifier = ValueNotifier(getFieldValue(path));
+    _watches[path.jsonValue] = notifier;
+    return notifier;
+  }
+
+  void _registerFieldWatch(AntFormItemState<dynamic>? field) {
+    if(field?.widget.notifier == null || field?.name == null){
+      return;
+    }
+    _watches[field!.name!.jsonValue] = field.widget.notifier!;
   }
 
   void _watchFieldChange(NamePath? path, dynamic value) {
     if (path != null) {
-      _watches[path]?.call(value);
+      _watches[path.jsonValue]?.value = value;
     }
   }
 
@@ -108,6 +112,7 @@ class AntFormState extends State<AntForm> {
     }
     Map<String, dynamic> pathMap = MapUtils.flattenMap(_formValues ?? {});
     if (pathMap.containsKey(field.name?.jsonValue)) {
+      _watchFieldChange(field.name,pathMap[field.name?.jsonValue]);
       field._formDidChange(pathMap[field.name?.jsonValue]);
     } else {
       if (field.initialValue != null) {
@@ -119,11 +124,13 @@ class AntFormState extends State<AntForm> {
 
   void _register(AntFormItemState<dynamic> field) {
     _fields.add(field);
+    _registerFieldWatch(field);
     _formValuesSet(field);
   }
 
   void _unregister(AntFormItemState<dynamic> field) {
     _fields.remove(field);
+    _watches.remove(field.name?.jsonValue);
   }
 
   void save() {
@@ -133,11 +140,15 @@ class AntFormState extends State<AntForm> {
   }
 
   void reset() {
+    print(_formValues);
     for (final AntFormItemState<dynamic> field in _fields) {
-      field.reset();
-      _watchFieldChange(field.name, field.initialValue);
+      print(field.name?.jsonValue);
+      if(field.name!=null){
+        setFieldValue(field.name!, field.initialValue);
+      }
     }
     _hasInteractedByUser = false;
+    _forceRebuild();
   }
 
   void setFieldsValue(Map<dynamic, dynamic>? values) {
@@ -148,9 +159,25 @@ class AntFormState extends State<AntForm> {
       if (field.name != null && field.name!.value.isNotEmpty) {
         if (pathMap.containsKey(field.name!.value.join("."))) {
           var value = pathMap[field.name!.value.join(".")];
+          _watchFieldChange(field.name, value);
           field._formDidChange(value);
         }
       }
+    }
+    _forceRebuild();
+  }
+
+  void setFieldValue(NamePath name, dynamic value) {
+
+    _formValues = _formValues ?? {};
+    MapUtils.setPathValue(_formValues, name.value, value);
+
+    var field = _fields.firstWhereOrNull((field){
+      return field.name?.jsonValue == name.jsonValue;
+    });
+    if(field != null){
+      _watchFieldChange(field.name, value);
+      field._formDidChange(value);
     }
     _forceRebuild();
   }
@@ -171,10 +198,7 @@ class AntFormState extends State<AntForm> {
     return !hasError;
   }
 
-  Future<Map<dynamic, dynamic>> validateFields() async {
-    if (!_validate()) {
-      throw Exception({errorFields});
-    }
+  Map<dynamic, dynamic> getFieldsValue() {
     Map<dynamic, dynamic> values = {};
     for (final AntFormItemState<dynamic> field in _fields) {
       Map<dynamic, dynamic> fieldValues = values;
@@ -191,6 +215,13 @@ class AntFormState extends State<AntForm> {
       }
     }
     return values;
+  }
+
+  Future<Map<dynamic, dynamic>> validateFields() async {
+    if (!_validate()) {
+      throw Exception({errorFields});
+    }
+    return getFieldsValue();
     // return Future.value(values);
   }
 
@@ -198,9 +229,7 @@ class AntFormState extends State<AntForm> {
     AntFormItemState<dynamic>? field = _fields.firstWhereOrNull((element) {
       return element.name == name;
     });
-    if (field != null) {
-      return field._value;
-    }
+    return field?._value;
   }
 
   @override
@@ -213,13 +242,13 @@ class AntFormState extends State<AntForm> {
   }
 }
 
+
 class _AntFormScope extends InheritedWidget {
   const _AntFormScope({
     required super.child,
     required AntFormState formState,
     required int generation,
-  })
-      : _formState = formState,
+  })  : _formState = formState,
         _generation = generation;
 
   final AntFormState _formState;
@@ -248,8 +277,15 @@ class NamePath {
 
   List<dynamic> get value => _namePaths;
 
-  String get jsonValue =>
-      _namePaths.map((item) {
+  @override
+  bool operator ==(Object other) {
+    if (other is! NamePath) {
+      return false;
+    }
+    return jsonValue == other.jsonValue;
+  }
+
+  String get jsonValue => _namePaths.map((item) {
         return item.toString();
       }).join(".");
 }
@@ -258,11 +294,7 @@ typedef FormItemBuilder<T> = Widget Function(AntFormItemState<T> field);
 typedef FormItemValidator<T> = String? Function(T? value);
 typedef FormItemSetter<T> = void Function(T? newValue);
 
-enum AntFormLabelVerticalAlign {
-  start,
-  center,
-  end
-}
+enum AntFormLabelVerticalAlign { start, center, end }
 
 class AntFormItem<T> extends StatefulWidget {
   final AntFormLayout? layout;
@@ -279,22 +311,26 @@ class AntFormItem<T> extends StatefulWidget {
   final String? restorationId;
   final bool? required;
   final StateStyle? style;
+  final ValueNotifier<T>? notifier;
 
-  const AntFormItem({super.key,
-    this.initialValue,
-    this.validator,
-    this.restorationId,
-    this.child,
-    this.layout,
-    this.name,
-    this.label,
-    required this.builder,
-    this.onSaved,
-    this.required,
-    this.style,
-    this.labelCol,
-    this.wrapperCol,
-    this.labelAlign});
+  const AntFormItem(
+      {super.key,
+      this.initialValue,
+      this.validator,
+      this.restorationId,
+      this.child,
+      this.layout,
+      this.name,
+      this.label,
+      required this.builder,
+      this.onSaved,
+      this.required,
+      this.style,
+      this.labelCol,
+      this.wrapperCol,
+      this.labelAlign,
+      this.notifier
+      });
 
   @override
   State<StatefulWidget> createState() => AntFormItemState<T>();
@@ -305,7 +341,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
   late final RestorableStringN _errorText = RestorableStringN(null);
   final RestorableBool _hasInteractedByUser = RestorableBool(false);
 
-  dynamic get value => _value;
+  T? get value => _value;
 
   NamePath? get name => widget.name;
 
@@ -315,9 +351,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     if (widget.layout != null) {
       return widget.layout;
     } else {
-      return AntForm
-          .maybeOf(context)
-          ?.layout;
+      return AntForm.maybeOf(context)?.layout;
     }
   }
 
@@ -325,9 +359,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     if (widget.labelCol != null) {
       return widget.labelCol;
     } else {
-      return AntForm
-          .maybeOf(context)
-          ?.labelCol;
+      return AntForm.maybeOf(context)?.labelCol;
     }
   }
 
@@ -335,9 +367,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     if (widget.wrapperCol != null) {
       return widget.wrapperCol;
     } else {
-      return AntForm
-          .maybeOf(context)
-          ?.wrapperCol;
+      return AntForm.maybeOf(context)?.wrapperCol;
     }
   }
 
@@ -345,9 +375,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     if (widget.labelAlign != null) {
       return widget.labelAlign;
     } else {
-      return AntForm
-          .maybeOf(context)
-          ?.labelAlign;
+      return AntForm.maybeOf(context)?.labelAlign;
     }
   }
 
@@ -368,11 +396,14 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
   // void setFormSettings({}){}
 
   void reset() {
-    setState(() {
-      _value = widget.initialValue;
-      _hasInteractedByUser.value = false;
-      _errorText.value = null;
-    });
+    _value = widget.initialValue;
+    _hasInteractedByUser.value = false;
+    _errorText.value = null;
+    // setState(() {
+    //   _value = widget.initialValue;
+    //   _hasInteractedByUser.value = false;
+    //   _errorText.value = null;
+    // });
   }
 
   bool validate() {
@@ -397,17 +428,17 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     print("form item changed:" + value.toString());
     AntFormState? formState = AntForm.maybeOf(context);
     _value = value;
+    _validate();
     if (formState != null) {
       formState._fieldDidChange(widget.name, value);
       return;
     }
-    _validate();
     setState(() {});
   }
 
   /// form 触发的边跟
   void _formDidChange(T? value) {
-    print("form item changed:" + value.toString());
+    print("form item ${name?.jsonValue} changed:" + value.toString());
     _value = value;
   }
 
@@ -431,55 +462,69 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
         child: fieldLabel,
       );
     } else if (labelCol?.span != null) {
-      return Expanded(flex: labelCol!.span!, child: Container(
-        constraints: BoxConstraints(minHeight: 32),
-        child: fieldLabel,));
+      return Expanded(
+          flex: labelCol!.span!,
+          child: Container(
+            constraints: BoxConstraints(minHeight: 32),
+            child: fieldLabel,
+          ));
     } else if (wrapperCol?.flex != null) {
       return Expanded(
         child: Container(
           constraints: BoxConstraints(minHeight: 32),
-          child: fieldLabel,),
+          child: fieldLabel,
+        ),
       );
     } else if (wrapperCol?.span != null) {
-      return Expanded(flex: 24 - wrapperCol!.span!, child: Container(
-        constraints: BoxConstraints(minHeight: 32),
-        child: fieldLabel,));
+      return Expanded(
+          flex: 24 - wrapperCol!.span!,
+          child: Container(
+            constraints: BoxConstraints(minHeight: 32),
+            child: fieldLabel,
+          ));
     } else {
       return Container(
         constraints: BoxConstraints(minHeight: 32),
-        child: fieldLabel,);
+        child: fieldLabel,
+      );
     }
   }
 
   Widget _wrapperCol(Widget fieldInput) {
     if (wrapperCol?.flex != null) {
       return Container(
-        alignment: Alignment.centerLeft ,
+        alignment: Alignment.centerLeft,
         constraints: BoxConstraints(minHeight: 32),
         width: wrapperCol!.flex,
         child: fieldInput,
       );
     } else if (wrapperCol?.span != null) {
-      return Expanded(flex: wrapperCol!.span!, child: Container(
-        alignment: Alignment.centerLeft ,
-        constraints: BoxConstraints(minHeight: 32),
-        child: fieldInput,
-      ));
+      return Expanded(
+          flex: wrapperCol!.span!,
+          child: Container(
+            alignment: Alignment.centerLeft,
+            constraints: BoxConstraints(minHeight: 32),
+            child: fieldInput,
+          ));
     } else if (labelCol?.flex != null) {
-      return Expanded(child: Container(
-        alignment: Alignment.centerLeft ,
+      return Expanded(
+          child: Container(
+        alignment: Alignment.centerLeft,
         constraints: BoxConstraints(minHeight: 32),
         child: fieldInput,
       ));
     } else if (labelCol?.span != null) {
-      return Expanded(flex: 24 - labelCol!.span!, child: Container(
-        alignment: Alignment.centerLeft ,
-        constraints: BoxConstraints(minHeight: 32),
-        child: fieldInput,
-      ));
+      return Expanded(
+          flex: 24 - labelCol!.span!,
+          child: Container(
+            alignment: Alignment.centerLeft,
+            constraints: BoxConstraints(minHeight: 32),
+            child: fieldInput,
+          ));
     } else {
-      return Expanded(child: Container(
-        alignment: Alignment.centerLeft ,
+      return Expanded(
+          child: Container(
+        alignment: Alignment.centerLeft,
         constraints: BoxConstraints(minHeight: 32),
         child: fieldInput,
       ));
@@ -524,7 +569,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       List<Widget> filedInputChildren = [child];
       if (errorText != null) {
         filedInputChildren.add(Container(
-          padding: EdgeInsets.only(left: 8, right: 8, top: 0),
+          padding: EdgeInsets.only(left: 0, right: 0, top: 0),
           child: Text(
             errorText!,
             style: TextStyle(fontSize: 12, color: Colors.red),
@@ -543,32 +588,22 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     }
 
     return Container(
-      decoration: stateStyle
-          .resolve(<WidgetState>{})
-          ?.decoration,
-      padding: stateStyle
-          .resolve(<WidgetState>{})
-          ?.computedPadding,
-      margin: stateStyle
-          .resolve(<WidgetState>{})
-          ?.computedMargin,
+      decoration: stateStyle.resolve(<WidgetState>{})?.decoration,
+      padding: stateStyle.resolve(<WidgetState>{})?.computedPadding,
+      margin: stateStyle.resolve(<WidgetState>{})?.computedMargin,
       child: layout == AntFormLayout.horizontal
           ? Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: AntForm
-            .maybeOf(context)
-            ?.rowSpacing ?? 0,
-        children: fieldItemChildren,
-      )
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: AntForm.maybeOf(context)?.rowSpacing ?? 0,
+              children: fieldItemChildren,
+            )
           : Column(
-        crossAxisAlignment: labelAlign == AntLabelAlign.left
-            ? CrossAxisAlignment.start
-            : CrossAxisAlignment.end,
-        spacing: AntForm
-            .maybeOf(context)
-            ?.columnSpacing ?? 0,
-        children: fieldItemChildren,
-      ),
+              crossAxisAlignment: labelAlign == AntLabelAlign.left
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.end,
+              spacing: AntForm.maybeOf(context)?.columnSpacing ?? 0,
+              children: fieldItemChildren,
+            ),
     );
     // return child;
   }
@@ -589,8 +624,8 @@ class _AntFormItemStyle extends StateStyle {
   @override
   Style get style {
     return Style(
-      // padding: StylePadding(left: 8, right: 8),
-      // margin: StyleMargin(bottom: 8)
-    );
+        // padding: StylePadding(left: 8, right: 8),
+        // margin: StyleMargin(bottom: 8)
+        );
   }
 }

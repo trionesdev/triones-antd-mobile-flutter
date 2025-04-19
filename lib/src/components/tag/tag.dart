@@ -9,6 +9,7 @@ class AntTag extends StatefulWidget {
   const AntTag({
     super.key,
     this.color,
+    this.backgroundColor,
     this.icon,
     this.bordered = true,
     this.closeable,
@@ -24,6 +25,7 @@ class AntTag extends StatefulWidget {
   final Widget? child;
   final String? label;
   final Color? color;
+  final Color? backgroundColor;
   final Widget? icon;
   final bool? bordered;
   final bool? closeable;
@@ -144,6 +146,9 @@ class _AntTagStyle extends StateStyle {
   }
 
   Color? backgroundColor() {
+    if(tag.backgroundColor!=null){
+      return tag.backgroundColor;
+    }
     AntThemeData themeData = AntTheme.of(context);
     Color? color = computedColor();
     if (tag.type != null) {

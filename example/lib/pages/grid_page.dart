@@ -21,7 +21,7 @@ class _GridPageState extends State<GridPage> {
           children: [
             DemoBlock(title: "基本使用",child: AntGrid(
               columns: 4,
-              gap: 2,
+              spacing: 2,
               children: [
                 AntGridItem(
                   span: 1,

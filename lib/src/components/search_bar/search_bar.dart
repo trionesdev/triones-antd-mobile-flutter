@@ -34,7 +34,7 @@ class AntSearchBar extends StatefulWidget {
   final bool? showCancelButton;
   final String? placeholder;
   final String? value;
-  final Function? onChange;
+  final Function(String?)? onChange;
   final Function? onCancel;
   final AntSearchBarStyles? styles;
   final double? height;
@@ -65,7 +65,7 @@ class _SearchBarState extends State<AntSearchBar> with MaterialStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    StateStyle style = _SearchBarStyle();
+    StateStyle style = _SearchBarStyle(context);
     style = style.merge(widget.style);
 
     Widget? cancelIcon;
@@ -112,7 +112,7 @@ class _SearchBarState extends State<AntSearchBar> with MaterialStateMixin {
                 _focused = false;
               });
             },
-            style: _SearchBarStyle().inputStyle.merge(widget.styles?.input),
+            style: _SearchBarStyle(context).inputStyle.merge(widget.styles?.input),
           ),
         ),
       ))
@@ -143,12 +143,14 @@ class _SearchBarState extends State<AntSearchBar> with MaterialStateMixin {
 }
 
 class _SearchBarStyle extends StateStyle {
-  const _SearchBarStyle();
+  const _SearchBarStyle(this.context);
+  final BuildContext context;
 
   @override
   Style get style {
+    AntThemeData themeData = AntTheme.of(context);
     return Style(
-      borderRadius: 6,
+      borderRadius: themeData.borderRadius,
     );
   }
 

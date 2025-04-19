@@ -231,6 +231,7 @@ class AntTabsState extends State<AntTabs> with MaterialStateMixin {
               child: Column(
                 children: [
                   Container(
+                    alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(
                         border: Border(
                             bottom: BorderSide(color: themeData.colorBorder))),

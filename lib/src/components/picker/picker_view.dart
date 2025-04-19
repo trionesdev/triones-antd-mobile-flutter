@@ -43,7 +43,7 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
     super.initState();
     setState(() {
       _options = widget.options ?? [];
-      if (widget.value == null) {
+      if (widget.value == null && _options!=null && _options!.isNotEmpty) {
         _value = _options?[0];
       }
     });
@@ -61,10 +61,6 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery
-        .of(context)
-        .size
-        .height);
     AntThemeData theme = AntTheme.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,

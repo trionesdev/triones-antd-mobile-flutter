@@ -139,6 +139,7 @@ class AntCollapsePanel extends StatefulWidget {
   const AntCollapsePanel(
       {super.key,
       this.title,
+      this.extra,
       this.disabled,
       this.arrowIcon,
       this.content,
@@ -147,6 +148,7 @@ class AntCollapsePanel extends StatefulWidget {
 
   final String antKey;
   final Widget? title;
+  final Widget? extra;
   final bool? disabled;
   final Widget Function(bool open)? arrowIcon;
   final Widget? content;
@@ -231,16 +233,25 @@ class AntCollapsePanelState extends State<AntCollapsePanel>
               padding: headerStyle.resolve(materialStates)?.computedPadding,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [widget.title ?? Container(), _arrowIcon],
+                children: [
+                  widget.title ?? Container(),
+                  Row(
+                    children: [
+                      if (widget.extra != null) widget.extra!,
+                      _arrowIcon
+                    ],
+                  )
+                ],
               ),
             ),
           ),
-          Visibility(visible: _open,child: Container(
-              width: double.infinity,
-              decoration:
-              contentStyle.resolve(materialStates)?.computedDecoration,
-              child: widget.content))
-
+          Visibility(
+              visible: _open,
+              child: Container(
+                  width: double.infinity,
+                  decoration:
+                      contentStyle.resolve(materialStates)?.computedDecoration,
+                  child: widget.content))
         ],
       ),
     );

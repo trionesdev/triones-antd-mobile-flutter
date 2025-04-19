@@ -87,8 +87,6 @@ class AntCheckboxBaseGroupState extends State<AntCheckboxBaseGroup> {
 
   @override
   void initState() {
-    print("----------");
-    print(widget.value);
     _value = widget.value ?? widget.defaultValue ?? [];
     // _didGroupValueInit(_value);
     super.initState();
@@ -174,9 +172,6 @@ class _AntCheckboxState extends State<AntCheckbox> {
   }
 
   void _groupValueChange(List<dynamic> val) {
-    print("eeeee");
-    print(val);
-    print(widget.value);
     if (val.contains(widget.value)) {
       if (!_checked) {
         setState(() {

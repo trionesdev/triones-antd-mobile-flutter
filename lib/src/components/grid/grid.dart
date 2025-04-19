@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class AntGrid extends StatefulWidget {
-  const AntGrid({super.key, this.children, this.columns = 1, this.gap = 0, this.decoration});
+  const AntGrid(
+      {super.key,
+      this.children,
+      this.columns = 1,
+      this.decoration,
+      this.spacing = 0});
 
   final int? columns;
-  final double? gap;
+  final double? spacing;
   final List<AntGridItem>? children;
   final BoxDecoration? decoration;
 
@@ -40,10 +45,10 @@ class AntGridState extends State<AntGrid> {
               return Container(
                 decoration: widget.decoration,
                 padding: EdgeInsets.only(
-                    left: widget.gap! / 2, right: widget.gap! / 2),
+                    left: widget.spacing! / 2, right: widget.spacing! / 2),
                 child: Wrap(
-                  spacing: widget.gap ?? 0,
-                  runSpacing: widget.gap ?? 0,
+                  spacing: widget.spacing ?? 0,
+                  runSpacing: widget.spacing ?? 0,
                   children: widget.children ?? [],
                 ),
               );
@@ -83,7 +88,7 @@ class _AntGridItemState extends State<AntGridItem> {
     final double gridWidth = gridState._gridWidth;
 
     final columns = gridState.widget.columns!;
-    final gap = gridState.widget.gap!;
+    final gap = gridState.widget.spacing!;
     final span = widget.span!;
 
     double width =

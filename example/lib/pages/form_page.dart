@@ -35,7 +35,7 @@ class _FormPageState extends State<FormPage> {
                       AntFormItem(
                           label: Text("年龄"),
                           name: NamePath('age'),
-                          builder: (AntFormItemState<int> field) {
+                          builder: (AntFormItemState<String> field) {
                             return AntInput(
                               value: field.value,
                               onChange: field.didChange,
@@ -204,7 +204,7 @@ class _FormPageState extends State<FormPage> {
                     AntFormItem(
                         label: Text("年龄"),
                         name: NamePath('age'),
-                        builder: (AntFormItemState<int> field) {
+                        builder: (AntFormItemState<String> field) {
                           return AntInput(
                             value: field.value,
                             onChange: field.didChange,

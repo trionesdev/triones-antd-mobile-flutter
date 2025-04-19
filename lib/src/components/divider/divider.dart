@@ -62,25 +62,31 @@ class _AntDividerState extends State<AntDivider> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.direction == AntDividerDirection.horizontal
-        ? (widget.child == null)
-        ? Divider(color: color, thickness: widget.thickness,)
-        : Row(
-      children: [
-        Expanded(
-            flex: leftFlex(),
-            child: Divider(endIndent: 16, color: color)),
-        widget.child!,
-        Expanded(
-            flex: rightFlex(),
-            child: Divider(indent: 16, color: color)),
-      ],
-    )
-        : SizedBox(
-      height: widget.height ?? 10,
-      child: VerticalDivider(
-        color: color,
-      ),
-    );
+    return ((){
+      if(widget.direction == AntDividerDirection.horizontal){
+        if(widget.child == null){
+          return Divider(color: color, thickness: widget.thickness,);
+        }else{
+          return Row(
+            children: [
+              Expanded(
+                  flex: leftFlex(),
+                  child: Divider(endIndent: 16, color: color)),
+              widget.child!,
+              Expanded(
+                  flex: rightFlex(),
+                  child: Divider(indent: 16, color: color)),
+            ],
+          );
+        }
+      }else {
+        return SizedBox(
+          height: widget.height ?? 10,
+          child: VerticalDivider(
+            color: color,
+          ),
+        );
+      }
+    })();
   }
 }
