@@ -19,7 +19,7 @@ class _TabBarPageState extends State<TabBarPage> {
           AntTabBarItem(
               icon: Icon(Icons.home),
               label: Text("首页"),
-              tabKey: 'index',
+              antKey: 'index',
               activeColor: Color(0xff1677FF),
               onPressed: (String id) {
                 print(id);
@@ -27,7 +27,7 @@ class _TabBarPageState extends State<TabBarPage> {
           AntTabBarItem(
             icon: Icon(Icons.search),
             label: Text("搜索"),
-            tabKey: 'search',
+            antKey: 'search',
           )
         ]));
   }

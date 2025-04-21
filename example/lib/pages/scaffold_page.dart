@@ -18,17 +18,17 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
           AntTabBarItem(
             icon: Icon(Icons.home),
             label: Text("首页"),
-            tabKey: 'index',
+            antKey: 'index',
           ),
           AntTabBarItem(
             icon: Icon(Icons.search),
             label: Text("搜索"),
-            tabKey: 'search',
+            antKey: 'search',
           ),
           AntTabBarItem(
             icon: Icon(Icons.person),
             label: Text("我的"),
-            tabKey: 'my',
+            antKey: 'my',
           ),
         ],
       ),

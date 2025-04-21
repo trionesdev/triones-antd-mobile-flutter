@@ -93,7 +93,7 @@ class AntTabBarState extends State<AntTabBar> with MaterialStateMixin {
   void initState() {
     super.initState();
     _currentActiveKey =
-        (widget.activeKey ?? widget.defaultActiveKey) ?? widget.children?.first.tabKey;
+        (widget.activeKey ?? widget.defaultActiveKey) ?? widget.children?.first.antKey;
   }
 
   @override
@@ -158,7 +158,7 @@ class _AntTabBarScope extends InheritedWidget {
 class AntTabBarItem extends StatefulWidget {
   const AntTabBarItem(
       {super.key,
-      required this.tabKey,
+      required this.antKey,
       this.child,
       this.icon,
       this.label,
@@ -167,7 +167,7 @@ class AntTabBarItem extends StatefulWidget {
       this.activeColor,
       this.stopPropagation=true});
 
-  final String tabKey;
+  final String antKey;
   final Widget? child;
   final Widget? icon;
   final Widget? label;
@@ -205,7 +205,7 @@ class AntTabBarItemState extends State<AntTabBarItem> {
 
   bool get isActive {
     AntTabBarState? tabBar = AntTabBar.maybeOf(context);
-    return tabBar?._currentActiveKey == widget.tabKey;
+    return tabBar?._currentActiveKey == widget.antKey;
   }
 
   void didChange() {
@@ -263,8 +263,8 @@ class AntTabBarItemState extends State<AntTabBarItem> {
         flex: 1,
         child: GestureDetector(
           onTap: () {
-            tabBar?._setCurrentActiveKey(widget.tabKey);
-            widget.onPressed?.call(widget.tabKey);
+            tabBar?._setCurrentActiveKey(widget.antKey);
+            widget.onPressed?.call(widget.antKey);
           },
           child: widget.child ??
               Column(

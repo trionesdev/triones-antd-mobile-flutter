@@ -72,7 +72,7 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
     if ((widget.shape != AntButtonShape.circle && widget.block == true)) {
       return double.infinity;
     }
-    if (widget.text == null) {
+    if (widget.text == null && widget.child == null) {
       switch (widget.size) {
         case AntButtonSize.large:
           return 48;
@@ -122,7 +122,7 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
           side: buttonBorderSide() ?? BorderSide.none);
     }
 
-    Widget _child(){
+    Widget child(){
       if(widget.child!=null){
         return widget.child!;
       }
@@ -145,15 +145,15 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
           },
           shape: shapeBorder(),
           minWidth: 0,
-          height: 0,
-          padding: style?.computedPadding,
-          color: style?.backgroundColor,
+          height: height,
+          padding: stateStyle.resolve(materialStates)?.computedPadding,
+          color: stateStyle.resolve(materialStates)?.backgroundColor,
           child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (widget.icon != null) widget.icon!,
-                _child()
+                child()
               ])),
     );
   }
@@ -268,6 +268,7 @@ class _AntButtonStyle extends StateStyle {
       }
       return buttonBackgroundColor;
     }
+
 
     return Style(
       backgroundColor: backgroundColor(),

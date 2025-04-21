@@ -31,7 +31,6 @@ class AntMaskRoute extends PopupRoute {
       color: Colors.transparent,
       child: GestureDetector(
         onTap: () {
-          print("ss");
           if (clickMaskClose == true) {
             Navigator.of(context).pop();
           }
@@ -42,12 +41,7 @@ class AntMaskRoute extends PopupRoute {
           decoration: BoxDecoration(
             color: Colors.transparent,
           ),
-          child: GestureDetector(
-            onTap: () {
-              // print("dfff");
-            },
-            child: child,
-          ),
+          child: child,
         ),
       ),
     );

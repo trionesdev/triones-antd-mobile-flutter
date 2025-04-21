@@ -20,7 +20,7 @@ class AntForm extends StatefulWidget {
     this.rowSpacing,
     this.columnSpacing,
     this.layout = AntFormLayout.horizontal,
-    this.children,
+    // this.children,
     this.child,
     this.labelCol,
     this.wrapperCol,
@@ -36,7 +36,7 @@ class AntForm extends StatefulWidget {
   final AntFormCol? labelCol;
   final AntFormCol? wrapperCol;
 
-  final List<Widget>? children;
+  // final List<Widget>? children;
   final Widget? child;
 
   static AntFormState? maybeOf(BuildContext context) {
@@ -542,18 +542,28 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     if (widget.label != null) {
       List<Widget> fieldLabelChildren = [];
       if (widget.required == true) {
-        fieldLabelChildren.add(Container(
-          width: 0,
-          transform: Matrix4.translationValues(-8.0, 0.0, 0.0),
-          child: Text(
-            "*",
-            style: TextStyle(color: Colors.red),
-          ),
-        ));
+        if(layout==AntFormLayout.vertical){
+          fieldLabelChildren.add(Container(
+            width: 0,
+            child: Text(
+              "*",
+              style: TextStyle(color: Colors.red),
+            ),
+          ));
+        }else{
+          fieldLabelChildren.add(Container(
+            width: 0,
+            transform: Matrix4.translationValues(-8.0, 0.0, 0.0),
+            child: Text(
+              "*",
+              style: TextStyle(color: Colors.red),
+            ),
+          ));
+        }
       }
       fieldLabelChildren.add(widget.label!);
       Widget fieldLabel = Container(
-        padding: EdgeInsets.only(left: 8),
+        padding: (layout==AntFormLayout.horizontal)?EdgeInsets.only(left: 8):null,
         child: Row(
           mainAxisAlignment: labelAlign == AntLabelAlign.left
               ? MainAxisAlignment.start
