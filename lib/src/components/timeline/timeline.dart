@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/antd.dart';
-import 'package:trionesdev_antd_mobile/src/components/theme/theme.dart';
 
 class AntTimelineItemRecord {
   AntTimelineItemRecord({this.icon, this.content, this.latest, this.lineType});
