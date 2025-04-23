@@ -30,22 +30,28 @@ class AntTimeline extends StatefulWidget {
 }
 
 class _AntTimelineState extends State<AntTimeline> {
+  List<Widget> _items() {
+    List<AntTimelineItemRecord> itemRecords = widget.items ?? [];
+    List<AntTimelineItem> items = [];
+    for (int i = 0; i < itemRecords.length; i++) {
+      AntTimelineItemRecord item = itemRecords[i];
+      items.add(AntTimelineItem(
+        icon: item.icon,
+        content: item.content,
+        latest: i == itemRecords.length - 1,
+        lineColumnWidth: widget.lineColumnWidth,
+        lineType: item.lineType ?? AntTimelineItemLineType.solid,
+      ));
+    }
+    return items;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          ...(widget.items ?? []).map((item) {
-            return AntTimelineItem(
-              icon: item.icon,
-              content: item.content,
-              latest: item.latest,
-              lineColumnWidth: widget.lineColumnWidth,
-              lineType: item.lineType ?? AntTimelineItemLineType.solid,
-            );
-          })
-        ],
+        children: _items(),
       ),
     );
   }
@@ -90,7 +96,7 @@ class AntTimelineItem extends StatelessWidget {
         children: [
           Container(
             width: lineColumnWidth,
-            constraints: BoxConstraints(minWidth: lineColumnWidth??40),
+            constraints: BoxConstraints(minWidth: lineColumnWidth ?? 40),
             height: double.infinity,
             alignment: Alignment.topCenter,
             child: Stack(
@@ -99,7 +105,7 @@ class AntTimelineItem extends StatelessWidget {
                 Container(
                   alignment: Alignment.center,
                   width: double.infinity,
-                  child: latest! ? null : lineIcon,
+                  child: latest == true ? null : lineIcon,
                 ),
                 Positioned(
                     top: 4,

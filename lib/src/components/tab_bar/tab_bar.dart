@@ -181,6 +181,7 @@ class AntTabBarItem extends StatefulWidget {
 }
 
 class AntTabBarItemState extends State<AntTabBarItem> {
+  _AntTabBarScope? _ancestor;
   Color? get color {
     AntTabBarState? tabBar = AntTabBar.maybeOf(context);
     if (widget.color != null) {
@@ -239,10 +240,16 @@ class AntTabBarItemState extends State<AntTabBarItem> {
     return widget.label!;
   }
 
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _ancestor = context.dependOnInheritedWidgetOfExactType<_AntTabBarScope>();
+  }
+
   @override
   void dispose() {
-    AntTabBarState? tabBar = AntTabBar.maybeOf(context);
-    tabBar?._unregister(this);
+    _ancestor?._tabBarState._unregister(this);
     super.dispose();
   }
 

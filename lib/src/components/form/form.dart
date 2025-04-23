@@ -140,7 +140,7 @@ class AntFormState extends State<AntForm> {
   }
 
   void reset() {
-    print(_formValues);
+    // print(_formValues);
     for (final AntFormItemState<dynamic> field in _fields) {
       print(field.name?.jsonValue);
       if(field.name!=null){
@@ -563,7 +563,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
       }
       fieldLabelChildren.add(widget.label!);
       Widget fieldLabel = Container(
-        padding: (layout==AntFormLayout.horizontal)?EdgeInsets.only(left: 8):null,
+        // padding: (layout==AntFormLayout.horizontal)?EdgeInsets.only(left: 8):null,
         child: Row(
           mainAxisAlignment: labelAlign == AntLabelAlign.left
               ? MainAxisAlignment.start
@@ -634,7 +634,7 @@ class _AntFormItemStyle extends StateStyle {
   @override
   Style get style {
     return Style(
-        // padding: StylePadding(left: 8, right: 8),
+        padding: StylePadding(left: 8, right: 8),
         // margin: StyleMargin(bottom: 8)
         );
   }
