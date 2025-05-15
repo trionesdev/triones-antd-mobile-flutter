@@ -2,7 +2,7 @@ library;
 
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
-import '../../../antd.dart';
+import '../../../trionesdev_antd_mobile.dart';
 
 enum AntThemeMode {
   system,

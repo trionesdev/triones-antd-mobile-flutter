@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../antd.dart';
+import '../../../trionesdev_antd_mobile.dart';
 import 'calendar_picker_view.dart';
 
 class AntCalendarPicker {

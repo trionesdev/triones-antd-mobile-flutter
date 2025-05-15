@@ -41,7 +41,7 @@ import 'package:antd_flutter_example/pages/upload_page.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;

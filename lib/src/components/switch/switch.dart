@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/src/components/theme/theme.dart';
 
-import '../../../antd.dart';
+import '../../../trionesdev_antd_mobile.dart';
 
 enum AntSwitchSize { small, middle, large }
 

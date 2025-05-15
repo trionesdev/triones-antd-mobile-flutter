@@ -1,6 +1,6 @@
 import 'package:antd_flutter_example/demo_block.dart';
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 class InputPage extends StatefulWidget {
   const InputPage({super.key});

@@ -1,7 +1,7 @@
 library;
 
 import 'package:flutter/material.dart';
-import '../../../antd.dart';
+import '../../../trionesdev_antd_mobile.dart';
 import '../theme/theme.dart';
 
 enum AntButtonType { primary, text, link }

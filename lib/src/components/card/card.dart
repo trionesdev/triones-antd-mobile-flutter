@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../antd.dart';
+import '../../../trionesdev_antd_mobile.dart';
 
 class AntCardStyles {
   StateStyle? header;

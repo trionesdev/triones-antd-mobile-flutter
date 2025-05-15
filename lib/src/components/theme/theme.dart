@@ -1,7 +1,7 @@
 
 import 'package:flutter/widgets.dart';
 
-import '../../../antd.dart';
+import '../../../trionesdev_antd_mobile.dart';
 
 const Duration kThemeAnimationDuration = Duration(milliseconds: 200);
 

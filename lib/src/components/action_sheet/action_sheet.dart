@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../antd.dart';
+import '../../../trionesdev_antd_mobile.dart';
 import '../theme/theme.dart';
 
 class AntActionSheetItemRecord {
