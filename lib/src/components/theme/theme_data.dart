@@ -133,7 +133,7 @@ class AntThemeData with Diagnosticable {
 
   static AntThemeData localize(
       AntThemeData? baseTheme, AntThemeData? localTextGeometry) {
-    return AntThemeData();
+    return baseTheme ?? AntThemeData();
   }
 
   material.ThemeData toMaterialThemeData() {

@@ -16,7 +16,8 @@ class AntTheme extends StatelessWidget{
 
   static AntThemeData of(BuildContext context){
     final _InheritedTheme? inheritedTheme = context.dependOnInheritedWidgetOfExactType<_InheritedTheme>();
-    return AntThemeData.localize(null, null);
+    AntThemeData themeData = inheritedTheme?.theme.data ?? _kFallbackTheme;
+    return AntThemeData.localize(themeData, null);
   }
 
 

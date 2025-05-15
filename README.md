@@ -41,9 +41,69 @@
 - [x] Breadcrumb 面包屑
 - [x] InputNumber 数字输入框
 
+## 直接使用
+```dart
+void main() {
+  // debugPaintSizeEnabled = true;
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return AntApp(
+      title: 'Flutter Demo',
+      theme: AntThemeData(
+        // colorPrimary: material.Colors.amber,
+      ),
+      routes: {
+
+      },
+      home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
+    );
+  }
+}
+```
+
+## 使用Getx
+1. 直接使用Getx
+```dart
+AntThemeData antThemeData = AntThemeData();
+AntTheme(
+  data: antThemeData,
+  child: GetMaterialApp(
+        title: 'TrionesDev',
+        theme: antThemeData.toMaterialThemeData(),
+        getPages: Routes.routes,
+        home: const HomePage(),
+        onInit: ()  {
+        
+        },
+        onReady: () {},
+    )
+)
+```
+2. 使用封装的AntGetx组件
+地址: https://github.com/trionesdev/triones-get-antd
+使用方法
+```dart
+  runApp(GetAntApp(
+    title: 'XXX',
+    theme: AntThemeData(),
+    getPages: Routes.routes,
+    home: const HomeLayout(),
+    onInit: ()  async {
+
+    },
+    onReady: () {},
+  ));
+```
 
 #### 互相吹捧，共同进步
-> 通过关注公众号联系我们
+> 留意回复不及时，可以通过关注公众号联系我们
 <div style="width: 100%;text-align: center;">
    <img src="images/shuque_wx.jpg" width="200px" alt="">
 </div>

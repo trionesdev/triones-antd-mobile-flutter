@@ -56,7 +56,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return AntApp(
       title: 'Flutter Demo',
-      theme: AntThemeData(),
+      theme: AntThemeData(
+        // colorPrimary: material.Colors.amber,
+      ),
       routes: {
         '/scaffold':(context)=>ScaffoldPage(),
         '/avatar': (context) => AvatarPage(),
