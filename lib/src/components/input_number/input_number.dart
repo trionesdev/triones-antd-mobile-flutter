@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 class AntInputNumber extends StatefulWidget {
   const AntInputNumber({super.key,

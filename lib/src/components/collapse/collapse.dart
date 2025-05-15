@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 class AntCollapse extends StatefulWidget {
   const AntCollapse(
@@ -139,14 +139,16 @@ class AntCollapsePanel extends StatefulWidget {
   const AntCollapsePanel(
       {super.key,
       this.title,
+      this.extra,
       this.disabled,
       this.arrowIcon,
       this.content,
-      this.antKey,
+      required this.antKey,
       this.styles});
 
-  final String? antKey;
+  final String antKey;
   final Widget? title;
+  final Widget? extra;
   final bool? disabled;
   final Widget Function(bool open)? arrowIcon;
   final Widget? content;
@@ -204,6 +206,7 @@ class AntCollapsePanelState extends State<AntCollapsePanel>
       child: Column(
         children: [
           GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () {
               if (widget.disabled ?? false) {
                 return;
@@ -227,18 +230,28 @@ class AntCollapsePanelState extends State<AntCollapsePanel>
                   headerStyle.resolve(materialStates)?.computedDecoration,
               constraints:
                   headerStyle.resolve(materialStates)?.computedConstraints,
+              padding: headerStyle.resolve(materialStates)?.computedPadding,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [widget.title ?? Container(), _arrowIcon],
+                children: [
+                  widget.title ?? Container(),
+                  Row(
+                    children: [
+                      if (widget.extra != null) widget.extra!,
+                      _arrowIcon
+                    ],
+                  )
+                ],
               ),
             ),
           ),
-          if (open)
-            Container(
-                width: double.infinity,
-                decoration:
-                    contentStyle.resolve(materialStates)?.computedDecoration,
-                child: widget.content)
+          Visibility(
+              visible: _open,
+              child: Container(
+                  width: double.infinity,
+                  decoration:
+                      contentStyle.resolve(materialStates)?.computedDecoration,
+                  child: widget.content))
         ],
       ),
     );
@@ -259,6 +272,7 @@ class AntCollapsePanelHeaderStyle extends StateStyle {
         width: 1,
         style: BorderStyle.solid,
       ),
+      padding: StylePadding.symmetric(horizontal: 8),
     );
   }
 }

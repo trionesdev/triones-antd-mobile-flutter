@@ -1,7 +1,7 @@
 
 import 'package:flutter/widgets.dart';
 
-import '../../../antd.dart';
+import '../../../trionesdev_antd_mobile.dart';
 
 const Duration kThemeAnimationDuration = Duration(milliseconds: 200);
 
@@ -16,7 +16,8 @@ class AntTheme extends StatelessWidget{
 
   static AntThemeData of(BuildContext context){
     final _InheritedTheme? inheritedTheme = context.dependOnInheritedWidgetOfExactType<_InheritedTheme>();
-    return AntThemeData.localize(null, null);
+    AntThemeData themeData = inheritedTheme?.theme.data ?? _kFallbackTheme;
+    return AntThemeData.localize(themeData, null);
   }
 
 

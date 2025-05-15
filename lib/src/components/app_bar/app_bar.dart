@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../antd.dart';
+import '../../../trionesdev_antd_mobile.dart';
 
 class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
   AntAppBar(
@@ -34,6 +34,7 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
     List<Widget> leadingChildren = [];
     if (back) {
       leadingChildren.add(GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: () {
           if (onBack != null) {
             onBack?.call();

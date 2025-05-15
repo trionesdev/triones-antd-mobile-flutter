@@ -2,7 +2,7 @@ library;
 
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
-import '../../../antd.dart';
+import '../../../trionesdev_antd_mobile.dart';
 
 enum AntThemeMode {
   system,
@@ -173,43 +173,46 @@ class AntApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return material.MaterialApp(
-      navigatorKey: navigatorKey,
-      scaffoldMessengerKey: scaffoldMessengerKey,
-      home: home,
-      routes: routes ?? const <String, WidgetBuilder>{},
-      initialRoute: initialRoute,
-      onGenerateRoute: onGenerateRoute,
-      onGenerateInitialRoutes: onGenerateInitialRoutes,
-      onUnknownRoute: onUnknownRoute,
-      navigatorObservers: navigatorObservers ?? const <NavigatorObserver>[],
-      builder: builder,
-      title: title,
-      onGenerateTitle: onGenerateTitle,
-      color: color,
-      theme: theme?.toMaterialThemeData(),
-      darkTheme: darkTheme?.toMaterialThemeData(),
-      highContrastTheme: highContrastTheme?.toMaterialThemeData(),
-      highContrastDarkTheme: highContrastDarkTheme?.toMaterialThemeData(),
-      themeMode: getThemeMode(),
-      themeAnimationDuration: themeAnimationDuration ?? kThemeAnimationDuration,
-      themeAnimationCurve: themeAnimationCurve ?? Curves.linear,
-      locale: locale,
-      localizationsDelegates: localizationsDelegates,
-      localeListResolutionCallback: localeListResolutionCallback,
-      localeResolutionCallback: localeResolutionCallback,
-      supportedLocales: supportedLocales,
-      debugShowMaterialGrid: debugShowMaterialGrid,
-      showPerformanceOverlay: showPerformanceOverlay  ,
-      checkerboardRasterCacheImages: checkerboardRasterCacheImages ,
-      checkerboardOffscreenLayers: checkerboardOffscreenLayers,
-      showSemanticsDebugger: showSemanticsDebugger,
-      debugShowCheckedModeBanner: debugShowCheckedModeBanner,
-      shortcuts: shortcuts,
-      actions: actions,
-      restorationScopeId: restorationScopeId,
-      scrollBehavior: scrollBehavior,
-      themeAnimationStyle: themeAnimationStyle,
-    );
+    return AntTheme(
+        data: theme ?? AntThemeData.fallback(),
+        child: material.MaterialApp(
+          navigatorKey: navigatorKey,
+          scaffoldMessengerKey: scaffoldMessengerKey,
+          home: home,
+          routes: routes ?? const <String, WidgetBuilder>{},
+          initialRoute: initialRoute,
+          onGenerateRoute: onGenerateRoute,
+          onGenerateInitialRoutes: onGenerateInitialRoutes,
+          onUnknownRoute: onUnknownRoute,
+          navigatorObservers: navigatorObservers ?? const <NavigatorObserver>[],
+          builder: builder,
+          title: title,
+          onGenerateTitle: onGenerateTitle,
+          color: color,
+          theme: theme?.toMaterialThemeData(),
+          darkTheme: darkTheme?.toMaterialThemeData(),
+          highContrastTheme: highContrastTheme?.toMaterialThemeData(),
+          highContrastDarkTheme: highContrastDarkTheme?.toMaterialThemeData(),
+          themeMode: getThemeMode(),
+          themeAnimationDuration:
+              themeAnimationDuration ?? kThemeAnimationDuration,
+          themeAnimationCurve: themeAnimationCurve ?? Curves.linear,
+          locale: locale,
+          localizationsDelegates: localizationsDelegates,
+          localeListResolutionCallback: localeListResolutionCallback,
+          localeResolutionCallback: localeResolutionCallback,
+          supportedLocales: supportedLocales,
+          debugShowMaterialGrid: debugShowMaterialGrid,
+          showPerformanceOverlay: showPerformanceOverlay,
+          checkerboardRasterCacheImages: checkerboardRasterCacheImages,
+          checkerboardOffscreenLayers: checkerboardOffscreenLayers,
+          showSemanticsDebugger: showSemanticsDebugger,
+          debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+          shortcuts: shortcuts,
+          actions: actions,
+          restorationScopeId: restorationScopeId,
+          scrollBehavior: scrollBehavior,
+          themeAnimationStyle: themeAnimationStyle,
+        ));
   }
 }

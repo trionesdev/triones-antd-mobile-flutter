@@ -12,6 +12,7 @@ class AntEmpty extends StatelessWidget {
     return UnconstrainedBox(
       child: Container(
         padding: const EdgeInsets.all(16),
+        alignment: Alignment.center,
         decoration: const BoxDecoration(
           color: Colors.white,
         ),

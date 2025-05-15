@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:flutter/services.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
-enum AntInputType {
-  text,
-  password,
-}
+enum AntInputType { text, password, number }
 
 class AntInput extends StatefulWidget {
   const AntInput({
@@ -124,6 +122,13 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
         obscureText: widget.type == AntInputType.password && passwordVisible,
         cursorColor: Colors.grey,
         style: TextStyle(fontSize: style.resolve(materialStates)?.fontSize),
+        keyboardType: (() {
+          if (widget.type == AntInputType.number) {
+            return TextInputType.number;
+          } else {
+            return TextInputType.text;
+          }
+        })(),
         decoration: InputDecoration(
           prefixIcon: widget.prefix,
 
@@ -137,6 +142,10 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
           ),
           contentPadding: EdgeInsets.zero,
         ),
+        inputFormatters: [
+          if (widget.type == AntInputType.number)
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))
+        ],
         onChanged: (value) {
           print("input changed:" + value);
           if (widget.onChange != null) {

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../antd.dart';
+import '../../../trionesdev_antd_mobile.dart';
 import '../theme/theme.dart';
 
-class AntActionType {
-  AntActionType({this.label, this.onPressed});
+class AntActionSheetItemRecord {
+  AntActionSheetItemRecord({this.labelText, this.label, this.onPressed});
 
+  final String? labelText;
   final Widget? label;
   final Function? onPressed;
 }
@@ -15,8 +16,10 @@ class AntActionSheet {
       {required BuildContext context,
       bool? closeOnMaskClick = false,
       Widget? title,
-      List<AntActionType>? actions,
+      String? titleText,
+      List<AntActionSheetItemRecord>? actions,
       bool? showCancelButton = true,
+      Widget? cancelWidget,
       StateStyle? itemStyle}) {
     showModalBottomSheet(
         context: context,
@@ -26,8 +29,10 @@ class AntActionSheet {
         builder: (context) {
           return AntActionSheetView(
             title: title,
+            titleText: titleText,
             actions: actions,
             showCancelButton: showCancelButton,
+            cancelWidget: cancelWidget,
             itemStyle: itemStyle,
           );
         });
@@ -40,14 +45,16 @@ class AntActionSheetView extends StatefulWidget {
       this.showCancelButton = true,
       this.itemStyle,
       this.actions,
-      this.cancelLabel,
+      this.cancelWidget,
       this.title,
+      this.titleText,
       this.decoration});
 
-  final List<AntActionType>? actions;
+  final List<AntActionSheetItemRecord>? actions;
   final bool? showCancelButton;
+  final String? titleText;
   final Widget? title;
-  final Widget? cancelLabel;
+  final Widget? cancelWidget;
   final StateStyle? itemStyle;
   final BoxDecoration? decoration;
 
@@ -72,6 +79,7 @@ class _AntActionSheetViewState extends State<AntActionSheetView>
       for (int i = 0; i < widget.actions!.length; i++) {
         items.add(ActionItem(
           label: widget.actions!.elementAt(i).label,
+          labelText: widget.actions!.elementAt(i).labelText,
           onPressed: widget.actions!.elementAt(i).onPressed,
           style: widget.itemStyle,
           splitLine:
@@ -93,26 +101,26 @@ class _AntActionSheetViewState extends State<AntActionSheetView>
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (widget.title != null)
+                if (widget.title != null || widget.titleText != null)
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border(
-                        bottom: BorderSide(
-                            color: Colors.grey.shade300, width: 1),
+                        bottom:
+                            BorderSide(color: Colors.grey.shade300, width: 1),
                       ),
                     ),
                     padding: EdgeInsets.all(12),
                     width: double.infinity,
                     alignment: Alignment.center,
-                    child: widget.title,
+                    child: widget.title ?? Text(widget.titleText ?? ""),
                   ),
                 ...items
               ],
             ),
             if (widget.showCancelButton == true)
               ActionItem(
-                label: widget.cancelLabel ?? Text('取消'),
+                label: widget.cancelWidget ?? Text('取消'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -141,9 +149,15 @@ class _AntActionSheetViewStyle extends StateStyle {
 
 class ActionItem extends StatefulWidget {
   const ActionItem(
-      {super.key, this.label, this.onPressed, this.style, this.splitLine});
+      {super.key,
+      this.label,
+      this.onPressed,
+      this.style,
+      this.splitLine,
+      this.labelText});
 
   final Widget? label;
+  final String? labelText;
   final Function? onPressed;
   final StateStyle? style;
   final bool? splitLine;
@@ -186,7 +200,7 @@ class _ActionItemState extends State<ActionItem> with MaterialStateMixin {
           alignment: Alignment.center,
           decoration: stateStyle.resolve(materialStates)?.decoration,
           padding: stateStyle.resolve(materialStates)?.computedPadding,
-          child: widget.label,
+          child: widget.label ?? Text(widget.labelText ?? ""),
         ),
       ),
     );

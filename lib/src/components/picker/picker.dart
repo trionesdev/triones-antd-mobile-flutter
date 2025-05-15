@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 import 'package:trionesdev_antd_mobile/src/components/picker/picker_multi_view.dart';
 import 'package:trionesdev_antd_mobile/src/components/picker/picker_view.dart';
 

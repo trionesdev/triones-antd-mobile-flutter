@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 class ImagesPreview extends StatefulWidget {
   const ImagesPreview({super.key, this.images, this.initialIndex = 0});

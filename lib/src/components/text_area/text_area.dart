@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 class AntTextArea extends StatefulWidget {
   const AntTextArea({
@@ -7,23 +7,17 @@ class AntTextArea extends StatefulWidget {
     this.placeholder,
     this.minLines=2,
     this.maxLines,
-    this.prefix,
-    this.suffix,
     this.value,
     this.onChange,
     this.decoration,
-    this.height = 32,
     this.style,
     this.onBlur,
     this.onFocus,
   });
 
-  final double? height;
   final int? minLines;
   final int? maxLines;
   final String? placeholder;
-  final Widget? prefix;
-  final Widget? suffix;
   final String? value;
   final Function? onChange;
   final BoxDecoration? decoration;
@@ -89,7 +83,6 @@ class _AntTextAreaState extends State<AntTextArea> with MaterialStateMixin {
         cursorColor: Colors.black,
         style: TextStyle(fontSize: style.resolve(materialStates)?.fontSize),
         decoration: InputDecoration(
-          prefixIcon: widget.prefix,
           hintText: widget.placeholder,
           hintStyle: TextStyle(color: Colors.grey),
           // 提示文本

@@ -4,12 +4,12 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 import 'package:trionesdev_antd_mobile/src/components/images_wall/images_preview.dart';
 import 'package:uuid/uuid.dart';
 
-class AntImageRecord {
-  AntImageRecord(
+class AntImagesWallItemRecord {
+  AntImagesWallItemRecord(
       {this.uid,
       this.status = AntImageStatus.done,
       this.image,
@@ -49,8 +49,8 @@ class AntImagesWall extends StatefulWidget {
       this.uploadRequest,
       this.multiSelect = true});
 
-  final List<AntImageRecord>? value;
-  final ValueChanged<List<AntImageRecord>>? onChange;
+  final List<AntImagesWallItemRecord>? value;
+  final ValueChanged<List<AntImagesWallItemRecord>>? onChange;
   final int? maxCount;
   final int? crossAxisCount;
   final bool disabled;
@@ -63,10 +63,10 @@ class AntImagesWall extends StatefulWidget {
 }
 
 class _AntImagesWallState extends State<AntImagesWall> {
-  final List<AntImageRecord> _images = [];
+  List<AntImagesWallItemRecord> _images = [];
   var uuid = Uuid();
 
-  void onChange(List<AntImageRecord> images) {
+  void onChange(List<AntImagesWallItemRecord> images) {
     if (widget.onChange != null) {
       widget.onChange!(images);
     }
@@ -76,11 +76,11 @@ class _AntImagesWallState extends State<AntImagesWall> {
     if (images.isEmpty) {
       return;
     }
-    List<AntImageRecord> imageRecords = [];
+    // List<AntImagesWallItemRecord> imageRecords = [];
     for (var image in images) {
       var uid = uuid.v4();
       if (kIsWeb) {
-        imageRecords.add(AntImageRecord(
+        _images.add(AntImagesWallItemRecord(
             uid: uid,
             type: AntImageType.network,
             path: image.path,
@@ -90,7 +90,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
             ),
             fileName: image.name));
       } else {
-        imageRecords.add(AntImageRecord(
+        _images.add(AntImagesWallItemRecord(
           uid: uid,
           type: AntImageType.file,
           path: image.path,
@@ -139,10 +139,10 @@ class _AntImagesWallState extends State<AntImagesWall> {
         });
       }
     }
-    setState(() {
-      _images.addAll(imageRecords);
-      onChange(_images);
-    });
+    // setState(() {
+    //
+    //   onChange(_images);
+    // });
   }
 
   Future<void> selectImageFromGallery(bool multi) async {
@@ -166,7 +166,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
     }
   }
 
-  Image generateImage(AntImageRecord image) {
+  Image generateImage(AntImagesWallItemRecord image) {
     if (image.type == AntImageType.asset) {
       return Image.asset(
         image.path!,
@@ -190,34 +190,28 @@ class _AntImagesWallState extends State<AntImagesWall> {
     }
   }
 
-  void generateImages() {
-    _images.clear();
-    if (widget.value != null && widget.value!.isNotEmpty) {
+  List<AntImagesWallItemRecord>? generateImages(List<AntImagesWallItemRecord>? images) {
+    if (images != null && images!.isNotEmpty) {
       for (var element in widget.value!) {
         element.uid ??= uuid.v4();
         element.status ??= AntImageStatus.done;
         element.image ??= generateImage(element);
       }
-
-      setState(() {
-        _images.addAll(widget.value!);
-      });
     }
+    return images;
   }
 
   @override
   void initState() {
     super.initState();
-    if (widget.value != null) {
-      generateImages();
-    }
+    _images = generateImages(widget.value) ?? [];
   }
 
   @override
   void didUpdateWidget(covariant AntImagesWall oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!ListEquality().equals(oldWidget.value ?? [], widget.value ?? [])) {
-      generateImages();
+      _images = generateImages(widget.value) ?? [];
     }
   }
 
@@ -249,14 +243,14 @@ class _AntImagesWallState extends State<AntImagesWall> {
       widgets.add(GestureDetector(
         onTap: () {
           AntActionSheet.show(context: context, actions: [
-            AntActionType(
+            AntActionSheetItemRecord(
               label: Text('从相册选择'),
               onPressed: () {
                 Navigator.of(context).pop();
                 selectImageFromGallery(widget.multiSelect!);
               },
             ),
-            AntActionType(
+            AntActionSheetItemRecord(
               label: Text('拍摄照片'),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -303,9 +297,9 @@ class AntImageWallItem extends StatefulWidget {
       required this.index});
 
   final bool disabled;
-  final AntImageRecord image;
+  final AntImagesWallItemRecord image;
   final int index;
-  final List<AntImageRecord> images;
+  final List<AntImagesWallItemRecord> images;
   final Function(String? uid)? onRemove;
 
   @override
@@ -313,8 +307,8 @@ class AntImageWallItem extends StatefulWidget {
 }
 
 class _AntImageWallItemState extends State<AntImageWallItem> {
-  late AntImageRecord _image;
-  List<AntImageRecord> _images = [];
+  late AntImagesWallItemRecord _image;
+  List<AntImagesWallItemRecord> _images = [];
   int _index = 0;
 
   @override

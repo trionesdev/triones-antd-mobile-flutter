@@ -1,6 +1,6 @@
 import 'package:antd_flutter_example/demo_block.dart';
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 class FormPage extends StatefulWidget {
   const FormPage({super.key});
@@ -35,7 +35,7 @@ class _FormPageState extends State<FormPage> {
                       AntFormItem(
                           label: Text("年龄"),
                           name: NamePath('age'),
-                          builder: (AntFormItemState<int> field) {
+                          builder: (AntFormItemState<String> field) {
                             return AntInput(
                               value: field.value,
                               onChange: field.didChange,
@@ -204,7 +204,7 @@ class _FormPageState extends State<FormPage> {
                     AntFormItem(
                         label: Text("年龄"),
                         name: NamePath('age'),
-                        builder: (AntFormItemState<int> field) {
+                        builder: (AntFormItemState<String> field) {
                           return AntInput(
                             value: field.value,
                             onChange: field.didChange,

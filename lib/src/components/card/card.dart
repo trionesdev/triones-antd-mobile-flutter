@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../antd.dart';
+import '../../../trionesdev_antd_mobile.dart';
 
 class AntCardStyles {
   StateStyle? header;
@@ -105,6 +105,6 @@ class _AntCardBodyStyle extends StateStyle {
   @override
   Style get style {
     AntThemeData themeData = AntTheme.of(context);
-    return Style(backgroundColor: Colors.white,padding: StylePadding.symmetric(horizontal: 12, vertical: 12));
+    return Style(backgroundColor: Colors.white,padding: StylePadding.symmetric(horizontal: 8, vertical: 8));
   }
 }

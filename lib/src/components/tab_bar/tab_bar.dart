@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 
 class AntTabBar extends StatefulWidget {
@@ -93,7 +93,7 @@ class AntTabBarState extends State<AntTabBar> with MaterialStateMixin {
   void initState() {
     super.initState();
     _currentActiveKey =
-        (widget.activeKey ?? widget.defaultActiveKey) ?? widget.children?.first.tabKey;
+        (widget.activeKey ?? widget.defaultActiveKey) ?? widget.children?.first.antKey;
   }
 
   @override
@@ -158,7 +158,7 @@ class _AntTabBarScope extends InheritedWidget {
 class AntTabBarItem extends StatefulWidget {
   const AntTabBarItem(
       {super.key,
-      required this.tabKey,
+      required this.antKey,
       this.child,
       this.icon,
       this.label,
@@ -167,7 +167,7 @@ class AntTabBarItem extends StatefulWidget {
       this.activeColor,
       this.stopPropagation=true});
 
-  final String tabKey;
+  final String antKey;
   final Widget? child;
   final Widget? icon;
   final Widget? label;
@@ -181,6 +181,7 @@ class AntTabBarItem extends StatefulWidget {
 }
 
 class AntTabBarItemState extends State<AntTabBarItem> {
+  _AntTabBarScope? _ancestor;
   Color? get color {
     AntTabBarState? tabBar = AntTabBar.maybeOf(context);
     if (widget.color != null) {
@@ -205,7 +206,7 @@ class AntTabBarItemState extends State<AntTabBarItem> {
 
   bool get isActive {
     AntTabBarState? tabBar = AntTabBar.maybeOf(context);
-    return tabBar?._currentActiveKey == widget.tabKey;
+    return tabBar?._currentActiveKey == widget.antKey;
   }
 
   void didChange() {
@@ -239,10 +240,16 @@ class AntTabBarItemState extends State<AntTabBarItem> {
     return widget.label!;
   }
 
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _ancestor = context.dependOnInheritedWidgetOfExactType<_AntTabBarScope>();
+  }
+
   @override
   void dispose() {
-    AntTabBarState? tabBar = AntTabBar.maybeOf(context);
-    tabBar?._unregister(this);
+    _ancestor?._tabBarState._unregister(this);
     super.dispose();
   }
 
@@ -263,8 +270,8 @@ class AntTabBarItemState extends State<AntTabBarItem> {
         flex: 1,
         child: GestureDetector(
           onTap: () {
-            tabBar?._setCurrentActiveKey(widget.tabKey);
-            widget.onPressed?.call(widget.tabKey);
+            tabBar?._setCurrentActiveKey(widget.antKey);
+            widget.onPressed?.call(widget.antKey);
           },
           child: widget.child ??
               Column(

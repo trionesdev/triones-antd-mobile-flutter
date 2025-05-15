@@ -1,6 +1,6 @@
 import 'package:antd_flutter_example/demo_block.dart';
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 class GridPage extends StatefulWidget {
   const GridPage({super.key});
@@ -21,7 +21,7 @@ class _GridPageState extends State<GridPage> {
           children: [
             DemoBlock(title: "基本使用",child: AntGrid(
               columns: 4,
-              gap: 2,
+              spacing: 2,
               children: [
                 AntGridItem(
                   span: 1,

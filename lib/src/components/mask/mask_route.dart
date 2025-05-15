@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 class AntMaskRoute extends PopupRoute {
   AntMaskRoute({
@@ -31,7 +31,6 @@ class AntMaskRoute extends PopupRoute {
       color: Colors.transparent,
       child: GestureDetector(
         onTap: () {
-          print("ss");
           if (clickMaskClose == true) {
             Navigator.of(context).pop();
           }
@@ -42,12 +41,7 @@ class AntMaskRoute extends PopupRoute {
           decoration: BoxDecoration(
             color: Colors.transparent,
           ),
-          child: GestureDetector(
-            onTap: () {
-              // print("dfff");
-            },
-            child: child,
-          ),
+          child: child,
         ),
       ),
     );

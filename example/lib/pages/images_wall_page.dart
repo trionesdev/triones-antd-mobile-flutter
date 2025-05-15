@@ -1,6 +1,6 @@
 import 'package:antd_flutter_example/demo_block.dart';
 import 'package:flutter/widgets.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 class ImagesWallPage extends StatefulWidget {
   const ImagesWallPage({super.key});
@@ -30,7 +30,7 @@ class _ImageUploadPageState extends State<ImagesWallPage> {
               title: "赋值",
               child: AntImagesWall(
                 value: [
-                  AntImageRecord(
+                  AntImagesWallItemRecord(
                       path: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
                       status: AntImageStatus.done)
                 ],

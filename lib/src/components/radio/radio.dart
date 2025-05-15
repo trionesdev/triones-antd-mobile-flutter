@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trionesdev_antd_mobile/antd.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 enum AntRadioLayout{
   horizontal,
@@ -185,14 +185,7 @@ mixin RadioStateMixin<T extends AntRadioBase> on State<T> {
   }
 
   void _groupValueChange(dynamic val) {
-    if (val == null) {
-      if (index == 0) {
-        setState(() {
-          _checked = true;
-        });
-      }
-      return;
-    }
+
     if (val == widget.value) {
       if (!_checked) {
         setState(() {
