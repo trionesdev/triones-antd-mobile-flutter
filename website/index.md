@@ -9,7 +9,7 @@ hero:
   actions:
     - theme: brand
       text: 快速开始
-      link: /guide/index
+      link: /guide/introduce
     - theme: alt
       text: 组件
       link: /components/overview
