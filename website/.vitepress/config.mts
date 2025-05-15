@@ -96,7 +96,7 @@ export default defineConfig({
             {icon: 'github', link: 'https://github.com/trionesdev/triones-antd-mobile-flutter'}
         ],
         footer: {
-            message: 'Released under the <a href="https://github.com/vuejs/vitepress/blob/main/LICENSE">MIT License</a>.',
+            message: 'Released under the <a href="https://github.com/trionesdev/triones-antd-mobile-flutter/blob/main/LICENSE">MIT License</a>.',
             copyright: 'Copyright © 2015-present <a href="https://www.trionesdev.com">TrionesDev</a>'
         }
     },
