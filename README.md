@@ -1,5 +1,7 @@
 # Antd 风格的 Flutter组件库
 
+[![pub package](https://img.shields.io/pub/v/trionesdev_antd_mobile.svg)](https://pub.dev/packages/trionesdev_antd_mobile)
+
 ## 组件目录
 - [x] Scaffold 脚手架
 - [x] Button 按钮
