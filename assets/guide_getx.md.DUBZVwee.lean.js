@@ -1,0 +1,1 @@
+import{_ as i,c as a,o as n,ae as t}from"./chunks/framework.CJ_HZlMT.js";const g=JSON.parse('{"title":"使用Getx","description":"","frontmatter":{},"headers":[],"relativePath":"guide/getx.md","filePath":"guide/getx.md"}'),h={name:"guide/getx.md"};function e(p,s,l,k,E,r){return n(),a("div",null,s[0]||(s[0]=[t("",9)]))}const y=i(h,[["render",e]]);export{g as __pageData,y as default};
