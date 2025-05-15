@@ -88,6 +88,7 @@ AntTheme(
 ```
 2. 使用封装的AntGetx组件
 地址: https://github.com/trionesdev/triones-get-antd
+
 使用方法
 ```dart
   runApp(GetAntApp(
