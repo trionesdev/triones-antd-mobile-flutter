@@ -14,7 +14,7 @@ export default defineConfig({
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
         nav: [
-            {text: '开始', link: '/guide/index'},
+            {text: '开始', link: '/guide/introduce'},
             {text: '组件', link: '/components/overview'}
         ],
 
@@ -85,7 +85,10 @@ export default defineConfig({
                 }
             ],
             '/guide/': [
-                {text: '指南', link: '/guide/index'},
+                {text: 'Antd Flutter', link: '/guide/introduce'},
+                {text: '快速上手', link: '/guide/quick-start'},
+                {text: '使用Getx', link: '/guide/getx'},
+
             ]
         },
 
@@ -99,9 +102,7 @@ export default defineConfig({
     },
     markdown: {
         config: (md) => {
-            // console.log(md)
-
-
+            const fence = md.renderer.rules.fence
             md.renderer.rules.fence = (tokens, idx, options, env, self) => {
                 const token = tokens[idx];
                 let src = "";
@@ -123,18 +124,22 @@ export default defineConfig({
                     if (fileExists) {
                         srcContent = fs.readFileSync(path.resolve(src), 'utf8');
                     }
+                }else {
+                    //没用预览树形的代码，直接按照原来的渲染处理
+                    return fence(tokens, idx, options, env, self);
                 }
+
 
                 //md.utils.escapeHtml(token.content)
                 const html = Prism.highlight(srcContent ?? token.content, Prism.languages.javascript, 'javascript')
                 return `<div class="triones-code">
-            <div class="triones-code-block">
-            <pre><code>${html}</code></pre>
-            </div>
-            <div class="triones-code-preview">
-            <iframe src="${previewUrl}"/>
-            </div>
-        </div>`
+                    <div class="triones-code-block">
+                    <pre><code>${html}</code></pre>
+                    </div>
+                    <div class="triones-code-preview">
+                    <iframe src="${previewUrl}"/>
+                    </div>
+                </div>`
 
             };
         }

@@ -94,7 +94,7 @@ AntTheme(
 使用方法
 ```dart
   runApp(GetAntApp(
-    title: 'XXX',
+    title: 'TrionesDev',
     theme: AntThemeData(),
     getPages: Routes.routes,
     home: const HomeLayout(),

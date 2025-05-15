@@ -3,43 +3,28 @@
   --vp-sidebar-width: 280px;
 }
 
-.VPSidebar {
+.VPSidebar{
+  min-width: var(--vp-sidebar-width);
 }
 
 .VPDoc.has-aside .content-container {
   max-width: 1440px !important;
 }
 
-
-
-@media (min-width: 1440px) {
-  .VPSidebar {
-    width: var(--vp-sidebar-width) !important;
-  }
-  .VPNavBar.has-sidebar .content {
-    padding-left: var(--vp-sidebar-width) !important;
-  }
-
-  .VPContent.has-sidebar {
-    padding-left: var(--vp-sidebar-width) !important;
-  }
-
-  .VPNavBar{
-    &.has-sidebar{
-      .title{
-        width: var(--vp-sidebar-width)!important;
-        a{
-          &.title{
-            width: inherit!important;
-          }
-        }
-      }
-      .divider{
-        padding-left: var(--vp-sidebar-width) !important
-      }
-    }
-  }
+.VPDoc .has-sidebar .has-aside{
+  max-width: calc(100% - var(--vp-sidebar-width))!important;
 }
+
+
+.VPNavBar.has-sidebar .content{
+  padding-left: max(var(--vp-sidebar-width), calc((100vw - var(--vp-layout-max-width)) / 2 + var(--vp-sidebar-width)))!important;
+}
+
+.VPContent.has-sidebar{
+  padding-left: max(var(--vp-sidebar-width), calc((100vw - var(--vp-layout-max-width)) / 2 + var(--vp-sidebar-width)))!important;
+}
+
+
 
 @media (max-width: 1800px) {
   .VPDoc {
