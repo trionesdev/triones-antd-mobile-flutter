@@ -39,9 +39,10 @@ import 'package:antd_flutter_example/pages/timeline_page.dart';
 import 'package:antd_flutter_example/pages/toast_page.dart';
 import 'package:antd_flutter_example/pages/upload_page.dart';
 import 'package:flutter/material.dart' as material;
-import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
+
+import 'pages/calendar_page.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
@@ -76,6 +77,7 @@ class MyApp extends StatelessWidget {
         '/picker': (context) => PickerPage(),
         '/cascader-picker': (context) => CascaderPickerPage(),
         '/calendar-picker': (context) => CalendarPickerPage(),
+        '/calendar': (context) => CalendarPage(),
         '/card': (context) => CardPage(),
         '/calendar-datetime-picker': (context) => CalendarDatetimePickerPage(),
         '/modal': (context) => ModalPage(),
@@ -248,6 +250,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('CalendarPicker 日历选择器'),
             onTap: () {
               Navigator.pushNamed(context, '/calendar-picker');
+            },
+          ),
+          material.ListTile(
+            title: Text('Calendar 日历'),
+            onTap: () {
+              Navigator.pushNamed(context, '/calendar');
             },
           ),
           material.ListTile(
