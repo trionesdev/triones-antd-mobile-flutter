@@ -45,7 +45,7 @@ class AntDialogView extends StatelessWidget {
               decoration: BoxDecoration(
                   border: Border(
                       bottom:
-                          BorderSide(color: themeData.colorBorder, width: 1))),
+                          BorderSide(color: themeData.colorBorder, width: 0.5))),
               child: content,
             ),
             if (type == AntDialogViewType.alert)
@@ -78,7 +78,7 @@ class AntDialogView extends StatelessWidget {
                           decoration: BoxDecoration(
                               border: Border(
                                   right: BorderSide(
-                                      color: themeData.colorBorder, width: 1))),
+                                      color: themeData.colorBorder, width: 0.5))),
                           child: Text(cancelText ?? "取消",
                               style: TextStyle(
                                   fontSize: 16, color: themeData.colorPrimary)),
