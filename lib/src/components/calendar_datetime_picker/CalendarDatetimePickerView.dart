@@ -46,10 +46,10 @@ class _AntCalendarDatetimePickerViewState
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: EdgeInsets.only(left: 16, right: 16),
+          height: 40,
           decoration: BoxDecoration(
               border:
-                  Border(bottom: BorderSide(color: Colors.grey, width: 0.5))),
+                  Border(bottom: BorderSide(color: themeData.colorBorder, width: 0.5))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -57,25 +57,26 @@ class _AntCalendarDatetimePickerViewState
                   child: ValueListenableBuilder(
                       valueListenable: _selectedDateTime,
                       builder: (context, value, child) {
-                        return _Label(
-                          index: _showIndex,
-                          selectedDateTime: value,
-                          onIndexChange: (index) {
-                            setState(() {
-                              _showIndex = index;
-                            });
-                          },
-                        );
+                        return Container(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            child: _Label(
+                              index: _showIndex,
+                              selectedDateTime: value,
+                              onIndexChange: (index) {
+                                setState(() {
+                                  _showIndex = index;
+                                });
+                              },
+                            ));
                       })),
               GestureDetector(
                 child: Container(
-                  padding:
-                      EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Text("确定",
                       style: TextStyle(color: themeData.colorPrimary)),
                 ),
                 onTap: () {
-                  widget.onOk?.call(_selectedDateTime?.value);
+                  widget.onOk?.call(_selectedDateTime.value);
                 },
               )
             ],
@@ -90,22 +91,24 @@ class _AntCalendarDatetimePickerViewState
               SingleChildScrollView(
                 physics: NeverScrollableScrollPhysics(),
                 child: AntCalendar(
-                value: _selectedDateTime.value,
-                onChange: (date) {
-                  setState(() {
-                    _selectedDateTime.value = _selectedDateTime.value?.copyWith(
-                      year: date?.year,
-                      month: date?.month,
-                      day: date?.day,
-                    );
-                  });
-                },
-                onRendered: (double? value) {
-                  setState(() {
-                    _height = value;
-                  });
-                },
-              ),),
+                  value: _selectedDateTime.value,
+                  onChange: (date) {
+                    setState(() {
+                      _selectedDateTime.value =
+                          _selectedDateTime.value?.copyWith(
+                        year: date?.year,
+                        month: date?.month,
+                        day: date?.day,
+                      );
+                    });
+                  },
+                  onRendered: (double? value) {
+                    setState(() {
+                      _height = value;
+                    });
+                  },
+                ),
+              ),
               AntPickerViewMultiColumns(
                 columns: _timeOptions,
                 itemHeight: 34,
@@ -173,12 +176,18 @@ class _LabelState extends State<_Label> {
             widget.onIndexChange?.call(0);
           },
           child: Container(
+            height: double.infinity,
+            alignment: Alignment.center,
             decoration:
                 widget.index == 0 ? BoxDecoration(color: Colors.grey) : null,
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            child: Text(_selectedDateTime != null
-                ? DateFormat("yyyy-MM-dd").format(_selectedDateTime!)
-                : '请选择日期'),
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              _selectedDateTime != null
+                  ? DateFormat("yyyy-MM-dd").format(_selectedDateTime!)
+                  : '请选择日期',
+              style: TextStyle(
+                  color: widget.index == 0 ? Colors.white : Colors.black),
+            ),
           ),
         ),
         GestureDetector(
@@ -188,10 +197,16 @@ class _LabelState extends State<_Label> {
             });
           },
           child: Container(
+            height: double.infinity,
+            alignment: Alignment.center,
             decoration:
                 widget.index == 1 ? BoxDecoration(color: Colors.grey) : null,
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            child: Text(DateFormat("HH:mm").format(_selectedDateTime)),
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              DateFormat("HH:mm").format(_selectedDateTime),
+              style: TextStyle(
+                  color: widget.index == 1 ? Colors.white : Colors.black),
+            ),
           ),
         )
       ],

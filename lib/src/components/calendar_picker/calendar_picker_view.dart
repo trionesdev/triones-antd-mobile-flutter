@@ -15,10 +15,8 @@ class AntCalendarPickerView extends StatefulWidget {
 class _AntCalendarPickerViewState extends State<AntCalendarPickerView> {
   final ValueNotifier<DateTime?> _selectedValue = ValueNotifier(null);
 
-  DateTime? valueInitialize(DateTime? value){
-    return value != null
-        ? DateTime(value.year, value.month, value.day)
-        : null;
+  DateTime? valueInitialize(DateTime? value) {
+    return value != null ? DateTime(value.year, value.month, value.day) : null;
   }
 
   @override
@@ -34,21 +32,27 @@ class _AntCalendarPickerViewState extends State<AntCalendarPickerView> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+          height: 40,
+          decoration: BoxDecoration(
+              border:
+              Border(bottom: BorderSide(color: themeData.colorBorder, width: 0.5))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ValueListenableBuilder(
                   valueListenable: _selectedValue,
                   builder: (context, value, child) {
-                    return Text(_selectedValue.value != null
-                        ? DateFormat("yyyy-MM-dd").format(_selectedValue.value!)
-                        : '请选择日期');
+                    return Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(_selectedValue.value != null
+                          ? DateFormat("yyyy-MM-dd")
+                              .format(_selectedValue.value!)
+                          : '请选择日期'),
+                    );
                   }),
               GestureDetector(
                 child: Container(
-                  padding:
-                      EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Text("确定",
                       style: TextStyle(color: themeData.colorPrimary)),
                 ),
@@ -87,16 +91,16 @@ class _AntCalendarRangePickerViewState
   List<DateTime?>? valueInitialize(List<DateTime?>? value) {
     DateTime? startDate = value?.elementAtOrNull(0);
     DateTime? endDate = value?.elementAtOrNull(1);
-    List<DateTime?> newValue = [null,null];
-    if(startDate!=null){
-      newValue[0] = DateTime(startDate.year,startDate.month,startDate.day);
+    List<DateTime?> newValue = [null, null];
+    if (startDate != null) {
+      newValue[0] = DateTime(startDate.year, startDate.month, startDate.day);
     }
-    if(endDate!=null){
-      newValue[1] = DateTime(endDate.year,endDate.month,endDate.day);
+    if (endDate != null) {
+      newValue[1] = DateTime(endDate.year, endDate.month, endDate.day);
     }
     return newValue;
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -110,23 +114,28 @@ class _AntCalendarRangePickerViewState
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+          height: 40,
+          decoration: BoxDecoration(
+              border:
+              Border(bottom: BorderSide(color: themeData.colorBorder, width: 0.5))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ValueListenableBuilder(
                   valueListenable: _selectedValue,
                   builder: (context, value, child) {
-                    return Text((_selectedValue.value?.elementAtOrNull(0) !=
-                                null &&
-                            _selectedValue.value?.elementAtOrNull(1) != null)
-                        ? '${DateFormat("yyyy-MM-dd").format(_selectedValue.value!.elementAt(0)!)}~${DateFormat("yyyy-MM-dd").format(_selectedValue.value!.elementAt(1)!)}'
-                        : '请选择日期范围');
+                    return Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text((_selectedValue.value?.elementAtOrNull(0) !=
+                                  null &&
+                              _selectedValue.value?.elementAtOrNull(1) != null)
+                          ? '${DateFormat("yyyy-MM-dd").format(_selectedValue.value!.elementAt(0)!)}~${DateFormat("yyyy-MM-dd").format(_selectedValue.value!.elementAt(1)!)}'
+                          : '请选择日期范围'),
+                    );
                   }),
               GestureDetector(
                 child: Container(
-                  padding:
-                      EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Text("确定",
                       style: TextStyle(color: themeData.colorPrimary)),
                 ),

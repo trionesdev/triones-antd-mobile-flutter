@@ -138,20 +138,19 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
     return Column(
       children: [
         Container(
+          height: 40,
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(color: themeData.colorBorder, width: 0.5),
             ),
           ),
-          padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             GestureDetector(
               child: Container(
-                padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  "取消",
-                  style: TextStyle(color: themeData.colorPrimary),
+                  "取消"
                 ),
               ),
               onTap: () {
@@ -165,7 +164,7 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
               )),
             GestureDetector(
               child: Container(
-                padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child:
                     Text("确定", style: TextStyle(color: themeData.colorPrimary)),
               ),
