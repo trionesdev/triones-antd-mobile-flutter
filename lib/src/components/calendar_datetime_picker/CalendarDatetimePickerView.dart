@@ -160,9 +160,7 @@ class _LabelState extends State<_Label> {
   void didUpdateWidget(covariant _Label oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.selectedDateTime != widget.selectedDateTime) {
-      setState(() {
-        _selectedDateTime = widget.selectedDateTime ?? DateTime.now();
-      });
+      _selectedDateTime = widget.selectedDateTime ?? DateTime.now();
     }
   }
 
