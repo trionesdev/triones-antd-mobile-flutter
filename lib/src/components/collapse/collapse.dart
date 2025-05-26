@@ -25,7 +25,7 @@ class AntCollapse extends StatefulWidget {
 }
 
 class AntCollapseState extends State<AntCollapse> {
-  List<String> _actveKeys = [];
+  List<String> _activeKeys = [];
   int _generation = 0;
   final Set<AntCollapsePanelState> _panelStates = {};
 
@@ -50,35 +50,31 @@ class AntCollapseState extends State<AntCollapse> {
   }
 
   void _open(AntCollapsePanelState state) {
-    if (state.widget.antKey?.isEmpty ?? false) {
+    if (state.widget.antKey.isEmpty) {
       return;
     }
     if (widget.accordion) {
-      setState(() {
-        _actveKeys = [state.widget.antKey!];
-      });
+      _activeKeys = [state.widget.antKey];
     } else {
-      if (!_actveKeys.contains(state.widget.antKey)) {
-        setState(() {
-          _actveKeys = [..._actveKeys, state.widget.antKey!];
-        });
+      if (!_activeKeys.contains(state.widget.antKey)) {
+        _activeKeys = [..._activeKeys, state.widget.antKey];
       }
     }
     _forceRebuild();
   }
 
   void _close(AntCollapsePanelState state) {
-    if (state.widget.antKey?.isEmpty ?? false) {
+    if (state.widget.antKey.isEmpty) {
       return;
     }
     if (widget.accordion) {
       setState(() {
-        _actveKeys = [];
+        _activeKeys = [];
       });
     } else {
-      _actveKeys.remove(state.widget.antKey!);
+      _activeKeys.remove(state.widget.antKey);
       setState(() {
-        _actveKeys = [..._actveKeys];
+        _activeKeys = [..._activeKeys];
       });
     }
     _forceRebuild();
@@ -86,7 +82,7 @@ class AntCollapseState extends State<AntCollapse> {
 
   @override
   void initState() {
-    _actveKeys = widget.activeKeys ?? widget.defaultActiveKeys ?? [];
+    _activeKeys = widget.activeKeys ?? widget.defaultActiveKeys ?? [];
     super.initState();
   }
 
@@ -94,9 +90,7 @@ class AntCollapseState extends State<AntCollapse> {
   void didUpdateWidget(AntCollapse oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.activeKeys != widget.activeKeys) {
-      setState(() {
-        _actveKeys = widget.activeKeys ?? [];
-      });
+      _activeKeys = widget.activeKeys ?? [];
     }
   }
 
@@ -165,15 +159,15 @@ class AntCollapsePanelState extends State<AntCollapsePanel>
   bool get open {
     AntCollapseState? collapseState = AntCollapse.maybeOf(context);
     if (collapseState != null) {
-      return collapseState._actveKeys.contains(widget.antKey);
+      return collapseState._activeKeys.contains(widget.antKey);
     }
     return _open;
   }
 
   Widget get _arrowIcon {
     AntThemeData themeData = AntTheme.of(context);
-    return widget.arrowIcon?.call(_open) ??
-        (_open
+    return widget.arrowIcon?.call(open) ??
+        (open
             ? Icon(
                 Icons.keyboard_arrow_up_sharp,
                 color: themeData.colorBorder,
@@ -211,18 +205,16 @@ class AntCollapsePanelState extends State<AntCollapsePanel>
               if (widget.disabled ?? false) {
                 return;
               }
-              _open = !_open;
-              if (widget.antKey == null) {
-                return;
-              }
+              // _open = !_open;
               if (collapseState != null) {
-                if (_open) {
-                  collapseState._open(this);
-                } else {
+                if (open) {
                   collapseState._close(this);
+                } else {
+                  collapseState._open(this);
                 }
                 return;
               }
+              _open = !_open;
               setState(() {});
             },
             child: Container(
@@ -246,7 +238,7 @@ class AntCollapsePanelState extends State<AntCollapsePanel>
             ),
           ),
           Visibility(
-              visible: _open,
+              visible: open,
               child: Container(
                   width: double.infinity,
                   decoration:
@@ -269,7 +261,7 @@ class AntCollapsePanelHeaderStyle extends StateStyle {
       minHeight: 40,
       borderBottom: StyleBorder(
         color: AntTheme.of(context).colorBorder,
-        width: 1,
+        width: 0.5,
         style: BorderStyle.solid,
       ),
       padding: StylePadding.symmetric(horizontal: 8),
@@ -287,7 +279,7 @@ class AntCollapsePanelContentStyle extends StateStyle {
     return Style(
       borderBottom: StyleBorder(
         color: AntTheme.of(context).colorBorder,
-        width: 1,
+        width: 0.5,
         style: BorderStyle.solid,
       ),
     );
