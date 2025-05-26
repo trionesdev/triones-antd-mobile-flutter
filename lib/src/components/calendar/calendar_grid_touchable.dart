@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-import '../../../trionesdev_antd_mobile.dart';
-import '../theme/theme.dart';
 import 'calendar_grid.dart';
 
 class AntCalendarGridTouchable extends StatefulWidget {
@@ -13,14 +10,15 @@ class AntCalendarGridTouchable extends StatefulWidget {
       this.onChange,
       this.range = false,
       this.onSelected,
-      this.onRendered, this.onMouthChange});
+      this.onRendered,
+      this.onMouthChange});
 
   final DateTime? mouth;
   final List<DateTime?>? value;
   final ValueChanged<List<DateTime?>?>? onChange;
   final bool range;
   final ValueSetter<DateTime>? onSelected;
-  final ValueChanged<DateTime?>? onMouthChange;
+  final ValueChanged<DateTime>? onMouthChange;
   final ValueChanged<double?>? onRendered;
 
   @override
@@ -28,13 +26,10 @@ class AntCalendarGridTouchable extends StatefulWidget {
 }
 
 class _AntCalendarGridTouchableState extends State<AntCalendarGridTouchable> {
-
-  DateTime? _currentMouth;
+  late DateTime _currentMouth;
   List<DateTime> _mouths = [];
   PageController _controller = PageController();
   double? _pageHeight = 300;
-  double _mouthHeight = 32;
-  double _weekHeight = 32;
 
   List<DateTime> generateMouths(DateTime dateTime) {
     return [
@@ -72,9 +67,9 @@ class _AntCalendarGridTouchableState extends State<AntCalendarGridTouchable> {
   }
 
   @override
-  void didUpdateWidget(covariant AntCalendarGridTouchable oldWidget){
+  void didUpdateWidget(covariant AntCalendarGridTouchable oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if(oldWidget.mouth!= widget.mouth){
+    if (oldWidget.mouth != widget.mouth) {
       _currentMouth = widget.mouth ?? DateTime.now();
       _mouths = generateMouths(_currentMouth!);
       _controller = PageController(initialPage: 1);
@@ -102,14 +97,14 @@ class _AntCalendarGridTouchableState extends State<AntCalendarGridTouchable> {
                 controller: _controller,
                 scrollDirection: Axis.vertical,
                 onPageChanged: (index) {
-                  print(_mouths);
-                  print('当前页：$index');
+
                   if (index == 0) {
                     setState(() {
                       DateTime firstMouth = _mouths.first;
                       _currentMouth = firstMouth;
                       _mouths = generateMouths(firstMouth);
                       _controller.jumpToPage(1);
+                      widget.onMouthChange?.call(_currentMouth);
                     });
                   } else if (index == _mouths.length - 1) {
                     setState(() {
@@ -117,7 +112,7 @@ class _AntCalendarGridTouchableState extends State<AntCalendarGridTouchable> {
                       _currentMouth = lastMouth;
                       _mouths = generateMouths(lastMouth);
                       _controller.jumpToPage(1);
-
+                      widget.onMouthChange?.call(_currentMouth);
                     });
                   }
                 },
@@ -136,14 +131,16 @@ class _AntCalendarGridTouchableState extends State<AntCalendarGridTouchable> {
                             mouthChange(date);
                           }
                         },
+                        onChange: (value) {
+                          widget.onChange?.call(value);
+                        },
                         onRendered: (height) {
-                          print('高度22 $height $_pageHeight');
                           if (_pageHeight != height) {
                             setState(() {
                               _pageHeight = height;
                             });
                             widget.onRendered
-                                ?.call(height! + _mouthHeight + _weekHeight);
+                                ?.call(height);
                           }
                         },
                       ));

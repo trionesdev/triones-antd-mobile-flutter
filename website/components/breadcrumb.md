@@ -2,3 +2,5 @@
 ```dar src=../example/lib/pages/breadcrumb_page.dart preview=/breadcrumb
 
 ```
+
+## API

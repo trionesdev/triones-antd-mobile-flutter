@@ -109,7 +109,11 @@ class AntCalendarDateCellState extends State<AntCalendarDateCell> {
               Text(
                 '${widget.date.day}',
                 style: TextStyle(color: textColor()),
-              )
+              ),
+              if (widget.date.day==1) Text(
+                '${widget.date.month}月',
+                style: TextStyle(fontSize: 10,color: textColor()),
+              ),
             ],
           ),
         ),
@@ -214,7 +218,6 @@ class _AntCalendarGridState extends State<AntCalendarGrid> {
   void didUpdateWidget(AntCalendarGrid oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.month != oldWidget.month) {
-      print('更新月份');
       onMouthChange();
     }
   }

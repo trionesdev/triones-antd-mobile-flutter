@@ -12,52 +12,54 @@ class _CalendarHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Container(
-        //   height: 32,
-        //   padding: EdgeInsets.all(4),
-        //   child: Text(DateFormat("yyyy-MM").format(mouth)),
-        // ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              onTap: () {
-                onMouthChange?.call(DateTime(mouth.year - 1, mouth.month));
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                child: Text("<<"),
+        SizedBox(
+          height: 40,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  onMouthChange?.call(DateTime(mouth.year - 1, mouth.month));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text("<<"),
+                ),
               ),
-            ),
-            GestureDetector(
-              onTap: () {
-                onMouthChange?.call(DateTime(mouth.year, mouth.month - 1));
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                child: Text("<"),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  onMouthChange?.call(DateTime(mouth.year, mouth.month - 1));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text("<"),
+                ),
               ),
-            ),
-            Text(DateFormat("yyyy-MM").format(mouth)),
-            GestureDetector(
-              onTap: () {
-                onMouthChange?.call(DateTime(mouth.year, mouth.month + 1));
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                child: Text(">"),
+              Text(DateFormat("yyyy-MM").format(mouth)),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  onMouthChange?.call(DateTime(mouth.year, mouth.month + 1));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(">"),
+                ),
               ),
-            ),
-            GestureDetector(
-              onTap: () {
-                onMouthChange?.call(DateTime(mouth.year + 1, mouth.month));
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                child: Text(">>"),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  onMouthChange?.call(DateTime(mouth.year + 1, mouth.month));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(">>"),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Container(
           height: 32,
@@ -78,11 +80,12 @@ class _CalendarHeader extends StatelessWidget {
 
 class AntCalendar extends StatefulWidget {
   const AntCalendar(
-      {super.key, this.value, this.mouth,  this.onChange});
+      {super.key, this.value, this.mouth, this.onChange, this.onRendered});
 
   final DateTime? mouth;
   final DateTime? value;
   final ValueChanged<DateTime?>? onChange;
+  final ValueChanged<double?>? onRendered;
 
   @override
   State<StatefulWidget> createState() => AntCalendarState();
@@ -90,10 +93,12 @@ class AntCalendar extends StatefulWidget {
 
 class AntCalendarState extends State<AntCalendar> {
   late DateTime _currentMouth;
+  late DateTime? _value;
 
   @override
   void initState() {
     _currentMouth = widget.mouth ?? DateTime.now();
+    _value = widget.value;
     super.initState();
   }
 
@@ -111,9 +116,20 @@ class AntCalendarState extends State<AntCalendar> {
         ),
         AntCalendarGridTouchable(
           mouth: _currentMouth,
-          value: [widget.value],
+          value: (_value != null) ? [_value] : [],
+          onMouthChange: (newMouth) {
+            setState(() {
+              _currentMouth = newMouth;
+            });
+          },
           onChange: (value) {
+            setState(() {
+              _value = value?.first;
+            });
             widget.onChange?.call(value?.first);
+          },
+          onRendered: (height) {
+            widget.onRendered?.call(height!+72);
           },
         )
       ],
@@ -123,11 +139,12 @@ class AntCalendarState extends State<AntCalendar> {
 
 class AntCalendarRange extends StatefulWidget {
   const AntCalendarRange(
-      {super.key, this.value, this.mouth,  this.onChange});
+      {super.key, this.value, this.mouth, this.onChange, this.onRendered});
 
   final DateTime? mouth;
   final List<DateTime?>? value;
   final ValueChanged<List<DateTime?>?>? onChange;
+  final ValueChanged<double?>? onRendered;
 
   @override
   State<StatefulWidget> createState() => AntCalendarRangeState();
@@ -135,10 +152,12 @@ class AntCalendarRange extends StatefulWidget {
 
 class AntCalendarRangeState extends State<AntCalendarRange> {
   late DateTime _currentMouth;
+  late List<DateTime?>? _value;
 
   @override
   void initState() {
     _currentMouth = widget.mouth ?? DateTime.now();
+    _value = widget.value;
     super.initState();
   }
 
@@ -146,12 +165,28 @@ class AntCalendarRangeState extends State<AntCalendarRange> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _CalendarHeader(mouth: _currentMouth),
+        _CalendarHeader(
+          mouth: _currentMouth,
+          onMouthChange: (newMouth) {
+            setState(() {
+              _currentMouth = newMouth;
+            });
+          },
+        ),
         AntCalendarGridTouchable(
+          mouth: _currentMouth,
           range: true,
-          value: widget.value,
+          value: _value,
+          onMouthChange: (newMouth) {
+            setState(() {
+              _currentMouth = newMouth;
+            });
+          },
           onChange: (value) {
             widget.onChange?.call(value);
+          },
+          onRendered: (height) {
+            widget.onRendered?.call(height!+72);
           },
         )
       ],

@@ -81,28 +81,31 @@ class _AntCalendarDatetimePickerViewState
             ],
           ),
         ),
-        Container(
+        SizedBox(
           height: _height ?? 500,
+          // constraints: BoxConstraints(minHeight: _height ?? 500),
           child: IndexedStack(
             index: _showIndex,
             children: [
-              // AntCalendarView(
-              //   value: _selectedDateTime.value,
-              //   onSelected: (date) {
-              //     setState(() {
-              //       _selectedDateTime.value = _selectedDateTime.value?.copyWith(
-              //         year: date.year,
-              //         month: date.month,
-              //         day: date.day,
-              //       );
-              //     });
-              //   },
-              //   onRendered: (double? value) {
-              //     setState(() {
-              //       _height = value;
-              //     });
-              //   },
-              // ),
+              SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                child: AntCalendar(
+                value: _selectedDateTime.value,
+                onChange: (date) {
+                  setState(() {
+                    _selectedDateTime.value = _selectedDateTime.value?.copyWith(
+                      year: date?.year,
+                      month: date?.month,
+                      day: date?.day,
+                    );
+                  });
+                },
+                onRendered: (double? value) {
+                  setState(() {
+                    _height = value;
+                  });
+                },
+              ),),
               AntPickerViewMultiColumns(
                 columns: _timeOptions,
                 itemHeight: 34,
