@@ -44,8 +44,8 @@ class AntDialogView extends StatelessWidget {
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                   border: Border(
-                      bottom:
-                          BorderSide(color: themeData.colorBorder, width: 0.5))),
+                      bottom: BorderSide(
+                          color: themeData.colorBorder, width: 0.5))),
               child: content,
             ),
             if (type == AntDialogViewType.alert)
@@ -68,6 +68,7 @@ class AntDialogView extends StatelessWidget {
               Row(children: [
                 Expanded(
                     child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
                         onTap: () {
                           onCancel?.call();
                           Navigator.of(context).pop();
@@ -78,13 +79,15 @@ class AntDialogView extends StatelessWidget {
                           decoration: BoxDecoration(
                               border: Border(
                                   right: BorderSide(
-                                      color: themeData.colorBorder, width: 0.5))),
+                                      color: themeData.colorBorder,
+                                      width: 0.5))),
                           child: Text(cancelText ?? "取消",
                               style: TextStyle(
                                   fontSize: 16, color: themeData.colorPrimary)),
                         ))),
                 Expanded(
                     child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
                         onTap: () {
                           onConfirm?.call();
                         },
