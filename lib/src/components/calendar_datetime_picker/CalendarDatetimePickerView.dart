@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 import '../../../trionesdev_antd_mobile.dart';
-import '../calendar_picker/calendar_view.dart';
+import '../calendar/calendar_grid_touchable.dart';
 import '../picker/picker_view_multi_columns.dart';
 import '../theme/theme.dart';
 
@@ -81,19 +81,22 @@ class _AntCalendarDatetimePickerViewState
             ],
           ),
         ),
-        Container(
+        SizedBox(
           height: _height ?? 500,
+          // constraints: BoxConstraints(minHeight: _height ?? 500),
           child: IndexedStack(
             index: _showIndex,
             children: [
-              AntCalendarView(
+              SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                child: AntCalendar(
                 value: _selectedDateTime.value,
-                onSelected: (date) {
+                onChange: (date) {
                   setState(() {
                     _selectedDateTime.value = _selectedDateTime.value?.copyWith(
-                      year: date.year,
-                      month: date.month,
-                      day: date.day,
+                      year: date?.year,
+                      month: date?.month,
+                      day: date?.day,
                     );
                   });
                 },
@@ -102,7 +105,7 @@ class _AntCalendarDatetimePickerViewState
                     _height = value;
                   });
                 },
-              ),
+              ),),
               AntPickerViewMultiColumns(
                 columns: _timeOptions,
                 itemHeight: 34,

@@ -21,6 +21,7 @@ class AntThemeData with Diagnosticable {
     double? borderRadiusSM,
     double? borderRadiusXS,
     Color? colorPrimary,
+    Color? colorPrimaryBg,
     Color? colorSuccess,
     Color? colorWarning,
     Color? colorError,
@@ -39,6 +40,7 @@ class AntThemeData with Diagnosticable {
     colorInfo ??= Color(0xFF1890ff);
     colorLink ??= Color(0xFF1677ff);
     colorPrimary ??= Color(0xFF1677FF);
+    colorPrimaryBg ??=Color(0xffe6f4ff);
     colorSuccess ??= Color(0xff52c41a);
     colorWarning ??= Color(0xfffaad14);
     colorTextBase ??= Color(0xff000000);
@@ -65,6 +67,7 @@ class AntThemeData with Diagnosticable {
       borderRadiusSM: borderRadiusSM,
       borderRadiusXS: borderRadiusXS,
       colorPrimary: colorPrimary,
+      colorPrimaryBg:colorPrimaryBg,
       colorSuccess: colorSuccess,
       colorWarning: colorWarning,
       colorError: colorError,
@@ -87,6 +90,7 @@ class AntThemeData with Diagnosticable {
     required this.borderRadiusSM,
     required this.borderRadiusXS,
     required this.colorPrimary,
+    required this.colorPrimaryBg,
     required this.colorSuccess,
     required this.colorWarning,
     required this.colorError,
@@ -102,6 +106,7 @@ class AntThemeData with Diagnosticable {
   final Color colorInfo;
   final Color colorLink;
   final Color colorPrimary;
+  final Color colorPrimaryBg;
   final Color colorSuccess;
   final Color colorTextBase;
   final Color colorWarning;

@@ -26,7 +26,9 @@ export 'src/components/search_bar/search_bar.dart';
 export 'src/components/tag/tag.dart';
 export 'src/components/popup/popup.dart';
 export 'src/components/picker/index.dart';
+
 export 'src/components/cascader_picker/cascader_picker.dart';
+export 'src/components/calendar/calendar.dart';
 export 'src/components/calendar_picker/calendar_picker.dart';
 export 'src/components/calendar_picker/calendar_picker_view.dart';
 export 'src/components/calendar_datetime_picker/calendar_datetime_picker.dart';

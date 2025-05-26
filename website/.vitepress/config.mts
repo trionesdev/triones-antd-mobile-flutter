@@ -65,6 +65,7 @@ export default defineConfig({
                         {text: 'Form  表单', link: '/components/form'},
                         {text: 'Input  输入框', link: '/components/input'},
                         {text: 'Picker  选择器', link: '/components/picker'},
+                        {text: 'Calendar  日历', link: '/components/calendar'},
                         {text: 'CalendarPicker  日历选择器', link: '/components/calendar-picker'},
                         {text: 'CalendarDatetimePicker  日历时间选择器', link: '/components/calendar-datetime-picker'},
                         {text: 'Radio  单选框', link: '/components/radio'},
