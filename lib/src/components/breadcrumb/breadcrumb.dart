@@ -31,6 +31,7 @@ class _AntBreadcrumbState extends State<AntBreadcrumb> {
     for (var i = 0; i < records.length; i++) {
       bool isLast = i == records.length - 1;
       result.add(GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: (){
           records[i].onTap?.call();
         },
