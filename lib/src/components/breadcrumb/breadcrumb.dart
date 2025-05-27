@@ -5,7 +5,7 @@ class AntBreadcrumbItemRecord {
   AntBreadcrumbItemRecord({this.title, this.onTap});
 
   String? title;
-  Function(BuildContext context)? onTap;
+  void Function()? onTap;
 }
 
 class AntBreadcrumb extends StatefulWidget {
@@ -27,7 +27,9 @@ class _AntBreadcrumbState extends State<AntBreadcrumb> {
     for (var i = 0; i < records.length; i++) {
       bool isLast = i == records.length - 1;
       result.add(GestureDetector(
-        onTap: records[i].onTap?.call(context),
+        onTap: (){
+          records[i].onTap?.call();
+        },
         child: widget.itemRender?.call(records[i], i) ??
             Text(
               records[i].title ?? '',
