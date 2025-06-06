@@ -22,17 +22,16 @@ class AntBreadcrumb extends StatefulWidget {
 }
 
 class _AntBreadcrumbState extends State<AntBreadcrumb> {
-
   late ScrollController _scrollController;
 
   List<Widget> _buildItems(List<AntBreadcrumbItemRecord> records) {
-    AntThemeData    themeData =  AntTheme.of(context);
+    AntThemeData themeData = AntTheme.of(context);
     List<Widget> result = [];
     for (var i = 0; i < records.length; i++) {
       bool isLast = i == records.length - 1;
       result.add(GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: (){
+        onTap: () {
           records[i].onTap?.call();
         },
         child: widget.itemRender?.call(records[i], i) ??

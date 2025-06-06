@@ -2,11 +2,10 @@ library;
 
 import 'package:flutter/material.dart';
 import '../../../trionesdev_antd_mobile.dart';
-import '../theme/theme.dart';
+import '../types.dart';
 
 enum AntButtonType { primary, text, link }
 
-enum AntButtonSize { large, middle, small }
 
 enum AntButtonVariant {
   outlined,
@@ -33,7 +32,7 @@ class AntButton extends StatefulWidget {
       this.onPressed,
       this.variant,
       this.shape = AntButtonShape.round,
-      this.size = AntButtonSize.middle,
+      this.size = AntSize.middle,
       this.style,
         this.child
       });
@@ -48,7 +47,7 @@ class AntButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final AntButtonVariant? variant;
   final AntButtonShape shape;
-  final AntButtonSize size;
+  final AntSize size;
   final StateStyle? style;
   final Widget? child;
 
@@ -59,11 +58,11 @@ class AntButton extends StatefulWidget {
 class _ButtonState extends State<AntButton> with MaterialStateMixin {
   double? get height {
     switch (widget.size) {
-      case AntButtonSize.large:
+      case AntSize.large:
         return 48;
-      case AntButtonSize.middle:
+      case AntSize.middle:
         return 32;
-      case AntButtonSize.small:
+      case AntSize.small:
         return 24;
     }
   }
@@ -74,11 +73,11 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
     }
     if (widget.text == null && widget.child == null) {
       switch (widget.size) {
-        case AntButtonSize.large:
+        case AntSize.large:
           return 48;
-        case AntButtonSize.middle:
+        case AntSize.middle:
           return 32;
-        case AntButtonSize.small:
+        case AntSize.small:
           return 24;
       }
     }
@@ -191,11 +190,11 @@ class _AntButtonStyle extends StateStyle {
     if (isIconButton) {
       return StylePadding();
     } else {
-      if (button.size == AntButtonSize.small) {
+      if (button.size == AntSize.small) {
         return StylePadding(left: 12, right: 12);
-      } else if (button.size == AntButtonSize.middle) {
+      } else if (button.size == AntSize.middle) {
         return StylePadding(left: 18, right: 18);
-      } else if (button.size == AntButtonSize.large) {
+      } else if (button.size == AntSize.large) {
         return StylePadding(left: 24, right: 24);
       }
     }

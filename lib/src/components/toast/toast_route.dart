@@ -3,7 +3,7 @@ import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 enum AntToastPosition { top, bottom, center }
 
-class AntToastRoute extends PopupRoute {
+class AntToastRoute<T> extends PopupRoute<T> {
   AntToastRoute({
     this.style,
     this.content,

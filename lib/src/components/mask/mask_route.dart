@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
-class AntMaskRoute extends PopupRoute {
+class AntMaskRoute<T> extends PopupRoute<T> {
   AntMaskRoute({
     this.child,
     this.onMaskClick,

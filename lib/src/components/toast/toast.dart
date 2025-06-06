@@ -26,3 +26,28 @@ class AntToast {
     });
   }
 }
+
+/// 显示轻提示
+Future<T?> showAntToast<T>({
+  required BuildContext context,
+  Widget? content,
+  Icon? icon,
+  AntToastPosition? position,
+  int? duration = 2000,
+  Function? afterClose,
+}) {
+  Future<T?> toastRoute = Navigator.push(
+      context,
+      AntToastRoute<T>(
+        icon: icon,
+        content: content,
+        position: position,
+      ));
+  Future.delayed(Duration(milliseconds: duration ?? 2000)).then((_) {
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
+    afterClose?.call();
+  });
+  return toastRoute;
+}

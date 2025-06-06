@@ -26,9 +26,11 @@ class _CalendarDatetimePickerPageState
               child: AntButton(
                   text: "打开",
                   onPressed: () {
-                    AntCalendarDatetimePicker.show(context: context,onOk: (date) {
-                      print(date.toString());
-                    });
+                    showAntCalendarDatetimePicker(
+                        context: context,
+                        onOk: (date) {
+                          print(date.toString());
+                        });
                   }),
             )
           ],

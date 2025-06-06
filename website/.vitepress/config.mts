@@ -51,6 +51,7 @@ export default defineConfig({
                         {text: 'Avatar 头像', link: '/components/avatar'},
                         {text: 'Card 卡片', link: '/components/card'},
                         {text: 'Collapse 折叠面板', link: '/components/collapse'},
+                        {text: 'Dialog 折叠面板', link: '/components/collapse'},
                         {text: 'Image 图片', link: '/components/image'},
                         {text: 'List 列表', link: '/components/list'},
                         {text: 'Tag 标签', link: '/components/tag'},
@@ -80,6 +81,8 @@ export default defineConfig({
                     text: '反馈',
                     items: [
                         {text: 'ActionSheet  操作表', link: '/components/action-sheet'},
+                        {text: 'Badge  徽标', link: '/components/badge'},
+                        {text: 'Dialog  对话框', link: '/components/dialog'},
                         {text: 'Empty  空状态', link: '/components/empty'},
                         {text: 'Toast 轻提示', link: '/components/toast'},
                     ]

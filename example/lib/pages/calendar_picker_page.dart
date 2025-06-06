@@ -26,9 +26,12 @@ class _CalendarPickerPageState extends State<CalendarPickerPage> {
                   AntButton(
                     text: "基本用法",
                     onPressed: () {
-                      AntCalendarPicker.show(context: context,  onOk: (value) {
-                        AntToast.show(context: context, content: Text("$value"));
-                      });
+                      showAntCalendarPicker(
+                          context: context,
+                          onOk: (value) {
+                            AntToast.show(
+                                context: context, content: Text("$value"));
+                          });
                     },
                   ),
                 ],
@@ -41,9 +44,13 @@ class _CalendarPickerPageState extends State<CalendarPickerPage> {
                   AntButton(
                     text: "设置默认值",
                     onPressed: () {
-                      AntCalendarPicker.show(context: context, value: DateTime.now(), onOk: (value) {
-                        AntToast.show(context: context, content: Text("$value"));
-                      });
+                      showAntCalendarPicker(
+                          context: context,
+                          value: DateTime.now(),
+                          onOk: (value) {
+                            AntToast.show(
+                                context: context, content: Text("$value"));
+                          });
                     },
                   ),
                 ],
@@ -56,9 +63,14 @@ class _CalendarPickerPageState extends State<CalendarPickerPage> {
                   AntButton(
                     text: "基本用法",
                     onPressed: () {
-                      AntCalendarRangePicker.show(context: context,onOk: (value){
-                        AntToast.show(context: context, content: Text("${value?.elementAtOrNull(0)}~${value?.elementAtOrNull(1)}"));
-                      });
+                      showAntCalendarRangePicker(
+                          context: context,
+                          onOk: (value) {
+                            AntToast.show(
+                                context: context,
+                                content: Text(
+                                    "${value?.elementAtOrNull(0)}~${value?.elementAtOrNull(1)}"));
+                          });
                     },
                   ),
                 ],
@@ -71,9 +83,18 @@ class _CalendarPickerPageState extends State<CalendarPickerPage> {
                   AntButton(
                     text: "设置默认值",
                     onPressed: () {
-                      AntCalendarRangePicker.show(context: context,value: [DateTime.now(),DateTime.now().add(Duration(days: 7))],onOk: (value){
-                        AntToast.show(context: context, content: Text("${value?.elementAtOrNull(0)}~${value?.elementAtOrNull(1)}"));
-                      });
+                      showAntCalendarRangePicker(
+                          context: context,
+                          value: [
+                            DateTime.now(),
+                            DateTime.now().add(Duration(days: 7))
+                          ],
+                          onOk: (value) {
+                            showAntToast(
+                                context: context,
+                                content: Text(
+                                    "${value?.elementAtOrNull(0)}~${value?.elementAtOrNull(1)}"));
+                          });
                     },
                   ),
                 ],
