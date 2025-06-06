@@ -243,14 +243,14 @@ class _ButtonPageState extends State<ButtonPage> {
                   children: [
                     AntButton(
                       text: 'Large',
-                      size: AntButtonSize.large,
+                      size: AntSize.large,
                       color: Color(0xffEB2F96),
                       onPressed: () {
                         print('ElevatedButton');
                       },
                     ),
                     AntButton(
-                      size: AntButtonSize.large,
+                      size: AntSize.large,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -259,7 +259,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     ),
                     AntButton(
                       shape: AntButtonShape.circle,
-                      size: AntButtonSize.large,
+                      size: AntSize.large,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -298,14 +298,14 @@ class _ButtonPageState extends State<ButtonPage> {
                     ),
                     AntButton(
                       text: 'Small',
-                      size: AntButtonSize.small,
+                      size: AntSize.small,
                       color: Color(0xffEB2F96),
                       onPressed: () {
                         print('ElevatedButton');
                       },
                     ),
                     AntButton(
-                      size: AntButtonSize.small,
+                      size: AntSize.small,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -313,7 +313,7 @@ class _ButtonPageState extends State<ButtonPage> {
                       },
                     ),
                     AntButton(
-                      size: AntButtonSize.small,
+                      size: AntSize.small,
                       shape: AntButtonShape.circle,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
@@ -366,7 +366,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     ),
                     AntButton(
                       shape: AntButtonShape.circle,
-                      size: AntButtonSize.small,
+                      size: AntSize.small,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -375,7 +375,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     ),
                     AntButton(
                       shape: AntButtonShape.circle,
-                      size: AntButtonSize.middle,
+                      size: AntSize.middle,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -384,7 +384,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     ),
                     AntButton(
                       shape: AntButtonShape.circle,
-                      size: AntButtonSize.large,
+                      size: AntSize.large,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {

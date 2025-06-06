@@ -6,6 +6,7 @@ export 'src/components/theme/theme.dart';
 export 'src/components/style/style.dart';
 export 'src/components/style/state_style.dart';
 export 'src/components/style/style_property.dart';
+export 'src/components/types.dart';
 //endregion
 
 export 'src/components/ant.dart';
