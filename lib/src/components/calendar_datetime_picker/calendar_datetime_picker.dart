@@ -20,3 +20,19 @@ class AntCalendarDatetimePicker {
         ));
   }
 }
+
+Future<T?> showAntCalendarDatetimePicker<T>({
+  required BuildContext context,
+  DateTime? value,
+  ValueChanged<DateTime?>? onOk,
+}) {
+  return showAntPopup(
+      context: context,
+      child: AntCalendarDatetimePickerView(
+        value: value,
+        onOk: (date) {
+          Navigator.of(context).pop();
+          onOk?.call(date);
+        },
+      ));
+}

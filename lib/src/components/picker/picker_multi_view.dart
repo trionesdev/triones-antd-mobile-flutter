@@ -64,17 +64,17 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
+          height: 40,
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(color: Colors.grey, width: 0.5),
             ),
           ),
-          padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
           child:
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             GestureDetector(
               child: Container(
-                padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   "取消",
                 ),
@@ -90,7 +90,7 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
                   )),
             GestureDetector(
               child: Container(
-                padding: EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text("确定", style: TextStyle(color: theme.colorPrimary)),
               ),
               onTap: () {

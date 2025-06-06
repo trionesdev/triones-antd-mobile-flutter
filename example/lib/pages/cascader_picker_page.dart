@@ -46,7 +46,7 @@ class _CascaderPickerPageState extends State<CascaderPickerPage> {
             child: AntButton(
                 text: "CascaderPicker",
                 onPressed: () {
-                  AntCascaderPicker.show(
+                  showAntCascaderPicker(
                       context: context,
                       options: _options,
                       maxHeight: 400,
@@ -60,9 +60,9 @@ class _CascaderPickerPageState extends State<CascaderPickerPage> {
             child: AntButton(
                 text: "CascaderPicker 默认值",
                 onPressed: () {
-                  AntCascaderPicker.show(
+                  showAntCascaderPicker(
                       context: context,
-                      value: ["jiangsu","taizhou"],
+                      value: ["jiangsu", "taizhou"],
                       options: _options,
                       maxHeight: 400,
                       onOk: (value) {
@@ -75,7 +75,7 @@ class _CascaderPickerPageState extends State<CascaderPickerPage> {
             child: AntButton(
                 text: "CascaderPicker 默认值",
                 onPressed: () {
-                  AntCascaderPicker.show(
+                  showAntCascaderPicker(
                       context: context,
                       value: ["hebei"],
                       options: _options,

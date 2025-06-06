@@ -1,10 +1,7 @@
 library;
 
-import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' as material;
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 @immutable
 class AntThemeData with Diagnosticable {
@@ -21,13 +18,13 @@ class AntThemeData with Diagnosticable {
     double? borderRadiusSM,
     double? borderRadiusXS,
     Color? colorPrimary,
+    Color? colorPrimaryBg,
     Color? colorSuccess,
     Color? colorWarning,
     Color? colorError,
     Color? colorBorder,
     double? borderRadius,
     Brightness? brightness,
-
   }) {
     platform ??= defaultTargetPlatform;
 
@@ -39,6 +36,7 @@ class AntThemeData with Diagnosticable {
     colorInfo ??= Color(0xFF1890ff);
     colorLink ??= Color(0xFF1677ff);
     colorPrimary ??= Color(0xFF1677FF);
+    colorPrimaryBg ??= Color(0xffe6f4ff);
     colorSuccess ??= Color(0xff52c41a);
     colorWarning ??= Color(0xfffaad14);
     colorTextBase ??= Color(0xff000000);
@@ -65,6 +63,7 @@ class AntThemeData with Diagnosticable {
       borderRadiusSM: borderRadiusSM,
       borderRadiusXS: borderRadiusXS,
       colorPrimary: colorPrimary,
+      colorPrimaryBg: colorPrimaryBg,
       colorSuccess: colorSuccess,
       colorWarning: colorWarning,
       colorError: colorError,
@@ -87,6 +86,7 @@ class AntThemeData with Diagnosticable {
     required this.borderRadiusSM,
     required this.borderRadiusXS,
     required this.colorPrimary,
+    required this.colorPrimaryBg,
     required this.colorSuccess,
     required this.colorWarning,
     required this.colorError,
@@ -94,6 +94,7 @@ class AntThemeData with Diagnosticable {
     required this.borderRadius,
     required this.brightness,
   });
+
   final TargetPlatform platform;
 
   final double borderRadius;
@@ -102,6 +103,7 @@ class AntThemeData with Diagnosticable {
   final Color colorInfo;
   final Color colorLink;
   final Color colorPrimary;
+  final Color colorPrimaryBg;
   final Color colorSuccess;
   final Color colorTextBase;
   final Color colorWarning;
@@ -116,13 +118,15 @@ class AntThemeData with Diagnosticable {
 
   final Brightness brightness;
 
-  factory AntThemeData.light() => AntThemeData(
-    brightness: Brightness.light,
-  );
+  factory AntThemeData.light() =>
+      AntThemeData(
+        brightness: Brightness.light,
+      );
 
-  factory AntThemeData.dark() => AntThemeData(
-    brightness: Brightness.dark,
-  );
+  factory AntThemeData.dark() =>
+      AntThemeData(
+        brightness: Brightness.dark,
+      );
 
   factory AntThemeData.fallback() => AntThemeData.light();
 
@@ -131,20 +135,26 @@ class AntThemeData with Diagnosticable {
     return AntThemeData();
   }
 
-  static AntThemeData localize(
-      AntThemeData? baseTheme, AntThemeData? localTextGeometry) {
+  static AntThemeData localize(AntThemeData? baseTheme,
+      AntThemeData? localTextGeometry) {
     return baseTheme ?? AntThemeData();
   }
 
-  material.ThemeData toMaterialThemeData() {
-    return material.ThemeData(
-        splashFactory: material.NoSplash.splashFactory,
+  ThemeData toMaterialThemeData() {
+    return ThemeData(
+        splashFactory: NoSplash.splashFactory,
         //移除水纹效果
-        splashColor: material.Colors.transparent,
-        highlightColor: material.Colors.transparent,
-        shadowColor: material.Colors.transparent,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        shadowColor: Colors.transparent,
         //移除阴影效果
-        textTheme: material.TextTheme());
+        textTheme: TextTheme(),
+        dialogBackgroundColor: colorBgBase,
+        bottomSheetTheme: BottomSheetThemeData(backgroundColor: colorBgBase,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(borderRadius),
+                topRight: Radius.circular(borderRadius))))
+    );
   }
 
   @override

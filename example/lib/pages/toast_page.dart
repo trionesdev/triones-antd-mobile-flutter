@@ -26,7 +26,7 @@ class _ToastPageState extends State<ToastPage> {
                 AntButton(
                     text: "轻提示",
                     onPressed: () {
-                      AntToast.show(
+                      showAntToast(
                           context: context,
                           content: Text("Hello World, This is a long text"));
                     }),
@@ -39,7 +39,7 @@ class _ToastPageState extends State<ToastPage> {
                 AntButton(
                   text: "成功",
                   onPressed: () {
-                    AntToast.show(
+                    showAntToast(
                         context: context,
                         icon: Icon(Icons.check),
                         content: Text("操作成功"));
@@ -48,7 +48,7 @@ class _ToastPageState extends State<ToastPage> {
                 AntButton(
                   text: "失败",
                   onPressed: () {
-                    AntToast.show(
+                    showAntToast(
                         context: context,
                         icon: Icon(Icons.close),
                         content: Text("操作失败"));
@@ -65,7 +65,7 @@ class _ToastPageState extends State<ToastPage> {
                 AntButton(
                   text: "顶部",
                   onPressed: () {
-                    AntToast.show(
+                    showAntToast(
                         context: context,
                         position: AntToastPosition.top,
                         content: Text("顶部显示"));
@@ -74,7 +74,7 @@ class _ToastPageState extends State<ToastPage> {
                 AntButton(
                   text: "底部",
                   onPressed: () {
-                    AntToast.show(
+                    showAntToast(
                         context: context,
                         position: AntToastPosition.bottom,
                         content: Text("底部显示"));

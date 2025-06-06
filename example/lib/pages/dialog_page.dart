@@ -28,7 +28,7 @@ class _DialogPageState extends State<DialogPage> {
                       block: true,
                       text: "最简单的小对话框",
                       onPressed: () {
-                        AntDialog.alert(
+                        showAntAlertDialog(
                             context: context,
                             content: Container(
                               alignment: Alignment.center,
@@ -43,7 +43,7 @@ class _DialogPageState extends State<DialogPage> {
                       block: true,
                       text: "点击遮罩层关闭",
                       onPressed: () {
-                        AntDialog.alert(
+                        showAntAlertDialog(
                             context: context,
                             closeOnMaskClick: true,
                             content: Container(
@@ -67,7 +67,7 @@ class _DialogPageState extends State<DialogPage> {
                       block: true,
                       text: "确定",
                       onPressed: () {
-                        AntDialog.confirm(
+                        showAntConfirmDialog(
                             context: context,
                             content: Container(
                               alignment: Alignment.center,

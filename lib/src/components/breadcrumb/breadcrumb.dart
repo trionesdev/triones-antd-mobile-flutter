@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../trionesdev_antd_mobile.dart';
+
 class AntBreadcrumbItemRecord {
   AntBreadcrumbItemRecord({this.title, this.onTap});
 
@@ -23,22 +25,26 @@ class _AntBreadcrumbState extends State<AntBreadcrumb> {
   late ScrollController _scrollController;
 
   List<Widget> _buildItems(List<AntBreadcrumbItemRecord> records) {
+    AntThemeData themeData = AntTheme.of(context);
     List<Widget> result = [];
     for (var i = 0; i < records.length; i++) {
       bool isLast = i == records.length - 1;
       result.add(GestureDetector(
-        onTap: records[i].onTap,
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          records[i].onTap?.call();
+        },
         child: widget.itemRender?.call(records[i], i) ??
             Text(
               records[i].title ?? '',
-              style: TextStyle(color: isLast ? null : Color(0xff8C8C8C)),
+              style: TextStyle(color: isLast ? null : themeData.colorBorder),
             ),
       ));
       if (isLast) {
         break;
       }
       result.add(widget.separator ??
-          const Text(' / ', style: TextStyle(color: Color(0xff8C8C8C))));
+          Text(' / ', style: TextStyle(color: themeData.colorBorder)));
     }
     return result;
   }
