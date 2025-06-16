@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
 class AntScaffold extends StatefulWidget {
-  const AntScaffold(
-      {super.key,
-      this.appBar,
-      this.body,
-      this.bottomNavigationBar,
-      this.backgroundColor = Colors.white,
-      this.bottomSheet});
+  const AntScaffold({super.key,
+    this.appBar,
+    this.body,
+    this.bottomNavigationBar,
+    this.backgroundColor = Colors.white,
+    this.bottomSheet});
 
   /// 顶部导航栏
   final PreferredSizeWidget? appBar;
@@ -32,7 +31,8 @@ class _AntScaffoldState extends State<AntScaffold> {
     return Scaffold(
       appBar: widget.appBar,
       body: widget.body,
-      bottomNavigationBar: widget.bottomNavigationBar,
+      bottomNavigationBar: widget.bottomNavigationBar ??
+          SafeArea(child: Container(height: 0,)),
       backgroundColor: widget.backgroundColor,
       bottomSheet: widget.bottomSheet,
     );
@@ -45,5 +45,4 @@ class AntScaffoldMessenger extends ScaffoldMessenger {
 }
 
 class AntScaffoldMessengerState extends ScaffoldMessengerState {
-
 }
