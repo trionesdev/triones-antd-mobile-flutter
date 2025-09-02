@@ -14,13 +14,13 @@ class AntInputNumber extends StatefulWidget {
     this.onChange});
 
   final double? defaultValue;
-  final double? value;
+  final num? value;
   final double? min;
   final double? max;
-  final double step;
+  final num step;
   final bool keyboard;
   final double iconSize;
-  final Function(double val)? onChange;
+  final Function(num val)? onChange;
 
   @override
   State<StatefulWidget> createState() => _AntInputNumberState();
@@ -29,7 +29,7 @@ class AntInputNumber extends StatefulWidget {
 class _AntInputNumberState extends State<AntInputNumber> {
   TextEditingController _controller = TextEditingController();
   FocusNode _focusNode = FocusNode();
-  double _value = 0;
+  num _value = 0;
 
   bool get _isMin {
     if (widget.min != null) {
@@ -45,7 +45,7 @@ class _AntInputNumberState extends State<AntInputNumber> {
     return false;
   }
 
-  void changeValue(double val) {
+  void changeValue(num val) {
     setState(() {
       _value = val;
     });
@@ -96,7 +96,7 @@ class _AntInputNumberState extends State<AntInputNumber> {
             child: EditableText(
               controller: _controller,
               focusNode: _focusNode,
-              style: TextStyle(),
+              style: TextStyle(color: Colors.black),
               textAlign: TextAlign.center,
               cursorColor: Colors.grey,
               backgroundCursorColor: Colors.grey,
@@ -105,7 +105,7 @@ class _AntInputNumberState extends State<AntInputNumber> {
                 _focusNode.unfocus();
               },
               onChanged: (val) {
-                changeValue(double.tryParse(val) ?? _value);
+                changeValue(num.tryParse(val) ?? _value);
               },
               keyboardType: widget.keyboard ? TextInputType.number : null,
             ),
