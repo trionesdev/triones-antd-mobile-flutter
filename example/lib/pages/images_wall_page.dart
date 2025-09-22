@@ -27,6 +27,20 @@ class _ImageUploadPageState extends State<ImagesWallPage> {
               ),
             ),
             DemoBlock(
+              title: "最大张数",
+              child: Column(
+                children: [AntImagesWall(maxCount: 5)],
+              ),
+            ),
+            DemoBlock(
+              title: "上传",
+              child: Column(
+                children: [AntImagesWall(uploadRequest: (file, onSuccess) async  {
+                  return "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+                })],
+              ),
+            ),
+            DemoBlock(
               title: "赋值",
               child: AntImagesWall(
                 value: [

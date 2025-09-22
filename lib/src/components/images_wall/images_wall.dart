@@ -9,13 +9,12 @@ import 'package:trionesdev_antd_mobile/src/components/images_wall/images_preview
 import 'package:uuid/uuid.dart';
 
 class AntImagesWallItemRecord {
-  AntImagesWallItemRecord(
-      {this.uid,
-      this.status = AntImageStatus.done,
-      this.image,
-      this.path,
-      this.type,
-      this.fileName});
+  AntImagesWallItemRecord({this.uid,
+    this.status = AntImageStatus.done,
+    this.image,
+    this.path,
+    this.type,
+    this.fileName});
 
   String? uid;
   AntImageStatus? status;
@@ -39,15 +38,14 @@ enum AntImageType {
 }
 
 class AntImagesWall extends StatefulWidget {
-  const AntImagesWall(
-      {super.key,
-      this.value,
-      this.maxCount,
-      this.disabled = false,
-      this.crossAxisCount = 5,
-      this.onChange,
-      this.uploadRequest,
-      this.multiSelect = true});
+  const AntImagesWall({super.key,
+    this.value,
+    this.maxCount,
+    this.disabled = false,
+    this.crossAxisCount = 5,
+    this.onChange,
+    this.uploadRequest,
+    this.multiSelect = true});
 
   final List<AntImagesWallItemRecord>? value;
   final ValueChanged<List<AntImagesWallItemRecord>>? onChange;
@@ -56,7 +54,7 @@ class AntImagesWall extends StatefulWidget {
   final bool disabled;
   final bool? multiSelect;
   final Future<String?> Function(List<int> fileContent, String? fileName)?
-      uploadRequest;
+  uploadRequest;
 
   @override
   State<StatefulWidget> createState() => _AntImagesWallState();
@@ -77,6 +75,8 @@ class _AntImagesWallState extends State<AntImagesWall> {
       return;
     }
     // List<AntImagesWallItemRecord> imageRecords = [];
+    List<Future> uploadRequests = [
+    ]; //如果有上传请求，则将所有异步请求放在一个列表中，再等待所有异步请求完成，再更新状态
     for (var image in images) {
       var uid = uuid.v4();
       if (kIsWeb) {
@@ -106,15 +106,15 @@ class _AntImagesWallState extends State<AntImagesWall> {
         image.readAsBytes().then((bytes) async {
           setState(() {
             var imageItem =
-                _images.firstWhereOrNull((element) => element.uid == uid);
+            _images.firstWhereOrNull((element) => element.uid == uid);
             if (imageItem != null) {
               imageItem.status = AntImageStatus.uploading;
             }
           });
-          widget.uploadRequest!(bytes, image.name).then((url) {
+          var req = widget.uploadRequest!(bytes, image.name).then((url) {
             setState(() {
               var imageItem =
-                  _images.firstWhereOrNull((element) => element.uid == uid);
+              _images.firstWhereOrNull((element) => element.uid == uid);
               if (imageItem != null) {
                 imageItem.image = Image.network(
                   url!,
@@ -128,32 +128,55 @@ class _AntImagesWallState extends State<AntImagesWall> {
           }).catchError((err) {
             setState(() {
               var imageItem =
-                  _images.firstWhereOrNull((element) => element.uid == uid);
+              _images.firstWhereOrNull((element) => element.uid == uid);
               if (imageItem != null) {
                 imageItem.status = AntImageStatus.error;
               }
             });
-          }).whenComplete(() {
-            onChange(_images);
           });
+          uploadRequests.add(req);
         });
       }
     }
-    // setState(() {
-    //
-    //   onChange(_images);
-    // });
+    if (uploadRequests.isNotEmpty) {
+      Future.wait(uploadRequests).then((value) {
+        onChange(_images);
+      });
+    } else {
+      onChange(_images);
+    }
   }
 
   Future<void> selectImageFromGallery(bool multi) async {
     final ImagePicker picker = ImagePicker();
+    if (widget.maxCount != null) {
+      if (widget.maxCount! <= _images.length) {
+        return;
+      }
+    }
+    int? limit;
+    if (widget.maxCount != null) {
+      limit = widget.maxCount! - _images.length;
+    }
     if (multi) {
-      final List<XFile> images = await picker.pickMultiImage();
-      addImages(images);
+      final List<XFile> images = await picker.pickMultiImage(limit: limit);
+      if (images.isNotEmpty) {
+        if (limit == null) {
+          setState(() {
+            addImages(images);
+          });
+        } else {
+          setState(() {
+            addImages(images.take(limit!).toList());
+          });
+        }
+      }
     } else {
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
-        addImages([image]);
+        setState(() {
+          addImages([image]);
+        });
       }
     }
   }
@@ -162,7 +185,9 @@ class _AntImagesWallState extends State<AntImagesWall> {
     final ImagePicker picker = ImagePicker();
     final XFile? photo = await picker.pickImage(source: ImageSource.camera);
     if (photo != null) {
-      addImages([photo]);
+      setState(() {
+        addImages([photo]);
+      });
     }
   }
 
@@ -190,8 +215,9 @@ class _AntImagesWallState extends State<AntImagesWall> {
     }
   }
 
-  List<AntImagesWallItemRecord>? generateImages(List<AntImagesWallItemRecord>? images) {
-    if (images != null && images!.isNotEmpty) {
+  List<AntImagesWallItemRecord>? generateImages(
+      List<AntImagesWallItemRecord>? images) {
+    if (images != null && images.isNotEmpty) {
       for (var element in widget.value!) {
         element.uid ??= uuid.v4();
         element.status ??= AntImageStatus.done;
@@ -224,6 +250,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
   Widget build(BuildContext context) {
     AntThemeData antThemeData = AntTheme.of(context);
     List<Widget> widgets = [];
+
     for (int i = 0; i < _images.length; i++) {
       widgets.add(AntImageWallItem(
         image: _images.elementAt(i),
@@ -237,7 +264,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
         },
       ));
     }
-    if (!widget.disabled! &&
+    if (!widget.disabled &&
         (widget.maxCount == null ||
             (widget.maxCount != null && _images.length < widget.maxCount!))) {
       widgets.add(GestureDetector(
@@ -288,13 +315,12 @@ class _AntImagesWallState extends State<AntImagesWall> {
 }
 
 class AntImageWallItem extends StatefulWidget {
-  const AntImageWallItem(
-      {super.key,
-      required this.image,
-      this.onRemove,
-      this.disabled = false,
-      required this.images,
-      required this.index});
+  const AntImageWallItem({super.key,
+    required this.image,
+    this.onRemove,
+    this.disabled = false,
+    required this.images,
+    required this.index});
 
   final bool disabled;
   final AntImagesWallItemRecord image;
@@ -350,7 +376,9 @@ class _AntImageWallItemState extends State<AntImageWallItem> {
                 },
                 child: FittedBox(
                   fit: BoxFit.cover,
-                  child: _images.elementAtOrNull(_index)?.image,
+                  child: _images
+                      .elementAtOrNull(_index)
+                      ?.image,
                 ),
               ),
             ),
@@ -403,7 +431,7 @@ class _AntImageWallItemState extends State<AntImageWallItem> {
                       decoration: BoxDecoration(
                         color: Colors.black26,
                         borderRadius:
-                            BorderRadius.only(bottomLeft: Radius.circular(6)),
+                        BorderRadius.only(bottomLeft: Radius.circular(6)),
                       ),
                       padding: EdgeInsets.all(4),
                       child: Icon(
