@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 import 'package:trionesdev_antd_mobile/src/components/modal/modal_view.dart';
 
-import '../theme/theme.dart';
-import '../types.dart';
-
 class AntModal {
   static Future<T?> show<T>({
     required BuildContext context,
@@ -93,7 +90,7 @@ class AntModal {
                 children: [
                   Expanded(
                       child: AntButton(
-                    text: cancelText ?? "取消",
+                    text: cancelText ?? AntdLocalizations.of(context)?.button_cancel ?? "取消",
                     type: AntButtonType.text,
                     onPressed: () {
                       Navigator.of(context).pop();

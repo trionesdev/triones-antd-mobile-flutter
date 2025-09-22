@@ -10,7 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.20.2
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.19.0
   image_picker: ^1.1.2
   photo_view: ^0.15.0
   flutter_svg: ^2.0.17
@@ -27,6 +29,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
   assets:
     - assets/images/empty.svg
     - assets/images/default-image.svg

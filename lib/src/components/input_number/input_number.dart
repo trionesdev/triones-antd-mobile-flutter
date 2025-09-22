@@ -28,7 +28,7 @@ class AntInputNumber extends StatefulWidget {
 
 class _AntInputNumberState extends State<AntInputNumber> {
   TextEditingController _controller = TextEditingController();
-  FocusNode _focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode();
   num _value = 0;
 
   bool get _isMin {
