@@ -4,7 +4,7 @@ version: 0.0.1
 homepage:
 
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.7.0
   flutter: ">=1.17.0"
 
 dependencies:
@@ -12,10 +12,10 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  intl: ^0.19.0
+  intl: ^0.20.2
   image_picker: ^1.1.2
   photo_view: ^0.15.0
-  flutter_svg: ^2.0.17
+  flutter_svg: ^2.2.1
   collection: ^1.19.0
   uuid: ^4.5.1
 

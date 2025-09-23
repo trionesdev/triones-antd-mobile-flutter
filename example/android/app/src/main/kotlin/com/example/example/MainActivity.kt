@@ -1,4 +1,4 @@
-package com.trionesdev.antd_flutter_example
+package com.example.example
 
 import io.flutter.embedding.android.FlutterActivity
 

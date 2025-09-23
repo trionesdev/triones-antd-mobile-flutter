@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'antd_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -21,7 +23,7 @@ class AntdLocalizationsZh extends AntdLocalizations {
 
 /// The translations for Chinese, as used in China, using the Han script (`zh_Hans_CN`).
 class AntdLocalizationsZhHansCn extends AntdLocalizationsZh {
-  AntdLocalizationsZhHansCn(): super('zh_Hans_CN');
+  AntdLocalizationsZhHansCn() : super('zh_Hans_CN');
 
   @override
   String get button_ok => '确定';

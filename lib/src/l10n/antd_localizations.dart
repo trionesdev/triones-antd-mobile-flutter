@@ -61,7 +61,8 @@ import 'antd_localizations_zh.dart';
 /// be consistent with the languages listed in the AntdLocalizations.supportedLocales
 /// property.
 abstract class AntdLocalizations {
-  AntdLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AntdLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -69,7 +70,8 @@ abstract class AntdLocalizations {
     return Localizations.of<AntdLocalizations>(context, AntdLocalizations);
   }
 
-  static const LocalizationsDelegate<AntdLocalizations> delegate = _AntdLocalizationsDelegate();
+  static const LocalizationsDelegate<AntdLocalizations> delegate =
+      _AntdLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -81,17 +83,22 @@ abstract class AntdLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('zh'),
-    Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN', scriptCode: 'Hans')
+    Locale.fromSubtags(
+      languageCode: 'zh',
+      countryCode: 'CN',
+      scriptCode: 'Hans',
+    ),
   ];
 
   /// No description provided for @button_ok.
@@ -119,37 +126,42 @@ abstract class AntdLocalizations {
   String get button_confirm;
 }
 
-class _AntdLocalizationsDelegate extends LocalizationsDelegate<AntdLocalizations> {
+class _AntdLocalizationsDelegate
+    extends LocalizationsDelegate<AntdLocalizations> {
   const _AntdLocalizationsDelegate();
 
   @override
   Future<AntdLocalizations> load(Locale locale) {
-    return SynchronousFuture<AntdLocalizations>(lookupAntdLocalizations(locale));
+    return SynchronousFuture<AntdLocalizations>(
+      lookupAntdLocalizations(locale),
+    );
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AntdLocalizationsDelegate old) => false;
 }
 
 AntdLocalizations lookupAntdLocalizations(Locale locale) {
-    // Lookup logic when language+script+country codes are specified.
+  // Lookup logic when language+script+country codes are specified.
   switch (locale.toString()) {
-    case 'zh_Hans_CN': return AntdLocalizationsZhHansCn();
+    case 'zh_Hans_CN':
+      return AntdLocalizationsZhHansCn();
   }
-
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'zh': return AntdLocalizationsZh();
+    case 'zh':
+      return AntdLocalizationsZh();
   }
 
   throw FlutterError(
     'AntdLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }
