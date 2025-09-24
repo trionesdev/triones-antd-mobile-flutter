@@ -1,7 +1,7 @@
 name: trionesdev_antd_mobile
 description: "antd ui"
 version: 0.0.1
-homepage:
+homepage: https://github.com/trionesdev/triones-antd-mobile-flutter
 
 environment:
   sdk: ^3.7.0
@@ -36,3 +36,7 @@ flutter:
     - assets/images/default-image.png
     - assets/images/error-image.svg
     - assets/images/error-image.png
+  fonts:
+    - family: TrionesAntdIcons
+      fonts:
+        - asset: assets/fonts/iconfont.ttf

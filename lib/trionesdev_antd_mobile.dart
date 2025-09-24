@@ -58,4 +58,5 @@ export 'src/components/image/image.dart';
 export 'src/components/collapse/collapse.dart';
 
 export 'src/components/util/utils.dart';
+export 'src/icons/icons.dart';
 export 'src/l10n/antd_localizations.dart';
