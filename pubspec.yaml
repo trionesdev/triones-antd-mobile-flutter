@@ -13,10 +13,10 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
-  image_picker: ^1.1.2
+  image_picker: ^1.2.0
   photo_view: ^0.15.0
   flutter_svg: ^2.2.1
-  collection: ^1.19.0
+  collection: ^1.19.1
   uuid: ^4.5.1
 
 dev_dependencies:
