@@ -10,14 +10,18 @@ class AntCalendarDatetimePicker {
     ValueChanged<DateTime?>? onOk,
   }) {
     AntPopup.show(
-        context: context,
+      context: context,
+      child: SafeArea(
+        bottom: true,
         child: AntCalendarDatetimePickerView(
           value: value,
           onOk: (date) {
             Navigator.of(context).pop();
             onOk?.call(date);
           },
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -27,12 +31,13 @@ Future<T?> showAntCalendarDatetimePicker<T>({
   ValueChanged<DateTime?>? onOk,
 }) {
   return showAntPopup(
-      context: context,
-      child: AntCalendarDatetimePickerView(
-        value: value,
-        onOk: (date) {
-          Navigator.of(context).pop();
-          onOk?.call(date);
-        },
-      ));
+    context: context,
+    child: AntCalendarDatetimePickerView(
+      value: value,
+      onOk: (date) {
+        Navigator.of(context).pop();
+        onOk?.call(date);
+      },
+    ),
+  );
 }

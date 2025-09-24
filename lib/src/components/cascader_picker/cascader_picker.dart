@@ -8,15 +8,10 @@ class AntCascaderPickerOption {
   final String? value;
   final List<AntCascaderPickerOption>? children;
 
-  const AntCascaderPickerOption({
-    this.label,
-    this.value,
-    this.children,
-  });
+  const AntCascaderPickerOption({this.label, this.value, this.children});
 }
 
 class AntCascaderPicker {
-
   static void show({
     required BuildContext context,
     double? minHeight,
@@ -28,9 +23,11 @@ class AntCascaderPicker {
     Function? onCancel,
   }) {
     AntPopup.show(
-        context: context,
-        minHeight: minHeight,
-        maxHeight: maxHeight,
+      context: context,
+      minHeight: minHeight,
+      maxHeight: maxHeight,
+      child: SafeArea(
+        bottom: true,
         child: AntCascaderPickerView(
           itemHeight: itemHeight,
           options: options,
@@ -43,7 +40,9 @@ class AntCascaderPicker {
             Navigator.of(context).pop();
             onCancel?.call();
           },
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -59,20 +58,21 @@ Future<T?> showAntCascaderPicker<T>({
   Function? onCancel,
 }) {
   return showAntPopup(
-      context: context,
-      minHeight: minHeight,
-      maxHeight: maxHeight,
-      child: AntCascaderPickerView(
-        itemHeight: itemHeight,
-        options: options,
-        value: value,
-        onOk: (value) {
-          Navigator.of(context).pop();
-          onOk?.call(value);
-        },
-        onCancel: () {
-          Navigator.of(context).pop();
-          onCancel?.call();
-        },
-      ));
+    context: context,
+    minHeight: minHeight,
+    maxHeight: maxHeight,
+    child: AntCascaderPickerView(
+      itemHeight: itemHeight,
+      options: options,
+      value: value,
+      onOk: (value) {
+        Navigator.of(context).pop();
+        onOk?.call(value);
+      },
+      onCancel: () {
+        Navigator.of(context).pop();
+        onCancel?.call();
+      },
+    ),
+  );
 }

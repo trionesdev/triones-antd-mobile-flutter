@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
-class AntTabItem {
-  AntTabItem({required this.key, this.label, this.content});
+class AntTabItemStruct {
+  AntTabItemStruct({required this.key, this.label, this.content});
 
   String key;
   Widget? label;
@@ -32,14 +32,14 @@ class AntTabs extends StatefulWidget {
 
   final String? defaultActiveKey;
   final String? activeKey;
-  final List<AntTabItem>? items;
+  final List<AntTabItemStruct>? items;
   final bool stretch;
   final List<AntTab>? children;
   final BoxDecoration? decoration;
   final BoxDecoration? tabDecoration;
   final StateStyle? style;
   final AntTabStyles? styles;
-  final Widget Function(AntTabItem item)? itemBuilder;
+  final Widget Function(AntTabItemStruct item)? itemBuilder;
 
   @override
   State<StatefulWidget> createState() => AntTabsState();
@@ -53,7 +53,7 @@ class AntTabs extends StatefulWidget {
 
 class AntTabsState extends State<AntTabs> with MaterialStateMixin {
   ScrollController? _scrollController;
-  List<AntTabItem> _items = [];
+  List<AntTabItemStruct> _items = [];
   int _generation = 0;
   String? _activeKey;
   int _index = 0;

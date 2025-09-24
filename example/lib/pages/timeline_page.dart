@@ -24,7 +24,7 @@ class _TimelinePageState extends State<TimelinePage> {
               title: "基本用法",
               child: AntTimeline(
                 items: List.generate(10, (index) {
-                  return AntTimelineItemRecord(
+                  return AntTimelineItemStruct(
                       latest: index == 9, content: Text("内容${index + 1}"));
                 }),
               ),

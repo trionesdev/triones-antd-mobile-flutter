@@ -8,8 +8,8 @@ import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 import 'package:trionesdev_antd_mobile/src/components/images_wall/images_preview.dart';
 import 'package:uuid/uuid.dart';
 
-class AntImagesWallItemRecord {
-  AntImagesWallItemRecord({this.uid,
+class AntImagesWallItemStruct {
+  AntImagesWallItemStruct({this.uid,
     this.status = AntImageStatus.done,
     this.image,
     this.path,
@@ -47,8 +47,8 @@ class AntImagesWall extends StatefulWidget {
     this.uploadRequest,
     this.multiSelect = true});
 
-  final List<AntImagesWallItemRecord>? value;
-  final ValueChanged<List<AntImagesWallItemRecord>>? onChange;
+  final List<AntImagesWallItemStruct>? value;
+  final ValueChanged<List<AntImagesWallItemStruct>>? onChange;
   final int? maxCount;
   final int? crossAxisCount;
   final bool disabled;
@@ -61,26 +61,26 @@ class AntImagesWall extends StatefulWidget {
 }
 
 class _AntImagesWallState extends State<AntImagesWall> {
-  List<AntImagesWallItemRecord> _images = [];
+  List<AntImagesWallItemStruct> _images = [];
   var uuid = Uuid();
 
-  void onChange(List<AntImagesWallItemRecord> images) {
+  void onChange(List<AntImagesWallItemStruct> images) {
     if (widget.onChange != null) {
       widget.onChange!(images);
     }
   }
 
-  void addImages(List<XFile> images) {
+  void addImages(List<XFile> images) async {
     if (images.isEmpty) {
       return;
     }
-    // List<AntImagesWallItemRecord> imageRecords = [];
+    // List<ImagesWallItem> imageRecords = [];
     List<Future> uploadRequests = [
     ]; //如果有上传请求，则将所有异步请求放在一个列表中，再等待所有异步请求完成，再更新状态
     for (var image in images) {
       var uid = uuid.v4();
       if (kIsWeb) {
-        _images.add(AntImagesWallItemRecord(
+        _images.add(AntImagesWallItemStruct(
             uid: uid,
             type: AntImageType.network,
             path: image.path,
@@ -90,7 +90,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
             ),
             fileName: image.name));
       } else {
-        _images.add(AntImagesWallItemRecord(
+        _images.add(AntImagesWallItemStruct(
           uid: uid,
           type: AntImageType.file,
           path: image.path,
@@ -103,7 +103,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
       }
 
       if (widget.uploadRequest != null) {
-        image.readAsBytes().then((bytes) async {
+        await image.readAsBytes().then((bytes) async {
           setState(() {
             var imageItem =
             _images.firstWhereOrNull((element) => element.uid == uid);
@@ -126,6 +126,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
               }
             });
           }).catchError((err) {
+            print(err);
             setState(() {
               var imageItem =
               _images.firstWhereOrNull((element) => element.uid == uid);
@@ -135,6 +136,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
             });
           });
           uploadRequests.add(req);
+
         });
       }
     }
@@ -191,7 +193,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
     }
   }
 
-  Image generateImage(AntImagesWallItemRecord image) {
+  Image generateImage(AntImagesWallItemStruct image) {
     if (image.type == AntImageType.asset) {
       return Image.asset(
         image.path!,
@@ -215,13 +217,14 @@ class _AntImagesWallState extends State<AntImagesWall> {
     }
   }
 
-  List<AntImagesWallItemRecord>? generateImages(
-      List<AntImagesWallItemRecord>? images) {
+  List<AntImagesWallItemStruct>? generateImages(
+      List<AntImagesWallItemStruct>? images) {
     if (images != null && images.isNotEmpty) {
       for (var element in widget.value!) {
         element.uid ??= uuid.v4();
         element.status ??= AntImageStatus.done;
         element.image ??= generateImage(element);
+        element.type ??= AntImageType.network;
       }
     }
     return images;
@@ -323,9 +326,9 @@ class AntImageWallItem extends StatefulWidget {
     required this.index});
 
   final bool disabled;
-  final AntImagesWallItemRecord image;
+  final AntImagesWallItemStruct image;
   final int index;
-  final List<AntImagesWallItemRecord> images;
+  final List<AntImagesWallItemStruct> images;
   final Function(String? uid)? onRemove;
 
   @override
@@ -333,8 +336,8 @@ class AntImageWallItem extends StatefulWidget {
 }
 
 class _AntImageWallItemState extends State<AntImageWallItem> {
-  late AntImagesWallItemRecord _image;
-  List<AntImagesWallItemRecord> _images = [];
+  late AntImagesWallItemStruct _image;
+  List<AntImagesWallItemStruct> _images = [];
   int _index = 0;
 
   @override
