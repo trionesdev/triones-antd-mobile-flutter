@@ -198,10 +198,10 @@ class AntFormState extends State<AntForm> {
     return !hasError;
   }
 
-  Map<dynamic, dynamic> getFieldsValue() {
-    Map<dynamic, dynamic> values = {};
+  Map<String, dynamic> getFieldsValue() {
+    Map<String, dynamic> values = {};
     for (final AntFormItemState<dynamic> field in _fields) {
-      Map<dynamic, dynamic> fieldValues = values;
+      Map<String, dynamic> fieldValues = values;
       if (field.name != null && field.name!.value.isNotEmpty) {
         List<dynamic> paths = field.name!.value;
         for (int i = 0; i < paths.length; i++) {
@@ -217,7 +217,7 @@ class AntFormState extends State<AntForm> {
     return values;
   }
 
-  Future<Map<dynamic, dynamic>> validateFields() async {
+  Future<Map<String, dynamic>> validateFields() async {
     if (!_validate()) {
       throw Exception({errorFields});
     }
