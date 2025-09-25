@@ -372,6 +372,7 @@ class AntTabState extends State<AntTab> with MaterialStateMixin {
     StateStyle stateStyle = _AntTabItemStyle(context, _active);
     stateStyle = stateStyle.merge(widget.style);
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         tabsState?._didTabChange(this);
       },

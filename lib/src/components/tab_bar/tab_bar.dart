@@ -269,6 +269,7 @@ class AntTabBarItemState extends State<AntTabBarItem> {
     return Flexible(
         flex: 1,
         child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onTap: () {
             tabBar?._setCurrentActiveKey(widget.antKey);
             widget.onPressed?.call(widget.antKey);
