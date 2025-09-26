@@ -140,9 +140,7 @@ class AntFormState extends State<AntForm> {
   }
 
   void reset() {
-    // print(_formValues);
     for (final AntFormItemState<dynamic> field in _fields) {
-      print(field.name?.jsonValue);
       if(field.name!=null){
         setFieldValue(field.name!, field.initialValue);
       }
@@ -277,6 +275,11 @@ class NamePath {
 
   List<dynamic> get value => _namePaths;
 
+  NamePath append(dynamic name) {
+    _namePaths.add(name);
+    return this;
+  }
+
   @override
   bool operator ==(Object other) {
     if (other is! NamePath) {
@@ -393,17 +396,10 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     widget.onSaved?.call(value);
   }
 
-  // void setFormSettings({}){}
-
   void reset() {
     _value = widget.initialValue;
     _hasInteractedByUser.value = false;
     _errorText.value = null;
-    // setState(() {
-    //   _value = widget.initialValue;
-    //   _hasInteractedByUser.value = false;
-    //   _errorText.value = null;
-    // });
   }
 
   bool validate() {
@@ -425,7 +421,6 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     if (value == _value) {
       return;
     }
-    print("form item changed:" + value.toString());
     AntFormState? formState = AntForm.maybeOf(context);
     _value = value;
     _validate();
@@ -438,7 +433,6 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
 
   /// form 触发的边跟
   void _formDidChange(T? value) {
-    print("form item ${name?.jsonValue} changed:" + value.toString());
     _value = value;
   }
 
@@ -638,4 +632,45 @@ class _AntFormItemStyle extends StateStyle {
         // margin: StyleMargin(bottom: 8)
         );
   }
+}
+
+class AntFormField{
+  NamePath name;
+  AntFormField({required this.name});
+}
+
+class AntFormList extends StatelessWidget {
+  NamePath? name;
+  Widget Function(BuildContext context, List<AntFormField> fields) builder;
+  AntFormList({super.key, this.name, required this.builder});
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    void add(){
+      final form = AntForm.maybeOf(context);
+      var values = form?.getFieldValue(name!)??[];
+      form!.setFieldValue(name!, [ ...values,{}]);
+    }
+
+    // ListView.builder(itemBuilder: itemBuilder);
+    final form = AntForm.maybeOf(context);
+    if(form != null && name!=null){
+      List<dynamic> values = (form.getFieldValue(name!)??[]) as List;
+      // List<AntFormField> fields1 = values.map(( item, index){
+      //   return AntFormField(name: name!.append( index));
+      // }).toList();
+      print(form.getFieldValue(name!));
+      if(form.getFieldValue(name!) is List){
+        print("sssssssssssssssssssssssss");
+      }
+      List<AntFormField> fields = [AntFormField(name: name!.append(0))];
+      return builder(context, fields);
+    }
+
+
+    return Container();
+  }
+
 }
