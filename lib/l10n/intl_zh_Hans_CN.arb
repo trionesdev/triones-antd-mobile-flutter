@@ -1,7 +1,14 @@
 {
   "@@locale": "zh_Hans_CN",
-  "button_ok":"确定",
-  "button_cancel":"取消",
-  "button_close":"关闭",
-  "button_confirm":"确定"
+  "button_ok": "确定",
+  "button_cancel": "取消",
+  "button_close": "关闭",
+  "button_confirm": "确定",
+  "calendar_mon": "一",
+  "calendar_tue": "二",
+  "calendar_wed": "三",
+  "calendar_thu": "四",
+  "calendar_fir": "五",
+  "calendar_sat": "六",
+  "calendar_sun": "日"
 }
