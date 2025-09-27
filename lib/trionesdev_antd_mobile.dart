@@ -15,6 +15,7 @@ export 'src/components/avatar/avatar.dart';
 export 'src/components/button/button.dart';
 export 'src/components/input/input.dart';
 export 'src/components/text_area/text_area.dart';
+export 'src/components/form/form_types.dart';
 export 'src/components/form/form.dart';
 export 'src/components/scaffold/scaffold.dart';
 export 'src/components/app_bar/index.dart';
