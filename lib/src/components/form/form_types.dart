@@ -52,9 +52,10 @@ class AntFormCol {
 
 class AntFormListField{
 
-  AntFormListField({required this.name});
+  AntFormListField({required this.name, required this.index});
 
   final NamePath name;
+  final int index;
 }
 
 typedef AddFunction = void Function(dynamic defalutValue);

@@ -1,17 +1,26 @@
 class MapUtils {
   static dynamic getPathValue(Map<dynamic, dynamic>? map, List<dynamic> keys) {
-    Map<dynamic, dynamic>? cloneValues = map;
-    for (int i = 0; i < keys.length; i++) {
-      if (i < keys.length - 1) {
-        if (cloneValues![keys.elementAt(i)] == null) {
-          return null;
-        } else {
-          cloneValues = cloneValues[keys.elementAt(i)];
-        }
-      } else {
-        return cloneValues![keys.elementAt(i)];
+    dynamic cloneValues = map;
+    // for (int i = 0; i < keys.length; i++) {
+    //   if (i < keys.length - 1) {
+    //     if (cloneValues![keys.elementAt(i)] == null) {
+    //       return null;
+    //     } else {
+    //       cloneValues = cloneValues[keys.elementAt(i)];
+    //     }
+    //   } else {
+    //     return cloneValues![keys.elementAt(i)];
+    //   }
+    // }
+
+    for (int i = 0; i < keys.length-1; i++) {
+      final key = keys.elementAt(i);
+      cloneValues = cloneValues[key];
+      if (cloneValues == null) {
+        return null;
       }
     }
+    return cloneValues[keys.last];
   }
 
   static Map<dynamic, dynamic> setPathValue(
