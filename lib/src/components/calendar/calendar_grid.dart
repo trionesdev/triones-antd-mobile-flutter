@@ -31,9 +31,6 @@ class AntCalendarDateCellState extends State<AntCalendarDateCell> {
 
   bool selected() {
     if (widget.range) {
-      if (overCurrentMonth()) {
-        return false;
-      }
       var startDate = widget.value?.elementAtOrNull(0);
       var endDate = widget.value?.elementAtOrNull(1);
       return widget.date == startDate || widget.date == endDate;
@@ -46,7 +43,7 @@ class AntCalendarDateCellState extends State<AntCalendarDateCell> {
   }
 
   bool betweenSelectRange() {
-    if (overCurrentMonth() || !widget.range) {
+    if ( !widget.range) {
       return false;
     }
     var startDate = widget.value?.elementAtOrNull(0);
@@ -59,12 +56,13 @@ class AntCalendarDateCellState extends State<AntCalendarDateCell> {
 
   Color backgroundColor() {
     AntThemeData themeData = AntTheme.of(context);
-    if (overCurrentMonth()) {
-      return Colors.white;
-    } else if (selected()) {
+
+    if (selected()) {
       return themeData.colorPrimary;
     } else if (betweenSelectRange()) {
       return themeData.colorPrimaryBg;
+    } else if (overCurrentMonth()) {
+      return Colors.white;
     } else {
       return Colors.white;
     }

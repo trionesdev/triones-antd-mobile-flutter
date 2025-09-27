@@ -19,6 +19,27 @@ class AntdLocalizationsZh extends AntdLocalizations {
 
   @override
   String get button_confirm => '确定';
+
+  @override
+  String get calendar_mon => '一';
+
+  @override
+  String get calendar_tue => '二';
+
+  @override
+  String get calendar_wed => '三';
+
+  @override
+  String get calendar_thu => '四';
+
+  @override
+  String get calendar_fir => '五';
+
+  @override
+  String get calendar_sat => '六';
+
+  @override
+  String get calendar_sun => '日';
 }
 
 /// The translations for Chinese, as used in China, using the Han script (`zh_Hans_CN`).
@@ -36,4 +57,25 @@ class AntdLocalizationsZhHansCn extends AntdLocalizationsZh {
 
   @override
   String get button_confirm => '确定';
+
+  @override
+  String get calendar_mon => '一';
+
+  @override
+  String get calendar_tue => '二';
+
+  @override
+  String get calendar_wed => '三';
+
+  @override
+  String get calendar_thu => '四';
+
+  @override
+  String get calendar_fir => '五';
+
+  @override
+  String get calendar_sat => '六';
+
+  @override
+  String get calendar_sun => '日';
 }

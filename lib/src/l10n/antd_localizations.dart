@@ -124,6 +124,48 @@ abstract class AntdLocalizations {
   /// In zh_Hans_CN, this message translates to:
   /// **'确定'**
   String get button_confirm;
+
+  /// No description provided for @calendar_mon.
+  ///
+  /// In zh_Hans_CN, this message translates to:
+  /// **'一'**
+  String get calendar_mon;
+
+  /// No description provided for @calendar_tue.
+  ///
+  /// In zh_Hans_CN, this message translates to:
+  /// **'二'**
+  String get calendar_tue;
+
+  /// No description provided for @calendar_wed.
+  ///
+  /// In zh_Hans_CN, this message translates to:
+  /// **'三'**
+  String get calendar_wed;
+
+  /// No description provided for @calendar_thu.
+  ///
+  /// In zh_Hans_CN, this message translates to:
+  /// **'四'**
+  String get calendar_thu;
+
+  /// No description provided for @calendar_fir.
+  ///
+  /// In zh_Hans_CN, this message translates to:
+  /// **'五'**
+  String get calendar_fir;
+
+  /// No description provided for @calendar_sat.
+  ///
+  /// In zh_Hans_CN, this message translates to:
+  /// **'六'**
+  String get calendar_sat;
+
+  /// No description provided for @calendar_sun.
+  ///
+  /// In zh_Hans_CN, this message translates to:
+  /// **'日'**
+  String get calendar_sun;
 }
 
 class _AntdLocalizationsDelegate
