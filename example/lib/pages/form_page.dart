@@ -308,6 +308,28 @@ class _FormPageState extends State<FormPage> {
                         );
                       },
                     ),
+                    AntFormList(name: NamePath("users"),builder: (context, fields, operations){
+                      return Column(
+                        children: [
+                          ...fields.map((field) {
+                            return AntFormItem(
+                              name: NamePath([field.index,"name"]),
+                              label: Text("Item"),
+                              builder: (AntFieldState state) {
+                                return AntInput(
+                                    value: state.value?.toString(),
+                                    onChange: state.didChange);
+                              },
+                              child: AntInput(),
+                            );
+                          }),
+                          Row(children: [AntButton(text: "添加",onPressed: (){
+                            Map<dynamic,dynamic> user = {"name":null};
+                            operations.add!(user);
+                          })])
+                        ]
+                      );
+                    })
                   ],
                 ),
               ),
