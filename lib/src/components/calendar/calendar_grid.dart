@@ -163,14 +163,14 @@ class _AntCalendarGridState extends State<AntCalendarGrid> {
           (i) => firstDay.subtract(Duration(days: (beforeDayCount - i))));
     }
     final lastDay = DateTime(date.year, date.month + 1, 0);
+    List<DateTime> mouthDates =
+        List.generate(lastDay.day, (i) => firstDay.add(Duration(days: i)));
     List<DateTime> afterDates = [];
-    int afterDayCount = 7 - lastDay.weekday;
+    int afterDayCount = (7 - lastDay.weekday) + (6-((beforeDayCount+mouthDates.length)/7).ceil())*7;
     if (afterDayCount > 0) {
       afterDates = List.generate(
           afterDayCount, (i) => lastDay.add(Duration(days: i + 1)));
     }
-    List<DateTime> mouthDates =
-        List.generate(lastDay.day, (i) => firstDay.add(Duration(days: i)));
     return [...beforeDates, ...mouthDates, ...afterDates];
   }
 
