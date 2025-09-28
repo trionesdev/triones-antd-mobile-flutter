@@ -29,6 +29,7 @@ import 'package:antd_flutter_example/pages/radio_page.dart';
 import 'package:antd_flutter_example/pages/rate_page.dart';
 import 'package:antd_flutter_example/pages/scaffold_page.dart';
 import 'package:antd_flutter_example/pages/search_bar_page.dart';
+import 'package:antd_flutter_example/pages/select_page.dart';
 import 'package:antd_flutter_example/pages/space_page.dart';
 import 'package:antd_flutter_example/pages/switch_page.dart';
 import 'package:antd_flutter_example/pages/tab_bar_page.dart';
@@ -72,6 +73,7 @@ class MyApp extends StatelessWidget {
         '/list': (context) => ListPage(),
         '/space': (context) => SpacePage(),
         '/search-bar': (context) => SearchBarPage(),
+        '/select': (context) => SelectPage(),
         '/tag': (context) => TagPage(),
         '/popup': (context) => PopupPage(),
         '/picker': (context) => PickerPage(),
@@ -220,6 +222,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('SearchBar 搜索栏'),
             onTap: () {
               Navigator.pushNamed(context, '/search-bar');
+            },
+          ),
+          material.ListTile(
+            title: Text('Select 选择器'),
+            onTap: () {
+              Navigator.pushNamed(context, '/select');
             },
           ),
           material.ListTile(

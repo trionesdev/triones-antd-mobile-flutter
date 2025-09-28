@@ -29,14 +29,15 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-  generate: true
+#  generate: true
   assets:
     - assets/images/empty.svg
     - assets/images/default-image.svg
     - assets/images/default-image.png
     - assets/images/error-image.svg
     - assets/images/error-image.png
+    - assets/fonts/iconfont.ttf
   fonts:
-    - family: TrionesAntdIcons
+    - family: TrionesAntmIcon
       fonts:
         - asset: assets/fonts/iconfont.ttf
