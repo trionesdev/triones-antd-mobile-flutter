@@ -27,6 +27,7 @@
 - [x] Radio 单选框
 - [x] Rate 评分
 - [x] SearchBar 搜索框
+- [x] Select 列表选择器
 - [x] Switch 开关
 - [x] TextArea 文本域
 - [x] ActionSheet 操作面板
