@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'antd_localizations_en.dart';
 import 'antd_localizations_zh.dart';
 
 // ignore_for_file: type=lint
@@ -93,6 +94,7 @@ abstract class AntdLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
     Locale('zh'),
     Locale.fromSubtags(
       languageCode: 'zh',
@@ -181,7 +183,7 @@ class _AntdLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['zh'].contains(locale.languageCode);
+      <String>['en', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AntdLocalizationsDelegate old) => false;
@@ -196,6 +198,8 @@ AntdLocalizations lookupAntdLocalizations(Locale locale) {
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'en':
+      return AntdLocalizationsEn();
     case 'zh':
       return AntdLocalizationsZh();
   }

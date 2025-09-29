@@ -24,41 +24,42 @@ class _ImagesPreviewState extends State<ImagesPreview> {
 
   @override
   Widget build(BuildContext context) {
-    return AntScaffold(
-      appBar: AntAppBar(
-        toolbarHeight: 40,
-      ),
-      body: PhotoViewGallery.builder(
-        backgroundDecoration: BoxDecoration(
-          color: Colors.black38,
+    return SafeArea(
+      child: AntScaffold(
+        appBar: AntAppBar(
+          toolbarHeight: 50,
+          backIcon: Icon(Icons.arrow_back_outlined, color: Colors.white),
+          title: Text("图片预览", style: TextStyle(color: Colors.white)),
         ),
-        scrollPhysics: const BouncingScrollPhysics(),
-        itemCount: widget.images?.length,
-        builder: (BuildContext context, int index) {
-          return PhotoViewGalleryPageOptions(
-            imageProvider: widget.images?.elementAtOrNull(index)?.image,
-            initialScale: PhotoViewComputedScale.contained,
-            minScale: PhotoViewComputedScale.contained,
-            maxScale: PhotoViewComputedScale.covered * 1.1,
-            heroAttributes: PhotoViewHeroAttributes(
-                tag: widget.images!.elementAtOrNull(index)!),
-          );
-        },
-        pageController: PageController(initialPage: _index),
-        onPageChanged: (i) {
-          setState(() {
-            _index = i;
-          });
-        },
-      ),
-      bottomNavigationBar: Container(
-        alignment: Alignment.center,
-        height: 48,
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.black38,
+        body: PhotoViewGallery.builder(
+          backgroundDecoration: BoxDecoration(color: Colors.black38),
+          scrollPhysics: const BouncingScrollPhysics(),
+          itemCount: widget.images?.length,
+          builder: (BuildContext context, int index) {
+            return PhotoViewGalleryPageOptions(
+              imageProvider: widget.images?.elementAtOrNull(index)?.image,
+              initialScale: PhotoViewComputedScale.contained,
+              minScale: PhotoViewComputedScale.contained,
+              maxScale: PhotoViewComputedScale.covered * 1.1,
+              heroAttributes: PhotoViewHeroAttributes(
+                tag: widget.images!.elementAtOrNull(index)!,
+              ),
+            );
+          },
+          pageController: PageController(initialPage: _index),
+          onPageChanged: (i) {
+            setState(() {
+              _index = i;
+            });
+          },
         ),
-        child: Text("${_index + 1}/${widget.images?.length}"),
+        bottomNavigationBar: Container(
+          alignment: Alignment.center,
+          height: 48,
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(color: Colors.black38),
+          child: Text("${_index + 1}/${widget.images?.length}"),
+        ),
       ),
     );
   }

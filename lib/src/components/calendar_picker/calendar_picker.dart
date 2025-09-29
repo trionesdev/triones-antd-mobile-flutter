@@ -11,15 +11,12 @@ class AntCalendarPicker {
     return AntPopup.show(
       context: context,
       maxHeight: 1000,
-      child: SafeArea(
-        bottom: true,
-        child: AntCalendarPickerView(
-          value: value,
-          onOk: (date) {
-            Navigator.of(context).pop();
-            onOk?.call(date);
-          },
-        ),
+      child: AntCalendarPickerView(
+        value: value,
+        onOk: (date) {
+          Navigator.of(context).pop();
+          onOk?.call(date);
+        },
       ),
     );
   }
@@ -40,7 +37,7 @@ class AntCalendarRangePicker {
           Navigator.of(context).pop();
           onOk?.call(date);
         },
-      ),
+      )
     );
   }
 }

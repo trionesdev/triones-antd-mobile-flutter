@@ -66,7 +66,7 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          height: 40,
+          padding: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(color: Colors.grey, width: 0.5),
@@ -74,12 +74,19 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
           ),
           child:
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            GestureDetector(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text("取消"),
-              ),
-              onTap: () {
+            // GestureDetector(
+            //   child: Container(
+            //     padding: EdgeInsets.symmetric(horizontal: 16),
+            //     child: Text("取消"),
+            //   ),
+            //   onTap: () {
+            //     widget.onCancel?.call();
+            //   },
+            // ),
+            AntButton(
+              type: AntButtonType.text,
+              text: "取消",
+              onPressed: () {
                 widget.onCancel?.call();
               },
             ),
@@ -88,13 +95,21 @@ class _AntPickerViewState extends State<AntPickerView> with MaterialStateMixin {
                   child: Center(
                     child: widget.title!,
                   )),
-            GestureDetector(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                    "确定", style: TextStyle(color: theme.colorPrimary)),
-              ),
-              onTap: () {
+            // GestureDetector(
+            //   child: Container(
+            //     padding: EdgeInsets.symmetric(horizontal: 16),
+            //     child: Text(
+            //         "确定", style: TextStyle(color: theme.colorPrimary)),
+            //   ),
+            //   onTap: () {
+            //     widget.onOk?.call(_value);
+            //   },
+            // ),
+            AntButton(
+              type: AntButtonType.text,
+              text: "确定",
+              style: StateStyle(style: Style(color: theme.colorPrimary)),
+              onPressed: () {
                 widget.onOk?.call(_value);
               },
             ),

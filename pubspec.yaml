@@ -36,7 +36,8 @@ flutter:
     - assets/images/default-image.png
     - assets/images/error-image.svg
     - assets/images/error-image.png
+    - assets/fonts/iconfont.ttf
   fonts:
-    - family: TrionesAntdIcons
+    - family: TrionesAntmIcon
       fonts:
         - asset: assets/fonts/iconfont.ttf

@@ -56,7 +56,7 @@ Future<T?> showAntPopup<T>({
     enableDrag: enableDrag ?? true,
     builder: (context) {
       AntThemeData themeData = AntTheme.of(context);
-      return Container(
+      return SafeArea(child: Container(
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.only(
@@ -70,7 +70,7 @@ Future<T?> showAntPopup<T>({
           maxHeight: maxHeight ?? MediaQuery.of(context).size.height,
         ),
         child: child,
-      );
+      ));
     },
   );
 }

@@ -31,8 +31,7 @@ class _AntScaffoldState extends State<AntScaffold> {
     return Scaffold(
       appBar: widget.appBar,
       body: widget.body,
-      bottomNavigationBar: widget.bottomNavigationBar ??
-          SafeArea(child: Container(height: 0,)),
+      bottomNavigationBar: widget.bottomNavigationBar ,
       backgroundColor: widget.backgroundColor,
       bottomSheet: widget.bottomSheet,
     );

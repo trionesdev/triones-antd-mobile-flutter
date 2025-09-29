@@ -15,7 +15,7 @@ export 'src/components/avatar/avatar.dart';
 export 'src/components/button/button.dart';
 export 'src/components/input/input.dart';
 export 'src/components/text_area/text_area.dart';
-export 'src/components/form/form.dart';
+export 'src/components/form/index.dart';
 export 'src/components/scaffold/scaffold.dart';
 export 'src/components/app_bar/index.dart';
 export 'src/components/grid/grid.dart';
@@ -33,6 +33,7 @@ export 'src/components/calendar/calendar.dart';
 export 'src/components/calendar_picker/calendar_picker.dart';
 export 'src/components/calendar_picker/calendar_picker_view.dart';
 export 'src/components/calendar_datetime_picker/calendar_datetime_picker.dart';
+export 'src/components/cell/cell.dart';
 export 'src/components/modal/modal.dart';
 export 'src/components/toast/toast.dart';
 export 'src/components/toast/toast_route.dart';
@@ -56,6 +57,8 @@ export 'src/components/rate/rate.dart';
 export 'src/components/input_number/input_number.dart';
 export 'src/components/image/image.dart';
 export 'src/components/collapse/collapse.dart';
+export 'src/components/select/index.dart';
+
 
 export 'src/components/util/utils.dart';
 export 'src/icons/icons.dart';

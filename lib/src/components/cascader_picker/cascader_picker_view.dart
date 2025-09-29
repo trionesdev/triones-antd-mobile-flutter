@@ -10,22 +10,14 @@ class TabItem {
   final AntCascaderPickerOption? value;
   final List<AntCascaderPickerOption>? options;
 
-  const TabItem({
-    required this.tabKey,
-    this.label,
-    this.value,
-    this.options,
-  });
+  const TabItem({required this.tabKey, this.label, this.value, this.options});
 }
 
 class CascaderPickerColumn {
   final AntCascaderPickerOption? value;
   final List<AntCascaderPickerOption>? options;
 
-  const CascaderPickerColumn({
-    this.value,
-    this.options,
-  });
+  const CascaderPickerColumn({this.value, this.options});
 }
 
 class AntCascaderPickerView extends StatefulWidget {
@@ -58,7 +50,9 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
   List<CascaderPickerColumn> _columns = [];
 
   AntCascaderPickerOption? findOptionByValue(
-      List<AntCascaderPickerOption>? options, String? value) {
+    List<AntCascaderPickerOption>? options,
+    String? value,
+  ) {
     print(options);
     print(value);
     if (value == null || options == null || options.isEmpty) {
@@ -73,7 +67,9 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
   }
 
   AntCascaderPickerOption? findOptionByValues(
-      List<AntCascaderPickerOption>? options, List<String>? values) {
+    List<AntCascaderPickerOption>? options,
+    List<String>? values,
+  ) {
     if (values == null ||
         values.isEmpty ||
         options == null ||
@@ -109,9 +105,7 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
       options = value?.children;
     }
     if (options != null && options.isNotEmpty) {
-      columns.add(CascaderPickerColumn(
-        options: options,
-      ));
+      columns.add(CascaderPickerColumn(options: options));
     }
     return columns;
   }
@@ -138,133 +132,139 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
     return Column(
       children: [
         Container(
-          height: 40,
+          padding: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(color: themeData.colorBorder, width: 0.5),
             ),
           ),
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            GestureDetector(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  "取消"
-                ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AntButton(
+                type: AntButtonType.text,
+                text: "取消",
+                onPressed: () {
+                  widget.onCancel?.call();
+                },
               ),
-              onTap: () {
-                widget.onCancel?.call();
-              },
-            ),
-            if (widget.title != null)
-              Expanded(
-                  child: Center(
-                child: widget.title!,
-              )),
-            GestureDetector(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child:
-                    Text("确定", style: TextStyle(color: themeData.colorPrimary)),
+              if (widget.title != null)
+                Expanded(child: Center(child: widget.title!)),
+              AntButton(
+                type: AntButtonType.text,
+                text: "确定",
+                style: StateStyle(style: Style(color: themeData.colorPrimary)),
+                onPressed: () {
+                  List<AntCascaderPickerOption?>? result =
+                      _columns.map((column) {
+                        return column.value;
+                      }).toList();
+                  widget.onOk?.call(result);
+                },
               ),
-              onTap: () {
-                List<AntCascaderPickerOption?>? result = _columns.map((column) {
-                  return column.value;
-                }).toList();
-                widget.onOk?.call(result);
-              },
-            ),
-          ]),
+            ],
+          ),
         ),
         Container(
           decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: Colors.grey, width: 0.5),
-            ),
+            border: Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
           ),
-          padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-          ),
+          padding: EdgeInsets.only(left: 16, right: 16),
           child: Row(
-            children: _columns.asMap().keys.map((index) {
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _activeIndex = index;
-                  });
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: (index == _activeIndex)
-                        ? Border(
-                            bottom: BorderSide(
-                                color: themeData.colorPrimary, width: 1),
-                          )
-                        : null,
-                  ),
-                  padding:
-                      EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-                  child: Text(
-                    _columns[index].value?.label ?? '请选择',
-                    style: TextStyle(
-                        color: (index == _activeIndex)
-                            ? themeData.colorPrimary
-                            : null),
-                  ),
-                ),
-              );
-            }).toList(),
+            children:
+                _columns.asMap().keys.map((index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _activeIndex = index;
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border:
+                            (index == _activeIndex)
+                                ? Border(
+                                  bottom: BorderSide(
+                                    color: themeData.colorPrimary,
+                                    width: 1,
+                                  ),
+                                )
+                                : null,
+                      ),
+                      padding: EdgeInsets.only(
+                        left: 8,
+                        right: 8,
+                        top: 8,
+                        bottom: 8,
+                      ),
+                      child: Text(
+                        _columns[index].value?.label ?? '请选择',
+                        style: TextStyle(
+                          color:
+                              (index == _activeIndex)
+                                  ? themeData.colorPrimary
+                                  : null,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
           ),
         ),
-        Expanded(child: LayoutBuilder(
+        Expanded(
+          child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-          print(constraints.maxHeight);
-          viewHeight = constraints.maxHeight;
-          return IndexedStack(
-            index: _activeIndex,
-            children: _columns.asMap().keys.map((index) {
-              return AntCascaderPickerViewColumn(
-                itemHeight: widget.itemHeight,
-                value: _columns.elementAtOrNull(index)?.value,
-                options: _columns.elementAtOrNull(index)?.options,
-                onSelected: (option) {
-                  setState(() {
-                    List<CascaderPickerColumn> newColumns = [];
-                    for (int i = 0; i < index; i++) {
-                      newColumns.add(_columns[i]);
-                    }
-                    newColumns.add(CascaderPickerColumn(
-                      value: option,
-                      options: _columns[index].options,
-                    ));
-                    if (option?.children != null &&
-                        option!.children!.isNotEmpty) {
-                      newColumns.add(CascaderPickerColumn(
-                        options: option.children,
-                      ));
-                      _activeIndex = index + 1;
-                    }
-                    _columns = newColumns;
-                  });
-                },
+              print(constraints.maxHeight);
+              viewHeight = constraints.maxHeight;
+              return IndexedStack(
+                index: _activeIndex,
+                children:
+                    _columns.asMap().keys.map((index) {
+                      return AntCascaderPickerViewColumn(
+                        itemHeight: widget.itemHeight,
+                        value: _columns.elementAtOrNull(index)?.value,
+                        options: _columns.elementAtOrNull(index)?.options,
+                        onSelected: (option) {
+                          setState(() {
+                            List<CascaderPickerColumn> newColumns = [];
+                            for (int i = 0; i < index; i++) {
+                              newColumns.add(_columns[i]);
+                            }
+                            newColumns.add(
+                              CascaderPickerColumn(
+                                value: option,
+                                options: _columns[index].options,
+                              ),
+                            );
+                            if (option?.children != null &&
+                                option!.children!.isNotEmpty) {
+                              newColumns.add(
+                                CascaderPickerColumn(options: option.children),
+                              );
+                              _activeIndex = index + 1;
+                            }
+                            _columns = newColumns;
+                          });
+                        },
+                      );
+                    }).toList(),
               );
-            }).toList(),
-          );
-        }))
+            },
+          ),
+        ),
       ],
     );
   }
 }
 
 class AntCascaderPickerViewColumn extends StatefulWidget {
-  const AntCascaderPickerViewColumn(
-      {super.key,
-      this.options,
-      this.onSelected,
-      this.value,
-      this.itemHeight = 34});
+  const AntCascaderPickerViewColumn({
+    super.key,
+    this.options,
+    this.onSelected,
+    this.value,
+    this.itemHeight = 34,
+  });
 
   final List<AntCascaderPickerOption>? options;
   final ValueChanged<AntCascaderPickerOption?>? onSelected;
@@ -308,7 +308,8 @@ class _AntCascaderPickerViewColumnState
     super.initState();
     if (widget.value != null) {
       _controller = ScrollController(
-          initialScrollOffset: scrollOffsetByValue(widget.value));
+        initialScrollOffset: scrollOffsetByValue(widget.value),
+      );
     }
   }
 
@@ -316,7 +317,8 @@ class _AntCascaderPickerViewColumnState
   void didUpdateWidget(AntCascaderPickerViewColumn oldWidget) {
     if (oldWidget.value != widget.value) {
       _controller = ScrollController(
-          initialScrollOffset: scrollOffsetByValue(widget.value));
+        initialScrollOffset: scrollOffsetByValue(widget.value),
+      );
     }
   }
 
@@ -330,39 +332,39 @@ class _AntCascaderPickerViewColumnState
   Widget build(BuildContext context) {
     AntThemeData themeData = AntTheme.of(context);
     return ListView.builder(
-        itemExtent: widget.itemHeight,
-        controller: _controller,
-        itemCount: widget.options?.length ?? 0,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                if (widget.options?.elementAtOrNull(index)?.value !=
-                    widget.value?.value) {
-                  widget.onSelected?.call(widget.options?[index]);
-                }
-              });
-            },
-            child: Container(
-              padding: EdgeInsets.only(left: 16, right: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: Text(
+      itemExtent: widget.itemHeight,
+      controller: _controller,
+      itemCount: widget.options?.length ?? 0,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              if (widget.options?.elementAtOrNull(index)?.value !=
+                  widget.value?.value) {
+                widget.onSelected?.call(widget.options?[index]);
+              }
+            });
+          },
+          child: Container(
+            padding: EdgeInsets.only(left: 16, right: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
                     widget.options?[index].label ?? "",
                     style: TextStyle(
-                        color: selected(index) ? themeData.colorPrimary : null),
-                  )),
-                  if (selected(index))
-                    Icon(
-                      Icons.check,
-                      color: themeData.colorPrimary,
-                    )
-                ],
-              ),
+                      color: selected(index) ? themeData.colorPrimary : null,
+                    ),
+                  ),
+                ),
+                if (selected(index))
+                  Icon(Icons.check, color: themeData.colorPrimary),
+              ],
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }
