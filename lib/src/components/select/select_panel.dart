@@ -17,8 +17,8 @@ class SelectPanel extends StatefulWidget {
     this.value,
     this.optionBuilder,
     this.onRefresh,
+    this.onSetState,
   });
-
 
   final AntSelectMode? mode;
   final bool showSearch;
@@ -31,8 +31,7 @@ class SelectPanel extends StatefulWidget {
   final ValueChanged<dynamic>? onChange;
   final AntSelectOptionBuilder? optionBuilder;
   final AsyncCallback? onRefresh;
-
-
+  final ValueChanged<StateSetter>? onSetState;
 
   @override
   State<StatefulWidget> createState() => SelectPanelState();
@@ -47,12 +46,13 @@ class SelectPanelState extends State<SelectPanel> {
   dynamic _value;
   bool _multipleValue = false;
 
-  void setOptions(List<dynamic> options) {
-    print("=================================================setOptions");
-    // setState(() {
-    //   _options = options;
-    // });
+  void refreshUI(){
+    print("=================================================refreshUI");
+    setState(() {
+      print(widget.options);
+    });
   }
+
 
   void selectItem(value) {
     print("selectItem");
@@ -76,7 +76,6 @@ class SelectPanelState extends State<SelectPanel> {
 
   @override
   void initState() {
-
     _fieldsNames = AntFieldsNames(
       label: widget.fieldsNames?.label ?? "label",
       value: widget.fieldsNames?.value ?? "value",
@@ -85,42 +84,39 @@ class SelectPanelState extends State<SelectPanel> {
     _value = widget.value ?? (_multipleValue ? [] : null);
 
     super.initState();
-
   }
 
   @override
-  void didUpdateWidget(covariant SelectPanel oldWidget){
+  void didUpdateWidget(covariant SelectPanel oldWidget) {
     super.didUpdateWidget(oldWidget);
-
-
   }
 
   @override
   Widget build(BuildContext context) {
     AntThemeData themeData = AntTheme.of(context);
-    StatefulBuilder(builder: (context, setState){
-      return Container();
-    });
-
     return Column(
       children: [
         if (widget.showSearch)
           Container(
             padding: EdgeInsets.all(8),
-            child: AntSearchBar(showSearchButton:  true,placeholder: widget.searchPlaceholder, onChange: (value){
-              widget.onSearch?.call(value);
-            }),
+            child: AntSearchBar(
+              showSearchButton: true,
+              placeholder: widget.searchPlaceholder,
+              onChange: (value) {
+                widget.onSearch?.call(value);
+              },
+            ),
           ),
         Expanded(
           child: RefreshIndicator(
-            // notificationPredicate: (notification) {
-            //   return widget.onRefresh != null;
-            // },
+            notificationPredicate: (notification) {
+              return widget.onRefresh != null;
+            },
             onRefresh: () async {
               await widget.onRefresh?.call();
             },
-            child:AntList(
-              dataSource: widget.options.value ?? [],
+            child: AntList(
+              dataSource: widget.options.value,
               itemBuilder: (context, item, index) {
                 var selected =
                 _multipleValue
@@ -171,5 +167,7 @@ class SelectPanelState extends State<SelectPanel> {
         ),
       ],
     );
+
+
   }
 }

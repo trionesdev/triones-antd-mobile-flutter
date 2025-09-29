@@ -29,7 +29,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-#  generate: true
+  generate: true
   assets:
     - assets/images/empty.svg
     - assets/images/default-image.svg

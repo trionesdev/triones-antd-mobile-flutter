@@ -41,6 +41,7 @@ import 'package:antd_flutter_example/pages/toast_page.dart';
 import 'package:antd_flutter_example/pages/upload_page.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 import 'pages/calendar_page.dart';
@@ -58,6 +59,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return AntApp(
       title: 'Flutter Demo',
+      locale: material.Locale('zh'),
+      localizationsDelegates: [
+        AntdLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
+      ],
+      supportedLocales:  [
+        material.Locale('zh'),
+        material.Locale('en'),
+      ],
       theme: AntThemeData(
         // colorPrimary: material.Colors.amber,
       ),
