@@ -238,7 +238,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             material.ListTile(
-              title: Text('Select 选择器'),
+              title: Text('Select 列表选择器'),
               onTap: () {
                 Navigator.pushNamed(context, '/select');
               },

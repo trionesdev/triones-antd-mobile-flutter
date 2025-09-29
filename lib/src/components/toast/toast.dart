@@ -12,12 +12,9 @@ class AntToast {
     Function? afterClose,
   }) {
     Navigator.push(
-        context,
-        AntToastRoute(
-          icon: icon,
-          content: content,
-          position: position,
-        ));
+      context,
+      AntToastRoute(icon: icon, content: content, position: position),
+    );
     Future.delayed(Duration(milliseconds: duration ?? 2000)).then((_) {
       if (context.mounted) {
         Navigator.of(context).pop();
@@ -37,12 +34,9 @@ Future<T?> showAntToast<T>({
   Function? afterClose,
 }) {
   Future<T?> toastRoute = Navigator.push(
-      context,
-      AntToastRoute<T>(
-        icon: icon,
-        content: content,
-        position: position,
-      ));
+    context,
+    AntToastRoute<T>(icon: icon, content: content, position: position),
+  );
   Future.delayed(Duration(milliseconds: duration ?? 2000)).then((_) {
     if (context.mounted) {
       Navigator.of(context).pop();
