@@ -11,7 +11,7 @@ class SelectPage extends StatefulWidget {
 }
 
 class SelectPageState extends State<SelectPage> {
-  static const options = [
+  var options = [
     {"value": "1", "label": "选项1"},
     {"value": "2", "label": "选项2"},
     {"value": "3", "label": "选项3"},
@@ -21,6 +21,17 @@ class SelectPageState extends State<SelectPage> {
     {"value": "7", "label": "选项7"},
     {"value": "8", "label": "选项8"},
     {"value": "9", "label": "选项9"},
+    {"value": "10", "label": "选项10"},
+    {"value": "11", "label": "选项11"},
+    {"value": "12", "label": "选项12"},
+    {"value": "13", "label": "选项13"},
+    {"value": "14", "label": "选项14"},
+    {"value": "15", "label": "选项15"},
+    {"value": "16", "label": "选项16"},
+    {"value": "17", "label": "选项17"},
+    {"value": "18", "label": "选项18"},
+    {"value": "19", "label": "选项19"},
+    {"value": "20", "label": "选项20"},
   ];
 
   @override
@@ -56,6 +67,66 @@ class SelectPageState extends State<SelectPage> {
               child: Column(
                 children: [
                   AntSelect(options: options, placeholder: "请选择", arrow: true,mode: AntSelectMode.multiple,),
+                ],
+              ),
+            ),
+            DemoBlock(
+              title: "Popup模式-刷新",
+              child: Column(
+                children: [
+                  AntSelect(
+                    options: options,
+                    placeholder: "请选择",
+                    arrow: true,
+                    modalMode: AntSelectModalMode.popup,
+                    showSearch:  true,
+                    onSearch: (value) {
+                      print("search Value:"+value.toString());
+                    },
+                    onRefresh: () async {
+                      setState(() {
+                        options = [
+                          {"value": "1", "label": "选项1"},
+                          {"value": "2", "label": "选项2"},
+                          {"value": "3", "label": "选项3"},
+                          {"value": "4", "label": "选项4"},
+                          {"value": "5", "label": "选项5"},
+                          {"value": "6", "label": "选项6"},
+                          {"value": "7", "label": "选项7"},
+                        ];
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            DemoBlock(
+              title: "页面模式-刷新",
+              child: Column(
+                children: [
+                  AntSelect(
+                    options: options,
+                    placeholder: "请选择",
+                    arrow: true,
+                    modalMode: AntSelectModalMode.page,
+                    showSearch:  true,
+                    onSearch: (value) {
+                      print("search Value:"+value.toString());
+                    },
+                    onRefresh: () async {
+                      setState(() {
+                        options = [
+                          {"value": "1", "label": "选项1"},
+                          {"value": "2", "label": "选项2"},
+                          {"value": "3", "label": "选项3"},
+                          {"value": "4", "label": "选项4"},
+                          {"value": "5", "label": "选项5"},
+                          {"value": "6", "label": "选项6"},
+                          {"value": "7", "label": "选项7"},
+                        ];
+                      });
+                    },
+                  ),
                 ],
               ),
             ),
