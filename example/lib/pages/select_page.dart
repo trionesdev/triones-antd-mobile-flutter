@@ -57,7 +57,7 @@ class SelectPageState extends State<SelectPage> {
                     options: options,
                     placeholder: "请选择",
                     arrow: true,
-                    modalMode: AntSelectModalMode.page,
+                    pickerMode: AntSelectPickerMode.page,
                   ),
                 ],
               ),
@@ -78,7 +78,7 @@ class SelectPageState extends State<SelectPage> {
                     options: options,
                     placeholder: "请选择",
                     arrow: true,
-                    modalMode: AntSelectModalMode.popup,
+                    pickerMode: AntSelectPickerMode.popup,
                     showSearch:  true,
                     onSearch: (value) {
                       print("search Value:"+value.toString());
@@ -108,7 +108,7 @@ class SelectPageState extends State<SelectPage> {
                     options: options,
                     placeholder: "请选择",
                     arrow: true,
-                    modalMode: AntSelectModalMode.page,
+                    pickerMode: AntSelectPickerMode.page,
                     showSearch:  true,
                     onSearch: (value) {
                       print("search Value:"+value.toString());
