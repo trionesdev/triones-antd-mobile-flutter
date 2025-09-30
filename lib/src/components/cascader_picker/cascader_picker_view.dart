@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
-import '../theme/theme.dart';
-import 'cascader_picker.dart';
 
 class TabItem {
   final String tabKey;
@@ -53,8 +51,6 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
     List<AntCascaderPickerOption>? options,
     String? value,
   ) {
-    print(options);
-    print(value);
     if (value == null || options == null || options.isEmpty) {
       return null;
     }
@@ -143,7 +139,7 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
             children: [
               AntButton(
                 type: AntButtonType.text,
-                text: "取消",
+                text:  AntdLocalizations.of(context)?.button_cancel ?? "取消",
                 onPressed: () {
                   widget.onCancel?.call();
                 },
@@ -152,7 +148,7 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
                 Expanded(child: Center(child: widget.title!)),
               AntButton(
                 type: AntButtonType.text,
-                text: "确定",
+                text: AntdLocalizations.of(context)?.button_ok ??"确定",
                 style: StateStyle(style: Style(color: themeData.colorPrimary)),
                 onPressed: () {
                   List<AntCascaderPickerOption?>? result =
@@ -214,7 +210,6 @@ class _AntCascaderPickerViewState extends State<AntCascaderPickerView> {
         Expanded(
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-              print(constraints.maxHeight);
               viewHeight = constraints.maxHeight;
               return IndexedStack(
                 index: _activeIndex,
@@ -359,7 +354,7 @@ class _AntCascaderPickerViewColumnState
                   ),
                 ),
                 if (selected(index))
-                  Icon(Icons.check, color: themeData.colorPrimary),
+                  Icon(AntIcons.checkOutline,size: 16, color: themeData.colorPrimary),
               ],
             ),
           ),

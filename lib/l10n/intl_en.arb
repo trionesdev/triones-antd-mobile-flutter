@@ -10,5 +10,6 @@
   "calendar_thu": "Thu",
   "calendar_fir": "Fir",
   "calendar_sat": "Sat",
-  "calendar_sun": "Sun"
+  "calendar_sun": "Sun",
+  "cascader_placeholder":"Please Select"
 }

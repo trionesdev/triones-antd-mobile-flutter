@@ -20,6 +20,7 @@ class AntSelect extends StatefulWidget {
     this.value,
     this.optionBuilder,
     this.onRefresh,
+    this.onLoadMore,
   });
 
   final AntSelectMode? mode;
@@ -36,6 +37,7 @@ class AntSelect extends StatefulWidget {
   final dynamic value;
   final ValueChanged<dynamic>? onChange;
   final AsyncCallback? onRefresh;
+  final AsyncCallback? onLoadMore;
 
   @override
   State<StatefulWidget> createState() => AntSelectState();
@@ -49,6 +51,7 @@ class AntSelectState extends State<AntSelect> {
     value: "value",
   );
   dynamic _value;
+  bool _multipleValue = false;
 
   Widget? get content {
     if (_value == null) {
@@ -78,6 +81,7 @@ class AntSelectState extends State<AntSelect> {
   @override
   void initState() {
     super.initState();
+    _multipleValue = widget.mode != null;
     _fieldsNames = AntFieldsNames(
       label: widget.fieldsNames?.label ?? "label",
       value: widget.fieldsNames?.value ?? "value",
@@ -91,7 +95,9 @@ class AntSelectState extends State<AntSelect> {
     if (widget.value != _value) {
       _value = widget.value;
     }
-
+    if (widget.mode != oldWidget.mode) {
+      _multipleValue = widget.mode != null;
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.options != oldWidget.options) {
         _options.value = widget.options;
@@ -111,7 +117,7 @@ class AntSelectState extends State<AntSelect> {
       onTap: () {
         SelectPanel selectPanel = SelectPanel(
           key: _key,
-          mode: widget.mode,
+          multiple: _multipleValue,
           showSearch: widget.showSearch,
           placeholder: widget.placeholder,
           fieldsNames: widget.fieldsNames,
@@ -126,6 +132,7 @@ class AntSelectState extends State<AntSelect> {
             widget.onChange?.call(value);
           },
           onRefresh: widget.onRefresh,
+          onLoadMore: widget.onLoadMore,
         );
 
         if (widget.modalMode == AntSelectModalMode.page) {

@@ -5,8 +5,7 @@ import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 class SelectPanel extends StatefulWidget {
   const SelectPanel({
     super.key,
-
-    this.mode = AntSelectMode.multiple,
+    this.multiple = false,
     this.showSearch = false,
     this.placeholder,
     this.fieldsNames,
@@ -17,10 +16,10 @@ class SelectPanel extends StatefulWidget {
     this.value,
     this.optionBuilder,
     this.onRefresh,
-    this.onSetState,
+    this.onLoadMore,
   });
 
-  final AntSelectMode? mode;
+  final bool? multiple;
   final bool showSearch;
   final String? placeholder;
   final String? searchPlaceholder;
@@ -31,33 +30,27 @@ class SelectPanel extends StatefulWidget {
   final ValueChanged<dynamic>? onChange;
   final AntSelectOptionBuilder? optionBuilder;
   final AsyncCallback? onRefresh;
-  final ValueChanged<StateSetter>? onSetState;
+  final AsyncCallback? onLoadMore;
 
   @override
   State<StatefulWidget> createState() => SelectPanelState();
 }
 
 class SelectPanelState extends State<SelectPanel> {
+  final ScrollController _scrollController = ScrollController();
   late AntFieldsNames _fieldsNames = AntFieldsNames(
     label: "label",
     value: "value",
   );
-  List<dynamic> _options = [];
   dynamic _value;
-  bool _multipleValue = false;
 
-  void refreshUI(){
-    print("=================================================refreshUI");
-    setState(() {
-      print(widget.options);
-    });
+  void refreshUI() {
+    setState(() {});
   }
 
-
   void selectItem(value) {
-    print("selectItem");
     setState(() {
-      if (_multipleValue) {
+      if (widget.multiple == true) {
         _value ??= [];
         if (_value.contains(value)) {
           _value.remove(value);
@@ -76,19 +69,30 @@ class SelectPanelState extends State<SelectPanel> {
 
   @override
   void initState() {
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 100) {
+        widget.onLoadMore?.call();
+      }
+    });
     _fieldsNames = AntFieldsNames(
       label: widget.fieldsNames?.label ?? "label",
       value: widget.fieldsNames?.value ?? "value",
     );
-    _multipleValue = widget.mode == null ? false : true;
-    _value = widget.value ?? (_multipleValue ? [] : null);
 
+    _value = widget.value ?? (widget.multiple == true ? [] : null);
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant SelectPanel oldWidget) {
     super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -116,50 +120,52 @@ class SelectPanelState extends State<SelectPanel> {
               await widget.onRefresh?.call();
             },
             child: AntList(
+              controller: _scrollController,
               dataSource: widget.options.value,
               itemBuilder: (context, item, index) {
                 var selected =
-                _multipleValue
-                    ? _value.contains(item[_fieldsNames.value])
-                    : _value == item[_fieldsNames.value];
+                    (widget.multiple == true)
+                        ? _value.contains(item[_fieldsNames.value])
+                        : _value == item[_fieldsNames.value];
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
                     selectItem(item[_fieldsNames.value]);
                   },
                   child:
-                  widget.optionBuilder != null
-                      ? widget.optionBuilder!(
-                    context,
-                    item,
-                    index,
-                    selected,
-                  )
-                      : Container(
-                    padding: EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          item[_fieldsNames.label],
-                          style: TextStyle(
-                            color:
-                            selected
-                                ? themeData.colorPrimary
-                                : null,
+                      widget.optionBuilder != null
+                          ? widget.optionBuilder!(
+                            context,
+                            item,
+                            index,
+                            selected,
+                          )
+                          : Container(
+                            padding: EdgeInsets.all(8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  item[_fieldsNames.label],
+                                  style: TextStyle(
+                                    color:
+                                        selected
+                                            ? themeData.colorPrimary
+                                            : null,
+                                  ),
+                                ),
+                                if (selected)
+                                  Icon(
+                                    AntIcons.checkOutline,
+                                    size: 16,
+                                    color:
+                                        selected
+                                            ? themeData.colorPrimary
+                                            : null,
+                                  ),
+                              ],
+                            ),
                           ),
-                        ),
-                        if (selected)
-                          Icon(
-                            Icons.check,
-                            color:
-                            selected
-                                ? themeData.colorPrimary
-                                : null,
-                          ),
-                      ],
-                    ),
-                  ),
                 );
               },
             ),
@@ -167,7 +173,5 @@ class SelectPanelState extends State<SelectPanel> {
         ),
       ],
     );
-
-
   }
 }

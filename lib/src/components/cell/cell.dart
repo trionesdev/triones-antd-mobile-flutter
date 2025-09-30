@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trionesdev_antd_mobile/src/icons/icons.dart';
 
 class AntCell extends StatefulWidget {
   const AntCell({
@@ -45,7 +46,7 @@ class _AntCellState extends State<AntCell> {
           Expanded(child: child),
           if (widget.arrow)
             widget.icon ??
-                Icon(Icons.keyboard_arrow_right, size: 18, color: Colors.grey),
+                Icon(AntIcons.rightOutline, size: 16, color: Colors.grey),
         ],
       ),
     );

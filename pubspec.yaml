@@ -31,12 +31,12 @@ dev_dependencies:
 flutter:
   generate: true
   assets:
+#    - assets/fonts/iconfont.json
     - assets/images/empty.svg
     - assets/images/default-image.svg
     - assets/images/default-image.png
     - assets/images/error-image.svg
     - assets/images/error-image.png
-    - assets/fonts/iconfont.ttf
   fonts:
     - family: TrionesAntmIcon
       fonts:

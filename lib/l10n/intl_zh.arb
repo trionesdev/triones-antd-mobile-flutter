@@ -10,5 +10,6 @@
   "calendar_thu": "四",
   "calendar_fir": "五",
   "calendar_sat": "六",
-  "calendar_sun": "日"
+  "calendar_sun": "日",
+  "cascader_placeholder":"请选择"
 }
