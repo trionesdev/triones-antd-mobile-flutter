@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 enum AntSelectMode { multiple, tags }
 
-enum AntSelectModalMode { page, popup }
+enum AntSelectPickerMode { page, popup }
 
 class AntFieldsNames {
   String label;

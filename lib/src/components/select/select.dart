@@ -7,7 +7,7 @@ class AntSelect extends StatefulWidget {
   const AntSelect({
     super.key,
     this.mode,
-    this.modalMode = AntSelectModalMode.popup,
+    this.pickerMode = AntSelectPickerMode.popup,
     this.showSearch = false,
     this.title,
     this.placeholder,
@@ -25,7 +25,7 @@ class AntSelect extends StatefulWidget {
   });
 
   final AntSelectMode? mode;
-  final AntSelectModalMode modalMode;
+  final AntSelectPickerMode pickerMode;
   final bool showSearch;
   final String? title;
   final String? placeholder;
@@ -153,10 +153,10 @@ class AntSelectState extends State<AntSelect> {
           onLoadMore: widget.onLoadMore,
         );
 
-        Future<dynamic> _modal;
+        Future<dynamic> picker;
 
-        if (widget.modalMode == AntSelectModalMode.page) {
-          _modal = Navigator.push(
+        if (widget.pickerMode == AntSelectPickerMode.page) {
+          picker = Navigator.push(
             context,
             MaterialPageRoute(
               fullscreenDialog: true, // 关键参数
@@ -225,7 +225,7 @@ class AntSelectState extends State<AntSelect> {
             ),
           );
         } else {
-          _modal = showModalBottomSheet(
+          picker = showModalBottomSheet(
             context: context,
             enableDrag: false,
             isScrollControlled: true,
@@ -298,7 +298,7 @@ class AntSelectState extends State<AntSelect> {
             },
           );
         }
-        _modal.then((_) {
+        picker.then((_) {
           _isOpen = true;
           widget.onOpenChange?.call(_isOpen);
         });
