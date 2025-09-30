@@ -7,6 +7,7 @@ enum AntInputType { text, password, number }
 class AntInput extends StatefulWidget {
   const AntInput({
     super.key,
+    this.size = AntSize.middle,
     this.placeholder,
     this.type = AntInputType.text,
     this.prefix,
@@ -21,6 +22,7 @@ class AntInput extends StatefulWidget {
   });
 
   final StateStyle? style;
+  final AntSize size;
   final double? height;
   final String? placeholder;
   final AntInputType? type;

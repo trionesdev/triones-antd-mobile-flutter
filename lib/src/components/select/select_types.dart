@@ -11,6 +11,8 @@ class AntFieldsNames {
   AntFieldsNames({this.label = "label", this.value = "value"});
 }
 
+typedef AntSelectValueChanged = void Function(dynamic value,dynamic option);
+
 typedef AntSelectOptionBuilder = Widget Function(
     BuildContext context,
     dynamic item,

@@ -1,5 +1,5 @@
 class MapUtils {
-  static dynamic getPathValue(Map<dynamic, dynamic>? map, List<dynamic> keys) {
+  static dynamic getPathValue(Map<dynamic, dynamic?>? map, List<dynamic> keys) {
     dynamic cloneValues = map;
     // for (int i = 0; i < keys.length; i++) {
     //   if (i < keys.length - 1) {
@@ -23,25 +23,25 @@ class MapUtils {
     return cloneValues[keys.last];
   }
 
-  static Map<dynamic, dynamic> setPathValue(
+  static Map<dynamic, dynamic?> setPathValue(
     Map<dynamic, dynamic>? map,
     List<dynamic> keys,
     dynamic value,
   ) {
     dynamic cloneMap = map;
-    dynamic current = cloneMap;
+    dynamic? current = cloneMap;
 
     for(int i=0;i<keys.length-1;i++){
       final key = keys.elementAt(i);
       current = current[key];
-      current ??= (keys[i+1] is String)? {}:[];
+      current ??= (keys[i+1] is String)? <dynamic,dynamic?>{}:<dynamic>[];
     }
     current[keys.last] = value;
     return cloneMap;
   }
 
   /// 将Map转换为扁平化Map
-  static Map<String, dynamic> flattenMap(Map<dynamic, dynamic> map) {
+  static Map<String, dynamic?> flattenMap(Map<dynamic, dynamic> map) {
     Map<String, dynamic> result = {};
 
     void loopMap(List<String> upKeys, Map<dynamic, dynamic> currentMap) {

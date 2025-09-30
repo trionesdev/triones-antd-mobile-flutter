@@ -42,6 +42,7 @@ class SelectPanelState extends State<SelectPanel> {
     label: "label",
     value: "value",
   );
+
   dynamic _value;
 
   void refreshUI() {

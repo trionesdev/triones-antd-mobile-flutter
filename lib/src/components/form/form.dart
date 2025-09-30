@@ -4,7 +4,6 @@ import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 // 以Field作为基础，所有的属性和操作都在FieldState内部进行处理。
 
-
 //region form
 class AntForm extends StatefulWidget {
   const AntForm({
@@ -101,7 +100,10 @@ class AntFormState extends State<AntForm> {
     if (field.mergedName == null) {
       return;
     }
-    var fieldValue = MapUtils.getPathValue(_formValues, field.mergedName!.value);
+    var fieldValue = MapUtils.getPathValue(
+      _formValues,
+      field.mergedName!.value,
+    );
     field._formDidChange(fieldValue);
   }
 
@@ -336,6 +338,9 @@ class AntFieldState extends State<Field> with RestorationMixin {
   }
 
   void didChange(dynamic value) {
+    if (mergedName == null) {
+      return;
+    }
     if (value == _value) {
       return;
     }
@@ -649,7 +654,6 @@ class InternalFormItemState<T> extends State<InternalFormItem<T>> {
       fieldItemChildren.add(_labelCol(fieldLabel));
     }
     if (widget.builder != null) {
-
       var child = widget.builder(fieldState!);
       List<Widget> filedInputChildren = [child];
       if (fieldState.errorText != null) {
@@ -717,10 +721,10 @@ class _AntFormItemStyle extends StateStyle {
 }
 
 typedef AntFormListBuilder =
-Widget Function(
-    BuildContext context,
-    List<AntFormListField> fields,
-    AntFormListOperations operations,
+    Widget Function(
+      BuildContext context,
+      List<AntFormListField> fields,
+      AntFormListOperations operations,
     );
 
 class AntFormList extends StatefulWidget {
@@ -767,40 +771,40 @@ class AntFormListState extends State<AntFormList> {
       isList: true,
       name: mergedName,
       child:
-      widget.builder != null
-          ? widget.builder!(
-        context,
-        fields,
-        AntFormListOperations(
-          add: (dynamic defaultValue) {
-            List<dynamic>? listValue =
-            MapUtils.getPathValue(
-              formState!._formValues,
-              widget.name!.value,
-            )
-            as List<dynamic>?;
-            if (listValue is List) {
-              listValue.add(defaultValue);
-            } else {
-              listValue = [defaultValue];
-            }
-            formState.setFieldValue(widget.name!, listValue);
-          },
-          remove: (int index) {
-            List<dynamic>? listValue =
-            MapUtils.getPathValue(
-              formState!._formValues,
-              widget.name!.value,
-            )
-            as List<dynamic>?;
-            if (listValue is List) {
-              listValue.removeAt(index);
-            }
-            formState.setFieldValue(widget.name!, listValue);
-          },
-        ),
-      )
-          : Container(),
+          widget.builder != null
+              ? widget.builder!(
+                context,
+                fields,
+                AntFormListOperations(
+                  add: (dynamic defaultValue) {
+                    List<dynamic>? listValue =
+                        MapUtils.getPathValue(
+                              formState!._formValues,
+                              widget.name!.value,
+                            )
+                            as List<dynamic>?;
+                    if (listValue is List) {
+                      listValue.add(defaultValue);
+                    } else {
+                      listValue = [defaultValue];
+                    }
+                    formState.setFieldValue(widget.name!, listValue);
+                  },
+                  remove: (int index) {
+                    List<dynamic>? listValue =
+                        MapUtils.getPathValue(
+                              formState!._formValues,
+                              widget.name!.value,
+                            )
+                            as List<dynamic>?;
+                    if (listValue is List) {
+                      listValue.removeAt(index);
+                    }
+                    formState.setFieldValue(widget.name!, listValue);
+                  },
+                ),
+              )
+              : Container(),
     );
   }
 }

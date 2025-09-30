@@ -21,6 +21,7 @@ class AntSelect extends StatefulWidget {
     this.optionBuilder,
     this.onRefresh,
     this.onLoadMore,
+    this.onOpenChange,
   });
 
   final AntSelectMode? mode;
@@ -35,9 +36,10 @@ class AntSelect extends StatefulWidget {
   final AntSelectOptionBuilder? optionBuilder;
   final ValueChanged<dynamic>? onSearch;
   final dynamic value;
-  final ValueChanged<dynamic>? onChange;
+  final AntSelectValueChanged? onChange;
   final AsyncCallback? onRefresh;
   final AsyncCallback? onLoadMore;
+  final ValueChanged<bool>? onOpenChange;
 
   @override
   State<StatefulWidget> createState() => AntSelectState();
@@ -52,6 +54,7 @@ class AntSelectState extends State<AntSelect> {
   );
   dynamic _value;
   bool _multipleValue = false;
+  bool _isOpen = false;
 
   Widget? get content {
     if (_value == null) {
@@ -60,33 +63,45 @@ class AntSelectState extends State<AntSelect> {
     if (widget.options.isEmpty) {
       return null;
     }
-    if (widget.mode != null) {
+    if (_multipleValue) {
       var labels = widget.options
           .where((item) {
             return (_value as List).contains(item[_fieldsNames.value]);
           })
           .map((item) => item[_fieldsNames.label]);
-      return (labels != null && labels.isNotEmpty)
-          ? Text(labels.join(","))
-          : null;
+      return (labels.isNotEmpty) ? Text(labels.join(",")) : null;
     } else {
       var label =
           widget.options.firstWhereOrNull((item) {
             return item[_fieldsNames.value] == _value;
           })?[_fieldsNames.label];
-      return label != null ? Text(label!) : null;
+      return label != null ? Text(label ?? "") : null;
+    }
+  }
+
+  dynamic valueOption(dynamic value) {
+    if (_multipleValue) {
+      return widget.options
+          .where((item) {
+            return (value as List).contains(item[_fieldsNames.value]);
+          })
+          .map((item) => item);
+    } else {
+      return widget.options.firstWhereOrNull((item) {
+        return item[_fieldsNames.value] == value;
+      });
     }
   }
 
   @override
   void initState() {
-    super.initState();
     _multipleValue = widget.mode != null;
     _fieldsNames = AntFieldsNames(
       label: widget.fieldsNames?.label ?? "label",
       value: widget.fieldsNames?.value ?? "value",
     );
-    _options.value = widget.options;
+    _options.value = widget.options ?? [];
+    super.initState();
   }
 
   @override
@@ -100,7 +115,7 @@ class AntSelectState extends State<AntSelect> {
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.options != oldWidget.options) {
-        _options.value = widget.options;
+        _options.value = widget.options ?? [];
         _key.currentState?.refreshUI();
       }
     });
@@ -115,6 +130,8 @@ class AntSelectState extends State<AntSelect> {
       arrow: widget.arrow,
       child: content,
       onTap: () {
+        _isOpen = true;
+        widget.onOpenChange?.call(_isOpen);
         SelectPanel selectPanel = SelectPanel(
           key: _key,
           multiple: _multipleValue,
@@ -125,18 +142,21 @@ class AntSelectState extends State<AntSelect> {
           searchPlaceholder: widget.searchPlaceholder,
           options: _options,
           value: _value,
+          optionBuilder: widget.optionBuilder,
           onChange: (value) {
             setState(() {
               _value = value;
             });
-            widget.onChange?.call(value);
+            widget.onChange?.call(value, valueOption(value));
           },
           onRefresh: widget.onRefresh,
           onLoadMore: widget.onLoadMore,
         );
 
+        Future<dynamic> _modal;
+
         if (widget.modalMode == AntSelectModalMode.page) {
-          final result = Navigator.push(
+          _modal = Navigator.push(
             context,
             MaterialPageRoute(
               fullscreenDialog: true, // 关键参数
@@ -189,7 +209,10 @@ class AntSelectState extends State<AntSelect> {
                                   Navigator.of(context).maybePop(true).then((
                                     _,
                                   ) {
-                                    widget.onChange?.call(_value);
+                                    widget.onChange?.call(
+                                      _value,
+                                      valueOption(_value),
+                                    );
                                   });
                                 },
                               ),
@@ -202,7 +225,7 @@ class AntSelectState extends State<AntSelect> {
             ),
           );
         } else {
-          var result = showModalBottomSheet(
+          _modal = showModalBottomSheet(
             context: context,
             enableDrag: false,
             isScrollControlled: true,
@@ -257,7 +280,10 @@ class AntSelectState extends State<AntSelect> {
                               ),
                               onPressed: () {
                                 Navigator.of(context).maybePop(true).then((_) {
-                                  widget.onChange?.call(_value);
+                                  widget.onChange?.call(
+                                    _value,
+                                    valueOption(_value),
+                                  );
                                 });
                               },
                             ),
@@ -272,6 +298,10 @@ class AntSelectState extends State<AntSelect> {
             },
           );
         }
+        _modal.then((_) {
+          _isOpen = true;
+          widget.onOpenChange?.call(_isOpen);
+        });
       },
     );
   }
