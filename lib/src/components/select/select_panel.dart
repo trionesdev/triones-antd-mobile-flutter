@@ -16,7 +16,11 @@ class SelectPanel extends StatefulWidget {
     this.value,
     this.optionBuilder,
     this.onRefresh,
-    this.onLoadMore,
+    //距顶部多远时（单位px），触发 scrolltoupper 事件
+    this.upperThreshold = 50,
+    //距底部多远时（单位px），触发 scrolltolower 事件
+    this.lowerThreshold = 50,
+    this.onScrollToLower,
   });
 
   final bool? multiple;
@@ -30,7 +34,9 @@ class SelectPanel extends StatefulWidget {
   final ValueChanged<dynamic>? onChange;
   final AntSelectOptionBuilder? optionBuilder;
   final AsyncCallback? onRefresh;
-  final AsyncCallback? onLoadMore;
+  final int upperThreshold;
+  final int lowerThreshold;
+  final AsyncCallback? onScrollToLower;
 
   @override
   State<StatefulWidget> createState() => SelectPanelState();
@@ -72,8 +78,8 @@ class SelectPanelState extends State<SelectPanel> {
   void initState() {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 100) {
-        widget.onLoadMore?.call();
+          _scrollController.position.maxScrollExtent - widget.lowerThreshold) {
+        widget.onScrollToLower?.call();
       }
     });
     _fieldsNames = AntFieldsNames(

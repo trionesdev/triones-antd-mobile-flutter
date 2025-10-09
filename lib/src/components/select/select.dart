@@ -20,7 +20,7 @@ class AntSelect extends StatefulWidget {
     this.value,
     this.optionBuilder,
     this.onRefresh,
-    this.onLoadMore,
+    this.onScrollToLower,
     this.onOpenChange,
   });
 
@@ -38,7 +38,7 @@ class AntSelect extends StatefulWidget {
   final dynamic value;
   final AntSelectValueChanged? onChange;
   final AsyncCallback? onRefresh;
-  final AsyncCallback? onLoadMore;
+  final AsyncCallback? onScrollToLower;
   final ValueChanged<bool>? onOpenChange;
 
   @override
@@ -150,7 +150,7 @@ class AntSelectState extends State<AntSelect> {
             widget.onChange?.call(value, valueOption(value));
           },
           onRefresh: widget.onRefresh,
-          onLoadMore: widget.onLoadMore,
+          onScrollToLower: widget.onScrollToLower,
         );
 
         Future<dynamic> picker;
