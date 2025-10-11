@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 
-class AntIconData extends IconData{
+class AntIconData extends IconData {
   const AntIconData(super.codePoint)
       : super(fontFamily: 'TrionesAntmIcon',
-      matchTextDirection: true,fontPackage:'trionesdev_antd_mobile');
+      fontPackage: 'trionesdev_antd_mobile');
 }
 
-class AntIcons{
+class AntIcons {
   static final IconData homeFill = AntIconData(59213);
   static final IconData userFill = AntIconData(59215);
   static final IconData wechatPayCircleFill = AntIconData(58886);

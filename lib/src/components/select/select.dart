@@ -6,6 +6,7 @@ import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 class AntSelect extends StatefulWidget {
   const AntSelect({
     super.key,
+    this.label,
     this.mode,
     this.pickerMode = AntSelectPickerMode.popup,
     this.showSearch = false,
@@ -24,6 +25,7 @@ class AntSelect extends StatefulWidget {
     this.onOpenChange,
   });
 
+  final String? label;
   final AntSelectMode? mode;
   final AntSelectPickerMode pickerMode;
   final bool showSearch;
@@ -128,6 +130,7 @@ class AntSelectState extends State<AntSelect> {
     return AntCell(
       placeholder: widget.placeholder,
       arrow: widget.arrow,
+      label: widget.label,
       child: content,
       onTap: () {
         _isOpen = true;

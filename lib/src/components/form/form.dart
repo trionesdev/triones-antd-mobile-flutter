@@ -24,8 +24,8 @@ class AntForm extends StatefulWidget {
   final double? columnSpacing;
   final AntFormLayout? layout;
   final AntLabelAlign? labelAlign;
-  final AntFormCol? labelCol;
-  final AntFormCol? wrapperCol;
+  final AntCol? labelCol;
+  final AntCol? wrapperCol;
 
   // final List<Widget>? children;
   final Widget? child;
@@ -58,9 +58,9 @@ class AntFormState extends State<AntForm> {
 
   double? get columnSpacing => widget.columnSpacing;
 
-  AntFormCol? get labelCol => widget.labelCol;
+  AntCol? get labelCol => widget.labelCol;
 
-  AntFormCol? get wrapperCol => widget.wrapperCol;
+  AntCol? get wrapperCol => widget.wrapperCol;
 
   AntLabelAlign? get labelAlign => widget.labelAlign;
 
@@ -430,8 +430,8 @@ class AntFormItem<T> extends StatelessWidget {
   final AntFormLayout? layout;
   final NamePath? name;
   final Widget? label;
-  final AntFormCol? labelCol;
-  final AntFormCol? wrapperCol;
+  final AntCol? labelCol;
+  final AntCol? wrapperCol;
   final AntLabelAlign? labelAlign;
   final Widget? child;
   final FormItemBuilder<T> builder;
@@ -470,8 +470,8 @@ class AntFormItem<T> extends StatelessWidget {
 class InternalFormItem<T> extends StatefulWidget {
   final AntFormLayout? layout;
   final Widget? label;
-  final AntFormCol? labelCol;
-  final AntFormCol? wrapperCol;
+  final AntCol? labelCol;
+  final AntCol? wrapperCol;
   final AntLabelAlign? labelAlign;
   final Widget? child;
   final FormItemBuilder<T> builder;
@@ -508,7 +508,7 @@ class InternalFormItemState<T> extends State<InternalFormItem<T>> {
     }
   }
 
-  AntFormCol? get labelCol {
+  AntCol? get labelCol {
     if (widget.labelCol != null) {
       return widget.labelCol;
     } else {
@@ -516,7 +516,7 @@ class InternalFormItemState<T> extends State<InternalFormItem<T>> {
     }
   }
 
-  AntFormCol? get wrapperCol {
+  AntCol? get wrapperCol {
     if (widget.wrapperCol != null) {
       return widget.wrapperCol;
     } else {
@@ -650,7 +650,6 @@ class InternalFormItemState<T> extends State<InternalFormItem<T>> {
                 : MainAxisAlignment.end,
         children: fieldLabelChildren,
       );
-
       fieldItemChildren.add(_labelCol(fieldLabel));
     }
     if (widget.builder != null) {

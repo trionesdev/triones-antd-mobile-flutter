@@ -1,20 +1,27 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
-typedef AntListItemBuilder<T> = Widget Function(BuildContext context, T item, int index)?;
+typedef AntListItemBuilder<T> =
+    Widget Function(BuildContext context, T item, int index)?;
 
 class AntList<T> extends StatefulWidget {
-  const AntList({super.key,
+  const AntList({
+    super.key,
     this.separator,
     this.dataSource,
     this.itemBuilder,
     this.children,
     this.style,
     this.controller,
-    this.loading = false, this.shrinkWrap = false,
+    this.loading = false,
+    this.shrinkWrap = false,
     this.pending,
     this.physics,
+    //距底部多远时（单位px），触发 scrolltolower 事件
+    this.lowerThreshold = 50,
+    this.onScrollToLower,
   });
 
   final StateStyle? style;
@@ -27,14 +34,27 @@ class AntList<T> extends StatefulWidget {
   final bool shrinkWrap;
   final EdgeInsetsGeometry? pending;
   final ScrollPhysics? physics;
+  final int lowerThreshold;
+  final AsyncCallback? onScrollToLower;
 
   @override
   State<StatefulWidget> createState() => _AntListState<T>();
 }
 
 class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
+  ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
+    if (widget.controller != null) {
+      _scrollController = widget.controller!;
+    }
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - widget.lowerThreshold) {
+        widget.onScrollToLower?.call();
+      }
+    });
     super.initState();
   }
 
@@ -70,31 +90,25 @@ class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
     return Stack(
       children: [
         Container(
-          decoration: stateStyle
-              .resolve(materialStates)
-              ?.decoration,
-          padding: stateStyle
-              .resolve(materialStates)
-              ?.computedPadding,
-          child: children.isNotEmpty
-              ? ListView(
-            padding: widget.pending,
-            controller: widget.controller,
-            shrinkWrap: widget.shrinkWrap,
-            physics: widget.physics,
-            children: children,
-          )
-              : Container(
-            width: double.infinity,
-            decoration: stateStyle
-                .resolve(materialStates)
-                ?.decoration,
-            child: AntEmpty(),
-          ),
+          decoration: stateStyle.resolve(materialStates)?.decoration,
+          padding: stateStyle.resolve(materialStates)?.computedPadding,
+          child:
+              children.isNotEmpty
+                  ? ListView(
+                    padding: widget.pending,
+                    controller: _scrollController,
+                    shrinkWrap: widget.shrinkWrap,
+                    physics: widget.physics,
+                    children: children,
+                  )
+                  : Container(
+                    width: double.infinity,
+                    decoration: stateStyle.resolve(materialStates)?.decoration,
+                    child: AntEmpty(),
+                  ),
         ),
-        if (widget.loading) Positioned.fill(child: Align(
-          child: AntSpinLoading(),
-        ))
+        if (widget.loading)
+          Positioned.fill(child: Align(child: AntSpinLoading())),
       ],
     );
   }
@@ -108,15 +122,19 @@ class _AntListStyle extends StateStyle {
 
   @override
   Style get style {
-    return Style(
-      backgroundColor: Colors.white,
-    );
+    return Style(backgroundColor: Colors.white);
   }
 }
 
 class AntListItem extends StatefulWidget {
-  const AntListItem(
-      {super.key, this.icon, this.title, this.extra, this.style, this.onTap});
+  const AntListItem({
+    super.key,
+    this.icon,
+    this.title,
+    this.extra,
+    this.style,
+    this.onTap,
+  });
 
   final StateStyle? style;
   final Widget? icon;
@@ -154,12 +172,8 @@ class _AntListItemState extends State<AntListItem> with MaterialStateMixin {
         widget.onTap?.call();
       },
       child: Container(
-        decoration: stateStyle
-            .resolve(materialStates)
-            ?.decoration,
-        padding: stateStyle
-            .resolve(materialStates)
-            ?.computedPadding,
+        decoration: stateStyle.resolve(materialStates)?.decoration,
+        padding: stateStyle.resolve(materialStates)?.computedPadding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           spacing: 2,
@@ -178,12 +192,6 @@ class _AntListItemStyle extends StateStyle {
 
   @override
   Style get style {
-    return Style(
-        padding: StylePadding(
-          top: 8,
-          bottom: 8,
-          left: 8,
-          right: 8,
-        ));
+    return Style(padding: StylePadding(top: 8, bottom: 8, left: 8, right: 8));
   }
 }

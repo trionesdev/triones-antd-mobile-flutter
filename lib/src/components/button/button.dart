@@ -19,22 +19,21 @@ enum AntButtonColor { primary, danger }
 enum AntButtonShape { circle, round }
 
 class AntButton extends StatefulWidget {
-  const AntButton(
-      {super.key,
-      this.type,
-      this.block,
-      this.color,
-      this.danger,
-      this.disabled,
-      this.text,
-      this.icon,
-      this.onPressed,
-      this.variant,
-      this.shape = AntButtonShape.round,
-      this.size = AntSize.middle,
-      this.style,
-        this.child
-      });
+  const AntButton({super.key,
+    this.type,
+    this.block,
+    this.color,
+    this.danger,
+    this.disabled,
+    this.text,
+    this.icon,
+    this.onPressed,
+    this.variant,
+    this.shape = AntButtonShape.round,
+    this.size = AntSize.middle,
+    this.style,
+    this.child
+  });
 
   final AntButtonType? type;
   final bool? block;
@@ -88,7 +87,7 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
   Widget build(BuildContext context) {
     final AntThemeData theme = AntTheme.of(context);
 
-    StateStyle stateStyle = _AntButtonStyle(widget,context);
+    StateStyle stateStyle = _AntButtonStyle(widget, context);
     stateStyle = stateStyle.merge(widget.style);
     Style? style = stateStyle.resolve(materialStates);
 
@@ -116,15 +115,17 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
       }
       return RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
-              stateStyle.resolve(materialStates)?.borderRadius ?? 6.0),
+              stateStyle
+                  .resolve(materialStates)
+                  ?.borderRadius ?? 6.0),
           side: buttonBorderSide() ?? BorderSide.none);
     }
 
-    Widget child(){
-      if(widget.child!=null){
+    Widget child() {
+      if (widget.child != null) {
         return widget.child!;
       }
-      if (widget.text != null){
+      if (widget.text != null) {
         return Text(
           widget.text ?? '',
           style: TextStyle(
@@ -144,9 +145,14 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
           shape: shapeBorder(),
           minWidth: 0,
           height: height,
-          padding: stateStyle.resolve(materialStates)?.computedPadding,
-          color: stateStyle.resolve(materialStates)?.backgroundColor,
+          padding: stateStyle
+              .resolve(materialStates)
+              ?.computedPadding,
+          color: stateStyle
+              .resolve(materialStates)
+              ?.backgroundColor,
           child: Row(
+              spacing: 4,
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -159,6 +165,7 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
 
 class _AntButtonStyle extends StateStyle {
   const _AntButtonStyle(this.button, this.context);
+
   final BuildContext context;
   final AntButton button;
 
@@ -259,8 +266,12 @@ class _AntButtonStyle extends StateStyle {
   @override
   Style? get hovered {
     Color? backgroundColor() {
-      if ([AntButtonVariant.filled, AntButtonVariant.outlined, AntButtonVariant.text]
-              .contains(button.variant) ||
+      if ([
+        AntButtonVariant.filled,
+        AntButtonVariant.outlined,
+        AntButtonVariant.text
+      ]
+          .contains(button.variant) ||
           [AntButtonType.text].contains(button.type)) {
         return Colors.white;
       }
@@ -276,7 +287,11 @@ class _AntButtonStyle extends StateStyle {
   @override
   Style? get pressed {
     Color? backgroundColor() {
-      if ([AntButtonVariant.filled, AntButtonVariant.outlined, AntButtonVariant.text]
+      if ([
+        AntButtonVariant.filled,
+        AntButtonVariant.outlined,
+        AntButtonVariant.text
+      ]
           .contains(button.variant)) {
         return Colors.white.withAlpha((255.0 * 0.1).round());
         // return finalColor.withOpacity(0.1);

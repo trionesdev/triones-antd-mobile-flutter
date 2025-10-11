@@ -1,8 +1,6 @@
 //region types
 enum AntFormLayout { horizontal, vertical }
 
-enum AntLabelAlign { left, right }
-
 enum AntFormLabelVerticalAlign { start, center, end }
 
 class NamePath {
@@ -40,13 +38,6 @@ class NamePath {
   }).join(".");
 
 
-}
-
-class AntFormCol {
-  const AntFormCol({this.flex, this.span});
-
-  final double? flex;
-  final int? span;
 }
 
 class AntFormListField{
