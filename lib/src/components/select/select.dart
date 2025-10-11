@@ -6,7 +6,10 @@ import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 class AntSelect extends StatefulWidget {
   const AntSelect({
     super.key,
-    this.label,
+    /**
+     * 显示的标签
+     */
+    this.cellLabel,
     this.mode,
     this.pickerMode = AntSelectPickerMode.popup,
     this.showSearch = false,
@@ -18,14 +21,27 @@ class AntSelect extends StatefulWidget {
     this.onSearch,
     this.onChange,
     this.searchPlaceholder,
+    /**
+     * 值
+     */
     this.value,
+    /**
+     * 值选项
+     */
+    this.valueOption,
+    /**
+     * 选项构建器
+     */
     this.optionBuilder,
+    /**
+     * 刷新事件
+     */
     this.onRefresh,
     this.onScrollToLower,
     this.onOpenChange,
   });
 
-  final String? label;
+  final String? cellLabel;
   final AntSelectMode? mode;
   final AntSelectPickerMode pickerMode;
   final bool showSearch;
@@ -38,6 +54,7 @@ class AntSelect extends StatefulWidget {
   final AntSelectOptionBuilder? optionBuilder;
   final ValueChanged<dynamic>? onSearch;
   final dynamic value;
+  final dynamic valueOption;
   final AntSelectValueChanged? onChange;
   final AsyncCallback? onRefresh;
   final AsyncCallback? onScrollToLower;
@@ -62,6 +79,10 @@ class AntSelectState extends State<AntSelect> {
     if (_value == null) {
       return null;
     }
+    if (widget.valueOption != null  && widget.value == widget.valueOption?[_fieldsNames.value]) {
+      return Text(widget.valueOption?[_fieldsNames.label] ?? "");
+    }
+
     if (widget.options.isEmpty) {
       return null;
     }
@@ -103,6 +124,7 @@ class AntSelectState extends State<AntSelect> {
       value: widget.fieldsNames?.value ?? "value",
     );
     _options.value = widget.options ?? [];
+    _value = widget.value;
     super.initState();
   }
 
@@ -130,7 +152,7 @@ class AntSelectState extends State<AntSelect> {
     return AntCell(
       placeholder: widget.placeholder,
       arrow: widget.arrow,
-      label: widget.label,
+      label: widget.cellLabel,
       child: content,
       onTap: () {
         _isOpen = true;

@@ -1,10 +1,6 @@
-enum AntSize{
-  small,
-  middle,
-  large
-}
+enum AntSize { small, middle, large }
 
-class AntCol{
+class AntCol {
   const AntCol({this.flex, this.span});
 
   final double? flex;
@@ -12,3 +8,10 @@ class AntCol{
 }
 
 enum AntLabelAlign { left, right }
+
+class AntOption {
+  String? label;
+  dynamic? value;
+
+  AntOption({this.label, this.value});
+}

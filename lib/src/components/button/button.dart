@@ -35,6 +35,7 @@ class AntButton extends StatefulWidget {
     this.child
   });
 
+  /// 按钮类型
   final AntButtonType? type;
   final bool? block;
   final Color? color;

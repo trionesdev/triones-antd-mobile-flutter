@@ -178,7 +178,7 @@ class _FormPageState extends State<FormPage> {
                         }
                         return null;
                       },
-                      labelCol: AntFormCol(flex: 100),
+                      labelCol: AntCol(flex: 100),
                       builder: (AntFieldState field) {
                         return AntInput(
                           value: field.value,
@@ -207,7 +207,7 @@ class _FormPageState extends State<FormPage> {
                         }
                         return null;
                       },
-                      wrapperCol: AntFormCol(span: 18),
+                      wrapperCol: AntCol(span: 18),
                       builder: (AntFieldState field) {
                         return AntInput(
                           value: field.value,
@@ -225,7 +225,7 @@ class _FormPageState extends State<FormPage> {
               child: AntForm(
                 key: _formKey5,
                 labelAlign: AntLabelAlign.right,
-                labelCol: AntFormCol(flex: 50),
+                labelCol: AntCol(flex: 50),
                 child: Column(
                   children: [
                     AntFormItem(
