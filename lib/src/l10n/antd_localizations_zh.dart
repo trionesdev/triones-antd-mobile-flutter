@@ -40,6 +40,9 @@ class AntdLocalizationsZh extends AntdLocalizations {
 
   @override
   String get calendar_sun => '日';
+
+  @override
+  String get cascader_placeholder => '请选择';
 }
 
 /// The translations for Chinese, as used in China, using the Han script (`zh_Hans_CN`).
@@ -78,4 +81,7 @@ class AntdLocalizationsZhHansCn extends AntdLocalizationsZh {
 
   @override
   String get calendar_sun => '日';
+
+  @override
+  String get cascader_placeholder => '请选择';
 }

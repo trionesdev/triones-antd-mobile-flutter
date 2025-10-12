@@ -168,6 +168,12 @@ abstract class AntdLocalizations {
   /// In zh_Hans_CN, this message translates to:
   /// **'日'**
   String get calendar_sun;
+
+  /// No description provided for @cascader_placeholder.
+  ///
+  /// In zh_Hans_CN, this message translates to:
+  /// **'请选择'**
+  String get cascader_placeholder;
 }
 
 class _AntdLocalizationsDelegate

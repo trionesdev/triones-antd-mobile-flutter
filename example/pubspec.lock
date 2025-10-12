@@ -143,10 +143,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_plugin_android_lifecycle
-      sha256: b0694b7fb1689b0e6cc193b3f1fcac6423c4f93c74fb20b806c6b6f196db0c31
+      sha256: c2fe1001710127dfa7da89977a08d591398370d099aacdaa6d44da7eb14b8476
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.30"
+    version: "2.0.31"
   flutter_svg:
     dependency: transitive
     description:
@@ -193,10 +193,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker_android
-      sha256: "8dfe08ea7fcf7467dbaf6889e72eebd5e0d6711caae201fdac780eb45232cd02"
+      sha256: dd7a61daaa5896cc34b7bc95f66c60225ae6bee0d167dde0e21a9d9016cac0dc
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.8.13+3"
+    version: "0.8.13+4"
   image_picker_for_web:
     dependency: transitive
     description:

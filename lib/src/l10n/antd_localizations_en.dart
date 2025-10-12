@@ -40,4 +40,7 @@ class AntdLocalizationsEn extends AntdLocalizations {
 
   @override
   String get calendar_sun => 'Sun';
+
+  @override
+  String get cascader_placeholder => 'Please Select';
 }
