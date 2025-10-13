@@ -79,6 +79,9 @@ class AntSelectState extends State<AntSelect> {
     if (_value == null) {
       return null;
     }
+    print(widget.value);
+    print(widget.valueOption?[_fieldsNames.value]);
+    print(widget.valueOption?[_fieldsNames.label]);
     if (widget.valueOption != null  && widget.value == widget.valueOption?[_fieldsNames.value]) {
       return Text(widget.valueOption?[_fieldsNames.label] ?? "");
     }

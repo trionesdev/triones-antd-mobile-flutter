@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/src/components/toast/toast_route.dart';
@@ -37,11 +39,10 @@ Future<T?> showAntToast<T>({
     context,
     AntToastRoute<T>(icon: icon, content: content, position: position),
   );
-  Future.delayed(Duration(milliseconds: duration ?? 2000)).then((_) {
+  return Future.delayed(Duration(milliseconds: duration ?? 2000)).then((_) {
     if (context.mounted) {
       Navigator.of(context).pop();
     }
-    afterClose?.call();
+    return toastRoute;
   });
-  return toastRoute;
 }

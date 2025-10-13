@@ -210,7 +210,7 @@ class AntFormState extends State<AntForm> {
     AntFieldState? field = _fields.firstWhereOrNull((element) {
       return element.mergedName == name;
     });
-    return field?._value;
+    return field?._value ?? MapUtils.getPathValue(_formValues, name.value);
   }
 
   @override
@@ -425,6 +425,7 @@ class AntFormItem<T> extends StatelessWidget {
     this.required,
     this.style,
     this.notifier,
+    this.hidden = false,
   });
 
   final AntFormLayout? layout;
@@ -442,10 +443,11 @@ class AntFormItem<T> extends StatelessWidget {
   final bool? required;
   final StateStyle? style;
   final ValueNotifier<T>? notifier;
+  final bool hidden;
 
   @override
   Widget build(BuildContext context) {
-    return Field<T>(
+    return Offstage(offstage: hidden, child: Field<T>(
       name: name,
       restorationId: restorationId,
       initialValue: initialValue,
@@ -463,7 +465,7 @@ class AntFormItem<T> extends StatelessWidget {
         required: required,
         style: style,
       ),
-    );
+    ));
   }
 }
 
