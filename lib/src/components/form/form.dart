@@ -104,7 +104,7 @@ class AntFormState extends State<AntForm> {
     }
     var fieldValue = MapUtils.getPathValue(
       _formValues,
-      field.mergedName!.value,
+      field.mergedName.value,
     );
     field._formDidChange(fieldValue);
   }
@@ -149,7 +149,6 @@ class AntFormState extends State<AntForm> {
     _forceRebuild();
   }
 
-
   void setFieldValue(NamePath name, dynamic value) {
     _formValues = _formValues ?? {};
     MapUtils.setPathValue(_formValues, name.value, value);
@@ -183,12 +182,12 @@ class AntFormState extends State<AntForm> {
   }
 
   /// 获取表单的值
-  Map<String, dynamic> getFieldsValue() {
-    Map<String, dynamic> values = {};
+  Map<String, dynamic?> getFieldsValue() {
+    Map<String, dynamic?> values = {};
     for (final AntFieldState field in _fields) {
       dynamic fieldValues = values;
       if (field.mergedName != null && field.mergedName!.value.isNotEmpty) {
-        List<dynamic> paths = field.mergedName!.value;
+        List<dynamic?> paths = field.mergedName!.value;
         for (int i = 0; i < paths.length; i++) {
           if (i < paths.length - 1) {
             fieldValues[paths[i]] ??= {};
@@ -289,7 +288,35 @@ class AntFieldState extends State<Field> with RestorationMixin {
   final RestorableBool _hasInteractedByUser = RestorableBool(false);
   int _generation = 0;
 
-  NamePath mergedName = NamePath([]);
+  // NamePath mergedName = NamePath([]);
+
+  NamePath get mergedName {
+    AntFieldState? fieldState = Field.maybeOf(context);
+    if (fieldState?.mergedName != null && widget.name != null) {
+      return NamePath([
+        ...fieldState!.mergedName.value,
+        ...widget.name!.value,
+      ]);
+    } else {
+      return widget.name ?? NamePath([]);
+    }
+  }
+
+  // void mergeName() {
+  //   AntFieldState? fieldState = Field.maybeOf(context);
+  //   print("field mergeName");
+  //   print(fieldState?.mergedName.value);
+  //   if (fieldState?.mergedName != null && widget.name != null) {
+  //     mergedName = NamePath([
+  //       ...fieldState!.mergedName.value,
+  //       ...widget.name!.value,
+  //     ]);
+  //   } else {
+  //     mergedName = widget.name ?? NamePath([]);
+  //   }
+  //
+  //   print(mergedName.value);
+  // }
 
   dynamic get initialValue => widget.initialValue;
 
@@ -353,21 +380,7 @@ class AntFieldState extends State<Field> with RestorationMixin {
     setState(() {});
   }
 
-  void mergeName() {
-    AntFieldState? fieldState = Field.maybeOf(context);
-    print("field mergeName");
-    print(fieldState?.mergedName.value);
-    if (fieldState?.mergedName != null && widget.name != null) {
-      mergedName = NamePath([
-        ...fieldState!.mergedName.value,
-        ...widget.name!.value,
-      ]);
-    }else{
-      mergedName = widget.name ?? NamePath([]);
-    }
 
-    print(mergedName.value);
-  }
 
   @override
   void deactivate() {
@@ -377,15 +390,14 @@ class AntFieldState extends State<Field> with RestorationMixin {
 
   @override
   void initState() {
-
     super.initState();
     _value = widget.initialValue;
   }
 
   @override
   Widget build(BuildContext context) {
-    mergeName();
-    print(mergedName);
+    // mergeName();
+    // print(mergedName);
     AntForm.maybeOf(context)!._register(this);
     return PopScope(
       child: _FieldScope(
@@ -775,10 +787,26 @@ class AntFormList extends StatefulWidget {
 }
 
 class AntFormListState extends State<AntFormList> {
-  NamePath mergedName = NamePath([]);
+  /// 是否已经合并了name
+  bool _nameMerged = false;
+  NamePath _mergedName = NamePath([]);
+
+  NamePath get mergedName {
+    AntFieldState? fieldState = Field.maybeOf(context);
+    if (fieldState?.mergedName != null && widget.name != null) {
+      return NamePath([
+        ...fieldState!.mergedName.value,
+        ...widget.name!.value,
+      ]);
+    } else {
+      return widget.name ?? NamePath([]);
+    }
+  }
 
   List<AntFormListField> get fields {
     AntFormState? formState = AntForm.maybeOf(context);
+    print("fields===================");
+    print(mergedName.value);
     var listValue = MapUtils.getPathValue(
       formState!._formValues,
       mergedName.value,
@@ -795,32 +823,17 @@ class AntFormListState extends State<AntFormList> {
     }
   }
 
-  void mergeName() {
-    AntFieldState? fieldState = Field.maybeOf(context);
-    if (fieldState?.mergedName != null && widget.name != null) {
-      mergedName = NamePath([
-        ...fieldState!.mergedName.value,
-        ...widget.name!.value,
-      ]);
-    } else {
-      mergedName = widget.name ?? NamePath([]);
-    }
-  }
-
   @override
   void initState() {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    mergeName();
-    print(mergedName);
     AntFormState? formState = AntForm.maybeOf(context);
     return Field(
       isList: true,
-      name: mergedName,
+      name: widget.name,
       child:
           widget.builder != null
               ? widget.builder!(
@@ -851,7 +864,7 @@ class AntFormListState extends State<AntFormList> {
                     if (listValue is List) {
                       listValue.removeAt(index);
                     }
-                    formState.setFieldValue(widget.name!, listValue);
+                    formState.setFieldValue(mergedName, listValue);
                   },
                 ),
               )

@@ -16,6 +16,7 @@ class _FormPageState extends State<FormPage> {
   final _formKey4 = GlobalKey<AntFormState>();
   final _formKey5 = GlobalKey<AntFormState>();
   final _formKey6 = GlobalKey<AntFormState>();
+  final _formKey7 = GlobalKey<AntFormState>();
 
   void setValues() {
     Future.delayed(Duration(milliseconds: 500), () {
@@ -330,6 +331,86 @@ class _FormPageState extends State<FormPage> {
                         ]
                       );
                     })
+                  ],
+                ),
+              ),
+            ),
+            DemoBlock(
+              title: "Form List",
+              child: AntForm(
+                key: _formKey7,
+                child: Column(
+                  children: [
+                    AntFormItem(
+                      label: Text("名称"),
+                      name: NamePath(['name']),
+                      builder: (AntFieldState state) {
+                        return AntInput(value: state.value,onChange: state.didChange);
+                      },
+                    ),
+                    AntFormList(
+                      name: NamePath("items"),
+                      builder: (context, fields, operations) {
+                        var list = fields.map((field) {
+                          return Column(children: [
+                            Row(children: [
+                              Expanded(child: AntFormItem(
+                                name: NamePath([field.index,"itemName"]),
+                                label: Text("Item"),
+                                builder: (AntFieldState state) {
+                                  return AntInput(
+                                      value: state.value,
+                                      onChange: state.didChange);
+                                },
+                                child: AntInput(),
+                              )),
+                              GestureDetector(
+                                onTap: () => {operations.remove(field.index)},
+                                child: Icon(Icons.delete),)
+                            ],),
+                            AntFormList(name: NamePath([field.index,"users"]),builder: (context, fields, operations){
+                              return Column(
+                                children: [
+                                  ...fields.map((field1) {
+                                    return AntFormItem(
+                                      name: NamePath([field1.index,"name"]),
+                                      label: Text("Item"),
+                                      builder: (AntFieldState state) {
+                                        return AntInput(
+                                            value: state.value?.toString(),
+                                            onChange: state.didChange);
+                                      },
+                                      child: AntInput(),
+                                    );
+                                  })
+                                ]
+                              );
+                            })
+                          ],);
+                        }).toList();
+                        return Column(
+                          children: [
+                            ...list,
+                            Row(
+                              children: [
+                                AntButton(
+                                  text: "添加",
+                                  onPressed: () => {operations.add({"itemName":"","users":[{"name":"1"}]})},
+                                ),
+                                AntButton(
+                                  text: "确定",
+                                  onPressed: () => {
+                                    _formKey7.currentState
+                                        ?.validateFields()
+                                        .then((values) => {print(values)})
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    )
                   ],
                 ),
               ),
