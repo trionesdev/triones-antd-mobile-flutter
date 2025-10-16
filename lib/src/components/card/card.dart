@@ -5,26 +5,32 @@ import '../../../trionesdev_antd_mobile.dart';
 class AntCardStyles {
   StateStyle? header;
   StateStyle? body;
+  StateStyle? footer;
 }
 
 class AntCard extends StatefulWidget {
-  const AntCard(
-      {super.key,
-      this.title,
-      this.extra,
-      this.child,
-      this.decoration,
-      this.headerDecoration,
-      this.bodyDecoration,
-      this.style,
-      this.styles});
+  const AntCard({
+    super.key,
+    this.title,
+    this.extra,
+    this.child,
+    this.footer,
+    this.decoration,
+    this.headerDecoration,
+    this.bodyDecoration,
+    this.footerDecoration,
+    this.style,
+    this.styles,
+  });
 
   final Widget? title;
   final Widget? extra;
   final Widget? child;
+  final Widget? footer;
   final BoxDecoration? decoration;
   final BoxDecoration? headerDecoration;
   final BoxDecoration? bodyDecoration;
+  final BoxDecoration? footerDecoration;
   final StateStyle? style;
   final AntCardStyles? styles;
 
@@ -44,25 +50,48 @@ class _AntCardState extends State<AntCard> with MaterialStateMixin {
     StateStyle bodyStateStyle = _AntCardBodyStyle(context);
     bodyStateStyle = bodyStateStyle.merge(widget.styles?.body);
 
+    StateStyle footerStateStyle = _AntCardFooterStyle(context);
+    footerStateStyle = footerStateStyle.merge(widget.styles?.footer);
+
     List<Widget> children = [];
     if (widget.title != null || widget.extra != null) {
-      children.add(Container(
-        decoration: widget.headerDecoration ??
-            headerStateStyle.resolve(materialStates)?.decoration,
-        padding: headerStateStyle.resolve(materialStates)?.computedPadding,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [widget.title ?? Container(), widget.extra ?? Container()],
+      children.add(
+        Container(
+          decoration:
+              widget.headerDecoration ??
+              headerStateStyle.resolve(materialStates)?.decoration,
+          padding: headerStateStyle.resolve(materialStates)?.computedPadding,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              widget.title ?? Container(),
+              widget.extra ?? Container(),
+            ],
+          ),
         ),
-      ));
+      );
     }
     if (widget.child != null) {
-      children.add(Container(
-        decoration: widget.bodyDecoration ??
-            bodyStateStyle.resolve(materialStates)?.decoration,
-        padding: bodyStateStyle.resolve(materialStates)?.computedPadding,
-        child: widget.child!,
-      ));
+      children.add(
+        Container(
+          decoration:
+              widget.bodyDecoration ??
+              bodyStateStyle.resolve(materialStates)?.decoration,
+          padding: bodyStateStyle.resolve(materialStates)?.computedPadding,
+          child: widget.child!,
+        ),
+      );
+    }
+    if (widget.footer != null) {
+      children.add(
+        Container(
+          decoration:
+              widget.footerDecoration ??
+              footerStateStyle.resolve(materialStates)?.decoration,
+          padding: footerStateStyle.resolve(materialStates)?.computedPadding,
+          child: widget.footer!,
+        ),
+      );
     }
     return Container(
       decoration:
@@ -91,9 +120,13 @@ class _AntCardHeaderStyle extends StateStyle {
   Style get style {
     AntThemeData themeData = AntTheme.of(context);
     return Style(
-        borderBottom: StyleBorder(
-            color: themeData.colorBorder, width: 1, style: BorderStyle.solid),
-        padding: StylePadding.symmetric(horizontal: 12, vertical: 12));
+      borderBottom: StyleBorder(
+        color: themeData.colorBorder,
+        width: 1,
+        style: BorderStyle.solid,
+      ),
+      padding: StylePadding.symmetric(horizontal: 12, vertical: 12),
+    );
   }
 }
 
@@ -105,6 +138,28 @@ class _AntCardBodyStyle extends StateStyle {
   @override
   Style get style {
     AntThemeData themeData = AntTheme.of(context);
-    return Style(backgroundColor: Colors.white,padding: StylePadding.symmetric(horizontal: 8, vertical: 8));
+    return Style(
+      backgroundColor: Colors.white,
+      padding: StylePadding.symmetric(horizontal: 8, vertical: 8),
+    );
+  }
+}
+
+class _AntCardFooterStyle extends StateStyle {
+  _AntCardFooterStyle(this.context);
+
+  final BuildContext context;
+
+  @override
+  Style get style {
+    AntThemeData themeData = AntTheme.of(context);
+    return Style(
+      borderTop: StyleBorder(
+        color: themeData.colorBorder,
+        width: 1,
+        style: BorderStyle.solid,
+      ),
+      padding: StylePadding.symmetric(horizontal: 12, vertical: 8),
+    );
   }
 }
