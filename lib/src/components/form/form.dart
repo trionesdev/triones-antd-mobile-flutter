@@ -333,7 +333,6 @@ class AntFieldState extends State<Field> with RestorationMixin {
   }
 
   void didChange(dynamic value) {
-
     if (mergedName == null) {
       return;
     }
@@ -381,15 +380,17 @@ class AntFieldState extends State<Field> with RestorationMixin {
 
   @override
   void dispose() {
-    if (widget.name != null) {}
-    _formScope?._formState._unregister(this);
+    if (widget.name != null) {
+      _formScope?._formState._unregister(this);
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.name != null) {}
-    _formScope!._formState._register(this);
+    if (widget.name != null) {
+      _formScope!._formState._register(this);
+    }
     return PopScope(
       child: _FieldScope(
         fieldState: this,
@@ -447,6 +448,7 @@ class AntFormItem<T> extends StatelessWidget {
     this.style,
     this.notifier,
     this.hidden = false,
+    this.noStyle = false,
   });
 
   final AntFormLayout? layout;
@@ -465,6 +467,7 @@ class AntFormItem<T> extends StatelessWidget {
   final StateStyle? style;
   final ValueNotifier<T>? notifier;
   final bool hidden;
+  final bool? noStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -486,6 +489,7 @@ class AntFormItem<T> extends StatelessWidget {
           labelAlign: labelAlign,
           builder: builder,
           required: required,
+          noStyle: noStyle,
           style: style,
         ),
       ),
@@ -505,6 +509,7 @@ class InternalFormItem<T> extends StatefulWidget {
   final T? initialValue;
   final String? restorationId;
   final bool? required;
+  final bool? noStyle;
   final StateStyle? style;
 
   const InternalFormItem({
@@ -515,12 +520,13 @@ class InternalFormItem<T> extends StatefulWidget {
     this.layout,
     this.label,
     required this.builder,
-    this.required,
-    this.style,
     this.labelCol,
     this.wrapperCol,
     this.labelAlign,
     this.size,
+    this.required,
+    this.noStyle,
+    this.style,
   });
 
   @override
@@ -717,6 +723,14 @@ class InternalFormItemState<T> extends State<InternalFormItem<T>> {
               ? _wrapperCol(fieldItem)
               : fieldItem;
       fieldItemChildren.add(filedInput);
+    }
+
+    if(widget.noStyle == true){
+      if(widget.builder!=null){
+        return widget.builder(fieldState!);
+      }else{
+        return Container();
+      }
     }
 
     return Container(
