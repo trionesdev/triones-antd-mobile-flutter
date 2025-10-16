@@ -12,6 +12,8 @@ class AntCellGroup extends StatefulWidget {
     this.labelCol,
     this.labelAlign,
     this.children,
+    this.showDivider = true,
+    this.arrow = true,
   });
 
   final AntSize? size;
@@ -21,6 +23,8 @@ class AntCellGroup extends StatefulWidget {
   final AntCol? labelCol;
   final AntLabelAlign? labelAlign;
   final List<Widget>? children;
+  final bool showDivider;
+  final bool arrow;
 
   static AntCellGroupState? maybeOf(BuildContext context) {
     final scope = context.dependOnInheritedWidgetOfExactType<_CellGroupScope>();
@@ -33,7 +37,6 @@ class AntCellGroup extends StatefulWidget {
 
 class _CellGroupScope extends InheritedWidget {
   const _CellGroupScope({
-    super.key,
     required this.groupState,
     required this.generation,
     required super.child,
@@ -51,18 +54,18 @@ class _CellGroupScope extends InheritedWidget {
 class AntCellGroupState extends State<AntCellGroup> {
   int _generation = 0;
 
-  Widget get cells{
+  Widget get cells {
     List<Widget> children = [];
     if (widget.children != null) {
       for (int i = 0; i < widget.children!.length; i++) {
         children.add(widget.children!.elementAt(i));
-        if (i != widget.children!.length - 1) {
-          children.add(Divider(height: 0));
+        if (widget.showDivider) {
+          if (i != widget.children!.length - 1) {
+            children.add(Divider(height: 0));
+          }
         }
       }
-      return Column(
-        children: children,
-      );
+      return Column(children: children);
     }
     return Container();
   }
@@ -84,7 +87,7 @@ class AntCellGroupState extends State<AntCellGroup> {
                 child: Text(
                   widget.title ?? '',
                   style:
-                      widget.titleStyle ??
+                  widget.titleStyle ??
                       TextStyle(fontSize: 14, color: Colors.grey),
                 ),
               ),
@@ -100,7 +103,7 @@ class AntCell extends StatefulWidget {
   const AntCell({
     super.key,
     this.size,
-    this.arrow = true,
+    this.arrow  ,
     this.placeholderWidget,
     this.placeholder,
     this.icon,
@@ -117,14 +120,14 @@ class AntCell extends StatefulWidget {
   final AntSize? size;
   final Text? placeholderWidget;
   final String? placeholder;
-  final bool arrow;
+  final bool? arrow;
   final Widget? icon;
   final Widget? labelWidget;
   final String? label;
   final TextStyle? labelStyle;
   final AntCol? labelCol;
   final AntLabelAlign? labelAlign;
-  final String? value;
+  final dynamic? value;
   final Widget? child;
   final Function? onTap;
 
@@ -133,7 +136,7 @@ class AntCell extends StatefulWidget {
 }
 
 class _AntCellState extends State<AntCell> {
-  double? get height {
+  double get height {
     AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
     AntSize size = widget.size ?? groupState?.widget.size ?? AntSize.middle;
     switch (size) {
@@ -151,7 +154,7 @@ class _AntCellState extends State<AntCell> {
       return widget.child!;
     }
     if (widget.value != null) {
-      return Text(widget.value ?? '', style: TextStyle(color: Colors.black));
+      return Text(widget.value?.toString() ?? '', style: TextStyle(color: Colors.black));
     } else {
       return Text(
         widget.placeholder ?? '',
@@ -178,10 +181,11 @@ class _AntCellState extends State<AntCell> {
 
     Widget labelWidget =
         widget.labelWidget ??
-        Text(widget.label ?? '', style: widget.labelStyle);
+            Text(widget.label ?? '', style: widget.labelStyle);
 
     if (labelCol?.flex != null) {
       return Container(
+        height: height,
         width: labelCol!.flex!,
         alignment: labelAlign,
         child: labelWidget,
@@ -189,42 +193,49 @@ class _AntCellState extends State<AntCell> {
     } else if (labelCol?.span != null) {
       return Expanded(
         flex: labelCol!.span!,
-        child: Container(alignment: labelAlign, child: labelWidget),
+        child: Container(
+            height: height,
+            alignment: labelAlign, child: labelWidget),
       );
     }
-    return labelWidget;
+    return Container(height: height, alignment: labelAlign, child: labelWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: Row(
-        children: [
-          if (widget.label != null) label,
-          Expanded(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                if (widget.onTap != null) {
-                  widget.onTap!();
-                }
-              },
-              child: Row(
-                children: [
-                  Expanded(child: child),
-                  if (widget.arrow)
-                    widget.icon ??
-                        Icon(
-                          AntIcons.rightOutline,
-                          size: 16,
-                          color: Colors.grey,
-                        ),
-                ],
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: height),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (widget.label != null) label,
+            Expanded(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  if (widget.onTap != null) {
+                    widget.onTap!();
+                  }
+                },
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: height), child: Row(
+                  children: [
+                    Expanded(child: child),
+                    if (widget.arrow == true)
+                      widget.icon ??
+                          Icon(
+                            AntIcons.rightOutline,
+                            size: 16,
+                            color: Colors.grey,
+                          ),
+                  ],
+                ),),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

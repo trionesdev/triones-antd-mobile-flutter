@@ -92,13 +92,12 @@ class _AntTextAreaState extends State<AntTextArea> with MaterialStateMixin {
           contentPadding: EdgeInsets.zero,
         ),
         onChanged: (value) {
-          print("input changed:" + value);
           if (widget.onChange != null) {
             widget.onChange!(value);
           }
         },
         onEditingComplete: () {
-          print("input c:" + _controller.text);
+
         },
       ),
     );

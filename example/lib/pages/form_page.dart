@@ -16,11 +16,12 @@ class _FormPageState extends State<FormPage> {
   final _formKey4 = GlobalKey<AntFormState>();
   final _formKey5 = GlobalKey<AntFormState>();
   final _formKey6 = GlobalKey<AntFormState>();
+  final _formKey7 = GlobalKey<AntFormState>();
 
   void setValues() {
     Future.delayed(Duration(milliseconds: 500), () {
       _formKey6.currentState?.setFieldsValue({
-        "name":"name",
+        "name": "name",
         "items": ["1"],
       });
     });
@@ -112,9 +113,7 @@ class _FormPageState extends State<FormPage> {
                           text: "赋值",
                           block: true,
                           onPressed: () => {
-                            _formKey.currentState?.setFieldsValue({
-                              "age": "1",
-                            }),
+                            _formKey.currentState?.setFieldsValue({"age": "1"}),
                           },
                         ),
                       ],
@@ -262,28 +261,36 @@ class _FormPageState extends State<FormPage> {
                       label: Text("名称"),
                       name: NamePath(['name']),
                       builder: (AntFieldState state) {
-                        return AntInput(value: state.value,onChange: state.didChange);
+                        return AntInput(
+                          value: state.value,
+                          onChange: state.didChange,
+                        );
                       },
                     ),
                     AntFormList(
                       name: NamePath("items"),
                       builder: (context, fields, operations) {
                         var list = fields.map((field) {
-                          return Row(children: [
-                            Expanded(child: AntFormItem(
-                              name: field.name,
-                              label: Text("Item"),
-                              builder: (AntFieldState state) {
-                                return AntInput(
-                                    value: state.value,
-                                    onChange: state.didChange);
-                              },
-                              child: AntInput(),
-                            )),
-                            GestureDetector(
-                              onTap: () => {operations.remove!(field.index)},
-                              child: Icon(Icons.delete),)
-                          ],);
+                          return Row(
+                            children: [
+                              Expanded(
+                                child: AntFormItem(
+                                  name: field.name,
+                                  label: Text("Item"),
+                                  builder: (AntFieldState state) {
+                                    return AntInput(
+                                      value: state.value,
+                                      onChange: state.didChange,
+                                    );
+                                  },
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () => {operations.remove!(field.index)},
+                                child: Icon(Icons.delete),
+                              ),
+                            ],
+                          );
                         }).toList();
                         return Column(
                           children: [
@@ -292,14 +299,14 @@ class _FormPageState extends State<FormPage> {
                               children: [
                                 AntButton(
                                   text: "添加",
-                                  onPressed: () => {operations.add!("")},
+                                  onPressed: () => {operations.add("")},
                                 ),
                                 AntButton(
                                   text: "确定",
                                   onPressed: () => {
                                     _formKey6.currentState
                                         ?.validateFields()
-                                        .then((values) => {print(values)})
+                                        .then((values) => {print(values)}),
                                   },
                                 ),
                               ],
@@ -308,28 +315,163 @@ class _FormPageState extends State<FormPage> {
                         );
                       },
                     ),
-                    AntFormList(name: NamePath("users"),builder: (context, fields, operations){
-                      return Column(
-                        children: [
-                          ...fields.map((field) {
-                            return AntFormItem(
-                              name: NamePath([field.index,"name"]),
-                              label: Text("Item"),
-                              builder: (AntFieldState state) {
-                                return AntInput(
+                    AntFormList(
+                      name: NamePath("users"),
+                      builder: (context, fields, operations) {
+                        return Column(
+                          children: [
+                            ...fields.map((field) {
+                              return AntFormItem(
+                                name: NamePath([field.index, "name"]),
+                                label: Text("Item"),
+                                builder: (AntFieldState state) {
+                                  return AntInput(
                                     value: state.value?.toString(),
-                                    onChange: state.didChange);
-                              },
-                              child: AntInput(),
-                            );
-                          }),
-                          Row(children: [AntButton(text: "添加",onPressed: (){
-                            Map<dynamic,dynamic> user = {"name":null};
-                            operations.add!(user);
-                          })])
-                        ]
-                      );
-                    })
+                                    onChange: state.didChange,
+                                  );
+                                },
+                              );
+                            }),
+                            Row(
+                              children: [
+                                AntButton(
+                                  text: "添加",
+                                  onPressed: () {
+                                    Map<dynamic, dynamic> user = {"name": null};
+                                    operations.add(user);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            DemoBlock(
+              title: "FormList With Sub FormList",
+              child: AntForm(
+                key: _formKey7,
+                child: Column(
+                  children: [
+                    AntFormItem(
+                      label: Text("名称"),
+                      name: NamePath(['name']),
+                      builder: (AntFieldState state) {
+                        return AntInput(
+                          value: state.value,
+                          onChange: state.didChange,
+                        );
+                      },
+                    ),
+                    AntFormList(
+                      name: NamePath("items"),
+                      builder: (context, fields, operations) {
+                        var list = fields.map((field) {
+                          return Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: AntFormItem(
+                                      name: NamePath([field.index, "itemName"]),
+                                      label: Text("Item"),
+                                      builder: (AntFieldState state) {
+                                        return AntInput(
+                                          placeholder: "请输入",
+                                          value: state.value,
+                                          onChange: state.didChange,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => {
+                                      operations.remove(field.index),
+                                    },
+                                    child: Icon(Icons.delete),
+                                  ),
+                                ],
+                              ),
+                              AntFormList(
+                                name: NamePath([field.index, "users"]),
+                                builder: (context, fields, operationsSub) {
+                                  return Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ...fields.map((field1) {
+                                        return AntFormItem(
+                                          name: NamePath([
+                                            field1.index,
+                                            "name",
+                                          ]),
+                                          label: Text("SubItem"),
+                                          builder: (AntFieldState state) {
+                                            return AntInput(
+                                              value: state.value?.toString(),
+                                              onChange: state.didChange,
+                                            );
+                                          },
+                                          // child: AntInput(),
+                                        );
+                                      }),
+                                      Row(
+                                        children: [
+                                          AntButton(
+                                            text: "添加",
+                                            onPressed: () {
+                                              operationsSub.add({
+                                                "name": "subItem",
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        }).toList();
+                        return Column(
+                          children: [
+                            ...list,
+                            Row(
+                              children: [
+                                AntButton(
+                                  text: "添加",
+                                  onPressed: () => {
+                                    operations.add({
+                                      "itemName": "",
+                                      "users": [
+                                        {"name": "1"},
+                                      ],
+                                    }),
+                                  },
+                                ),
+                                AntButton(
+                                  text: "确定",
+                                  onPressed: () => {
+                                    _formKey7.currentState?.validateFields().then(
+                                      (values) => {
+                                        print(
+                                          "------------------------values------------------------",
+                                        ),
+                                        print(values),
+                                      },
+                                    ),
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),

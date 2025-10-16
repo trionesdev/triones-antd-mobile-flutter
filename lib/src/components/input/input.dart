@@ -149,7 +149,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
             FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))
         ],
         onChanged: (value) {
-          print("input changed:" + value);
+
           if (widget.onChange != null) {
             widget.onChange!(value);
           }
@@ -158,7 +158,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
           _focusNode.unfocus();
         },
         onEditingComplete: () {
-          print("input c:" + _controller.text);
+
         },
       ),
     );

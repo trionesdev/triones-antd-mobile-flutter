@@ -60,7 +60,6 @@ class _AntModalViewState extends State<AntModalView> with MaterialStateMixin {
                     children: widget.actions!.map((action) {
                       return GestureDetector(
                         onTap: () {
-                          print("sss");
                           if (widget.closeOnAction == true) {
                             Navigator.of(context).pop();
                             widget.onClose?.call();
