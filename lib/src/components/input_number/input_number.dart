@@ -91,6 +91,7 @@ class _AntInputNumberState extends State<AntInputNumber> {
     _value = widget.value ?? widget.defaultValue ?? 0;
     _focusNode.addListener(_onFocusChange);
     _controller = TextEditingController(text: _value.toString());
+    widget.onChange?.call(_value);
   }
 
   @override
@@ -111,13 +112,14 @@ class _AntInputNumberState extends State<AntInputNumber> {
 
   @override
   Widget build(BuildContext context) {
+    AntThemeData theme = AntTheme.of(context);
     return Container(
       alignment: Alignment.centerRight,
       child: Container(
         height: _height,
         decoration: BoxDecoration(
           color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(theme.borderRadius),
         ),
         constraints: BoxConstraints(
 

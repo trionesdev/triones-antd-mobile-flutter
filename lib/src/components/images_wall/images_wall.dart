@@ -126,7 +126,6 @@ class _AntImagesWallState extends State<AntImagesWall> {
               }
             });
           }).catchError((err) {
-            print(err);
             setState(() {
               var imageItem =
               _images.firstWhereOrNull((element) => element.uid == uid);

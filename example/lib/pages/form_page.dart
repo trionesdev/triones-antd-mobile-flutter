@@ -283,7 +283,6 @@ class _FormPageState extends State<FormPage> {
                                       onChange: state.didChange,
                                     );
                                   },
-                                  child: AntInput(),
                                 ),
                               ),
                               GestureDetector(
@@ -331,7 +330,6 @@ class _FormPageState extends State<FormPage> {
                                     onChange: state.didChange,
                                   );
                                 },
-                                child: AntInput(),
                               );
                             }),
                             Row(
@@ -383,11 +381,11 @@ class _FormPageState extends State<FormPage> {
                                       label: Text("Item"),
                                       builder: (AntFieldState state) {
                                         return AntInput(
+                                          placeholder: "请输入",
                                           value: state.value,
                                           onChange: state.didChange,
                                         );
                                       },
-                                      child: AntInput(),
                                     ),
                                   ),
                                   GestureDetector(
@@ -402,6 +400,7 @@ class _FormPageState extends State<FormPage> {
                                 name: NamePath([field.index, "users"]),
                                 builder: (context, fields, operationsSub) {
                                   return Column(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       ...fields.map((field1) {
                                         return AntFormItem(
@@ -409,7 +408,7 @@ class _FormPageState extends State<FormPage> {
                                             field1.index,
                                             "name",
                                           ]),
-                                          label: Text("Item"),
+                                          label: Text("SubItem"),
                                           builder: (AntFieldState state) {
                                             return AntInput(
                                               value: state.value?.toString(),
@@ -428,7 +427,7 @@ class _FormPageState extends State<FormPage> {
                                                 "name": "subItem",
                                               });
                                             },
-                                          )
+                                          ),
                                         ],
                                       ),
                                     ],
