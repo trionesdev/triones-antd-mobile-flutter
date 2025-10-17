@@ -205,38 +205,35 @@ class _AntCellState extends State<AntCell> {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: height),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (widget.label != null) label,
-            Expanded(
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  if (widget.onTap != null) {
-                    widget.onTap!();
-                  }
-                },
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: height), child: Row(
-                  children: [
-                    Expanded(child: child),
-                    if (widget.arrow == true)
-                      widget.icon ??
-                          Icon(
-                            AntIcons.rightOutline,
-                            size: 16,
-                            color: Colors.grey,
-                          ),
-                  ],
-                ),),
-              ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (widget.label != null) label,
+          Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                if (widget.onTap != null) {
+                  widget.onTap!();
+                }
+              },
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: height), child: Row(
+                children: [
+                  Expanded(child: child),
+                  if (widget.arrow == true)
+                    widget.icon ??
+                        Icon(
+                          AntIcons.rightOutline,
+                          size: 16,
+                          color: Colors.grey,
+                        ),
+                ],
+              ),),
             ),
-          ],
-        ),
-      ),
+          ),
+        ],
+      )
     );
   }
 }

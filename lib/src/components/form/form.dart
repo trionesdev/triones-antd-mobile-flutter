@@ -369,7 +369,7 @@ class AntFieldState extends State<Field> with RestorationMixin {
       _generation++;
     }
     if (oldWidget.value != widget.value) {
-      _value = widget.value;
+      _value = widget.value ?? widget.initialValue;
     }
   }
 
@@ -435,6 +435,7 @@ class AntFormItem<T> extends StatelessWidget {
     this.layout,
     this.name,
     this.label,
+    this.labelWidget,
     this.labelCol,
     this.wrapperCol,
     this.labelAlign,
@@ -453,7 +454,8 @@ class AntFormItem<T> extends StatelessWidget {
 
   final AntFormLayout? layout;
   final NamePath? name;
-  final Widget? label;
+  final Widget? labelWidget;
+  final String? label;
   final AntCol? labelCol;
   final AntCol? wrapperCol;
   final AntLabelAlign? labelAlign;
@@ -483,6 +485,7 @@ class AntFormItem<T> extends StatelessWidget {
 
         child: InternalFormItem<T>(
           layout: layout,
+          labelWidget: labelWidget,
           label: label,
           labelCol: labelCol,
           wrapperCol: wrapperCol,
@@ -500,7 +503,8 @@ class AntFormItem<T> extends StatelessWidget {
 class InternalFormItem<T> extends StatefulWidget {
   final AntFormLayout? layout;
   final AntSize? size;
-  final Widget? label;
+  final Widget? labelWidget;
+  final String? label;
   final AntCol? labelCol;
   final AntCol? wrapperCol;
   final AntLabelAlign? labelAlign;
@@ -519,6 +523,7 @@ class InternalFormItem<T> extends StatefulWidget {
     this.child,
     this.layout,
     this.label,
+    this.labelWidget,
     required this.builder,
     this.labelCol,
     this.wrapperCol,
@@ -682,14 +687,15 @@ class InternalFormItemState<T> extends State<InternalFormItem<T>> {
         } else {
           fieldLabelChildren.add(
             Container(
-              width: 0,
-              transform: Matrix4.translationValues(-8.0, 0.0, 0.0),
+              padding: EdgeInsets.only(left: 0, right: 0, top: 0),
+              // width: 0,
+              // transform: Matrix4.translationValues(-8.0, 0.0, 0.0),
               child: Text("*", style: TextStyle(color: Colors.red)),
             ),
           );
         }
       }
-      fieldLabelChildren.add(widget.label!);
+      fieldLabelChildren.add(widget.labelWidget ?? Text(widget.label ?? ""));
       Widget fieldLabel = Row(
         mainAxisAlignment:
             labelAlign == AntLabelAlign.left
@@ -725,10 +731,10 @@ class InternalFormItemState<T> extends State<InternalFormItem<T>> {
       fieldItemChildren.add(filedInput);
     }
 
-    if(widget.noStyle == true){
-      if(widget.builder!=null){
+    if (widget.noStyle == true) {
+      if (widget.builder != null) {
         return widget.builder(fieldState!);
-      }else{
+      } else {
         return Container();
       }
     }
@@ -768,7 +774,7 @@ class _AntFormItemStyle extends StateStyle {
   @override
   Style get style {
     return Style(
-      padding: StylePadding(left: 8, right: 8),
+      // padding: StylePadding(left: 8, right: 8),
       // margin: StyleMargin(bottom: 8)
     );
   }
