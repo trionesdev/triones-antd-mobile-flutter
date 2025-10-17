@@ -12,9 +12,13 @@ class AntCard extends StatefulWidget {
   const AntCard({
     super.key,
     this.title,
+    this.titleStyle,
+    this.titleWidget,
     this.extra,
+    this.extraStyle,
+    this.extraWidget,
     this.child,
-    this.footer,
+    this.footerWidget,
     this.decoration,
     this.headerDecoration,
     this.bodyDecoration,
@@ -23,10 +27,14 @@ class AntCard extends StatefulWidget {
     this.styles,
   });
 
-  final Widget? title;
-  final Widget? extra;
+  final String? title;
+  final TextStyle? titleStyle;
+  final Widget? titleWidget;
+  final String? extra;
+  final TextStyle? extraStyle;
+  final Widget? extraWidget;
   final Widget? child;
-  final Widget? footer;
+  final Widget? footerWidget;
   final BoxDecoration? decoration;
   final BoxDecoration? headerDecoration;
   final BoxDecoration? bodyDecoration;
@@ -54,18 +62,25 @@ class _AntCardState extends State<AntCard> with MaterialStateMixin {
     footerStateStyle = footerStateStyle.merge(widget.styles?.footer);
 
     List<Widget> children = [];
-    if (widget.title != null || widget.extra != null) {
+    if (widget.titleWidget != null || widget.title != null ||
+        widget.extraWidget != null || widget.extra != null) {
       children.add(
         Container(
           decoration:
-              widget.headerDecoration ??
-              headerStateStyle.resolve(materialStates)?.decoration,
-          padding: headerStateStyle.resolve(materialStates)?.computedPadding,
+          widget.headerDecoration ??
+              headerStateStyle
+                  .resolve(materialStates)
+                  ?.decoration,
+          padding: headerStateStyle
+              .resolve(materialStates)
+              ?.computedPadding,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              widget.title ?? Container(),
-              widget.extra ?? Container(),
+              widget.titleWidget ??
+                  Text(widget.title ?? "", style: widget.titleStyle),
+              widget.extraWidget ??
+                  Text(widget.extra ?? "", style: widget.extraStyle),
             ],
           ),
         ),
@@ -75,27 +90,37 @@ class _AntCardState extends State<AntCard> with MaterialStateMixin {
       children.add(
         Container(
           decoration:
-              widget.bodyDecoration ??
-              bodyStateStyle.resolve(materialStates)?.decoration,
-          padding: bodyStateStyle.resolve(materialStates)?.computedPadding,
+          widget.bodyDecoration ??
+              bodyStateStyle
+                  .resolve(materialStates)
+                  ?.decoration,
+          padding: bodyStateStyle
+              .resolve(materialStates)
+              ?.computedPadding,
           child: widget.child!,
         ),
       );
     }
-    if (widget.footer != null) {
+    if (widget.footerWidget != null) {
       children.add(
         Container(
           decoration:
-              widget.footerDecoration ??
-              footerStateStyle.resolve(materialStates)?.decoration,
-          padding: footerStateStyle.resolve(materialStates)?.computedPadding,
-          child: widget.footer!,
+          widget.footerDecoration ??
+              footerStateStyle
+                  .resolve(materialStates)
+                  ?.decoration,
+          padding: footerStateStyle
+              .resolve(materialStates)
+              ?.computedPadding,
+          child: widget.footerWidget,
         ),
       );
     }
     return Container(
       decoration:
-          widget.decoration ?? stateStyle.resolve(materialStates)?.decoration,
+      widget.decoration ?? stateStyle
+          .resolve(materialStates)
+          ?.decoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: children,

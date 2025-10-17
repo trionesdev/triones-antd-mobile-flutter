@@ -9,6 +9,7 @@ class AntCellGroup extends StatefulWidget {
     this.title,
     this.titleAlign,
     this.titleStyle,
+    this.titleWidget,
     this.labelCol,
     this.labelAlign,
     this.children,
@@ -20,6 +21,7 @@ class AntCellGroup extends StatefulWidget {
   final String? title;
   final AntLabelAlign? titleAlign;
   final TextStyle? titleStyle;
+  final Widget? titleWidget;
   final AntCol? labelCol;
   final AntLabelAlign? labelAlign;
   final List<Widget>? children;
@@ -84,12 +86,14 @@ class AntCellGroupState extends State<AntCellGroup> {
                   horizontal: 16,
                   vertical: 8,
                 ),
-                child: Text(
-                  widget.title ?? '',
-                  style:
-                  widget.titleStyle ??
-                      TextStyle(fontSize: 14, color: Colors.grey),
-                ),
+                child:
+                    widget.titleWidget ??
+                    Text(
+                      widget.title ?? '',
+                      style:
+                          widget.titleStyle ??
+                          TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
               ),
             if (widget.children != null) cells,
           ],
@@ -103,7 +107,7 @@ class AntCell extends StatefulWidget {
   const AntCell({
     super.key,
     this.size,
-    this.arrow  ,
+    this.arrow,
     this.placeholderWidget,
     this.placeholder,
     this.icon,
@@ -154,7 +158,10 @@ class _AntCellState extends State<AntCell> {
       return widget.child!;
     }
     if (widget.value != null) {
-      return Text(widget.value?.toString() ?? '', style: TextStyle(color: Colors.black));
+      return Text(
+        widget.value?.toString() ?? '',
+        style: TextStyle(color: Colors.black),
+      );
     } else {
       return Text(
         widget.placeholder ?? '',
@@ -181,7 +188,7 @@ class _AntCellState extends State<AntCell> {
 
     Widget labelWidget =
         widget.labelWidget ??
-            Text(widget.label ?? '', style: widget.labelStyle);
+        Text(widget.label ?? '', style: widget.labelStyle);
 
     if (labelCol?.flex != null) {
       return Container(
@@ -194,8 +201,10 @@ class _AntCellState extends State<AntCell> {
       return Expanded(
         flex: labelCol!.span!,
         child: Container(
-            height: height,
-            alignment: labelAlign, child: labelWidget),
+          height: height,
+          alignment: labelAlign,
+          child: labelWidget,
+        ),
       );
     }
     return Container(height: height, alignment: labelAlign, child: labelWidget);
@@ -218,22 +227,24 @@ class _AntCellState extends State<AntCell> {
                 }
               },
               child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: height), child: Row(
-                children: [
-                  Expanded(child: child),
-                  if (widget.arrow == true)
-                    widget.icon ??
-                        Icon(
-                          AntIcons.rightOutline,
-                          size: 16,
-                          color: Colors.grey,
-                        ),
-                ],
-              ),),
+                constraints: BoxConstraints(minHeight: height),
+                child: Row(
+                  children: [
+                    Expanded(child: child),
+                    if (widget.arrow == true)
+                      widget.icon ??
+                          Icon(
+                            AntIcons.rightOutline,
+                            size: 16,
+                            color: Colors.grey,
+                          ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
-      )
+      ),
     );
   }
 }
