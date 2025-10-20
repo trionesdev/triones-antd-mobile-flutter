@@ -1,46 +1,10 @@
 //region types
+import '../../../trionesdev_antd_mobile.dart';
+
 enum AntFormLayout { horizontal, vertical }
 
 enum AntFormLabelVerticalAlign { start, center, end }
 
-class NamePath {
-  List<dynamic> _namePaths = [];
-
-  NamePath(dynamic namePath) {
-    if (namePath is List) {
-      _namePaths = namePath;
-    } else {
-      _namePaths = [namePath];
-    }
-  }
-
-  List<dynamic> get value => _namePaths;
-
-  bool get isEmpty => _namePaths.isEmpty;
-
-  NamePath append(dynamic name) {
-    if (name is List) {
-      _namePaths.addAll(name);
-    } else {
-      _namePaths.add(name);
-    }
-    return this;
-  }
-
-  @override
-  bool operator == (Object other) {
-    if (other is! NamePath) {
-      return false;
-    }
-    return jsonValue == other.jsonValue;
-  }
-
-  String get jsonValue => _namePaths.map((item) {
-    return item.toString();
-  }).join(".");
-
-
-}
 
 class AntFormListField{
 

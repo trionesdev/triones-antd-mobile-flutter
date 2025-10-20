@@ -45,8 +45,8 @@ class SelectPanel extends StatefulWidget {
 class SelectPanelState extends State<SelectPanel> {
   final ScrollController _scrollController = ScrollController();
   late AntFieldsNames _fieldsNames = AntFieldsNames(
-    label: "label",
-    value: "value",
+    label: NamePath("label"),
+    value: NamePath("value"),
   );
 
   dynamic _value;
@@ -83,8 +83,8 @@ class SelectPanelState extends State<SelectPanel> {
       }
     });
     _fieldsNames = AntFieldsNames(
-      label: widget.fieldsNames?.label ?? "label",
-      value: widget.fieldsNames?.value ?? "value",
+      label: widget.fieldsNames?.label ?? NamePath("label"),
+      value: widget.fieldsNames?.value ?? NamePath("value"),
     );
 
     _value = widget.value ?? (widget.multiple == true ? [] : null);
@@ -100,6 +100,20 @@ class SelectPanelState extends State<SelectPanel> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  bool handleSelected(item) {
+    if (widget.multiple == true) {
+      if (_value == null || _value.isEmpty) {
+        return false;
+      }
+      return _value.contains(MapUtils.getPathValue(item, _fieldsNames.value?.value));
+    } else {
+      if (_value == null) {
+        return false;
+      }
+      return _value == MapUtils.getPathValue(item, _fieldsNames.value?.value);
+    }
   }
 
   @override
@@ -130,14 +144,11 @@ class SelectPanelState extends State<SelectPanel> {
               controller: _scrollController,
               dataSource: widget.options.value,
               itemBuilder: (context, item, index) {
-                var selected =
-                    (widget.multiple == true)
-                        ? _value.contains(item[_fieldsNames.value])
-                        : _value == item[_fieldsNames.value];
+                var selected = handleSelected(item);
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
-                    selectItem(item[_fieldsNames.value]);
+                    selectItem(MapUtils.getPathValue(item, _fieldsNames.value?.value));
                   },
                   child:
                       widget.optionBuilder != null
@@ -153,7 +164,7 @@ class SelectPanelState extends State<SelectPanel> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  item[_fieldsNames.label],
+                                  MapUtils.getPathValue(item, _fieldsNames.label?.value) ?? "",
                                   style: TextStyle(
                                     color:
                                         selected

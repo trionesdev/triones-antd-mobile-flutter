@@ -1,7 +1,11 @@
 class MapUtils {
-  static dynamic getPathValue(Map<dynamic, dynamic?>? map, List<dynamic> keys) {
+  static dynamic getPathValue(Map<dynamic, dynamic?>? map,
+      List<dynamic>? keys) {
+    if (map == null || keys == null || keys.isEmpty) {
+      return null;
+    }
     dynamic cloneValues = map;
-    for (int i = 0; i < keys.length-1; i++) {
+    for (int i = 0; i < keys.length - 1; i++) {
       final key = keys.elementAt(i);
       cloneValues = cloneValues[key];
       if (cloneValues == null) {
@@ -11,18 +15,16 @@ class MapUtils {
     return cloneValues[keys.last];
   }
 
-  static Map<dynamic, dynamic?> setPathValue(
-    Map<dynamic, dynamic>? map,
-    List<dynamic> keys,
-    dynamic value,
-  ) {
+  static Map<dynamic, dynamic?> setPathValue(Map<dynamic, dynamic>? map,
+      List<dynamic> keys,
+      dynamic value,) {
     dynamic cloneMap = map;
     dynamic? current = cloneMap;
 
-    for(int i=0;i<keys.length-1;i++){
+    for (int i = 0; i < keys.length - 1; i++) {
       final key = keys.elementAt(i);
       current = current[key];
-      current ??= (keys[i+1] is String)? <dynamic,dynamic?>{}:<dynamic>[];
+      current ??= (keys[i + 1] is String) ? <dynamic, dynamic?>{} : <dynamic>[];
     }
     current[keys.last] = value;
     return cloneMap;

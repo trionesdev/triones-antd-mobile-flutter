@@ -35,6 +35,7 @@ export 'src/components/calendar_picker/calendar_picker_view.dart';
 export 'src/components/calendar_datetime_picker/calendar_datetime_picker.dart';
 export 'src/components/cell/cell.dart';
 export 'src/components/modal/modal.dart';
+export 'src/components/page/page.dart';
 export 'src/components/toast/toast.dart';
 export 'src/components/toast/toast_route.dart';
 export 'src/components/divider/divider.dart';

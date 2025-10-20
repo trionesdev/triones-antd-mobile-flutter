@@ -68,19 +68,28 @@ class AntSelectState extends State<AntSelect> {
   final GlobalKey<SelectPanelState> _key = GlobalKey();
   final ValueNotifier<List<dynamic>> _options = ValueNotifier([]);
   late AntFieldsNames _fieldsNames = AntFieldsNames(
-    label: "label",
-    value: "value",
+    label: NamePath("label"),
+    value: NamePath("value"),
   );
   dynamic _value;
   bool _multipleValue = false;
   bool _isOpen = false;
 
+
   Widget? get content {
     if (_value == null) {
       return null;
     }
-    if (widget.valueOption != null  && widget.value == widget.valueOption?[_fieldsNames.value]) {
-      return Text(widget.valueOption?[_fieldsNames.label] ?? "");
+    if (widget.valueOption != null &&
+        widget.value ==
+            MapUtils.getPathValue(
+              widget.valueOption,
+              _fieldsNames.value?.value,
+            )) {
+      return Text(
+        MapUtils.getPathValue(widget.valueOption, _fieldsNames.label?.value) ??
+            "",
+      );
     }
 
     if (widget.options.isEmpty) {
@@ -89,16 +98,23 @@ class AntSelectState extends State<AntSelect> {
     if (_multipleValue) {
       var labels = widget.options
           .where((item) {
-            return (_value as List).contains(item[_fieldsNames.value]);
+            return (_value as List).contains(
+              MapUtils.getPathValue(item, _fieldsNames.value?.value),
+            );
           })
-          .map((item) => item[_fieldsNames.label]);
+          .map(
+            (item) => MapUtils.getPathValue(item, _fieldsNames.label?.value),
+          );
       return (labels.isNotEmpty) ? Text(labels.join(",")) : null;
     } else {
-      var label =
-          widget.options.firstWhereOrNull((item) {
-            return item[_fieldsNames.value] == _value;
-          })?[_fieldsNames.label];
-      return label != null ? Text(label ?? "") : null;
+      var labelItem = widget.options.firstWhereOrNull((item) {
+        return MapUtils.getPathValue(item, _fieldsNames.value?.value) == _value;
+      });
+      return labelItem != null
+          ? Text(
+            MapUtils.getPathValue(labelItem, _fieldsNames.label?.value) ?? "",
+          )
+          : null;
     }
   }
 
@@ -106,12 +122,14 @@ class AntSelectState extends State<AntSelect> {
     if (_multipleValue) {
       return widget.options
           .where((item) {
-            return (value as List).contains(item[_fieldsNames.value]);
+            return (value as List).contains(
+              MapUtils.getPathValue(item, _fieldsNames.value?.value),
+            );
           })
           .map((item) => item);
     } else {
       return widget.options.firstWhereOrNull((item) {
-        return item[_fieldsNames.value] == value;
+        return MapUtils.getPathValue(item, _fieldsNames.value?.value) == value;
       });
     }
   }
@@ -120,8 +138,8 @@ class AntSelectState extends State<AntSelect> {
   void initState() {
     _multipleValue = widget.mode != null;
     _fieldsNames = AntFieldsNames(
-      label: widget.fieldsNames?.label ?? "label",
-      value: widget.fieldsNames?.value ?? "value",
+      label: widget.fieldsNames?.label ?? NamePath("label"),
+      value: widget.fieldsNames?.value ?? NamePath("value"),
     );
     _options.value = widget.options ?? [];
     _value = widget.value;
