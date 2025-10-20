@@ -333,7 +333,7 @@ class AntFieldState extends State<Field> with RestorationMixin {
   }
 
   void didChange(dynamic value) {
-    if (mergedName == null) {
+    if (mergedName == null || mergedName.isEmpty) {
       return;
     }
     if (value == _value) {

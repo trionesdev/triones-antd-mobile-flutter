@@ -16,6 +16,8 @@ class NamePath {
 
   List<dynamic> get value => _namePaths;
 
+  bool get isEmpty => _namePaths.isEmpty;
+
   NamePath append(dynamic name) {
     if (name is List) {
       _namePaths.addAll(name);
