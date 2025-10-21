@@ -13,7 +13,7 @@ class AntCellGroup extends StatefulWidget {
     this.labelCol,
     this.labelAlign,
     this.children,
-    this.showDivider = true,
+    this.showDivider = false,
     this.arrow = true,
   });
 
