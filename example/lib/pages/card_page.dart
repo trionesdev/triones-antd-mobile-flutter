@@ -25,8 +25,8 @@ class _CardPageState extends State<CardPage> {
                 title: "基本用法",
                 child: Column(children: [
                   AntCard(
-                    title: const Text('Card Title'),
-                    extra: const Icon(Icons.more_horiz_rounded),
+                    titleWidget: const Text('Card Title'),
+                    extraWidget: const Icon(Icons.more_horiz_rounded),
                     child: const Text('Card Content'),
                   ),
                 ]),

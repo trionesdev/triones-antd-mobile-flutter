@@ -3,21 +3,24 @@ import 'package:flutter/material.dart';
 import '../../../trionesdev_antd_mobile.dart';
 
 class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
-  AntAppBar(
-      {super.key,
-      this.backIcon,
-      this.backText,
-      this.back = true,
-      this.onBack,
-      this.leading,
-      this.title,
-      this.actions,
-      this.toolbarHeight,
-      this.bottom,
-      this.centerTitle = true,
-      this.decoration})
-      : preferredSize =
-            _PreferredAppBarSize(toolbarHeight, bottom?.preferredSize.height);
+  AntAppBar({
+    super.key,
+    this.backIcon,
+    this.backText,
+    this.back = true,
+    this.onBack,
+    this.leading,
+    this.title,
+    this.actions,
+    this.toolbarHeight,
+    this.bottom,
+    this.centerTitle = true,
+    this.backgroundColor,
+    this.decoration,
+  }) : preferredSize = _PreferredAppBarSize(
+         toolbarHeight,
+         bottom?.preferredSize.height,
+       );
   final Widget? backIcon;
   final Widget? backText;
   final bool back;
@@ -28,46 +31,48 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double? toolbarHeight;
   final PreferredSizeWidget? bottom;
   final bool? centerTitle;
+  final Color? backgroundColor;
   final BoxDecoration? decoration;
 
   Widget leadingWidget(BuildContext context) {
     List<Widget> leadingChildren = [];
     if (back) {
-      leadingChildren.add(GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () {
-          if (onBack != null) {
-            onBack?.call();
-            return;
-          }
-          Navigator.maybePop(context);
-        },
-        child: Row(children: [
-          Container(
-            padding: EdgeInsets.only(left: 8),
-            child: backIcon ?? Icon(Icons.arrow_back),
+      leadingChildren.add(
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            if (onBack != null) {
+              onBack?.call();
+              return;
+            }
+            Navigator.maybePop(context);
+          },
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.only(left: 8),
+                child: backIcon ?? Icon(AntIcons.leftOutline),
+              ),
+              if (backText != null) backText!,
+            ],
           ),
-          if (backText != null) backText!
-        ]),
-      ));
+        ),
+      );
     }
     if (leading != null) {
       leadingChildren.add(leading!);
     }
-    return Row(
-      children: leadingChildren,
-    );
+    return Row(children: leadingChildren);
   }
 
   Widget? titleWidget(BuildContext context) {
+    AntThemeData themeData = AntTheme.of(context);
     if (title != null && title is Text) {
       Text source = title as Text;
       return WidgetUtils.textMerge(
-          Text(
-            source.data!,
-            style: TextStyle(fontSize: 16),
-          ),
-          source);
+        Text(source.data!, style: TextStyle(fontSize: themeData.fontSizeLG)),
+        source,
+      );
     }
     return title;
   }
@@ -81,7 +86,7 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: titleWidget(context),
       actions: actions,
       bottom: bottom,
-      backgroundColor: themeData.colorPrimary,
+      backgroundColor: backgroundColor ?? themeData.colorBgBase,
       centerTitle: centerTitle,
       flexibleSpace: Container(decoration: decoration),
     );
@@ -93,8 +98,7 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 class _PreferredAppBarSize extends Size {
   _PreferredAppBarSize(this.toolbarHeight, this.bottomHeight)
-      : super.fromHeight(
-            (toolbarHeight ?? kToolbarHeight) + (bottomHeight ?? 0));
+    : super.fromHeight((toolbarHeight ?? kToolbarHeight) + (bottomHeight ?? 0));
 
   final double? toolbarHeight;
   final double? bottomHeight;

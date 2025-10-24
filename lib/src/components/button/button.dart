@@ -111,6 +111,7 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
     }
 
     ShapeBorder? shapeBorder() {
+      AntThemeData theme = AntTheme.of(context);
       if (widget.shape == AntButtonShape.circle && widget.text == null) {
         return CircleBorder(side: buttonBorderSide() ?? BorderSide.none);
       }
@@ -118,7 +119,7 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
           borderRadius: BorderRadius.circular(
               stateStyle
                   .resolve(materialStates)
-                  ?.borderRadius ?? 6.0),
+                  ?.borderRadius ?? theme.borderRadius),
           side: buttonBorderSide() ?? BorderSide.none);
     }
 
@@ -248,6 +249,8 @@ class _AntButtonStyle extends StateStyle {
 
   @override
   Style? get style {
+    AntThemeData themeData = AntTheme.of(context);
+
     Color? backgroundColor() {
       Color finalColor = buttonBackgroundColor ?? Colors.white;
       if (button.variant == AntButtonVariant.filled) {
@@ -261,7 +264,7 @@ class _AntButtonStyle extends StateStyle {
         backgroundColor: backgroundColor(),
         padding: padding,
         borderColor: buttonBorderColor,
-        borderRadius: button.shape == AntButtonShape.circle ? 180 : 6);
+        borderRadius: button.shape == AntButtonShape.circle ? 180 : themeData.borderRadius);
   }
 
   @override
