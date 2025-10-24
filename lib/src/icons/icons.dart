@@ -22,7 +22,7 @@ class AntIcons {
   static final IconData completedOutline = AntIconData(58894);
   static final IconData refundOutline = AntIconData(58883);
   static final IconData homeOutline = AntIconData(58882);
-  static final IconData minusOutline = AntIconData(58880);
+  static final IconData minusOutline = const AntIconData(58880);
   static final IconData addCircleOutline = AntIconData(59254);
   static final IconData addSquareOutline = AntIconData(59240);
   static final IconData audioMutedOutline = AntIconData(59241);
@@ -35,7 +35,7 @@ class AntIcons {
   static final IconData bellMuteOutline = AntIconData(59248);
   static final IconData arrowsAltOutline = AntIconData(59249);
   static final IconData alipayCircleFill = AntIconData(59250);
-  static final IconData addOutline = AntIconData(59251);
+  static final IconData addOutline = const AntIconData(59251);
   static final IconData addressBookFill = AntIconData(59252);
   static final IconData alipaySquareFill = AntIconData(59253);
   static final IconData billOutline = AntIconData(59096);
@@ -61,10 +61,10 @@ class AntIcons {
   static final IconData chatWrongOutline = AntIconData(59228);
   static final IconData checkShieldFill = AntIconData(59229);
   static final IconData closeOutline = AntIconData(59230);
-  static final IconData checkOutline = AntIconData(59231);
+  static final IconData checkOutline = const AntIconData(59231);
   static final IconData downlandOutline = AntIconData(59099);
   static final IconData downCircleOutline = AntIconData(59098);
-  static final IconData deleteOutline = AntIconData(59212);
+  static final IconData deleteOutline = const AntIconData(59212);
   static final IconData clockCircleOutline = AntIconData(59097);
   static final IconData compassOutline = AntIconData(59214);
   static final IconData eyeInvisibleFill = AntIconData(59201);
@@ -81,7 +81,7 @@ class AntIcons {
   static final IconData formOutlined = AntIconData(59192);
   static final IconData eyeInvisibleOutline = AntIconData(59193);
   static final IconData fingerDownOutline = AntIconData(59194);
-  static final IconData filterOutline = AntIconData(59195);
+  static final IconData filterOutline = const AntIconData(59195);
   static final IconData exclamationCircleOutline = AntIconData(59100);
   static final IconData environmentOutline = AntIconData(59197);
   static final IconData faceRecognitionOutline = AntIconData(59198);
@@ -93,7 +93,7 @@ class AntIcons {
   static final IconData kouBeiFill = AntIconData(59179);
   static final IconData linkOutline = AntIconData(59180);
   static final IconData handPayCircleOutline = AntIconData(59181);
-  static final IconData leftOutline = AntIconData(59182);
+  static final IconData leftOutline = const AntIconData(59182);
   static final IconData globalOutline = AntIconData(59183);
   static final IconData keyOutline = AntIconData(59184);
   static final IconData giftOutline = AntIconData(59185);
@@ -144,7 +144,7 @@ class AntIcons {
   static final IconData scanningOutline = AntIconData(59142);
   static final IconData starFill = AntIconData(59143);
   static final IconData searchOutline = AntIconData(59144);
-  static final IconData rightOutline = AntIconData(59145);
+  static final IconData rightOutline = const AntIconData(59145);
   static final IconData scanningFaceOutline = AntIconData(59146);
   static final IconData shopBagOutline = AntIconData(59147);
   static final IconData receivePaymentOutline = AntIconData(59148);
