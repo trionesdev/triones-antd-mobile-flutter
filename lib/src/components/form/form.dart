@@ -125,7 +125,7 @@ class AntFormState extends State<AntForm> {
 
   void reset<T>() {
     for (final AntFieldState field in _fields) {
-      if (field.mergedName != null) {
+      if (field.mergedName != null && field.mergedName.value.isNotEmpty) {
         setFieldValue(field.mergedName, field.initialValue);
       }
     }
@@ -154,7 +154,6 @@ class AntFormState extends State<AntForm> {
   bool _validate() {
     errorFields = [];
     bool hasError = false;
-    String errorMessage = '';
     for (final AntFieldState field in _fields) {
       if (!field.validate()) {
         if (field.mergedName != null && field.mergedName.value.isNotEmpty) {
@@ -166,9 +165,7 @@ class AntFormState extends State<AntForm> {
         hasError = true;
       }
     }
-    setState(() {
-
-    });
+    _forceRebuild();
     return !hasError;
   }
 
