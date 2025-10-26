@@ -13,6 +13,7 @@ class AntInput extends StatefulWidget {
     this.prefix,
     this.suffix,
     this.value,
+    this.defaultValue,
     this.onChange,
     this.decoration,
     this.height = 32,
@@ -29,6 +30,7 @@ class AntInput extends StatefulWidget {
   final Widget? prefix;
   final Widget? suffix;
   final String? value;
+  final String? defaultValue;
   final Function? onChange;
   final BoxDecoration? decoration;
 
@@ -57,7 +59,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
   @override
   void initState() {
     super.initState();
-    _controller.text = widget.value ?? "";
+    _controller.text = widget.value ?? widget.defaultValue ?? "";
     _focusNode.addListener(() {
       setMaterialState(WidgetState.focused, _focusNode.hasFocus);
       if (_focusNode.hasFocus) {

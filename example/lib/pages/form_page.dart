@@ -47,10 +47,10 @@ class _FormPageState extends State<FormPage> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    AntFormItem(
+                    AntFormItem<String>(
                       labelWidget: Text("年龄"),
                       name: NamePath('age'),
-                      builder: (AntFieldState field) {
+                      builder: (field) {
                         return AntInput(
                           value: field.value,
                           onChange: field.didChange,
@@ -67,10 +67,10 @@ class _FormPageState extends State<FormPage> {
                         );
                       },
                     ),
-                    AntFormItem(
+                    AntFormItem<String?>(
                       name: NamePath(['username']),
                       validator: (value) {
-                        if (value == null) {
+                        if (value == null || value.isEmpty) {
                           return '请输入用户名';
                         }
                         return null;
@@ -274,7 +274,7 @@ class _FormPageState extends State<FormPage> {
                           return Row(
                             children: [
                               Expanded(
-                                child: AntFormItem(
+                                child: AntFormItem<String?>(
                                   name: field.name,
                                   labelWidget: Text("Item"),
                                   builder: (AntFieldState state) {
@@ -321,10 +321,10 @@ class _FormPageState extends State<FormPage> {
                         return Column(
                           children: [
                             ...fields.map((field) {
-                              return AntFormItem(
+                              return AntFormItem<String>(
                                 name: NamePath([field.index, "name"]),
                                 labelWidget: Text("Item"),
-                                builder: (AntFieldState state) {
+                                builder: (AntFieldState<String?> state) {
                                   return AntInput(
                                     value: state.value?.toString(),
                                     onChange: state.didChange,
@@ -376,10 +376,10 @@ class _FormPageState extends State<FormPage> {
                               Row(
                                 children: [
                                   Expanded(
-                                    child: AntFormItem(
+                                    child: AntFormItem<String>(
                                       name: NamePath([field.index, "itemName"]),
                                       labelWidget: Text("Item"),
-                                      builder: (AntFieldState state) {
+                                      builder: ( state) {
                                         return AntInput(
                                           placeholder: "请输入",
                                           value: state.value,
@@ -403,13 +403,13 @@ class _FormPageState extends State<FormPage> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       ...fields.map((field1) {
-                                        return AntFormItem(
+                                        return AntFormItem<String>(
                                           name: NamePath([
                                             field1.index,
                                             "name",
                                           ]),
                                           labelWidget: Text("SubItem"),
-                                          builder: (AntFieldState state) {
+                                          builder: (  state) {
                                             return AntInput(
                                               value: state.value?.toString(),
                                               onChange: state.didChange,
@@ -464,6 +464,28 @@ class _FormPageState extends State<FormPage> {
                                         print(values),
                                       },
                                     ),
+                                  },
+                                ),
+                                AntButton(
+                                  text: "设置",
+                                  onPressed: () => {
+                                    _formKey7.currentState?.setFieldsValue({
+                                      "name": "test",
+                                      "items": [
+                                        {
+                                          "itemName": "111",
+                                          "users": [
+                                            {"name": "1"},
+                                          ],
+                                        },
+                                        {
+                                          "itemName": "ddddd",
+                                          "users": [
+                                            {"name": "ssd"},
+                                          ],
+                                        },
+                                      ],
+                                    }),
                                   },
                                 ),
                               ],
