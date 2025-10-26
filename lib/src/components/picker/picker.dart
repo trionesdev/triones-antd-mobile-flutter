@@ -99,7 +99,10 @@ Future<T?> showPicker<T>({
             Navigator.of(context).pop();
             onOk?.call(value);
           },
-          onCancel: () {}
+          onCancel: () {
+            Navigator.of(context).pop();
+            onCancel?.call();
+          }
       )
   );
 }
@@ -131,7 +134,10 @@ Future<T?> showMultiPicker<T>({
           Navigator.of(context).pop();
           onOk?.call(value);
         },
-        onCancel: () {},
+        onCancel: () {
+          Navigator.of(context).pop();
+          onCancel?.call();
+        },
       )
   );
 }

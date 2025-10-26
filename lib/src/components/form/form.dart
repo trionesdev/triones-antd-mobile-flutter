@@ -105,16 +105,17 @@ class AntFormState extends State<AntForm> {
     field._formDidChange(fieldValue);
   }
 
-  void _register(AntFieldState field) {
+  void _register<T>(AntFieldState<T?> field) {
     _fields.add(field);
     _registerFieldWatch(field);
     _formValuesSet(field);
   }
 
-  void _unregister(AntFieldState field) {
+  void  _unregister<T>(AntFieldState<T?> field) {
     _fields.remove(field);
     _watches.remove(field.mergedName.jsonValue);
   }
+
 
   void save() {
     for (final AntFieldState field in _fields) {
@@ -122,7 +123,7 @@ class AntFormState extends State<AntForm> {
     }
   }
 
-  void reset() {
+  void reset<T>() {
     for (final AntFieldState field in _fields) {
       if (field.mergedName != null) {
         setFieldValue(field.mergedName, field.initialValue);
@@ -156,7 +157,7 @@ class AntFormState extends State<AntForm> {
     String errorMessage = '';
     for (final AntFieldState field in _fields) {
       if (!field.validate()) {
-        if (field.mergedName != null) {
+        if (field.mergedName != null && field.mergedName.value.isNotEmpty) {
           errorFields.add({
             "name": field.mergedName?.value,
             "errors": field.getErrorText(),
@@ -165,6 +166,9 @@ class AntFormState extends State<AntForm> {
         hasError = true;
       }
     }
+    setState(() {
+
+    });
     return !hasError;
   }
 
@@ -259,26 +263,26 @@ class Field<T> extends StatefulWidget {
   final T? initialValue;
   final String? restorationId;
 
-  static AntFieldState? maybeOf<T>(BuildContext context) {
-    final _FieldScope? scope =
-        context.dependOnInheritedWidgetOfExactType<_FieldScope>();
+  static  AntFieldState<T?>? maybeOf<T>(BuildContext context) {
+    final _FieldScope<T?>? scope =
+        context.dependOnInheritedWidgetOfExactType<_FieldScope<T?>>();
     return scope?._fieldState;
   }
 
   @override
-  State<StatefulWidget> createState() => AntFieldState();
+  State<StatefulWidget> createState() => AntFieldState<T>();
 }
 
-class AntFieldState extends State<Field> with RestorationMixin {
+class AntFieldState<T> extends State<Field<T?>> with RestorationMixin {
   _AntFormScope? _formScope;
-  _FieldScope? _fieldScope;
+  _FieldScope<T?>? _fieldScope;
   late final RestorableStringN _errorText = RestorableStringN(null);
   final RestorableBool _hasInteractedByUser = RestorableBool(false);
   int _generation = 0;
 
   /// 获取 合并后的 name
   NamePath get mergedName {
-    AntFieldState? fieldState = _fieldScope?.fieldState;
+    AntFieldState<T?>? fieldState = _fieldScope?.fieldState;
     if (fieldState?.mergedName != null && widget.name != null) {
       return NamePath([...fieldState!.mergedName.value, ...widget.name!.value]);
     } else {
@@ -286,13 +290,13 @@ class AntFieldState extends State<Field> with RestorationMixin {
     }
   }
 
-  dynamic get initialValue => widget.initialValue;
+  T? get initialValue => widget.initialValue;
 
-  dynamic get value {
+  T? get value {
     return _value;
   }
 
-  dynamic _value;
+  T? _value;
 
   /// 获取组件传入name
   NamePath? get name {
@@ -309,7 +313,7 @@ class AntFieldState extends State<Field> with RestorationMixin {
     return _errorText.value;
   }
 
-  void _formDidChange(dynamic value) {
+  void _formDidChange(T? value) {
     _value = value;
   }
 
@@ -318,9 +322,7 @@ class AntFieldState extends State<Field> with RestorationMixin {
   }
 
   bool validate() {
-    setState(() {
-      _validate();
-    });
+    _validate();
     return !hasError;
   }
 
@@ -331,8 +333,7 @@ class AntFieldState extends State<Field> with RestorationMixin {
       _errorText.value = null;
     }
   }
-
-  void didChange(dynamic value) {
+  void didChange(T? value) {
     if (mergedName == null || mergedName.isEmpty) {
       return;
     }
@@ -349,6 +350,7 @@ class AntFieldState extends State<Field> with RestorationMixin {
     setState(() {});
   }
 
+
   @override
   void initState() {
     super.initState();
@@ -358,12 +360,12 @@ class AntFieldState extends State<Field> with RestorationMixin {
   @override
   void didChangeDependencies() {
     _formScope = context.dependOnInheritedWidgetOfExactType<_AntFormScope>();
-    _fieldScope = context.dependOnInheritedWidgetOfExactType<_FieldScope>();
+    _fieldScope = context.dependOnInheritedWidgetOfExactType<_FieldScope<T?>>();
     super.didChangeDependencies();
   }
 
   @override
-  void didUpdateWidget(Field oldWidget) {
+  void didUpdateWidget(Field<T?> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.name != widget.name) {
       _generation++;
@@ -392,7 +394,7 @@ class AntFieldState extends State<Field> with RestorationMixin {
       _formScope!._formState._register(this);
     }
     return PopScope(
-      child: _FieldScope(
+      child: _FieldScope<T?>(
         fieldState: this,
         generation: _generation,
         child: widget.child,
@@ -409,17 +411,17 @@ class AntFieldState extends State<Field> with RestorationMixin {
   }
 }
 
-class _FieldScope<T> extends InheritedWidget {
+class  _FieldScope<T> extends InheritedWidget {
   const _FieldScope({
     required super.child,
-    required AntFieldState fieldState,
+    required AntFieldState<T?> fieldState,
     required int generation,
   }) : _fieldState = fieldState,
        _generation = generation;
-  final AntFieldState _fieldState;
+  final AntFieldState<T?> _fieldState;
   final int _generation;
 
-  AntFieldState get fieldState => _fieldState;
+  AntFieldState<T?> get fieldState => _fieldState;
 
   @override
   bool updateShouldNotify(covariant _FieldScope oldWidget) {
@@ -475,7 +477,7 @@ class AntFormItem<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Offstage(
       offstage: hidden,
-      child: Field<T>(
+      child: Field<T?>(
         name: name,
         restorationId: restorationId,
         initialValue: initialValue,
@@ -483,7 +485,7 @@ class AntFormItem<T> extends StatelessWidget {
         onSaved: onSaved,
         notifier: notifier,
 
-        child: InternalFormItem<T>(
+        child: InternalFormItem<T?>(
           layout: layout,
           labelWidget: labelWidget,
           label: label,
@@ -538,7 +540,7 @@ class InternalFormItem<T> extends StatefulWidget {
   State<StatefulWidget> createState() => InternalFormItemState<T>();
 }
 
-class InternalFormItemState<T> extends State<InternalFormItem<T>> {
+class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
   double get height {
     AntFormState? formState = AntForm.maybeOf(context);
     AntSize size = widget.size ?? formState?.widget.size ?? AntSize.middle;
@@ -669,7 +671,8 @@ class InternalFormItemState<T> extends State<InternalFormItem<T>> {
 
   @override
   Widget build(BuildContext context) {
-    AntFieldState? fieldState = Field.maybeOf(context);
+    AntFieldState<T?>? fieldState = Field.maybeOf<T?>(context);
+
     StateStyle stateStyle = _AntFormItemStyle();
     stateStyle = stateStyle.merge(widget.style);
 
@@ -764,7 +767,7 @@ class InternalFormItemState<T> extends State<InternalFormItem<T>> {
 }
 //endregion
 
-typedef FormItemBuilder<T> = Widget Function(AntFieldState field);
+typedef FormItemBuilder<T> = Widget Function(AntFieldState<T?> field);
 typedef FormItemValidator<T> = String? Function(T? value);
 typedef FormItemSetter<T> = void Function(T? newValue);
 
