@@ -24,9 +24,12 @@ class _ImagesPreviewState extends State<ImagesPreview> {
 
   @override
   Widget build(BuildContext context) {
+    AntThemeData theme = AntTheme.of(context);
+
     return SafeArea(
       child: AntScaffold(
         appBar: AntAppBar(
+          backgroundColor: theme.colorPrimary,
           toolbarHeight: 50,
           backIcon: Icon(Icons.arrow_back_outlined, color: Colors.white),
           title: Text("图片预览", style: TextStyle(color: Colors.white)),

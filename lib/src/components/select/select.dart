@@ -75,7 +75,6 @@ class AntSelectState extends State<AntSelect> {
   bool _multipleValue = false;
   bool _isOpen = false;
 
-
   Widget? get content {
     if (_value == null) {
       return null;
@@ -207,6 +206,7 @@ class AntSelectState extends State<AntSelect> {
                   (context) => SafeArea(
                     child: AntScaffold(
                       appBar: AntAppBar(
+                        backgroundColor: theme.colorPrimary,
                         backIcon: Icon(Icons.arrow_back, color: Colors.white),
                         title:
                             widget.title != null
