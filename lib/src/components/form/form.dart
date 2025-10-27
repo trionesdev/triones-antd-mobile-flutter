@@ -102,7 +102,9 @@ class AntFormState extends State<AntForm> {
       return;
     }
     var fieldValue = MapUtils.getPathValue(_formValues, field.mergedName.value);
-    field._formDidChange(fieldValue);
+    if (fieldValue != null) {
+      field._formDidChange(fieldValue);
+    }
   }
 
   void _register<T>(AntFieldState<T?> field) {
@@ -260,9 +262,9 @@ class Field<T> extends StatefulWidget {
   final T? initialValue;
   final String? restorationId;
 
-  static  AntFieldState<T>? maybeOf<T>(BuildContext context) {
-    final _FieldScope<T>? scope =
-        context.dependOnInheritedWidgetOfExactType<_FieldScope<T>>();
+  static  AntFieldState<T?>? maybeOf<T>(BuildContext context) {
+    final _FieldScope<T?>? scope =
+        context.dependOnInheritedWidgetOfExactType<_FieldScope<T?>>();
     return scope?._fieldState;
   }
 
@@ -270,7 +272,7 @@ class Field<T> extends StatefulWidget {
   State<StatefulWidget> createState() => AntFieldState<T>();
 }
 
-class AntFieldState<T> extends State<Field<T>> with RestorationMixin {
+class AntFieldState<T> extends State<Field<T?>> with RestorationMixin {
   _AntFormScope? _formScope;
   _FieldScope? _fieldScope;
   late final RestorableStringN _errorText = RestorableStringN(null);
@@ -351,8 +353,8 @@ class AntFieldState<T> extends State<Field<T>> with RestorationMixin {
 
   @override
   void initState() {
-    super.initState();
     _value = widget.value ?? widget.initialValue;
+    super.initState();
   }
 
   @override
@@ -363,7 +365,7 @@ class AntFieldState<T> extends State<Field<T>> with RestorationMixin {
   }
 
   @override
-  void didUpdateWidget(Field<T> oldWidget) {
+  void didUpdateWidget(Field<T?> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.name != widget.name) {
       _generation++;
@@ -391,6 +393,7 @@ class AntFieldState<T> extends State<Field<T>> with RestorationMixin {
     if (widget.name != null) {
       _formScope!._formState._register(this);
     }
+
     return PopScope(
       child: _FieldScope<T?>(
         fieldState: this,
@@ -412,14 +415,16 @@ class AntFieldState<T> extends State<Field<T>> with RestorationMixin {
 class  _FieldScope<T> extends InheritedWidget {
   const _FieldScope({
     required super.child,
-    required AntFieldState<T> fieldState,
+    required AntFieldState<T?> fieldState,
     required int generation,
   }) : _fieldState = fieldState,
        _generation = generation;
-  final AntFieldState<T> _fieldState;
+  final AntFieldState<T?> _fieldState;
   final int _generation;
 
-  AntFieldState<T> get fieldState => _fieldState;
+
+
+  AntFieldState<T?> get fieldState => _fieldState;
 
   @override
   bool updateShouldNotify(covariant _FieldScope oldWidget) {
@@ -665,6 +670,15 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
         ),
       );
     }
+  }
+
+  @override
+  void initState() {
+  }
+
+  @override
+  void didChangeDependencies( ) {
+
   }
 
   @override

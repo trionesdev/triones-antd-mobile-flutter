@@ -106,7 +106,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
                 });
               },
               child: Icon(
-                passwordVisible ? Icons.visibility_off : Icons.visibility,
+                passwordVisible ? AntIcons.eyeInvisibleOutline : AntIcons.eyeOutline,
                 size: iconSize(),
               ),
             ),

@@ -846,7 +846,7 @@ class AntThemeData with Diagnosticable {
       //移除阴影效果
       textTheme: TextTheme(),
       appBarTheme: AppBarTheme(
-        surfaceTintColor: colorBgBase,
+        surfaceTintColor: Colors.grey,
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: colorBgBase,

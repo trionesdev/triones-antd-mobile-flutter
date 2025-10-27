@@ -13,6 +13,7 @@ class AntSelect extends StatefulWidget {
     this.mode,
     this.pickerMode = AntSelectPickerMode.popup,
     this.showSearch = false,
+    this.appBar,
     this.title,
     this.placeholder,
     this.arrow = false,
@@ -45,6 +46,7 @@ class AntSelect extends StatefulWidget {
   final AntSelectMode? mode;
   final AntSelectPickerMode pickerMode;
   final bool showSearch;
+  final PreferredSizeWidget? appBar;
   final String? title;
   final String? placeholder;
   final String? searchPlaceholder;
@@ -206,13 +208,11 @@ class AntSelectState extends State<AntSelect> {
               builder:
                   (context) => SafeArea(
                     child: AntScaffold(
-                      appBar: AntAppBar(
-                        backIcon: Icon(Icons.arrow_back, color: Colors.white),
+                      appBar: widget.appBar ?? AntAppBar(
                         title:
                             widget.title != null
                                 ? Text(
-                                  widget.title!,
-                                  style: TextStyle(color: Colors.white),
+                                  widget.title??""
                                 )
                                 : null,
                         onBack: () {
