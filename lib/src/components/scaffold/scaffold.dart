@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AntScaffold extends StatefulWidget {
   const AntScaffold({super.key,
@@ -27,7 +28,19 @@ class AntScaffold extends StatefulWidget {
 
 class _AntScaffoldState extends State<AntScaffold> {
   @override
+  void initState() {
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   const SystemUiOverlayStyle(
+    //     systemNavigationBarColor: Color(0xffffffff),
+    //     systemNavigationBarIconBrightness: Brightness.light,
+    //   ),
+    // );
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: widget.appBar,
       body: widget.body,
