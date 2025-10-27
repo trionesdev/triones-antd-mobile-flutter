@@ -28,8 +28,7 @@ class _ImagesPreviewState extends State<ImagesPreview> {
       child: AntScaffold(
         appBar: AntAppBar(
           toolbarHeight: 50,
-          backIcon: Icon(Icons.arrow_back_outlined, color: Colors.white),
-          title: Text("图片预览", style: TextStyle(color: Colors.white)),
+          title: Text("图片预览"),
         ),
         body: PhotoViewGallery.builder(
           backgroundDecoration: BoxDecoration(color: Colors.black38),
