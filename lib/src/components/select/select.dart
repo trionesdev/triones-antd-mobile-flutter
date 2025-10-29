@@ -105,7 +105,9 @@ class AntSelectState extends State<AntSelect> {
             );
           })
           .map(
-            (item) => MapUtils.getPathValue(item, _fieldsNames.label?.value),
+            (item){
+              return MapUtils.getPathValue(item, _fieldsNames.label?.value);
+            },
           );
       return (labels.isNotEmpty) ? Text(labels.join(",")) : null;
     } else {
