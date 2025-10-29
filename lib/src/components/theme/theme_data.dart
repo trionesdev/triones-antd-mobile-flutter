@@ -2,6 +2,8 @@ library;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:trionesdev_antd_mobile/src/components/theme/ant_app_bar_theme_data.dart';
 
 @immutable
 class AntThemeData with Diagnosticable {
@@ -25,7 +27,6 @@ class AntThemeData with Diagnosticable {
     Color? colorError,
     Color? colorBorder,
     double? borderRadius,
-    Brightness? brightness,
     Color? colorBgBlur,
     Color? colorBgContainer,
     Color? colorBgElevated,
@@ -165,6 +166,8 @@ class AntThemeData with Diagnosticable {
     double? paddingXL,
     double? paddingXS,
     double? paddingXXS,
+    AntAppBarThemeData? appBarTheme,
+    Brightness? brightness,
   }) {
     platform ??= defaultTargetPlatform;
 
@@ -190,11 +193,11 @@ class AntThemeData with Diagnosticable {
     colorBgContainer ??= Color(0xFFFFFFFF);
     colorBgElevated ??= Color(0xFFFFFFFF);
     colorBgLayout ??= Color(0xFFf5f5f5);
-    colorBgMask ??= Color.fromRGBO(0,0,0,0.45);
+    colorBgMask ??= Color.fromRGBO(0, 0, 0, 0.45);
     colorBgSolid ??= Color.fromRGBO(0, 0, 0, 1);
-    colorBgSolidActive ??= Color.fromRGBO(0,0,0,0.95);
-    colorBgSolidHover ??= Color.fromRGBO(0,0,0,0.75);
-    colorBgSpotlight ??= Color.fromRGBO(0,0,0,0.85);
+    colorBgSolidActive ??= Color.fromRGBO(0, 0, 0, 0.95);
+    colorBgSolidHover ??= Color.fromRGBO(0, 0, 0, 0.75);
+    colorBgSpotlight ??= Color.fromRGBO(0, 0, 0, 0.85);
     colorBorder ??= Color(0xffd9d9d9);
     colorBorderSecondary ??= Color(0xfff0f0f0);
     colorErrorActive ??= Color(0xffd9363e);
@@ -208,10 +211,10 @@ class AntThemeData with Diagnosticable {
     colorErrorText ??= Color(0xffff4d4f);
     colorErrorTextActive ??= Color(0xffd9363e);
     colorErrorTextHover ??= Color(0xffff7875);
-    colorFill ??= Color.fromRGBO(0,0,0,0.15);
-    colorFillQuaternary ??= Color.fromRGBO(0,0,0,0.02);
-    colorFillSecondary ??= Color.fromRGBO(0,0,0,0.06);
-    colorFillTertiary ??= Color.fromRGBO(0,0,0,0.04);
+    colorFill ??= Color.fromRGBO(0, 0, 0, 0.15);
+    colorFillQuaternary ??= Color.fromRGBO(0, 0, 0, 0.02);
+    colorFillSecondary ??= Color.fromRGBO(0, 0, 0, 0.06);
+    colorFillTertiary ??= Color.fromRGBO(0, 0, 0, 0.04);
     colorInfoActive ??= Color(0xFF0958d9);
     colorInfoBg ??= Color(0xFFe6f4ff);
     colorInfoBgHover ??= Color(0xFFbae0ff);
@@ -241,10 +244,10 @@ class AntThemeData with Diagnosticable {
     colorSuccessText ??= Color(0xff52c41a);
     colorSuccessTextActive ??= Color(0xff389e0d);
     colorSuccessTextHover ??= Color(0xff73d13d);
-    colorText ??= Color.fromRGBO(0,0,0,0.88);
-    colorTextQuaternary ??= Color.fromRGBO(0,0,0,0.25);
-    colorTextSecondary ??= Color.fromRGBO(0,0,0,0.65);
-    colorTextTertiary ??= Color.fromRGBO(0,0,0,0.45);
+    colorText ??= Color.fromRGBO(0, 0, 0, 0.88);
+    colorTextQuaternary ??= Color.fromRGBO(0, 0, 0, 0.25);
+    colorTextSecondary ??= Color.fromRGBO(0, 0, 0, 0.65);
+    colorTextTertiary ??= Color.fromRGBO(0, 0, 0, 0.45);
     colorWarningActive ??= Color(0xffd48806);
     colorWarningBg ??= Color(0xfffffbe6);
     colorWarningBgHover ??= Color(0xfffff1b8);
@@ -328,6 +331,7 @@ class AntThemeData with Diagnosticable {
     paddingXL ??= 32;
     paddingXS ??= 4;
     paddingXXS ??= 2;
+    appBarTheme ??= AntAppBarThemeData();
     brightness ??= Brightness.light;
 
     return AntThemeData.raw(
@@ -350,7 +354,6 @@ class AntThemeData with Diagnosticable {
       colorError: colorError,
       colorBorder: colorBorder,
       borderRadius: borderRadius,
-      brightness: brightness,
       colorBgBlur: colorBgBlur,
       colorBgContainer: colorBgContainer,
       colorBgElevated: colorBgElevated,
@@ -490,6 +493,8 @@ class AntThemeData with Diagnosticable {
       paddingXL: paddingXL,
       paddingXS: paddingXS,
       paddingXXS: paddingXXS,
+      appBarTheme: appBarTheme,
+      brightness: brightness,
     );
   }
 
@@ -652,6 +657,7 @@ class AntThemeData with Diagnosticable {
     required this.paddingXL,
     required this.paddingXS,
     required this.paddingXXS,
+    required this.appBarTheme,
     required this.brightness,
   });
 
@@ -816,6 +822,7 @@ class AntThemeData with Diagnosticable {
   final double paddingXS;
   final double paddingXXS;
 
+  final AntAppBarThemeData appBarTheme;
   final Brightness brightness;
 
   factory AntThemeData.light() => AntThemeData(brightness: Brightness.light);
@@ -845,8 +852,10 @@ class AntThemeData with Diagnosticable {
       shadowColor: Colors.transparent,
       //移除阴影效果
       textTheme: TextTheme(),
+
       appBarTheme: AppBarTheme(
-        surfaceTintColor: Colors.grey,
+        surfaceTintColor: appBarTheme.surfaceTintColor ?? Colors.grey,
+        systemOverlayStyle: appBarTheme.systemOverlayStyle,
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: colorBgBase,
@@ -856,7 +865,8 @@ class AntThemeData with Diagnosticable {
             topRight: Radius.circular(borderRadius),
           ),
         ),
-      ), dialogTheme: DialogThemeData(backgroundColor: colorBgBase),
+      ),
+      dialogTheme: DialogThemeData(backgroundColor: colorBgBase),
     );
   }
 

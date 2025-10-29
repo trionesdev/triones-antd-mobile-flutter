@@ -206,64 +206,62 @@ class AntSelectState extends State<AntSelect> {
             MaterialPageRoute(
               fullscreenDialog: true, // 关键参数
               builder:
-                  (context) => SafeArea(
-                    child: AntScaffold(
-                      appBar: widget.appBar ?? AntAppBar(
-                        title:
-                            widget.title != null
-                                ? Text(
-                                  widget.title??""
-                                )
-                                : null,
-                        onBack: () {
-                          Navigator.of(context).maybePop(true).then((_) {});
-                        },
-                      ),
-                      body: selectPanel,
-                      bottomNavigationBar: Container(
-                        padding: EdgeInsets.all(8),
-                        child: Row(
-                          spacing: 8,
-                          children: [
-                            Expanded(
-                              child: AntButton(
-                                size: AntSize.large,
-                                type: AntButtonType.text,
-                                text:
-                                    AntdLocalizations.of(
-                                      context,
-                                    )?.button_cancel ??
-                                    "取消",
-                                onPressed: () {
-                                  Navigator.of(
-                                    context,
-                                  ).maybePop(true).then((_) {});
-                                },
-                              ),
-                            ),
-                            Expanded(
-                              child: AntButton(
-                                size: AntSize.large,
-                                type: AntButtonType.primary,
-                                text:
-                                    AntdLocalizations.of(context)?.button_ok ??
-                                    "确定",
-                                onPressed: () {
-                                  Navigator.of(context).maybePop(true).then((
-                                    _,
-                                  ) {
-                                    widget.onChange?.call(
-                                      _value,
-                                      valueOption(_value),
-                                    );
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  (context) => AntScaffold(
+                    appBar: widget.appBar ?? AntAppBar(
+                      title:
+                      widget.title != null
+                          ? Text(
+                          widget.title??""
+                      )
+                          : null,
+                      onBack: () {
+                        Navigator.of(context).maybePop(true).then((_) {});
+                      },
                     ),
+                    body: selectPanel,
+                    bottomNavigationBar: SafeArea(child: Container(
+                      padding: EdgeInsets.all(8),
+                      child: Row(
+                        spacing: 8,
+                        children: [
+                          Expanded(
+                            child: AntButton(
+                              size: AntSize.large,
+                              type: AntButtonType.text,
+                              text:
+                              AntdLocalizations.of(
+                                context,
+                              )?.button_cancel ??
+                                  "取消",
+                              onPressed: () {
+                                Navigator.of(
+                                  context,
+                                ).maybePop(true).then((_) {});
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: AntButton(
+                              size: AntSize.large,
+                              type: AntButtonType.primary,
+                              text:
+                              AntdLocalizations.of(context)?.button_ok ??
+                                  "确定",
+                              onPressed: () {
+                                Navigator.of(context).maybePop(true).then((
+                                    _,
+                                    ) {
+                                  widget.onChange?.call(
+                                    _value,
+                                    valueOption(_value),
+                                  );
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
                   ),
             ),
           );

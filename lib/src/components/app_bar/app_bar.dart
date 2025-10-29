@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../trionesdev_antd_mobile.dart';
 
@@ -17,6 +18,7 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.centerTitle = true,
     this.backgroundColor,
     this.decoration,
+    this.systemUiOverlayStyle,
   }) : preferredSize = _PreferredAppBarSize(
          toolbarHeight,
          bottom?.preferredSize.height,
@@ -33,6 +35,7 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool? centerTitle;
   final Color? backgroundColor;
   final BoxDecoration? decoration;
+  final SystemUiOverlayStyle? systemUiOverlayStyle;
 
   Widget leadingWidget(BuildContext context) {
     List<Widget> leadingChildren = [];
@@ -89,6 +92,7 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: backgroundColor ?? themeData.colorBgBase,
       centerTitle: centerTitle,
       flexibleSpace: Container(decoration: decoration),
+      systemOverlayStyle: systemUiOverlayStyle,
     );
   }
 

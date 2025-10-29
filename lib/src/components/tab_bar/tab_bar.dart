@@ -118,8 +118,7 @@ class AntTabBarState extends State<AntTabBar> with MaterialStateMixin {
             child: Container(
               decoration: widget.decoration ??
                   stateStyle.resolve(materialStates)?.decoration,
-              child: SafeArea(
-                  child: BottomAppBar(
+              child: BottomAppBar(
                 color: Colors.transparent,
                 height: widget.height!,
                 padding: widget.padding ??
@@ -128,7 +127,7 @@ class AntTabBarState extends State<AntTabBar> with MaterialStateMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: widget.children ?? [],
                 ),
-              )),
+              ),
             )));
   }
 }

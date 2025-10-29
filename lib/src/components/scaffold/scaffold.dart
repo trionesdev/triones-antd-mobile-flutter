@@ -29,12 +29,6 @@ class AntScaffold extends StatefulWidget {
 class _AntScaffoldState extends State<AntScaffold> {
   @override
   void initState() {
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   const SystemUiOverlayStyle(
-    //     systemNavigationBarColor: Color(0xffffffff),
-    //     systemNavigationBarIconBrightness: Brightness.light,
-    //   ),
-    // );
     super.initState();
   }
 

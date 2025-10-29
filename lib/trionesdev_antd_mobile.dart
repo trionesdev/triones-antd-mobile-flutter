@@ -1,12 +1,12 @@
 library;
 
 //region 风格配色
-export 'src/components/theme/theme_data.dart';
-export 'src/components/theme/theme.dart';
+export 'src/components/theme/index.dart';
 export 'src/components/style/style.dart';
 export 'src/components/style/state_style.dart';
 export 'src/components/style/style_property.dart';
 export 'src/components/types.dart';
+export 'src/components/colors.dart';
 //endregion
 
 export 'src/components/ant.dart';
