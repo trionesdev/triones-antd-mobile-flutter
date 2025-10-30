@@ -48,6 +48,11 @@ class _ImageUploadPageState extends State<ImagesWallPage> {
                           "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
                       status: AntImageStatus.done,
                     ),
+                    AntImagesWallItemStruct(
+                      path:
+                      "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+                      status: AntImageStatus.error,
+                    )
                   ],
                   onChange: (value) {},
                 ),

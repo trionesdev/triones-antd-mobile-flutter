@@ -296,8 +296,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
                 right: Radius.circular(antThemeData.borderRadius)),
           ),
           child: Icon(
-            Icons.add,
-            size: 32,
+            AntIcons.addOutline,
             color: Color(0xff999999),
           ),
         ),
@@ -403,22 +402,29 @@ class _AntImageWallItemState extends State<AntImageWallItem> {
                         left: Radius.circular(antThemeData.borderRadius),
                         right: Radius.circular(antThemeData.borderRadius)),
                   ),
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.broken_image_outlined,
-                          color: Colors.red,
-                          size: 32,
-                        ),
-                        Text(
-                          "上传失败!",
-                          style: TextStyle(color: Colors.red),
-                        )
-                      ],
-                    ),
-                  ),
+                  child: LayoutBuilder(builder: ( context, constraints){
+                    var size = constraints.maxWidth / 2;
+                    if(size>32){
+                      size = 32;
+                    }
+                    return Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.broken_image_outlined,
+                            color: Colors.red,
+                            size: size,
+                          ),
+                          if(constraints.maxWidth>64)
+                            Text(
+                              "上传失败",
+                              style: TextStyle(color: Colors.red, fontSize: 12),
+                            )
+                        ],
+                      ),
+                    );
+                  }),
                 ),
               ),
             if (!widget.disabled)
