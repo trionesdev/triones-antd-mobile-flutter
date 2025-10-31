@@ -12,5 +12,8 @@
   "calendar_sat": "六",
   "calendar_sun": "日",
   "cascader_placeholder":"请选择",
+  "images_wall_camera":"拍摄照片",
+  "images_wall_album":"从相册选择",
+  "images_wall_too_large":"图片过大",
   "images_wall_error":"上传失败"
 }

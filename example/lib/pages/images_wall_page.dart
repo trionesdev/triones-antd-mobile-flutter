@@ -28,6 +28,19 @@ class _ImageUploadPageState extends State<ImagesWallPage> {
                 child: Column(children: [AntImagesWall(maxCount: 5)]),
               ),
               DemoBlock(
+                title: "图片大小限制",
+                child: Column(
+                  children: [
+                    AntImagesWall(
+                      maxSize: 1,
+                      uploadRequest: (file, onSuccess) async {
+                        return "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              DemoBlock(
                 title: "上传",
                 child: Column(
                   children: [
@@ -50,9 +63,9 @@ class _ImageUploadPageState extends State<ImagesWallPage> {
                     ),
                     AntImagesWallItemStruct(
                       path:
-                      "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+                          "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
                       status: AntImageStatus.error,
-                    )
+                    ),
                   ],
                   onChange: (value) {},
                 ),

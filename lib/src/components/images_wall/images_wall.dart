@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +8,15 @@ import 'package:trionesdev_antd_mobile/src/components/images_wall/images_preview
 import 'package:uuid/uuid.dart';
 
 class AntImagesWallItemStruct {
-  AntImagesWallItemStruct({this.uid,
+  AntImagesWallItemStruct({
+    this.uid,
     this.status = AntImageStatus.done,
     this.image,
     this.path,
     this.type,
-    this.fileName});
+    this.fileName,
+    this.errorMessage,
+  });
 
   String? uid;
   AntImageStatus? status;
@@ -22,30 +24,26 @@ class AntImagesWallItemStruct {
   String? path;
   AntImageType? type;
   String? fileName;
+  String? errorMessage;
 }
 
-enum AntImageStatus {
-  done,
-  uploading,
-  error,
-  removed,
-}
+enum AntImageStatus { done, uploading, error, removed }
 
-enum AntImageType {
-  asset,
-  network,
-  file,
-}
+enum AntImageType { asset, network, file }
 
 class AntImagesWall extends StatefulWidget {
-  const AntImagesWall({super.key,
+  const AntImagesWall({
+    super.key,
     this.value,
     this.maxCount,
     this.disabled = false,
     this.crossAxisCount = 5,
+
     this.onChange,
     this.uploadRequest,
-    this.multiSelect = true});
+    this.multiSelect = true,
+    this.maxSize,
+  });
 
   final List<AntImagesWallItemStruct>? value;
   final ValueChanged<List<AntImagesWallItemStruct>>? onChange;
@@ -53,7 +51,8 @@ class AntImagesWall extends StatefulWidget {
   final int? crossAxisCount;
   final bool disabled;
   final bool? multiSelect;
-  final Future<String?> Function(List<int> fileContent, String? fileName)?
+  final int? maxSize;
+  final Future<String?> Function(Uint8List fileContent, String? fileName)?
   uploadRequest;
 
   @override
@@ -75,67 +74,82 @@ class _AntImagesWallState extends State<AntImagesWall> {
       return;
     }
     // List<ImagesWallItem> imageRecords = [];
-    List<Future> uploadRequests = [
-    ]; //如果有上传请求，则将所有异步请求放在一个列表中，再等待所有异步请求完成，再更新状态
+    List<Future> uploadRequests =
+        []; //如果有上传请求，则将所有异步请求放在一个列表中，再等待所有异步请求完成，再更新状态
     for (var image in images) {
       var uid = uuid.v4();
       if (kIsWeb) {
-        _images.add(AntImagesWallItemStruct(
+        _images.add(
+          AntImagesWallItemStruct(
             uid: uid,
             type: AntImageType.network,
             path: image.path,
-            image: Image.network(
-              image.path,
-              fit: BoxFit.cover,
-            ),
-            fileName: image.name));
-      } else {
-        _images.add(AntImagesWallItemStruct(
-          uid: uid,
-          type: AntImageType.file,
-          path: image.path,
-          image: Image.file(
-            File(image.path),
-            fit: BoxFit.cover,
+            image: Image.network(image.path, fit: BoxFit.cover),
+            fileName: image.name,
           ),
-          fileName: image.name,
-        ));
+        );
+      } else {
+        _images.add(
+          AntImagesWallItemStruct(
+            uid: uid,
+            type: AntImageType.file,
+            path: image.path,
+            image: Image.file(File(image.path), fit: BoxFit.cover),
+            fileName: image.name,
+          ),
+        );
       }
 
       if (widget.uploadRequest != null) {
         await image.readAsBytes().then((bytes) async {
+          var imageItem = _images.firstWhereOrNull(
+            (element) => element.uid == uid,
+          );
           setState(() {
-            var imageItem =
-            _images.firstWhereOrNull((element) => element.uid == uid);
             if (imageItem != null) {
-              imageItem.status = AntImageStatus.uploading;
+              if (widget.maxSize != null &&
+                  bytes.length / 1024 / 1024 > widget.maxSize!) {
+                imageItem.status = AntImageStatus.error;
+                imageItem.errorMessage = "图片过大";
+                showAntToast(
+                  context: context,
+                  content: Text("图片不能超过${widget.maxSize}M"),
+                  duration: 1000,
+                );
+              } else {
+                imageItem.status = AntImageStatus.uploading;
+              }
             }
           });
-          var req = widget.uploadRequest!(bytes, image.name).then((url) {
-            setState(() {
-              var imageItem =
-              _images.firstWhereOrNull((element) => element.uid == uid);
-              if (imageItem != null) {
-                imageItem.image = Image.network(
-                  url!,
-                  fit: BoxFit.cover,
-                );
-                imageItem.path = url;
-                imageItem.type = AntImageType.network;
-                imageItem.status = AntImageStatus.done;
-              }
-            });
-          }).catchError((err) {
-            setState(() {
-              var imageItem =
-              _images.firstWhereOrNull((element) => element.uid == uid);
-              if (imageItem != null) {
-                imageItem.status = AntImageStatus.error;
-              }
-            });
-          });
+          if (imageItem == null ||
+              imageItem.status != AntImageStatus.uploading) {
+            return;
+          }
+          var req = widget.uploadRequest!(bytes, image.name)
+              .then((url) {
+                setState(() {
+                  var imageItem = _images.firstWhereOrNull(
+                    (element) => element.uid == uid,
+                  );
+                  if (imageItem != null) {
+                    imageItem.image = Image.network(url!, fit: BoxFit.cover);
+                    imageItem.path = url;
+                    imageItem.type = AntImageType.network;
+                    imageItem.status = AntImageStatus.done;
+                  }
+                });
+              })
+              .catchError((err) {
+                setState(() {
+                  var imageItem = _images.firstWhereOrNull(
+                    (element) => element.uid == uid,
+                  );
+                  if (imageItem != null) {
+                    imageItem.status = AntImageStatus.error;
+                  }
+                });
+              });
           uploadRequests.add(req);
-
         });
       }
     }
@@ -185,6 +199,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
   Future<void> selectImageFromCamera() async {
     final ImagePicker picker = ImagePicker();
     final XFile? photo = await picker.pickImage(source: ImageSource.camera);
+
     if (photo != null) {
       setState(() {
         addImages([photo]);
@@ -194,30 +209,19 @@ class _AntImagesWallState extends State<AntImagesWall> {
 
   Image generateImage(AntImagesWallItemStruct image) {
     if (image.type == AntImageType.asset) {
-      return Image.asset(
-        image.path!,
-        fit: BoxFit.cover,
-      );
+      return Image.asset(image.path!, fit: BoxFit.cover);
     } else if (image.type == AntImageType.network) {
-      return Image.network(
-        image.path!,
-        fit: BoxFit.cover,
-      );
+      return Image.network(image.path!, fit: BoxFit.cover);
     } else if (image.type == AntImageType.file) {
-      return Image.file(
-        File(image.path!),
-        fit: BoxFit.cover,
-      );
+      return Image.file(File(image.path!), fit: BoxFit.cover);
     } else {
-      return Image.network(
-        image.path!,
-        fit: BoxFit.cover,
-      );
+      return Image.network(image.path!, fit: BoxFit.cover);
     }
   }
 
   List<AntImagesWallItemStruct>? generateImages(
-      List<AntImagesWallItemStruct>? images) {
+    List<AntImagesWallItemStruct>? images,
+  ) {
     if (images != null && images.isNotEmpty) {
       for (var element in widget.value!) {
         element.uid ??= uuid.v4();
@@ -254,74 +258,82 @@ class _AntImagesWallState extends State<AntImagesWall> {
     List<Widget> widgets = [];
 
     for (int i = 0; i < _images.length; i++) {
-      widgets.add(AntImageWallItem(
-        image: _images.elementAt(i),
-        images: _images,
-        disabled: widget.disabled,
-        index: i,
-        onRemove: (uid) {
-          setState(() {
-            _images.removeWhere((element) => element.uid == uid);
-          });
-        },
-      ));
+      widgets.add(
+        AntImageWallItem(
+          image: _images.elementAt(i),
+          images: _images,
+          disabled: widget.disabled,
+          index: i,
+          onRemove: (uid) {
+            setState(() {
+              _images.removeWhere((element) => element.uid == uid);
+            });
+          },
+        ),
+      );
     }
     if (!widget.disabled &&
         (widget.maxCount == null ||
             (widget.maxCount != null && _images.length < widget.maxCount!))) {
-      widgets.add(GestureDetector(
-        onTap: () {
-          AntActionSheet.show(context: context, actions: [
-            AntActionSheetItemRecord(
-              label: Text('从相册选择'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                selectImageFromGallery(widget.multiSelect!);
-              },
-            ),
-            AntActionSheetItemRecord(
-              label: Text('拍摄照片'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                selectImageFromCamera();
-              },
-            ),
-          ]);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.black12,
-            borderRadius: BorderRadius.horizontal(
+      widgets.add(
+        GestureDetector(
+          onTap: () {
+            AntActionSheet.show(
+              context: context,
+              actions: [
+                AntActionSheetItemRecord(
+                  label: Text('从相册选择'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    selectImageFromGallery(widget.multiSelect!);
+                  },
+                ),
+                AntActionSheetItemRecord(
+                  label: Text('拍摄照片'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    selectImageFromCamera();
+                  },
+                ),
+              ],
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black12,
+              borderRadius: BorderRadius.horizontal(
                 left: Radius.circular(antThemeData.borderRadius),
-                right: Radius.circular(antThemeData.borderRadius)),
-          ),
-          child: Icon(
-            AntIcons.addOutline,
-            color: Color(0xff999999),
+                right: Radius.circular(antThemeData.borderRadius),
+              ),
+            ),
+            child: Icon(AntIcons.addOutline, color: Color(0xff999999)),
           ),
         ),
-      ));
+      );
     }
 
     return GridView(
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: widget.crossAxisCount!,
-          childAspectRatio: 1,
-          crossAxisSpacing: 2,
-          mainAxisSpacing: 2),
+        crossAxisCount: widget.crossAxisCount!,
+        childAspectRatio: 1,
+        crossAxisSpacing: 2,
+        mainAxisSpacing: 2,
+      ),
       children: widgets,
     );
   }
 }
 
 class AntImageWallItem extends StatefulWidget {
-  const AntImageWallItem({super.key,
+  const AntImageWallItem({
+    super.key,
     required this.image,
     this.onRemove,
     this.disabled = false,
     required this.images,
-    required this.index});
+    required this.index,
+  });
 
   final bool disabled;
   final AntImagesWallItemStruct image;
@@ -357,54 +369,55 @@ class _AntImageWallItemState extends State<AntImageWallItem> {
   Widget build(BuildContext context) {
     AntThemeData antThemeData = AntTheme.of(context);
     return ClipRRect(
-        borderRadius: BorderRadius.horizontal(
-            left: Radius.circular(antThemeData.borderRadius),
-            right: Radius.circular(antThemeData.borderRadius)),
-        child: Stack(
-          children: [
-            AspectRatio(
-              aspectRatio: 1,
-              child: GestureDetector(
-                onTap: () {
-                  AntMask.show(
-                      context: context,
-                      child: ImagesPreview(
-                        images: _images.map((image) {
+      borderRadius: BorderRadius.horizontal(
+        left: Radius.circular(antThemeData.borderRadius),
+        right: Radius.circular(antThemeData.borderRadius),
+      ),
+      child: Stack(
+        children: [
+          AspectRatio(
+            aspectRatio: 1,
+            child: GestureDetector(
+              onTap: () {
+                AntMask.show(
+                  context: context,
+                  child: ImagesPreview(
+                    images:
+                        _images.map((image) {
                           return image.image!;
                         }).toList(),
-                        initialIndex: _index,
-                      ));
-                },
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: _images
-                      .elementAtOrNull(_index)
-                      ?.image,
-                ),
+                    initialIndex: _index,
+                  ),
+                );
+              },
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: _images.elementAtOrNull(_index)?.image,
               ),
             ),
-            if (_image.status == AntImageStatus.uploading)
-              Positioned.fill(
-                child: Container(
+          ),
+          if (_image.status == AntImageStatus.uploading)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black26,
+                child: Center(child: AntSpinLoading()),
+              ),
+            ),
+          if (_image.status == AntImageStatus.error)
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
                   color: Colors.black26,
-                  child: Center(
-                    child: AntSpinLoading(),
+                  border: Border.all(color: Colors.red, width: 1),
+                  borderRadius: BorderRadius.horizontal(
+                    left: Radius.circular(antThemeData.borderRadius),
+                    right: Radius.circular(antThemeData.borderRadius),
                   ),
                 ),
-              ),
-            if (_image.status == AntImageStatus.error)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black26,
-                    border: Border.all(color: Colors.red, width: 1),
-                    borderRadius: BorderRadius.horizontal(
-                        left: Radius.circular(antThemeData.borderRadius),
-                        right: Radius.circular(antThemeData.borderRadius)),
-                  ),
-                  child: LayoutBuilder(builder: ( context, constraints){
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
                     var size = constraints.maxWidth / 2;
-                    if(size>32){
+                    if (size > 32) {
                       size = 32;
                     }
                     return Center(
@@ -416,40 +429,40 @@ class _AntImageWallItemState extends State<AntImageWallItem> {
                             color: Colors.red,
                             size: size,
                           ),
-                          if(constraints.maxWidth>64)
+                          if (constraints.maxWidth > 64)
                             Text(
-                              "上传失败",
+                              _image.errorMessage ?? "上传失败",
                               style: TextStyle(color: Colors.red, fontSize: 12),
-                            )
+                            ),
                         ],
                       ),
                     );
-                  }),
+                  },
                 ),
               ),
-            if (!widget.disabled)
-              Positioned(
-                  top: 0,
-                  right: 0,
-                  child: GestureDetector(
-                    onTap: () {
-                      widget.onRemove?.call(widget.image.uid);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black26,
-                        borderRadius:
-                        BorderRadius.only(bottomLeft: Radius.circular(6)),
-                      ),
-                      padding: EdgeInsets.all(4),
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                        size: 14,
-                      ),
+            ),
+          if (!widget.disabled)
+            Positioned(
+              top: 0,
+              right: 0,
+              child: GestureDetector(
+                onTap: () {
+                  widget.onRemove?.call(widget.image.uid);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black26,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(6),
                     ),
-                  ))
-          ],
-        ));
+                  ),
+                  padding: EdgeInsets.all(4),
+                  child: Icon(Icons.close, color: Colors.white, size: 14),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 }
