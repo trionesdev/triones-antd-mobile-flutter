@@ -13,12 +13,12 @@ class AntCard extends StatefulWidget {
     super.key,
     this.title,
     this.titleStyle,
-    this.titleWidget,
+    this.titleText,
     this.extra,
     this.extraStyle,
-    this.extraWidget,
+    this.extraText,
     this.child,
-    this.footerWidget,
+    this.footer,
     this.decoration,
     this.headerDecoration,
     this.bodyDecoration,
@@ -27,14 +27,14 @@ class AntCard extends StatefulWidget {
     this.styles,
   });
 
-  final String? title;
+  final String? titleText;
   final TextStyle? titleStyle;
-  final Widget? titleWidget;
-  final String? extra;
+  final Widget? title;
+  final String? extraText;
   final TextStyle? extraStyle;
-  final Widget? extraWidget;
+  final Widget? extra;
   final Widget? child;
-  final Widget? footerWidget;
+  final Widget? footer;
   final BoxDecoration? decoration;
   final BoxDecoration? headerDecoration;
   final BoxDecoration? bodyDecoration;
@@ -62,25 +62,23 @@ class _AntCardState extends State<AntCard> with MaterialStateMixin {
     footerStateStyle = footerStateStyle.merge(widget.styles?.footer);
 
     List<Widget> children = [];
-    if (widget.titleWidget != null || widget.title != null ||
-        widget.extraWidget != null || widget.extra != null) {
+    if (widget.title != null ||
+        widget.titleText != null ||
+        widget.extra != null ||
+        widget.extraText != null) {
       children.add(
         Container(
           decoration:
-          widget.headerDecoration ??
-              headerStateStyle
-                  .resolve(materialStates)
-                  ?.decoration,
-          padding: headerStateStyle
-              .resolve(materialStates)
-              ?.computedPadding,
+              widget.headerDecoration ??
+              headerStateStyle.resolve(materialStates)?.decoration,
+          padding: headerStateStyle.resolve(materialStates)?.computedPadding,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              widget.titleWidget ??
-                  Text(widget.title ?? "", style: widget.titleStyle),
-              widget.extraWidget ??
-                  Text(widget.extra ?? "", style: widget.extraStyle),
+              widget.title ??
+                  Text(widget.titleText ?? "", style: widget.titleStyle),
+              widget.extra ??
+                  Text(widget.extraText ?? "", style: widget.extraStyle),
             ],
           ),
         ),
@@ -90,37 +88,27 @@ class _AntCardState extends State<AntCard> with MaterialStateMixin {
       children.add(
         Container(
           decoration:
-          widget.bodyDecoration ??
-              bodyStateStyle
-                  .resolve(materialStates)
-                  ?.decoration,
-          padding: bodyStateStyle
-              .resolve(materialStates)
-              ?.computedPadding,
+              widget.bodyDecoration ??
+              bodyStateStyle.resolve(materialStates)?.decoration,
+          padding: bodyStateStyle.resolve(materialStates)?.computedPadding,
           child: widget.child!,
         ),
       );
     }
-    if (widget.footerWidget != null) {
+    if (widget.footer != null) {
       children.add(
         Container(
           decoration:
-          widget.footerDecoration ??
-              footerStateStyle
-                  .resolve(materialStates)
-                  ?.decoration,
-          padding: footerStateStyle
-              .resolve(materialStates)
-              ?.computedPadding,
-          child: widget.footerWidget,
+              widget.footerDecoration ??
+              footerStateStyle.resolve(materialStates)?.decoration,
+          padding: footerStateStyle.resolve(materialStates)?.computedPadding,
+          child: widget.footer,
         ),
       );
     }
     return Container(
       decoration:
-      widget.decoration ?? stateStyle
-          .resolve(materialStates)
-          ?.decoration,
+          widget.decoration ?? stateStyle.resolve(materialStates)?.decoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: children,

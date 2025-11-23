@@ -67,12 +67,12 @@ class _TabsPageState extends State<TabsPage> {
                     AntTab(
                       antKey: "tab1",
                       label: Text("Tab1"),
-                      content: Text("Tab1 Content"),
+                      child: Text("Tab1 Content"),
                     ),
                     AntTab(
                       antKey: "tab2",
                       label: Text("Tab2"),
-                      content: Text("Tab2 Content"),
+                      child: Text("Tab2 Content"),
                     ),
                   ],
                 ),
@@ -89,12 +89,12 @@ class _TabsPageState extends State<TabsPage> {
                     AntTab(
                       antKey: "tab1",
                       label: Text("Tab1"),
-                      content: Text("Tab1 Content"),
+                      child: Text("Tab1 Content"),
                     ),
                     AntTab(
                       antKey: "tab2",
                       label: Text("Tab2"),
-                      content: Text("Tab2 Content"),
+                      child: Text("Tab2 Content"),
                     ),
                   ],
                 ),

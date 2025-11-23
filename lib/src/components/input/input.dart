@@ -96,7 +96,8 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     if (widget.type == AntInputType.password || widget.suffix != null) {
       suffixIcon = Row(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (widget.type == AntInputType.password)
             GestureDetector(
@@ -106,7 +107,8 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
                 });
               },
               child: Icon(
-                passwordVisible ? AntIcons.eyeInvisibleOutline : AntIcons.eyeOutline,
+                passwordVisible ? AntIcons.eyeInvisibleOutline : AntIcons
+                    .eyeOutline,
                 size: iconSize(),
               ),
             ),
@@ -117,15 +119,21 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
 
     return Container(
       decoration:
-          widget.decoration ?? style.resolve(materialStates)?.decoration,
+      widget.decoration ?? style
+          .resolve(materialStates)
+          ?.decoration,
       height: widget.height,
-      padding: style.resolve(materialStates)?.computedPadding,
+      padding: style
+          .resolve(materialStates)
+          ?.computedPadding,
       child: TextField(
         controller: _controller,
         focusNode: _focusNode,
         obscureText: widget.type == AntInputType.password && passwordVisible,
         cursorColor: Colors.grey,
-        style: TextStyle(fontSize: style.resolve(materialStates)?.fontSize),
+        style: TextStyle(fontSize: style
+            .resolve(materialStates)
+            ?.fontSize),
         keyboardType: (() {
           if (widget.type == AntInputType.number) {
             return TextInputType.number;
@@ -134,9 +142,9 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
           }
         })(),
         decoration: InputDecoration(
-          prefixIcon: widget.prefix,
-
-          // 前缀图标
+          prefixIcon: widget.prefix != null ? Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [widget.prefix ?? SizedBox.shrink()],) : null,
           suffixIcon: suffixIcon,
           hintText: widget.placeholder,
           hintStyle: TextStyle(color: Colors.grey),
@@ -151,7 +159,6 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
             FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))
         ],
         onChanged: (value) {
-
           if (widget.onChange != null) {
             widget.onChange!(value);
           }

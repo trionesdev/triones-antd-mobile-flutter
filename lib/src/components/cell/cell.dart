@@ -9,7 +9,7 @@ class AntCellGroup extends StatefulWidget {
     this.title,
     this.titleAlign,
     this.titleStyle,
-    this.titleWidget,
+    this.titleText,
     this.labelCol,
     this.labelAlign,
     this.children,
@@ -18,10 +18,10 @@ class AntCellGroup extends StatefulWidget {
   });
 
   final AntSize? size;
-  final String? title;
+  final String? titleText;
   final AntLabelAlign? titleAlign;
   final TextStyle? titleStyle;
-  final Widget? titleWidget;
+  final Widget? title;
   final AntCol? labelCol;
   final AntLabelAlign? labelAlign;
   final List<Widget>? children;
@@ -87,9 +87,9 @@ class AntCellGroupState extends State<AntCellGroup> {
                   vertical: 8,
                 ),
                 child:
-                    widget.titleWidget ??
+                    widget.title ??
                     Text(
-                      widget.title ?? '',
+                      widget.titleText ?? '',
                       style:
                           widget.titleStyle ??
                           TextStyle(fontSize: 14, color: Colors.grey),

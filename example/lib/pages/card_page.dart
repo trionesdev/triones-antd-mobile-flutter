@@ -1,6 +1,5 @@
 import 'package:antd_flutter_example/demo_block.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 class CardPage extends StatefulWidget {
@@ -25,8 +24,8 @@ class _CardPageState extends State<CardPage> {
                 title: "基本用法",
                 child: Column(children: [
                   AntCard(
-                    titleWidget: const Text('Card Title'),
-                    extraWidget: const Icon(Icons.more_horiz_rounded),
+                    title: const Text('Card Title'),
+                    extra: const Icon(Icons.more_horiz_rounded),
                     child: const Text('Card Content'),
                   ),
                 ]),

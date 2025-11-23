@@ -159,7 +159,7 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (widget.icon != null) widget.icon!,
-                child()
+                if(widget.child !=null || widget.text != null) child()
               ])),
     );
   }
