@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 class AntTabItemStruct {
-  AntTabItemStruct({required this.key, this.label, this.content});
-
+  AntTabItemStruct({required this.key, this.label, this.labelWidget, this.content});
   String key;
-  Widget? label;
+  String? label;
+  Widget? labelWidget;
   Widget? content;
 }
 
@@ -102,6 +102,7 @@ class AntTabsState extends State<AntTabs> with MaterialStateMixin {
       return AntTab(
         antKey: item.key,
         label: item.label,
+        labelWidget: item.labelWidget,
         style: widget.styles?.tab,
         activeStyle: widget.styles?.activeTab,
         bodyStyle: widget.styles?.body,
@@ -126,7 +127,7 @@ class AntTabsState extends State<AntTabs> with MaterialStateMixin {
     List<Widget> contentWidgets = [];
     for (var child in widget.children!) {
       tabWidgets.add(child);
-      contentWidgets.add(child.content ?? Container());
+      contentWidgets.add(child.child ?? Container());
     }
     _tabs = tabWidgets;
     _contents = contentWidgets;
@@ -280,7 +281,8 @@ class AntTab extends StatefulWidget {
     this.style,
     required this.antKey,
     this.label,
-    this.content,
+    this.labelWidget,
+    this.child,
     this.onTab,
     this.activeStyle,
     this.bodyStyle,
@@ -290,8 +292,9 @@ class AntTab extends StatefulWidget {
   final StateStyle? style;
   final String antKey;
 
-  final Widget? label;
-  final Widget? content;
+  final String? label;
+  final Widget? labelWidget;
+  final Widget? child;
   final BoxDecoration? decoration;
   final Function(AntTabState? state)? onTab;
 
@@ -331,7 +334,7 @@ class AntTabState extends State<AntTab> with MaterialStateMixin {
   Widget? _labelRender() {
     AntThemeData themeData = AntTheme.of(context);
 
-    Widget? label = widget.label;
+    Widget? label = widget.labelWidget ?? Text(widget.label ?? "");
     if (_active && label != null && label is Text) {
       return WidgetUtils.textMerge(
           Text(
