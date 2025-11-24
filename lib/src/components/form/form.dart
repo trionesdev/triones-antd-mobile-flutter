@@ -153,19 +153,22 @@ class AntFormState extends State<AntForm> {
     }
   }
 
-  bool _validate() {
+  bool _validate({List<NamePath>? nameList}) {
     errorFields = [];
     bool hasError = false;
     for (final AntFieldState field in _fields) {
-      if (!field.validate()) {
-        if (field.mergedName != null && field.mergedName.value.isNotEmpty) {
-          errorFields.add({
-            "name": field.mergedName?.value,
-            "errors": field.getErrorText(),
-          });
+      if((nameList == null || nameList.isEmpty) || nameList.contains(field.mergedName)){
+        if (!field.validate()) {
+          if (field.mergedName != null && field.mergedName.value.isNotEmpty) {
+            errorFields.add({
+              "name": field.mergedName?.value,
+              "errors": field.getErrorText(),
+            });
+          }
+          hasError = true;
         }
-        hasError = true;
       }
+
     }
     _forceRebuild();
     return !hasError;
@@ -192,7 +195,7 @@ class AntFormState extends State<AntForm> {
     return values;
   }
 
-  Future<Map<String, dynamic>> validateFields() async {
+  Future<Map<String, dynamic>> validateFields({List<NamePath>? nameList}) async {
     if (!_validate()) {
       throw Exception({errorFields});
     }

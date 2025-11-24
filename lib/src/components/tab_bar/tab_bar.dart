@@ -25,7 +25,7 @@ class AntTabBar extends StatefulWidget {
   final String? activeKey;
   final String? defaultActiveKey;
   final Function(String key)? onChange;
-  final List<AntTabBarItem>? children;
+  final List<Widget>? children;
 
   static AntTabBarState? maybeOf(BuildContext context) {
     _AntTabBarScope? scope =
@@ -92,8 +92,9 @@ class AntTabBarState extends State<AntTabBar> with MaterialStateMixin {
   @override
   void initState() {
     super.initState();
+    List<AntTabBarItem> items = widget.children?.whereType<AntTabBarItem>().toList() ?? [];
     _currentActiveKey =
-        (widget.activeKey ?? widget.defaultActiveKey) ?? widget.children?.first.antKey;
+        (widget.activeKey ?? widget.defaultActiveKey) ?? items.first.antKey;
   }
 
   @override

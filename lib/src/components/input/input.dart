@@ -16,7 +16,7 @@ class AntInput extends StatefulWidget {
     this.defaultValue,
     this.onChange,
     this.decoration,
-    this.height = 32,
+    this.height,
     this.style,
     this.onBlur,
     this.onFocus,
@@ -31,11 +31,11 @@ class AntInput extends StatefulWidget {
   final Widget? suffix;
   final String? value;
   final String? defaultValue;
-  final Function? onChange;
+  final ValueChanged<String>? onChange;
   final BoxDecoration? decoration;
 
-  final VoidCallback? onBlur;
-  final VoidCallback? onFocus;
+  final ValueGetter<void>? onBlur;
+  final ValueGetter<void>? onFocus;
 
   @override
   State<StatefulWidget> createState() => _InputState();
@@ -45,6 +45,20 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   bool passwordVisible = true;
+
+  double? get height {
+    if (widget.height != null) {
+      return widget.height;
+    }
+    switch (widget.size) {
+      case AntSize.large:
+        return 48;
+      case AntSize.middle:
+        return 32;
+      case AntSize.small:
+        return 24;
+    }
+  }
 
   @override
   void didUpdateWidget(AntInput oldWidget) {
@@ -122,7 +136,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
       widget.decoration ?? style
           .resolve(materialStates)
           ?.decoration,
-      height: widget.height,
+      height: height,
       padding: style
           .resolve(materialStates)
           ?.computedPadding,
