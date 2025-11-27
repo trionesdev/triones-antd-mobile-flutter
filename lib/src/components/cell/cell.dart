@@ -111,8 +111,8 @@ class AntCell extends StatefulWidget {
     this.placeholderWidget,
     this.placeholder,
     this.icon,
-    this.labelWidget,
     this.label,
+    this.labelText,
     this.labelStyle,
     this.labelCol,
     this.labelAlign,
@@ -126,8 +126,8 @@ class AntCell extends StatefulWidget {
   final String? placeholder;
   final bool? arrow;
   final Widget? icon;
-  final Widget? labelWidget;
-  final String? label;
+  final Widget? label;
+  final String? labelText;
   final TextStyle? labelStyle;
   final AntCol? labelCol;
   final AntLabelAlign? labelAlign;
@@ -170,6 +170,7 @@ class _AntCellState extends State<AntCell> {
     }
   }
 
+
   Alignment get labelAlign {
     AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
     if (widget.labelAlign == AntLabelAlign.right) {
@@ -187,8 +188,8 @@ class _AntCellState extends State<AntCell> {
     AntCol? labelCol = widget.labelCol ?? groupState?.widget.labelCol;
 
     Widget labelWidget =
-        widget.labelWidget ??
-        Text(widget.label ?? '', style: widget.labelStyle);
+        widget.label ??
+        Text(widget.labelText ?? '', style: widget.labelStyle);
 
     if (labelCol?.flex != null) {
       return Container(
@@ -217,7 +218,7 @@ class _AntCellState extends State<AntCell> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.label != null) label,
+          if (widget.label != null || widget.labelText != null) label,
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,

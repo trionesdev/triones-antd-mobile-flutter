@@ -174,7 +174,7 @@ class AntSelectState extends State<AntSelect> {
     return AntCell(
       placeholder: widget.placeholder,
       arrow: widget.arrow,
-      label: widget.cellLabel,
+      labelText: widget.cellLabel,
       child: content,
       onTap: () {
         _isOpen = true;
