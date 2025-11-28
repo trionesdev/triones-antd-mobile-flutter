@@ -5,6 +5,7 @@ import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 // 以Field作为基础，所有的属性和操作都在FieldState内部进行处理。
 
 //region form
+/// @component AntForm 表单
 class AntForm extends StatefulWidget {
   const AntForm({
     super.key,
@@ -19,14 +20,40 @@ class AntForm extends StatefulWidget {
     this.size = AntSize.middle,
   });
 
+  /// @description 子项间距
+  /// @default null
   final double? spacing;
+
+  /// @description 行间距
+  /// @default null
   final double? rowSpacing;
+
+  /// @description 列间距
+  /// @default null
   final double? columnSpacing;
+
+  /// @description 表单布局
+  /// @default horizontal
   final AntFormLayout? layout;
+
+  /// @description 表单标签对齐方式
+  /// @default left
   final AntLabelAlign? labelAlign;
+
+  /// @description 表单标签宽度
+  /// @default null
   final AntCol? labelCol;
+
+  /// @description 表单内容宽度
+  /// @default null
   final AntCol? wrapperCol;
+
+  /// @description 表单大小
+  /// @default middle
   final AntSize? size;
+
+  /// @description 子项
+  /// @default null
   final Widget? child;
 
   static AntFormState? maybeOf(BuildContext context) {
@@ -113,11 +140,10 @@ class AntFormState extends State<AntForm> {
     _formValuesSet(field);
   }
 
-  void  _unregister<T>(AntFieldState<T?> field) {
+  void _unregister<T>(AntFieldState<T?> field) {
     _fields.remove(field);
     _watches.remove(field.mergedName.jsonValue);
   }
-
 
   void save() {
     for (final AntFieldState field in _fields) {
@@ -157,7 +183,8 @@ class AntFormState extends State<AntForm> {
     errorFields = [];
     bool hasError = false;
     for (final AntFieldState field in _fields) {
-      if((nameList == null || nameList.isEmpty) || nameList.contains(field.mergedName)){
+      if ((nameList == null || nameList.isEmpty) ||
+          nameList.contains(field.mergedName)) {
         if (!field.validate()) {
           if (field.mergedName != null && field.mergedName.value.isNotEmpty) {
             errorFields.add({
@@ -168,7 +195,6 @@ class AntFormState extends State<AntForm> {
           hasError = true;
         }
       }
-
     }
     _forceRebuild();
     return !hasError;
@@ -195,7 +221,9 @@ class AntFormState extends State<AntForm> {
     return values;
   }
 
-  Future<Map<String, dynamic>> validateFields({List<NamePath>? nameList}) async {
+  Future<Map<String, dynamic>> validateFields({
+    List<NamePath>? nameList,
+  }) async {
     if (!_validate()) {
       throw Exception({errorFields});
     }
@@ -265,7 +293,7 @@ class Field<T> extends StatefulWidget {
   final T? initialValue;
   final String? restorationId;
 
-  static  AntFieldState<T?>? maybeOf<T>(BuildContext context) {
+  static AntFieldState<T?>? maybeOf<T>(BuildContext context) {
     final _FieldScope<T?>? scope =
         context.dependOnInheritedWidgetOfExactType<_FieldScope<T?>>();
     return scope?._fieldState;
@@ -336,6 +364,7 @@ class AntFieldState<T> extends State<Field<T?>> with RestorationMixin {
       _errorText.value = null;
     }
   }
+
   void didChange(T? value) {
     if (mergedName == null || mergedName.isEmpty) {
       return;
@@ -352,7 +381,6 @@ class AntFieldState<T> extends State<Field<T?>> with RestorationMixin {
     }
     setState(() {});
   }
-
 
   @override
   void initState() {
@@ -415,7 +443,7 @@ class AntFieldState<T> extends State<Field<T?>> with RestorationMixin {
   }
 }
 
-class  _FieldScope<T> extends InheritedWidget {
+class _FieldScope<T> extends InheritedWidget {
   const _FieldScope({
     required super.child,
     required AntFieldState<T?> fieldState,
@@ -424,8 +452,6 @@ class  _FieldScope<T> extends InheritedWidget {
        _generation = generation;
   final AntFieldState<T?> _fieldState;
   final int _generation;
-
-
 
   AntFieldState<T?> get fieldState => _fieldState;
 
@@ -437,6 +463,7 @@ class  _FieldScope<T> extends InheritedWidget {
 //endregion
 
 //region form item
+/// @component AntFormItem 表单项
 class AntFormItem<T> extends StatelessWidget {
   const AntFormItem({
     super.key,
@@ -448,15 +475,35 @@ class AntFormItem<T> extends StatelessWidget {
     this.wrapperCol,
     this.labelAlign,
 
+    /// @description 组件
+    /// @default null
     required this.builder,
+
+    /// @description 保存回调
     this.onSaved,
+
+    /// @description 初始值
     this.initialValue,
+
+    /// @description 验证器
     this.validator,
+
     this.restorationId,
+
+    /// @description 是否必填
+    /// @default false
     this.required,
+
+    /// @description 组件样式
     this.style,
     this.notifier,
+
+    /// @description 是否隐藏
+    /// @default false
     this.hidden = false,
+
+    /// @description 是否无样式
+    /// @default false
     this.noStyle = false,
   });
 
@@ -676,13 +723,10 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
   }
 
   @override
-  void initState() {
-  }
+  void initState() {}
 
   @override
-  void didChangeDependencies( ) {
-
-  }
+  void didChangeDependencies() {}
 
   @override
   Widget build(BuildContext context) {
@@ -805,10 +849,16 @@ typedef AntFormListBuilder =
       AntFormListOperations operations,
     );
 
+/// @component AntFormList 表单列表
 class AntFormList extends StatefulWidget {
   const AntFormList({super.key, this.name, this.builder});
 
+  /// @description 组件名称
+  /// @default null
   final NamePath? name;
+
+  /// @description 表单列表子组件
+  /// @default null
   final AntFormListBuilder? builder;
 
   @override

@@ -79,8 +79,14 @@ class AntVerificationCodeInput extends StatefulWidget {
   /// @default 60
   final int? intervalSeconds;
 
+  /// @description 输入框失去焦点回调
+  /// @default null
   final ValueGetter<void>? onBlur;
+  /// @description 输入框获取焦点回调
+  /// @default null
   final ValueGetter<void>? onFocus;
+  /// @description 验证码发送回调
+  /// @default null
   final AsyncValueGetter<bool>? onSend;
 
   @override
