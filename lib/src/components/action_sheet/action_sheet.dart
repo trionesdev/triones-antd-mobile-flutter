@@ -3,23 +3,44 @@ import 'package:flutter/material.dart';
 import '../../../trionesdev_antd_mobile.dart';
 import '../theme/theme.dart';
 
-class AntActionSheetItemRecord {
-  AntActionSheetItemRecord({this.labelText, this.label, this.onPressed});
+class AntActionSheetItemStruct {
+  AntActionSheetItemStruct({this.labelText, this.label, this.onPressed});
 
+  /// @description 标签文本
+  /// @default null
   final String? labelText;
+  /// @description 标签Widget
+  /// @default null
   final Widget? label;
+  /// @description 点击事件
+  /// @default null
   final Function? onPressed;
 }
 
+/// @component ActionSheet 动作面板
 class AntActionSheet {
   static void show({
+    /// @description 上下文
+    /// @default null
     required BuildContext context,
+    /// @description 是否点击遮罩关闭
+    /// @default false
     bool? closeOnMaskClick = false,
+    /// @description 标题
+    /// @default null
     Widget? title,
+    /// @description 标题文本
+    /// @default null
     String? titleText,
-    List<AntActionSheetItemRecord>? actions,
+    /// @description 动作列表
+    /// @default null
+    List<AntActionSheetItemStruct>? actions,
+    /// @description 是否显示取消按钮
+    /// @default true
     bool? showCancelButton = true,
-    Widget? cancelWidget,
+    /// @description 取消按钮
+    /// @default null
+    Widget? cancel,
     StateStyle? itemStyle,
   }) {
     showModalBottomSheet(
@@ -33,7 +54,7 @@ class AntActionSheet {
           titleText: titleText,
           actions: actions,
           showCancelButton: showCancelButton,
-          cancelWidget: cancelWidget,
+          cancel: cancel,
           itemStyle: itemStyle,
         );
       },
@@ -47,18 +68,32 @@ class AntActionSheetView extends StatefulWidget {
     this.showCancelButton = true,
     this.itemStyle,
     this.actions,
-    this.cancelWidget,
+    this.cancel,
     this.title,
     this.titleText,
     this.decoration,
   });
 
-  final List<AntActionSheetItemRecord>? actions;
+  /// @description 动作列表
+  /// @default null
+  final List<AntActionSheetItemStruct>? actions;
+  /// @description 是否显示取消按钮
+  /// @default true
   final bool? showCancelButton;
+  /// @description 标题文本
+  /// @default null
   final String? titleText;
+  /// @description 标题
+  /// @default null
   final Widget? title;
-  final Widget? cancelWidget;
+  /// @description 取消按钮
+  /// @default null
+  final Widget? cancel;
+  /// @description 动作样式
+  /// @default null
   final StateStyle? itemStyle;
+  /// @description 容器样式
+  /// @default null
   final BoxDecoration? decoration;
 
   @override
@@ -131,7 +166,7 @@ class _AntActionSheetViewState extends State<AntActionSheetView>
               ),
               if (widget.showCancelButton == true)
                 ActionItem(
-                  label: widget.cancelWidget ?? Text('取消'),
+                  label: widget.cancel ?? Text('取消'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

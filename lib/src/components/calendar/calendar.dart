@@ -65,12 +65,10 @@ class _CalendarHeader extends StatelessWidget {
           height: 32,
           padding: EdgeInsets.all(4),
           child: Row(
-            children: ["一", "二", "三", "四", "五", "六", "日"].map((weekday) {
-              return Expanded(
-                  child: Center(
-                child: Text(weekday),
-              ));
-            }).toList(),
+            children:
+                ["一", "二", "三", "四", "五", "六", "日"].map((weekday) {
+                  return Expanded(child: Center(child: Text(weekday)));
+                }).toList(),
           ),
         ),
       ],
@@ -78,13 +76,30 @@ class _CalendarHeader extends StatelessWidget {
   }
 }
 
+/// @component Calendar 日历
 class AntCalendar extends StatefulWidget {
-  const AntCalendar(
-      {super.key, this.value, this.mouth, this.onChange, this.onRendered});
+  const AntCalendar({
+    super.key,
+    this.value,
+    this.mouth,
+    this.onChange,
+    this.onRendered,
+  });
 
+  /// @description 选中月份
+  /// @default null
   final DateTime? mouth;
+
+  /// @description 选中日期
+  /// @default null
   final DateTime? value;
+
+  /// @description 选中日期变化回调
+  /// @default null
   final ValueChanged<DateTime?>? onChange;
+
+  /// @description 渲染完成回调，返回当前组件高度
+  /// @default null
   final ValueChanged<double?>? onRendered;
 
   @override
@@ -129,21 +144,38 @@ class AntCalendarState extends State<AntCalendar> {
             widget.onChange?.call(value?.first);
           },
           onRendered: (height) {
-            widget.onRendered?.call(height!+72);
+            widget.onRendered?.call(height! + 72);
           },
-        )
+        ),
       ],
     );
   }
 }
 
+/// @component CalendarRange 日历范围
 class AntCalendarRange extends StatefulWidget {
-  const AntCalendarRange(
-      {super.key, this.value, this.mouth, this.onChange, this.onRendered});
+  const AntCalendarRange({
+    super.key,
+    this.value,
+    this.mouth,
+    this.onChange,
+    this.onRendered,
+  });
 
+  /// @description 选中月份
+  /// @default null
   final DateTime? mouth;
+
+  /// @description 选中日期
+  /// @default null
   final List<DateTime?>? value;
+
+  /// @description 选中日期变化回调
+  /// @default null
   final ValueChanged<List<DateTime?>?>? onChange;
+
+  /// @description 渲染完成回调，返回当前组件高度
+  /// @default null
   final ValueChanged<double?>? onRendered;
 
   @override
@@ -186,9 +218,9 @@ class AntCalendarRangeState extends State<AntCalendarRange> {
             widget.onChange?.call(value);
           },
           onRendered: (height) {
-            widget.onRendered?.call(height!+72);
+            widget.onRendered?.call(height! + 72);
           },
-        )
+        ),
       ],
     );
   }

@@ -3,19 +3,33 @@ import 'package:flutter/material.dart';
 
 import '../../../trionesdev_antd_mobile.dart';
 
-class AntBreadcrumbItemRecord {
-  AntBreadcrumbItemRecord({this.title, this.onTap});
+class AntBreadcrumbItemStruct {
+  AntBreadcrumbItemStruct({this.title, this.onTap});
 
+  /// @description 标题
+  /// @default null
   String? title;
+
+  /// @description 点击事件
+  /// @default null
   void Function()? onTap;
 }
 
+/// @component Breadcrumb 面包屑
 class AntBreadcrumb extends StatefulWidget {
   const AntBreadcrumb({super.key, this.separator, this.items, this.itemRender});
 
-  final List<AntBreadcrumbItemRecord>? items;
+  /// @description 面包屑项
+  /// @default null
+  final List<AntBreadcrumbItemStruct>? items;
+
+  /// @description 分隔符
+  /// @default null
   final Widget? separator;
-  final Widget? Function(AntBreadcrumbItemRecord item, int index)? itemRender;
+
+  /// @description 自定义渲染
+  /// @default null
+  final Widget? Function(AntBreadcrumbItemStruct item, int index)? itemRender;
 
   @override
   State<StatefulWidget> createState() => _AntBreadcrumbState();
@@ -24,27 +38,32 @@ class AntBreadcrumb extends StatefulWidget {
 class _AntBreadcrumbState extends State<AntBreadcrumb> {
   late ScrollController _scrollController;
 
-  List<Widget> _buildItems(List<AntBreadcrumbItemRecord> records) {
+  List<Widget> _buildItems(List<AntBreadcrumbItemStruct> records) {
     AntThemeData themeData = AntTheme.of(context);
     List<Widget> result = [];
     for (var i = 0; i < records.length; i++) {
       bool isLast = i == records.length - 1;
-      result.add(GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () {
-          records[i].onTap?.call();
-        },
-        child: widget.itemRender?.call(records[i], i) ??
-            Text(
-              records[i].title ?? '',
-              style: TextStyle(color: isLast ? null : themeData.colorBorder),
-            ),
-      ));
+      result.add(
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            records[i].onTap?.call();
+          },
+          child:
+              widget.itemRender?.call(records[i], i) ??
+              Text(
+                records[i].title ?? '',
+                style: TextStyle(color: isLast ? null : themeData.colorBorder),
+              ),
+        ),
+      );
       if (isLast) {
         break;
       }
-      result.add(widget.separator ??
-          Text(' / ', style: TextStyle(color: themeData.colorBorder)));
+      result.add(
+        widget.separator ??
+            Text(' / ', style: TextStyle(color: themeData.colorBorder)),
+      );
     }
     return result;
   }
@@ -69,22 +88,17 @@ class _AntBreadcrumbState extends State<AntBreadcrumb> {
   Widget build(BuildContext context) {
     if (kIsWeb) {
       return Scrollbar(
+        controller: _scrollController,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           controller: _scrollController,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            controller: _scrollController,
-            child: Row(
-              spacing: 4,
-              children: _buildItems(widget.items ?? []),
-            ),
-          ));
+          child: Row(spacing: 4, children: _buildItems(widget.items ?? [])),
+        ),
+      );
     } else {
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: Row(
-          spacing: 4,
-          children: _buildItems(widget.items ?? []),
-        ),
+        child: Row(spacing: 4, children: _buildItems(widget.items ?? [])),
       );
     }
   }

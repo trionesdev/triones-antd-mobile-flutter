@@ -281,14 +281,14 @@ class _AntImagesWallState extends State<AntImagesWall> {
             AntActionSheet.show(
               context: context,
               actions: [
-                AntActionSheetItemRecord(
+                AntActionSheetItemStruct(
                   label: Text('从相册选择'),
                   onPressed: () {
                     Navigator.of(context).pop();
                     selectImageFromGallery(widget.multiSelect!);
                   },
                 ),
-                AntActionSheetItemRecord(
+                AntActionSheetItemStruct(
                   label: Text('拍摄照片'),
                   onPressed: () {
                     Navigator.of(context).pop();
