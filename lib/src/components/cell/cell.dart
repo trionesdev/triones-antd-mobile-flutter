@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/src/components/types.dart';
 import 'package:trionesdev_antd_mobile/src/icons/icons.dart';
 
+/// @component AntCellGroup 单元格组
 class AntCellGroup extends StatefulWidget {
   const AntCellGroup({
     super.key,
@@ -17,15 +18,44 @@ class AntCellGroup extends StatefulWidget {
     this.arrow = true,
   });
 
+  /// @description 大小
+  /// @default middle
   final AntSize? size;
-  final String? titleText;
-  final AntLabelAlign? titleAlign;
-  final TextStyle? titleStyle;
+
+  /// @description 标题
+  /// @default null
   final Widget? title;
+
+  /// @description 标题文本
+  /// @default null
+  final String? titleText;
+
+  /// @description 标题对齐
+  /// @default null
+  final AntLabelAlign? titleAlign;
+
+  /// @description 样式
+  /// @default null
+  final TextStyle? titleStyle;
+
+  /// @description 左侧标签列
+  /// @default null
   final AntCol? labelCol;
+
+  /// @description 左侧标签对齐
+  /// @default null
   final AntLabelAlign? labelAlign;
+
+  /// @description 子组件
+  /// @default null
   final List<Widget>? children;
+
+  /// @description 是否显示分割线
+  /// @default false
   final bool showDivider;
+
+  /// @description 是否显示箭头
+  /// @default true
   final bool arrow;
 
   static AntCellGroupState? maybeOf(BuildContext context) {
@@ -103,12 +133,13 @@ class AntCellGroupState extends State<AntCellGroup> {
   }
 }
 
+/// @component AntCell 单元格
 class AntCell extends StatefulWidget {
   const AntCell({
     super.key,
     this.size,
     this.arrow,
-    this.placeholderWidget,
+    this.placeholderText,
     this.placeholder,
     this.icon,
     this.label,
@@ -121,18 +152,55 @@ class AntCell extends StatefulWidget {
     this.onTap,
   });
 
+  /// @description 大小
+  /// @default middle
   final AntSize? size;
-  final Text? placeholderWidget;
-  final String? placeholder;
+
+  /// @description 占位符
+  /// @default null
+  final Text? placeholder;
+
+  /// @description 占位符文本
+  /// @default null
+  final String? placeholderText;
+
+  /// @description 是否显示箭头
+  /// @default true
   final bool? arrow;
+
+  /// @description 图标
+  /// @default null
   final Widget? icon;
+
+  /// @description 标签
+  /// @default null
   final Widget? label;
+
+  /// @description 标签文本
+  /// @default null
   final String? labelText;
+
+  /// @description 样式
+  /// @default null
   final TextStyle? labelStyle;
+
+  /// @description 左侧标签列
+  /// @default null
   final AntCol? labelCol;
+
+  /// @description 左侧标签对齐
+  /// @default null
   final AntLabelAlign? labelAlign;
+
+  /// @description 值
+  /// @default null
   final dynamic? value;
+
+  /// @description 子组件
   final Widget? child;
+
+  /// @description 点击回调
+  /// @default null
   final Function? onTap;
 
   @override
@@ -163,13 +231,15 @@ class _AntCellState extends State<AntCell> {
         style: TextStyle(color: Colors.black),
       );
     } else {
+      if (widget.placeholder != null) {
+        return widget.placeholder!;
+      }
       return Text(
-        widget.placeholder ?? '',
+        widget.placeholderText ?? '',
         style: TextStyle(color: Colors.grey),
       );
     }
   }
-
 
   Alignment get labelAlign {
     AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
@@ -188,8 +258,7 @@ class _AntCellState extends State<AntCell> {
     AntCol? labelCol = widget.labelCol ?? groupState?.widget.labelCol;
 
     Widget labelWidget =
-        widget.label ??
-        Text(widget.labelText ?? '', style: widget.labelStyle);
+        widget.label ?? Text(widget.labelText ?? '', style: widget.labelStyle);
 
     if (labelCol?.flex != null) {
       return Container(

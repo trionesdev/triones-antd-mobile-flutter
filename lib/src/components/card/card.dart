@@ -8,6 +8,7 @@ class AntCardStyles {
   StateStyle? footer;
 }
 
+/// @component AntCard 卡片
 class AntCard extends StatefulWidget {
   const AntCard({
     super.key,
@@ -27,19 +28,60 @@ class AntCard extends StatefulWidget {
     this.styles,
   });
 
-  final String? titleText;
+  /// @description 标题样式
+  /// @default null
   final TextStyle? titleStyle;
+
+  /// @description 标题
+  /// @default null
   final Widget? title;
-  final String? extraText;
+
+  /// @description 标题文字
+  /// @default null
+  final String? titleText;
+
+  /// @description 额外信息样式
+  /// @default null
   final TextStyle? extraStyle;
+
+  /// @description 额外信息
+  /// @default null
   final Widget? extra;
+
+  /// @description 额外信息文字
+  /// @default null
+  final String? extraText;
+
+  /// @description 内容
+  /// @default null
   final Widget? child;
+
+  /// @description 底部
+  /// @default null
   final Widget? footer;
+
+  /// @description 卡片样式
+  /// @default null
   final BoxDecoration? decoration;
+
+  /// @description 卡片头部样式
+  /// @default null
   final BoxDecoration? headerDecoration;
+
+  /// @description 卡片内容样式
+  /// @default null
   final BoxDecoration? bodyDecoration;
+
+  /// @description 卡片底部样式
+  /// @default null
   final BoxDecoration? footerDecoration;
+
+  /// @description 卡片样式
+  /// @default null
   final StateStyle? style;
+
+  /// @description 卡片样式
+  /// @default null
   final AntCardStyles? styles;
 
   @override

@@ -4,12 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
+/// @component VerificationCodeInput 验证码输入框
 class AntVerificationCodeInput extends StatefulWidget {
   const AntVerificationCodeInput({
     super.key,
     this.style,
     this.size = AntSize.middle,
-    this.height  ,
+    this.height,
     this.placeholder,
     this.type = AntInputType.text,
     this.prefix,
@@ -26,24 +27,61 @@ class AntVerificationCodeInput extends StatefulWidget {
     this.onSend,
   });
 
+  /// @description 样式
+  /// @default null
   final StateStyle? style;
+
+  /// @description 大小
+  /// @default middle
   final AntSize size;
+
+  /// @description 高度
+  /// @default null
   final double? height;
+
+  /// @description 占位符
+  /// @default null
   final String? placeholder;
+
+  /// @description 输入框类型
+  /// @default text
   final AntInputType? type;
+
+  /// @description 前缀
+  /// @default null
   final Widget? prefix;
 
+  /// @description 值
+  /// @default null
   final String? value;
+
+  /// @description 默认值
+  /// @default null
   final String? defaultValue;
+
+  /// @description 值改变回调
+  /// @default null
   final ValueChanged<String>? onChange;
+
+  /// @description 输入框样式
+  /// @default null
   final BoxDecoration? decoration;
+
+  /// @description 发送按钮文本
+  /// @default 获取验证码
   final String? sendText;
+
+  /// @description 重新发送按钮文本
+  /// @default 重新发送
   final String? resendText;
+
+  /// @description 验证码发送间隔
+  /// @default 60
   final int? intervalSeconds;
 
   final ValueGetter<void>? onBlur;
   final ValueGetter<void>? onFocus;
-  final  AsyncValueGetter<bool>? onSend;
+  final AsyncValueGetter<bool>? onSend;
 
   @override
   State<StatefulWidget> createState() => _VerificationCodeInputState();

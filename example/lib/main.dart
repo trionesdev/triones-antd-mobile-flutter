@@ -9,6 +9,7 @@ import 'package:antd_flutter_example/pages/calendar_datetime_picker_page.dart';
 import 'package:antd_flutter_example/pages/calendar_picker_page.dart';
 import 'package:antd_flutter_example/pages/card_page.dart';
 import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
+import 'package:antd_flutter_example/pages/cell_page.dart';
 import 'package:antd_flutter_example/pages/checkbox_page.dart';
 import 'package:antd_flutter_example/pages/collapse_page.dart';
 import 'package:antd_flutter_example/pages/dialog_page.dart';
@@ -39,6 +40,7 @@ import 'package:antd_flutter_example/pages/text_area_page.dart';
 import 'package:antd_flutter_example/pages/timeline_page.dart';
 import 'package:antd_flutter_example/pages/toast_page.dart';
 import 'package:antd_flutter_example/pages/upload_page.dart';
+import 'package:antd_flutter_example/pages/verification_code_input_page.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -90,6 +92,7 @@ class MyApp extends StatelessWidget {
         '/popup': (context) => PopupPage(),
         '/picker': (context) => PickerPage(),
         '/cascader-picker': (context) => CascaderPickerPage(),
+        '/cell': (context) => CellPage(),
         '/calendar-picker': (context) => CalendarPickerPage(),
         '/calendar': (context) => CalendarPage(),
         '/card': (context) => CardPage(),
@@ -116,6 +119,7 @@ class MyApp extends StatelessWidget {
         '/text-area': (context) => TextAreaPage(),
         '/image': (context) => ImagePage(),
         '/collapse': (context) => CollapsePage(),
+        '/verification-code-input': (context) => VerificationCodeInputPage(),
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -265,6 +269,12 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text('CascasderPicker 级联选择器'),
               onTap: () {
                 Navigator.pushNamed(context, '/cascader-picker');
+              },
+            ),
+            material.ListTile(
+              title: Text('Cell 单元格'),
+              onTap: () {
+                Navigator.pushNamed(context, '/cell');
               },
             ),
             material.ListTile(
@@ -421,6 +431,12 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text('Collapse 折叠面板'),
               onTap: () {
                 Navigator.pushNamed(context, '/collapse');
+              },
+            ),
+            material.ListTile(
+              title: Text('VerificationCodeInput 验证码输入框'),
+              onTap: () {
+                Navigator.pushNamed(context, '/verification-code-input');
               },
             ),
           ],

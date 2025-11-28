@@ -1,5 +1,10 @@
 enum AntSize { small, middle, large }
 
+enum AntLayout{
+  horizontal,
+  vertical
+}
+
 class AntCol {
   const AntCol({this.flex, this.span});
 

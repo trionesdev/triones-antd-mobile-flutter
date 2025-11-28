@@ -172,7 +172,7 @@ class AntSelectState extends State<AntSelect> {
     AntThemeData theme = AntTheme.of(context);
 
     return AntCell(
-      placeholder: widget.placeholder,
+      placeholderText: widget.placeholder,
       arrow: widget.arrow,
       labelText: widget.cellLabel,
       child: content,
