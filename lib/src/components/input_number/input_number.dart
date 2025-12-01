@@ -99,6 +99,7 @@ class _AntInputNumberState extends State<AntInputNumber> {
     super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
       _value = widget.value ?? widget.defaultValue ?? 0;
+      _controller.text = _value.toString();
     }
   }
 
