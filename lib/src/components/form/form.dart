@@ -477,7 +477,7 @@ class AntFormItem<T> extends StatelessWidget {
 
     /// @description 组件
     /// @default null
-    required this.builder,
+      this.builder,
 
     /// @description 保存回调
     this.onSaved,
@@ -515,7 +515,7 @@ class AntFormItem<T> extends StatelessWidget {
   final AntCol? wrapperCol;
   final AntLabelAlign? labelAlign;
 
-  final FormItemBuilder<T?> builder;
+  final FormItemBuilder<T?>? builder;
   final FormItemSetter<T?>? onSaved;
   final T? initialValue;
   final FormItemValidator<T>? validator;
@@ -564,7 +564,7 @@ class InternalFormItem<T> extends StatefulWidget {
   final AntCol? wrapperCol;
   final AntLabelAlign? labelAlign;
   final Widget? child;
-  final FormItemBuilder<T?> builder;
+  final FormItemBuilder<T?>? builder;
   final T? initialValue;
   final String? restorationId;
   final bool? required;
@@ -579,7 +579,7 @@ class InternalFormItem<T> extends StatefulWidget {
     this.layout,
     this.label,
     this.labelWidget,
-    required this.builder,
+      this.builder,
     this.labelCol,
     this.wrapperCol,
     this.labelAlign,
@@ -768,7 +768,7 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
       fieldItemChildren.add(_labelCol(fieldLabel));
     }
     if (widget.builder != null) {
-      var child = widget.builder(fieldState!);
+      var child = widget.builder!(fieldState!);
       List<Widget> filedInputChildren = [child];
       if (fieldState.errorText != null) {
         filedInputChildren.add(
@@ -795,7 +795,7 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
 
     if (widget.noStyle == true) {
       if (widget.builder != null) {
-        return widget.builder(fieldState!);
+        return widget.builder!(fieldState!);
       } else {
         return Container();
       }

@@ -23,6 +23,7 @@ class AntTabStyles {
   StateStyle? body;
 }
 
+/// @component AntTabs 标签栏
 class AntTabs extends StatefulWidget {
   const AntTabs({
     super.key,
@@ -38,15 +39,44 @@ class AntTabs extends StatefulWidget {
     this.tabDecoration,
   });
 
+  /// @description 默认激活的tabKey
+  /// @default null
   final String? defaultActiveKey;
+
+  /// @description 当前激活的tabKey
+  /// @default null
   final String? activeKey;
+
+  /// @description 子项
+  /// @default null
   final List<AntTabItemStruct>? items;
+
+  /// @description 是否拉伸
+  /// @default true
   final bool stretch;
+
+  /// @description 子项
+  /// @default null
   final List<AntTab>? children;
+
+  /// @description 装饰
+  /// @default null
   final BoxDecoration? decoration;
+
+  /// @description tab项的样式
+  /// @default null
   final BoxDecoration? tabDecoration;
+
+  /// @description 样式
+  /// @default null
   final StateStyle? style;
+
+  /// @description 自定义样式
+  /// @default null
   final AntTabStyles? styles;
+
+  /// @description 自定义tab项
+  /// @default null
   final Widget Function(AntTabItemStruct item)? itemBuilder;
 
   @override

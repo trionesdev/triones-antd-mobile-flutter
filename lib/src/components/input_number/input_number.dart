@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
+/// @component AntInputNumber 数字输入框
 class AntInputNumber extends StatefulWidget {
   const AntInputNumber({
     super.key,
@@ -12,16 +13,44 @@ class AntInputNumber extends StatefulWidget {
     this.keyboard = true,
     this.defaultValue = 0,
     this.value,
+    this.disabled = false,
     this.onChange,
   });
 
+  /// @description 组件大小
+  /// @default middle
   final AntSize size;
-  final double? defaultValue;
+
+  /// @description 默认值
+  /// @default null
+  final num? defaultValue;
+
+  /// @description 当前值
+  /// @default null
   final num? value;
+
+  /// @description 最小值
+  /// @default null
   final double? min;
+
+  /// @description 最大值
+  /// @default null
   final double? max;
+
+  /// @description 步长
+  /// @default 1
   final num step;
+
+  /// @description 是否使用键盘
+  /// @default true
   final bool keyboard;
+
+  /// @description 是否禁用
+  /// @default false
+  final bool disabled;
+
+  /// @description 值改变回调
+  /// @default null
   final Function(num val)? onChange;
 
   @override
@@ -33,7 +62,7 @@ class _AntInputNumberState extends State<AntInputNumber> {
   final FocusNode _focusNode = FocusNode();
   num _value = 0;
 
-  double get _height{
+  double get _height {
     switch (widget.size) {
       case AntSize.large:
         return 48;
@@ -122,15 +151,16 @@ class _AntInputNumberState extends State<AntInputNumber> {
           color: Colors.grey[200],
           borderRadius: BorderRadius.circular(theme.borderRadius),
         ),
-        constraints: BoxConstraints(
-
-        ),
+        constraints: BoxConstraints(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: [
             GestureDetector(
               onTap: () {
+                if (widget.disabled) {
+                  return;
+                }
                 var newValue = _value - widget.step;
                 if (widget.min != null && newValue < widget.min!) {
                   newValue = widget.min!;
@@ -146,7 +176,10 @@ class _AntInputNumberState extends State<AntInputNumber> {
                 child: Icon(
                   AntIcons.minusOutline,
                   size: _height / 2,
-                  color: _isMin ? Colors.grey : null,
+                  color:
+                      widget.disabled
+                          ? Colors.grey
+                          : (_isMin ? Colors.grey : null),
                 ),
               ),
             ),
@@ -154,9 +187,12 @@ class _AntInputNumberState extends State<AntInputNumber> {
               // width: 24,
               constraints: BoxConstraints(maxWidth: 32, minWidth: 24),
               child: EditableText(
+                readOnly: widget.disabled,
                 controller: _controller,
                 focusNode: _focusNode,
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                  color: widget.disabled ? Colors.grey : Colors.black,
+                ),
                 textAlign: TextAlign.center,
                 cursorColor: Colors.grey,
                 backgroundCursorColor: Colors.grey,
@@ -172,6 +208,9 @@ class _AntInputNumberState extends State<AntInputNumber> {
             ),
             GestureDetector(
               onTap: () {
+                if (widget.disabled) {
+                  return;
+                }
                 var newValue = _value + widget.step;
                 if (widget.max != null && newValue > widget.max!) {
                   newValue = widget.max!;
@@ -187,7 +226,10 @@ class _AntInputNumberState extends State<AntInputNumber> {
                 child: Icon(
                   AntIcons.addOutline,
                   size: _height / 2,
-                  color: _isMax ? Colors.grey : null,
+                  color:
+                      widget.disabled
+                          ? Colors.grey
+                          : (_isMax ? Colors.grey : null),
                 ),
               ),
             ),

@@ -4,6 +4,7 @@ import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 enum AntInputType { text, password, number }
 
+/// @component AntInput 输入框
 class AntInput extends StatefulWidget {
   const AntInput({
     super.key,
@@ -14,6 +15,7 @@ class AntInput extends StatefulWidget {
     this.suffix,
     this.value,
     this.defaultValue,
+    this.disabled = false,
     this.onChange,
     this.decoration,
     this.height,
@@ -23,18 +25,56 @@ class AntInput extends StatefulWidget {
   });
 
   final StateStyle? style;
+
+  /// @description 组件大小
+  /// @default middle
   final AntSize size;
+
+  /// @description 输入框高度
   final double? height;
+
+  /// @description 提示文本
+  /// @default null
   final String? placeholder;
+
+  /// @description 输入框类型
+  /// @default text
   final AntInputType? type;
+
+  /// @description 前缀
+  /// @default null
   final Widget? prefix;
+
+  /// @description 后缀
+  /// @default null
   final Widget? suffix;
+
+  /// @description 当前值
+  /// @default null
   final String? value;
+
+  /// @description 默认值
+  /// @default null
   final String? defaultValue;
+
+  /// @description 是否禁用
+  /// @default false
+  final bool disabled;
+
+  /// @description 值改变回调
+  /// @default null
   final ValueChanged<String>? onChange;
+
+  /// @description 输入框装饰
+  /// @default null
   final BoxDecoration? decoration;
 
+  /// @description 失去焦点回调
+  /// @default null
   final ValueGetter<void>? onBlur;
+
+  /// @description 获得焦点回调
+  /// @default null
   final ValueGetter<void>? onFocus;
 
   @override
@@ -121,8 +161,9 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
                 });
               },
               child: Icon(
-                passwordVisible ? AntIcons.eyeInvisibleOutline : AntIcons
-                    .eyeOutline,
+                passwordVisible
+                    ? AntIcons.eyeInvisibleOutline
+                    : AntIcons.eyeOutline,
                 size: iconSize(),
               ),
             ),
@@ -133,44 +174,42 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
 
     return Container(
       decoration:
-      widget.decoration ?? style
-          .resolve(materialStates)
-          ?.decoration,
+          widget.decoration ?? style.resolve(materialStates)?.decoration,
       height: height,
-      padding: style
-          .resolve(materialStates)
-          ?.computedPadding,
+      padding: style.resolve(materialStates)?.computedPadding,
       child: TextField(
+        enabled: !widget.disabled,
         controller: _controller,
         focusNode: _focusNode,
         obscureText: widget.type == AntInputType.password && passwordVisible,
         cursorColor: Colors.grey,
-        style: TextStyle(fontSize: style
-            .resolve(materialStates)
-            ?.fontSize),
-        keyboardType: (() {
-          if (widget.type == AntInputType.number) {
-            return TextInputType.number;
-          } else {
-            return TextInputType.text;
-          }
-        })(),
+        style: TextStyle(fontSize: style.resolve(materialStates)?.fontSize),
+        keyboardType:
+            (() {
+              if (widget.type == AntInputType.number) {
+                return TextInputType.number;
+              } else {
+                return TextInputType.text;
+              }
+            })(),
         decoration: InputDecoration(
-          prefixIcon: widget.prefix != null ? Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [widget.prefix ?? SizedBox.shrink()],) : null,
+          prefixIcon:
+              widget.prefix != null
+                  ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [widget.prefix ?? SizedBox.shrink()],
+                  )
+                  : null,
           suffixIcon: suffixIcon,
           hintText: widget.placeholder,
           hintStyle: TextStyle(color: Colors.grey),
           // 提示文本
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
+          border: OutlineInputBorder(borderSide: BorderSide.none),
           contentPadding: EdgeInsets.zero,
         ),
         inputFormatters: [
           if (widget.type == AntInputType.number)
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
         ],
         onChanged: (value) {
           if (widget.onChange != null) {
@@ -180,9 +219,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
         onTapOutside: (event) {
           _focusNode.unfocus();
         },
-        onEditingComplete: () {
-
-        },
+        onEditingComplete: () {},
       ),
     );
   }

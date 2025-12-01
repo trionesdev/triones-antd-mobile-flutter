@@ -31,6 +31,7 @@ enum AntImageStatus { done, uploading, error, removed }
 
 enum AntImageType { asset, network, file }
 
+/// @component AntImagesWall 图片墙
 class AntImagesWall extends StatefulWidget {
   const AntImagesWall({
     super.key,
@@ -45,13 +46,36 @@ class AntImagesWall extends StatefulWidget {
     this.maxSize,
   });
 
+  /// @description 当前值
+  /// @default null
   final List<AntImagesWallItemStruct>? value;
+
+  /// @description 值改变回调
+  /// @default null
   final ValueChanged<List<AntImagesWallItemStruct>>? onChange;
+
+  /// @description 最大图片数量
+  /// @default null
   final int? maxCount;
+
+  /// @description 列数
+  /// @default 5
   final int? crossAxisCount;
+
+  /// @description 是否禁用
+  /// @default false
   final bool disabled;
+
+  /// @description 是否多选
+  /// @default true
   final bool? multiSelect;
+
+  /// @description 图片最大大小，单位MB
+  /// @default null
   final int? maxSize;
+
+  /// @description 上传请求
+  /// @default null
   final Future<String?> Function(Uint8List fileContent, String? fileName)?
   uploadRequest;
 
