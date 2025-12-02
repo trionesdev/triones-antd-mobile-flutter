@@ -76,6 +76,7 @@ export default defineConfig({
                         {text: 'InputNumber  数字输入框', link: '/components/input-number'},
                         {text: 'TextArea  文本域', link: '/components/text-area'},
                         {text: 'ImagesWall  图片墙', link: '/components/images-wall'},
+                        {text: 'VerificationCodeInput 验证码输入框', link: '/components/verification-code-input'},
                     ]
                 },
                 {

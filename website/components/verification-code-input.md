@@ -17,24 +17,24 @@
 
 ### AntVerificationCodeInput 组件参数
 
-| 属性              | 说明         | 类型                      | 默认值               |
-|-----------------|------------|-------------------------|-------------------|
-| style           | 样式         | StateStyle?             | null              |
-| size            | 大小         | AntSize                 | AntSize.middle    |
-| height          | 高度         | double?                 | null              |
-| placeholder     | 占位符        | String?                 | null              |
-| type            | 输入框类型      | AntInputType?           | AntInputType.text |
-| prefix          | 前缀         | Widget?                 | null              |
-| value           | 值          | String?                 | null              |
-| defaultValue    | 默认值        | String?                 | null              |
-| onChange        | 值改变回调      | ValueChanged<String>?   | null              |
-| decoration      | 输入框样式      | BoxDecoration?          | null              |
-| sendText        | 发送按钮文本     | String?                 | "获取验证码"           |
-| resendText      | 重新发送按钮文本   | String?                 | "重新发送"            |
-| intervalSeconds | 验证码发送间隔(秒) | int?                    | 60                |
-| onBlur          | 失去焦点回调     | ValueGetter<void>?      | null              |
-| onFocus         | 获得焦点回调     | ValueGetter<void>?      | null              |
-| onSend          | 发送验证码回调    | AsyncValueGetter<bool>? | null              |
+| 属性              | 说明         | 类型                        | 默认值               |
+|-----------------|------------|---------------------------|-------------------|
+| style           | 样式         | StateStyle?               | null              |
+| size            | 大小         | AntSize                   | AntSize.middle    |
+| height          | 高度         | double?                   | null              |
+| placeholder     | 占位符        | String?                   | null              |
+| type            | 输入框类型      | AntInputType?             | AntInputType.text |
+| prefix          | 前缀         | Widget?                   | null              |
+| value           | 值          | String?                   | null              |
+| defaultValue    | 默认值        | String?                   | null              |
+| onChange        | 值改变回调      | `ValueChanged<String>?`   | null              |
+| decoration      | 输入框样式      | BoxDecoration?            | null              |
+| sendText        | 发送按钮文本     | String?                   | "获取验证码"           |
+| resendText      | 重新发送按钮文本   | String?                   | "重新发送"            |
+| intervalSeconds | 验证码发送间隔(秒) | int?                      | 60                |
+| onBlur          | 失去焦点回调     | `ValueGetter<void>?`      | null              |
+| onFocus         | 获得焦点回调     | `ValueGetter<void>?`      | null              |
+| onSend          | 发送验证码回调    | `AsyncValueGetter<bool>?` | null              |
 
 ### 组件特性
 
