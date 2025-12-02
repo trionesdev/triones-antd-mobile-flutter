@@ -1,7 +1,7 @@
 
 name: Deploy Docs
 env:
-  FLUTTER_VERSION: "3.27.2"
+  FLUTTER_VERSION: "3.35.4"
 on:
   push:
     branches:
@@ -21,7 +21,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
 #          channel: stable
-          flutter-version: 3.27.2
+          flutter-version: 3.35.4
       - run: flutter pub get
       - name: Install Example app
         working-directory: example
