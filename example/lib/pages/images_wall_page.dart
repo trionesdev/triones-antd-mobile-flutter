@@ -12,34 +12,66 @@ class ImagesWallPage extends StatefulWidget {
 class _ImageUploadPageState extends State<ImagesWallPage> {
   @override
   Widget build(BuildContext context) {
-    return AntScaffold(
-      appBar: AntAppBar(
-        title: Text("ImagesWall 图片墙"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            DemoBlock(
-              title: "基本使用",
-              child: Column(
-                children: [AntImagesWall()],
+    return SafeArea(
+      child: AntScaffold(
+        appBar: AntAppBar(title: Text("ImagesWall 图片墙")),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DemoBlock(
+                title: "基本使用",
+                child: Column(children: [AntImagesWall()]),
               ),
-            ),
-            DemoBlock(
-              title: "赋值",
-              child: AntImagesWall(
-                value: [
-                  AntImagesWallItemRecord(
-                      path: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-                      status: AntImageStatus.done)
-                ],
-                onChange: (value) {
-
-                },
+              DemoBlock(
+                title: "最大张数",
+                child: Column(children: [AntImagesWall(maxCount: 5)]),
               ),
-            )
-          ],
+              DemoBlock(
+                title: "图片大小限制",
+                child: Column(
+                  children: [
+                    AntImagesWall(
+                      maxSize: 1,
+                      uploadRequest: (file, onSuccess) async {
+                        return "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              DemoBlock(
+                title: "上传",
+                child: Column(
+                  children: [
+                    AntImagesWall(
+                      uploadRequest: (file, onSuccess) async {
+                        return "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              DemoBlock(
+                title: "赋值",
+                child: AntImagesWall(
+                  value: [
+                    AntImagesWallItemStruct(
+                      path:
+                          "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+                      status: AntImageStatus.done,
+                    ),
+                    AntImagesWallItemStruct(
+                      path:
+                          "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+                      status: AntImageStatus.error,
+                    ),
+                  ],
+                  onChange: (value) {},
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

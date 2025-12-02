@@ -1,40 +1,62 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
-typedef AntListItemBuilder<T> = Widget Function(BuildContext context, T item, int index)?;
+typedef AntListItemBuilder<T> =
+Widget Function(BuildContext context, T item, int index)?;
 
 class AntList<T> extends StatefulWidget {
-  const AntList({super.key,
+  const AntList({
+    super.key,
     this.separator,
+    this.empty,
     this.dataSource,
     this.itemBuilder,
     this.children,
     this.style,
     this.controller,
-    this.loading = false, this.shrinkWrap = false,
+    this.loading = false,
+    this.shrinkWrap = false,
     this.pending,
     this.physics,
+    //距底部多远时（单位px），触发 scrolltolower 事件
+    this.lowerThreshold = 50,
+    this.onScrollToLower,
   });
 
   final StateStyle? style;
   final bool loading;
   final List<Widget>? children;
   final Widget? separator;
+  final Widget? empty;
   final List<T>? dataSource;
   final AntListItemBuilder<T>? itemBuilder;
   final ScrollController? controller;
   final bool shrinkWrap;
   final EdgeInsetsGeometry? pending;
   final ScrollPhysics? physics;
+  final int lowerThreshold;
+  final AsyncCallback? onScrollToLower;
 
   @override
   State<StatefulWidget> createState() => _AntListState<T>();
 }
 
 class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
+  ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
+    if (widget.controller != null) {
+      _scrollController = widget.controller!;
+    }
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - widget.lowerThreshold) {
+        widget.onScrollToLower?.call();
+      }
+    });
     super.initState();
   }
 
@@ -67,6 +89,7 @@ class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
       }
     }
 
+
     return Stack(
       children: [
         Container(
@@ -76,25 +99,22 @@ class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
           padding: stateStyle
               .resolve(materialStates)
               ?.computedPadding,
-          child: children.isNotEmpty
+          child:
+          children.isNotEmpty
               ? ListView(
             padding: widget.pending,
-            controller: widget.controller,
+            controller: _scrollController,
             shrinkWrap: widget.shrinkWrap,
             physics: widget.physics,
             children: children,
           )
-              : Container(
-            width: double.infinity,
-            decoration: stateStyle
-                .resolve(materialStates)
-                ?.decoration,
+              : (widget.empty ?? Align(
+            alignment: Alignment(0.0, -0.8),
             child: AntEmpty(),
-          ),
+          )),
         ),
-        if (widget.loading) Positioned.fill(child: Align(
-          child: AntSpinLoading(),
-        ))
+        if (widget.loading)
+          Positioned.fill(child: Align(child: AntSpinLoading())),
       ],
     );
   }
@@ -108,15 +128,19 @@ class _AntListStyle extends StateStyle {
 
   @override
   Style get style {
-    return Style(
-      backgroundColor: Colors.white,
-    );
+    return Style(backgroundColor: Colors.white);
   }
 }
 
 class AntListItem extends StatefulWidget {
-  const AntListItem(
-      {super.key, this.icon, this.title, this.extra, this.style, this.onTap});
+  const AntListItem({
+    super.key,
+    this.icon,
+    this.title,
+    this.extra,
+    this.style,
+    this.onTap,
+  });
 
   final StateStyle? style;
   final Widget? icon;
@@ -178,12 +202,6 @@ class _AntListItemStyle extends StateStyle {
 
   @override
   Style get style {
-    return Style(
-        padding: StylePadding(
-          top: 8,
-          bottom: 8,
-          left: 8,
-          right: 8,
-        ));
+    return Style(padding: StylePadding(top: 8, bottom: 8, left: 8, right: 8));
   }
 }

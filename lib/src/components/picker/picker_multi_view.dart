@@ -52,13 +52,11 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
           _value[i] = widget.columns![i].first;
         }
       }
-      print(_value);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size.height);
     AntThemeData theme = AntTheme.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,

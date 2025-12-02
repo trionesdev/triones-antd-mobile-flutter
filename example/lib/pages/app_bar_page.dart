@@ -29,7 +29,7 @@ class _AppBarPageState extends State<AppBarPage> {
             DemoBlock(
               title: "返回按钮显示文字",
               child: AntAppBar(
-                backText: Text("返回"),
+                back: Text("返回"),
                 title: Text("标题"),
               ),
             ),

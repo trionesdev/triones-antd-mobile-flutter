@@ -1,20 +1,22 @@
 name: trionesdev_antd_mobile
 description: "antd ui"
 version: 0.0.1
-homepage:
+homepage: https://github.com/trionesdev/triones-antd-mobile-flutter
 
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.7.0
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   intl: ^0.20.2
-  image_picker: ^1.1.2
+  image_picker: ^1.2.0
   photo_view: ^0.15.0
-  flutter_svg: ^2.0.17
-  collection: ^1.19.0
+  flutter_svg: ^2.2.1
+  collection: ^1.19.1
   uuid: ^4.5.1
 
 dev_dependencies:
@@ -27,9 +29,15 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
   assets:
+#    - assets/fonts/iconfont.json
     - assets/images/empty.svg
     - assets/images/default-image.svg
     - assets/images/default-image.png
     - assets/images/error-image.svg
     - assets/images/error-image.png
+  fonts:
+    - family: TrionesAntmIcon
+      fonts:
+        - asset: assets/fonts/iconfont.ttf

@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+/// @component AntGrid
 class AntGrid extends StatefulWidget {
-  const AntGrid(
-      {super.key,
-      this.children,
-      this.columns = 1,
-      this.decoration,
-      this.spacing = 0});
+  const AntGrid({
+    super.key,
+    this.children,
+    this.columns = 1,
+    this.decoration,
+    this.spacing = 0,
+  });
 
+  /// @description 列数
+  /// @default 1
   final int? columns;
+
+  /// @description 子项间距
+  /// @default 0
   final double? spacing;
+
+  /// @description 子项
   final List<AntGridItem>? children;
+
+  /// @description 装饰
+  /// @default null
   final BoxDecoration? decoration;
 
   static AntGridState? maybeOf(BuildContext context) {
@@ -36,23 +48,28 @@ class AntGridState extends State<AntGrid> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-        child: _AntGridScope(
-            gridState: this,
-            generation: _generation,
-            child: LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-              _gridWidth = constraints.maxWidth;
-              return Container(
-                decoration: widget.decoration,
-                padding: EdgeInsets.only(
-                    left: widget.spacing! / 2, right: widget.spacing! / 2),
-                child: Wrap(
-                  spacing: widget.spacing ?? 0,
-                  runSpacing: widget.spacing ?? 0,
-                  children: widget.children ?? [],
-                ),
-              );
-            })));
+      child: _AntGridScope(
+        gridState: this,
+        generation: _generation,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            _gridWidth = constraints.maxWidth;
+            return Container(
+              decoration: widget.decoration,
+              padding: EdgeInsets.only(
+                left: widget.spacing! / 2,
+                right: widget.spacing! / 2,
+              ),
+              child: Wrap(
+                spacing: widget.spacing ?? 0,
+                runSpacing: widget.spacing ?? 0,
+                children: widget.children ?? [],
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
 
@@ -61,8 +78,8 @@ class _AntGridScope extends InheritedWidget {
     required super.child,
     required AntGridState gridState,
     required int generation,
-  })  : _gridState = gridState,
-        _generation = generation;
+  }) : _gridState = gridState,
+       _generation = generation;
 
   final AntGridState _gridState;
   final int _generation;

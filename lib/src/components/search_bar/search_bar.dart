@@ -16,9 +16,11 @@ class AntSearchBar extends StatefulWidget {
       this.decoration,
       this.searchIcon,
       this.showCancelButton = false,
+        this.showSearchButton = false,
       this.placeholder,
       this.value,
       this.onChange,
+        this.onSearch,
       this.styles,
       this.height = 32,
       this.allowClear = true,
@@ -32,9 +34,11 @@ class AntSearchBar extends StatefulWidget {
   final Widget? searchIcon;
   final bool? allowClear;
   final bool? showCancelButton;
+  final bool? showSearchButton;
   final String? placeholder;
   final String? value;
   final Function(String?)? onChange;
+  final Function(String?)? onSearch;
   final Function? onCancel;
   final AntSearchBarStyles? styles;
   final double? height;
@@ -131,6 +135,15 @@ class _SearchBarState extends State<AntSearchBar> with MaterialStateMixin {
             widget.onChange?.call(null);
           }
           widget.onCancel?.call();
+        },
+      ));
+    }
+    if(widget.showSearchButton== true){
+      children.add(AntButton(
+        text: '搜索',
+        type: AntButtonType.primary,
+        onPressed: () {
+          widget.onSearch?.call(_value);
         },
       ));
     }

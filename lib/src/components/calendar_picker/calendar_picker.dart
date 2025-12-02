@@ -9,15 +9,16 @@ class AntCalendarPicker {
     ValueChanged<DateTime?>? onOk,
   }) {
     return AntPopup.show(
-        context: context,
-        maxHeight: 1000,
-        child: AntCalendarPickerView(
-          value: value,
-          onOk: (date) {
-            Navigator.of(context).pop();
-            onOk?.call(date);
-          },
-        ));
+      context: context,
+      maxHeight: 1000,
+      child: AntCalendarPickerView(
+        value: value,
+        onOk: (date) {
+          Navigator.of(context).pop();
+          onOk?.call(date);
+        },
+      ),
+    );
   }
 }
 
@@ -28,15 +29,16 @@ class AntCalendarRangePicker {
     ValueChanged<List<DateTime?>?>? onOk,
   }) {
     return AntPopup.show(
-        context: context,
-        maxHeight: 1000,
-        child: AntCalendarRangePickerView(
-          value: value,
-          onOk: (date) {
-            Navigator.of(context).pop();
-            onOk?.call(date);
-          },
-        ));
+      context: context,
+      maxHeight: 1000,
+      child: AntCalendarRangePickerView(
+        value: value,
+        onOk: (date) {
+          Navigator.of(context).pop();
+          onOk?.call(date);
+        },
+      )
+    );
   }
 }
 
@@ -47,15 +49,16 @@ Future<T?> showAntCalendarPicker<T>({
   ValueChanged<DateTime?>? onOk,
 }) {
   return showAntPopup(
-      context: context,
-      maxHeight: 1000,
-      child: AntCalendarPickerView(
-        value: value,
-        onOk: (date) {
-          Navigator.of(context).pop();
-          onOk?.call(date);
-        },
-      ));
+    context: context,
+    maxHeight: 1000,
+    child: AntCalendarPickerView(
+      value: value,
+      onOk: (date) {
+        Navigator.of(context).pop();
+        onOk?.call(date);
+      },
+    ),
+  );
 }
 
 ///  显示日历区间选择器
@@ -65,13 +68,14 @@ Future<T?> showAntCalendarRangePicker<T>({
   ValueChanged<List<DateTime?>?>? onOk,
 }) {
   return showAntPopup(
-      context: context,
-      maxHeight: 1000,
-      child: AntCalendarRangePickerView(
-        value: value,
-        onOk: (date) {
-          Navigator.of(context).pop();
-          onOk?.call(date);
-        },
-      ));
+    context: context,
+    maxHeight: 1000,
+    child: AntCalendarRangePickerView(
+      value: value,
+      onOk: (date) {
+        Navigator.of(context).pop();
+        onOk?.call(date);
+      },
+    ),
+  );
 }

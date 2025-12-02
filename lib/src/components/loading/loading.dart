@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 
+/// @component AntSpinLoading
 class AntSpinLoading extends StatefulWidget {
-  const AntSpinLoading(
-      {super.key, this.backgroundColor, this.color = Colors.grey});
+  const AntSpinLoading({
+    super.key,
+    this.backgroundColor,
+    this.color = Colors.grey,
+  });
 
-  /// 背景色
+  /// @description 背景颜色
+  /// @default null
   final Color? backgroundColor;
-  /// 颜色
+
+  /// @description 颜色
+  /// @default null
   final Color? color;
 
   @override

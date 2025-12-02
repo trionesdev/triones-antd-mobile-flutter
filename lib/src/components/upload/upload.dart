@@ -17,7 +17,7 @@ class _AntUploadState extends State<AntUpload> {
       children: [
         GestureDetector(
           onTap: () {
-            print("sss");
+
           },
           child: Container(
             child: Icon(Icons.add),

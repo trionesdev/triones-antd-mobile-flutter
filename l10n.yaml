@@ -1,0 +1,8 @@
+arb-dir: lib/l10n
+template-arb-file: intl_zh_Hans_CN.arb
+output-dir: lib/src/l10n
+output-class: AntdLocalizations
+output-localization-file: antd_localizations.dart
+synthetic-package: false
+supported-locales:
+  - zh-Hans-CN

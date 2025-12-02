@@ -13,7 +13,7 @@ class _ImagePageState extends State<ImagePage> {
   @override
   @override
   Widget build(BuildContext context) {
-    return AntScaffold(
+    return SafeArea(child: AntScaffold(
         appBar: AntAppBar(
           title: const Text('Image 图片'),
         ),
@@ -26,7 +26,7 @@ class _ImagePageState extends State<ImagePage> {
                   alignment: Alignment.centerLeft,
                   child: AntImage(
                     src:
-                        'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+                    'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
                     width: 200,
                   ),
                 ),
@@ -53,6 +53,6 @@ class _ImagePageState extends State<ImagePage> {
               ),
             ],
           ),
-        ));
+        )));
   }
 }

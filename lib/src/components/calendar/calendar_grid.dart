@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import '../../../trionesdev_antd_mobile.dart';
 
 class AntCalendarDateCell extends StatefulWidget {
-  const AntCalendarDateCell(
-      {super.key,
-      required this.date,
-      required this.mouth,
-      this.value,
-      this.range = false,
-      this.onSelected});
+  const AntCalendarDateCell({
+    super.key,
+    required this.date,
+    required this.mouth,
+    this.value,
+    this.range = false,
+    this.onSelected,
+  });
 
   final List<DateTime?>? value;
   final bool range;
@@ -23,17 +24,16 @@ class AntCalendarDateCell extends StatefulWidget {
 
 class AntCalendarDateCellState extends State<AntCalendarDateCell> {
   bool overCurrentMonth() {
-    return widget.date
-            .isBefore(DateTime(widget.mouth.year, widget.mouth.month, 1)) ||
-        widget.date
-            .isAfter(DateTime(widget.mouth.year, widget.mouth.month + 1, 0));
+    return widget.date.isBefore(
+          DateTime(widget.mouth.year, widget.mouth.month, 1),
+        ) ||
+        widget.date.isAfter(
+          DateTime(widget.mouth.year, widget.mouth.month + 1, 0),
+        );
   }
 
   bool selected() {
     if (widget.range) {
-      if (overCurrentMonth()) {
-        return false;
-      }
       var startDate = widget.value?.elementAtOrNull(0);
       var endDate = widget.value?.elementAtOrNull(1);
       return widget.date == startDate || widget.date == endDate;
@@ -46,7 +46,7 @@ class AntCalendarDateCellState extends State<AntCalendarDateCell> {
   }
 
   bool betweenSelectRange() {
-    if (overCurrentMonth() || !widget.range) {
+    if (!widget.range) {
       return false;
     }
     var startDate = widget.value?.elementAtOrNull(0);
@@ -59,12 +59,13 @@ class AntCalendarDateCellState extends State<AntCalendarDateCell> {
 
   Color backgroundColor() {
     AntThemeData themeData = AntTheme.of(context);
-    if (overCurrentMonth()) {
-      return Colors.white;
-    } else if (selected()) {
+
+    if (selected()) {
       return themeData.colorPrimary;
     } else if (betweenSelectRange()) {
       return themeData.colorPrimaryBg;
+    } else if (overCurrentMonth()) {
+      return Colors.white;
     } else {
       return Colors.white;
     }
@@ -106,14 +107,12 @@ class AntCalendarDateCellState extends State<AntCalendarDateCell> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                '${widget.date.day}',
-                style: TextStyle(color: textColor()),
-              ),
-              if (widget.date.day==1) Text(
-                '${widget.date.month}月',
-                style: TextStyle(fontSize: 10,color: textColor()),
-              ),
+              Text('${widget.date.day}', style: TextStyle(color: textColor())),
+              if (widget.date.day == 1)
+                Text(
+                  '${widget.date.month}月',
+                  style: TextStyle(fontSize: 10, color: textColor()),
+                ),
             ],
           ),
         ),
@@ -122,21 +121,40 @@ class AntCalendarDateCellState extends State<AntCalendarDateCell> {
   }
 }
 
+/// @component CalendarGrid 日历网格
 class AntCalendarGrid extends StatefulWidget {
-  const AntCalendarGrid(
-      {super.key,
-      this.month,
-      this.onSelected,
-      this.value,
-      this.range = false,
-      this.onRendered,
-      this.onChange});
+  const AntCalendarGrid({
+    super.key,
+    this.month,
+    this.onSelected,
+    this.value,
+    this.range = false,
+    this.onRendered,
+    this.onChange,
+  });
 
+  /// @description 月份
+  /// @default null
   final DateTime? month;
+
+  /// @description 选中日期
+  /// @default null
   final List<DateTime?>? value;
+
+  /// @description 选中日期变化回调
+  /// @default null
   final ValueChanged<List<DateTime?>?>? onChange;
+
+  /// @description 点击日期回调
+  /// @default null
   final ValueChanged<DateTime>? onSelected;
+
+  /// @description 是否是范围模式
+  /// @default false
   final bool range;
+
+  /// @description 渲染完成回调，返回当前组件高度
+  /// @default null
   final ValueChanged<double?>? onRendered;
 
   @override
@@ -159,18 +177,26 @@ class _AntCalendarGridState extends State<AntCalendarGrid> {
     List<DateTime> beforeDates = [];
     int beforeDayCount = firstDay.weekday - 1;
     if (beforeDayCount > 0) {
-      beforeDates = List.generate(beforeDayCount,
-          (i) => firstDay.subtract(Duration(days: (beforeDayCount - i))));
+      beforeDates = List.generate(
+        beforeDayCount,
+        (i) => firstDay.subtract(Duration(days: (beforeDayCount - i))),
+      );
     }
     final lastDay = DateTime(date.year, date.month + 1, 0);
+    List<DateTime> mouthDates = List.generate(
+      lastDay.day,
+      (i) => firstDay.add(Duration(days: i)),
+    );
     List<DateTime> afterDates = [];
-    int afterDayCount = 7 - lastDay.weekday;
+    int afterDayCount =
+        (7 - lastDay.weekday) +
+        (6 - ((beforeDayCount + mouthDates.length) / 7).ceil()) * 7;
     if (afterDayCount > 0) {
       afterDates = List.generate(
-          afterDayCount, (i) => lastDay.add(Duration(days: i + 1)));
+        afterDayCount,
+        (i) => lastDay.add(Duration(days: i + 1)),
+      );
     }
-    List<DateTime> mouthDates =
-        List.generate(lastDay.day, (i) => firstDay.add(Duration(days: i)));
     return [...beforeDates, ...mouthDates, ...afterDates];
   }
 
@@ -236,24 +262,25 @@ class _AntCalendarGridState extends State<AntCalendarGrid> {
     });
 
     return GridView.builder(
-        key: _key,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 7,
-          childAspectRatio: 1,
-        ),
-        itemCount: _dates.length,
-        itemBuilder: (context, index) {
-          return AntCalendarDateCell(
-            mouth: _month!,
-            date: _dates[index],
-            value: _value,
-            range: widget.range,
-            onSelected: (date) {
-              onDateSelected(date);
-            },
-          );
-        });
+      key: _key,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 7,
+        childAspectRatio: 1,
+      ),
+      itemCount: _dates.length,
+      itemBuilder: (context, index) {
+        return AntCalendarDateCell(
+          mouth: _month!,
+          date: _dates[index],
+          value: _value,
+          range: widget.range,
+          onSelected: (date) {
+            onDateSelected(date);
+          },
+        );
+      },
+    );
   }
 }

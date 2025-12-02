@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
-enum AntCheckboxLayout{
-  horizontal,
-  vertical
-}
-
 class AntCheckboxBaseGroup extends StatefulWidget {
-  const AntCheckboxBaseGroup({super.key,
+  const AntCheckboxBaseGroup({
+    super.key,
     this.children,
     this.child,
     this.defaultValue,
     this.disabled = false,
     this.onChange,
     this.value,
-    this.iconSize});
+    this.iconSize,
+  });
 
   final List<dynamic>? defaultValue;
   final List<dynamic>? value;
   final bool disabled;
   final double? iconSize;
-  final Function(List<dynamic>? val)? onChange;
+  final ValueChanged<List<dynamic>?>? onChange;
   final List<AntCheckbox>? children;
   final Widget? child;
 
   static AntCheckboxBaseGroupState? maybeOf(BuildContext context) {
     final _AntCheckboxGroupScope? scope =
-    context.dependOnInheritedWidgetOfExactType<_AntCheckboxGroupScope>();
+        context.dependOnInheritedWidgetOfExactType<_AntCheckboxGroupScope>();
     return scope?._checkboxGroupState;
   }
 
@@ -62,7 +59,6 @@ class AntCheckboxBaseGroupState extends State<AntCheckboxBaseGroup> {
   void _unregister(_AntCheckboxState checkbox) {
     _checkboxStates.remove(checkbox);
   }
-
 
   void _didGroupValueInit(List<dynamic>? val) {
     _value = val ?? [];
@@ -104,20 +100,22 @@ class AntCheckboxBaseGroupState extends State<AntCheckboxBaseGroup> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-        child: _AntCheckboxGroupScope(
-          checkboxGroupState: this,
-          generation: _generation,
-          child: widget.child ?? Container(),
-        ));
+      child: _AntCheckboxGroupScope(
+        checkboxGroupState: this,
+        generation: _generation,
+        child: widget.child ?? Container(),
+      ),
+    );
   }
 }
 
 class _AntCheckboxGroupScope extends InheritedWidget {
-  const _AntCheckboxGroupScope({required super.child,
+  const _AntCheckboxGroupScope({
+    required super.child,
     required AntCheckboxBaseGroupState checkboxGroupState,
-    required int generation})
-      : _checkboxGroupState = checkboxGroupState,
-        _generation = generation;
+    required int generation,
+  }) : _checkboxGroupState = checkboxGroupState,
+       _generation = generation;
   final AntCheckboxBaseGroupState _checkboxGroupState;
   final int _generation;
 
@@ -130,8 +128,10 @@ class _AntCheckboxGroupScope extends InheritedWidget {
 }
 
 class AntCheckbox extends StatefulWidget {
-  const AntCheckbox({super.key,
+  const AntCheckbox({
+    super.key,
     this.label,
+    this.labelText,
     this.block = false,
     this.checked,
     this.defaultChecked = false,
@@ -141,19 +141,60 @@ class AntCheckbox extends StatefulWidget {
     this.onChange,
     this.onTap,
     this.value,
-    this.iconSize, this.spacing = 4});
+    this.iconSize,
+    this.spacing = 4,
+  });
 
+  /// @description 标签
+  /// @default null
   final Widget? label;
+
+  /// @description 标签文本
+  /// @default null
+  final String? labelText;
+
+  /// @description 是否块级
+  /// @default false
   final bool block;
+
+  /// @description 是否选中
+  /// @default null
   final bool? checked;
+
+  /// @description 是否选中(默认)
+  /// @default false
   final bool defaultChecked;
+
+  /// @description 是否禁用
+  /// @default false
   final bool? disabled;
+
+  /// @description 选中图标
+  /// @default null
   final Widget? checkedIcon;
+
+  /// @description 未选中图标
+  /// @default null
   final Widget? uncheckedIcon;
-  final Function(bool val)? onChange;
-  final Function? onTap;
+
+  /// @description 选中状态变化回调
+  /// @default null
+  final ValueChanged<bool>? onChange;
+
+  /// @description 点击回调
+  /// @default null
+  final ValueChanged<void>? onTap;
+
+  /// @description 值
+  /// @default null
   final dynamic value;
+
+  /// @description 图标大小
+  /// @default null
   final double? iconSize;
+
+  /// @description 间距
+  /// @default 4
   final double? spacing;
 
   @override
@@ -165,9 +206,7 @@ class _AntCheckboxState extends State<AntCheckbox> {
 
   double get _iconSize {
     return widget.iconSize ??
-        AntCheckboxBaseGroup
-            .maybeOf(context)
-            ?._iconSize ??
+        AntCheckboxBaseGroup.maybeOf(context)?._iconSize ??
         22;
   }
 
@@ -189,22 +228,28 @@ class _AntCheckboxState extends State<AntCheckbox> {
 
   Widget icon() {
     if (_checked) {
-      return widget.checkedIcon ??
-          _DefaultCheckedIcon(
-            iconSize: _iconSize,
-          );
+      return widget.checkedIcon ?? _DefaultCheckedIcon(iconSize: _iconSize);
     } else {
-      return widget.uncheckedIcon ??
-          _DefaultUnCheckedIcon(
-            iconSize: _iconSize,
-          );
+      return widget.uncheckedIcon ?? _DefaultUnCheckedIcon(iconSize: _iconSize);
     }
+  }
+
+  Widget? get innerLabel {
+    if (widget.label != null) {
+      return widget.label!;
+    }
+    if (widget.labelText != null) {
+      return Text(widget.labelText!);
+    }
+    return null;
   }
 
   Widget label() {
     var labelWidget = Container(
       alignment: Alignment.centerLeft,
-      constraints: BoxConstraints(minHeight: 32,), child: widget.label,);
+      constraints: BoxConstraints(minHeight: 32),
+      child: innerLabel,
+    );
     if (widget.block) {
       return Expanded(child: labelWidget);
     } else {
@@ -214,9 +259,7 @@ class _AntCheckboxState extends State<AntCheckbox> {
 
   bool get _disabled {
     return widget.disabled ??
-        AntCheckboxBaseGroup
-            .maybeOf(context)
-            ?._disabled ??
+        AntCheckboxBaseGroup.maybeOf(context)?._disabled ??
         false;
   }
 
@@ -232,7 +275,6 @@ class _AntCheckboxState extends State<AntCheckbox> {
     widget.onChange?.call(_checked);
   }
 
-  
   @override
   void initState() {
     handleInit();
@@ -256,7 +298,7 @@ class _AntCheckboxState extends State<AntCheckbox> {
   @override
   Widget build(BuildContext context) {
     AntCheckboxBaseGroupState? checkboxGroupState =
-    AntCheckboxBaseGroup.maybeOf(context);
+        AntCheckboxBaseGroup.maybeOf(context);
     checkboxGroupState?._register(this);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -276,13 +318,13 @@ class _AntCheckboxState extends State<AntCheckbox> {
           mainAxisSize: widget.block ? MainAxisSize.max : MainAxisSize.min,
           spacing: widget.spacing ?? 0,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Container(
-              constraints: BoxConstraints(
-                  minHeight: 32
-              ),
+          children: [
+            Container(
+              constraints: BoxConstraints(minHeight: 32),
               alignment: Alignment.center,
-              child: UnconstrainedBox(child: Container(child: icon(),),)),
-            if(widget.label != null ) label()
+              child: UnconstrainedBox(child: Container(child: icon())),
+            ),
+            if (widget.label != null) label(),
           ],
         ),
       ),
@@ -323,18 +365,18 @@ class _DefaultUnCheckedIcon extends StatelessWidget {
       width: iconSize,
       height: iconSize,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(90)),
-          border: Border.all(color: themeData.colorBorder, width: 1)),
+        borderRadius: BorderRadius.all(Radius.circular(90)),
+        border: Border.all(color: themeData.colorBorder, width: 1),
+      ),
     );
   }
 }
 
-
-class AntCheckboxGroup extends StatelessWidget{
-
+/// @component AntCheckboxGroup 多选框组
+class AntCheckboxGroup extends StatelessWidget {
   const AntCheckboxGroup({
     super.key,
-    this.layout = AntCheckboxLayout.vertical,
+    this.layout = AntLayout.vertical,
     this.defaultValue,
     this.value,
     this.disabled = false,
@@ -343,12 +385,31 @@ class AntCheckboxGroup extends StatelessWidget{
     this.children,
   });
 
-  final AntCheckboxLayout layout;
+  /// @description 布局方向
+  /// @default AntLayout.vertical
+  final AntLayout layout;
+
+  /// @description 默认值
   final List<dynamic>? defaultValue;
+
+  /// @description 当前值
+  /// @default null
   final List<dynamic>? value;
+
+  /// @description 是否禁用
+  /// @default false
   final bool disabled;
+
+  /// @description 图标大小
+  /// @default null
   final double? iconSize;
-  final Function(List<dynamic>? val)? onChange;
+
+  /// @description 选中状态变化回调
+  /// @default null
+  final ValueChanged<List<dynamic>?>? onChange;
+
+  /// @description 子组件
+  /// @default null
   final List<AntCheckbox>? children;
 
   @override
@@ -359,20 +420,18 @@ class AntCheckboxGroup extends StatelessWidget{
       disabled: disabled,
       iconSize: iconSize,
       onChange: onChange,
-      child: ((){
-        if(layout == AntCheckboxLayout.vertical){
-          return Column(
-            spacing: 8,
-            children: children ?? [],
-          );
-        }else {
-          return Wrap(
-            spacing: 8,
-            direction: Axis.horizontal,
-            children: children ?? [],
-          );
-        }
-      })(),
+      child:
+          (() {
+            if (layout == AntLayout.vertical) {
+              return Column(spacing: 8, children: children ?? []);
+            } else {
+              return Wrap(
+                spacing: 8,
+                direction: Axis.horizontal,
+                children: children ?? [],
+              );
+            }
+          })(),
     );
   }
 }

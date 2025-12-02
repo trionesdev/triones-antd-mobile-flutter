@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
-class AntTimelineItemRecord {
-  AntTimelineItemRecord({this.icon, this.content, this.latest, this.lineType});
+class AntTimelineItemStruct {
+  AntTimelineItemStruct({this.icon, this.content, this.latest, this.lineType});
 
   final Widget? icon;
   final Widget? content;
@@ -19,7 +19,7 @@ enum AntTimelineItemLineType {
 class AntTimeline extends StatefulWidget {
   const AntTimeline({super.key, this.items, this.lineColumnWidth = 40});
 
-  final List<AntTimelineItemRecord>? items;
+  final List<AntTimelineItemStruct>? items;
   final double lineColumnWidth;
 
   @override
@@ -28,10 +28,10 @@ class AntTimeline extends StatefulWidget {
 
 class _AntTimelineState extends State<AntTimeline> {
   List<Widget> _items() {
-    List<AntTimelineItemRecord> itemRecords = widget.items ?? [];
+    List<AntTimelineItemStruct> itemRecords = widget.items ?? [];
     List<AntTimelineItem> items = [];
     for (int i = 0; i < itemRecords.length; i++) {
-      AntTimelineItemRecord item = itemRecords[i];
+      AntTimelineItemStruct item = itemRecords[i];
       items.add(AntTimelineItem(
         icon: item.icon,
         content: item.content,

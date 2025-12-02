@@ -2,11 +2,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
-class AntTabItem {
-  AntTabItem({required this.key, this.label, this.content});
+class AntTabItemStruct {
+  AntTabItemStruct({
+    required this.key,
+    this.label,
+    this.labelText,
+    this.content,
+  });
 
   String key;
+  String? labelText;
   Widget? label;
+
   Widget? content;
 }
 
@@ -16,30 +23,61 @@ class AntTabStyles {
   StateStyle? body;
 }
 
+/// @component AntTabs 标签栏
 class AntTabs extends StatefulWidget {
-  const AntTabs(
-      {super.key,
-      this.items,
-      this.stretch = true,
-      this.defaultActiveKey,
-      this.activeKey,
-      this.children,
-      this.style,
-      this.styles,
-      this.decoration,
-      this.itemBuilder,
-      this.tabDecoration});
+  const AntTabs({
+    super.key,
+    this.items,
+    this.stretch = true,
+    this.defaultActiveKey,
+    this.activeKey,
+    this.children,
+    this.style,
+    this.styles,
+    this.decoration,
+    this.itemBuilder,
+    this.tabDecoration,
+  });
 
+  /// @description 默认激活的tabKey
+  /// @default null
   final String? defaultActiveKey;
+
+  /// @description 当前激活的tabKey
+  /// @default null
   final String? activeKey;
-  final List<AntTabItem>? items;
+
+  /// @description 子项
+  /// @default null
+  final List<AntTabItemStruct>? items;
+
+  /// @description 是否拉伸
+  /// @default true
   final bool stretch;
+
+  /// @description 子项
+  /// @default null
   final List<AntTab>? children;
+
+  /// @description 装饰
+  /// @default null
   final BoxDecoration? decoration;
+
+  /// @description tab项的样式
+  /// @default null
   final BoxDecoration? tabDecoration;
+
+  /// @description 样式
+  /// @default null
   final StateStyle? style;
+
+  /// @description 自定义样式
+  /// @default null
   final AntTabStyles? styles;
-  final Widget Function(AntTabItem item)? itemBuilder;
+
+  /// @description 自定义tab项
+  /// @default null
+  final Widget Function(AntTabItemStruct item)? itemBuilder;
 
   @override
   State<StatefulWidget> createState() => AntTabsState();
@@ -53,7 +91,7 @@ class AntTabs extends StatefulWidget {
 
 class AntTabsState extends State<AntTabs> with MaterialStateMixin {
   ScrollController? _scrollController;
-  List<AntTabItem> _items = [];
+  List<AntTabItemStruct> _items = [];
   int _generation = 0;
   String? _activeKey;
   int _index = 0;
@@ -102,6 +140,7 @@ class AntTabsState extends State<AntTabs> with MaterialStateMixin {
       return AntTab(
         antKey: item.key,
         label: item.label,
+        labelText: item.labelText,
         style: widget.styles?.tab,
         activeStyle: widget.styles?.activeTab,
         bodyStyle: widget.styles?.body,
@@ -126,12 +165,11 @@ class AntTabsState extends State<AntTabs> with MaterialStateMixin {
     List<Widget> contentWidgets = [];
     for (var child in widget.children!) {
       tabWidgets.add(child);
-      contentWidgets.add(child.content ?? Container());
+      contentWidgets.add(child.child ?? Container());
     }
     _tabs = tabWidgets;
     _contents = contentWidgets;
   }
-
 
   void _register(AntTabState tabState) {
     _tabStates.add(tabState);
@@ -146,28 +184,26 @@ class AntTabsState extends State<AntTabs> with MaterialStateMixin {
     Widget tabHeader;
     if (widget.stretch) {
       tabHeader = Row(
-        children: _tabs.map((tab) {
-          return Expanded(child: tab);
-        }).toList(),
+        children:
+            _tabs.map((tab) {
+              return Expanded(child: tab);
+            }).toList(),
       );
     } else {
       if (kIsWeb) {
         tabHeader = Scrollbar(
+          controller: _scrollController,
+          thickness: 2,
+          child: SingleChildScrollView(
             controller: _scrollController,
-            thickness: 2,
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: _tabs,
-              ),
-            ));
+            scrollDirection: Axis.horizontal,
+            child: Row(children: _tabs),
+          ),
+        );
       } else {
         tabHeader = SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
-            children: _tabs,
-          ),
+          child: Row(children: _tabs),
         );
       }
     }
@@ -221,27 +257,31 @@ class AntTabsState extends State<AntTabs> with MaterialStateMixin {
     StateStyle stateStyle = _AntTabsStyle(context);
     stateStyle = stateStyle.merge(widget.style);
     return PopScope(
-        child: _AntTabsScope(
-            tabsState: this,
-            generation: _generation,
-            child: Container(
-              // width: double.infinity,
-              decoration: widget.decoration ??
-                  stateStyle.resolve(materialStates)?.decoration,
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(color: themeData.colorBorder))),
-                    child: _tabHeader(),
+      child: _AntTabsScope(
+        tabsState: this,
+        generation: _generation,
+        child: Container(
+          // width: double.infinity,
+          decoration:
+              widget.decoration ??
+              stateStyle.resolve(materialStates)?.decoration,
+          child: Column(
+            children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: themeData.colorBorder),
                   ),
-                  Expanded(
-                      child: IndexedStack(index: _index, children: _contents))
-                ],
+                ),
+                child: _tabHeader(),
               ),
-            )));
+              Expanded(child: IndexedStack(index: _index, children: _contents)),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -262,8 +302,8 @@ class _AntTabsScope extends InheritedWidget {
     required super.child,
     required AntTabsState tabsState,
     required int generation,
-  })  : _tabsState = tabsState,
-        _generation = generation;
+  }) : _tabsState = tabsState,
+       _generation = generation;
 
   final int _generation;
   final AntTabsState _tabsState;
@@ -280,7 +320,8 @@ class AntTab extends StatefulWidget {
     this.style,
     required this.antKey,
     this.label,
-    this.content,
+    this.labelText,
+    this.child,
     this.onTab,
     this.activeStyle,
     this.bodyStyle,
@@ -290,8 +331,9 @@ class AntTab extends StatefulWidget {
   final StateStyle? style;
   final String antKey;
 
+  final String? labelText;
   final Widget? label;
-  final Widget? content;
+  final Widget? child;
   final BoxDecoration? decoration;
   final Function(AntTabState? state)? onTab;
 
@@ -331,14 +373,12 @@ class AntTabState extends State<AntTab> with MaterialStateMixin {
   Widget? _labelRender() {
     AntThemeData themeData = AntTheme.of(context);
 
-    Widget? label = widget.label;
+    Widget? label = widget.label ?? Text(widget.labelText ?? "");
     if (_active && label != null && label is Text) {
       return WidgetUtils.textMerge(
-          Text(
-            label.data ?? "",
-            style: TextStyle(color: themeData.colorPrimary),
-          ),
-          label);
+        Text(label.data ?? "", style: TextStyle(color: themeData.colorPrimary)),
+        label,
+      );
     }
     return label;
   }
@@ -372,11 +412,13 @@ class AntTabState extends State<AntTab> with MaterialStateMixin {
     StateStyle stateStyle = _AntTabItemStyle(context, _active);
     stateStyle = stateStyle.merge(widget.style);
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         tabsState?._didTabChange(this);
       },
       child: Container(
-        decoration: widget.decoration ??
+        decoration:
+            widget.decoration ??
             (_active
                 ? stateStyle
                     .merge(widget.activeStyle)
@@ -400,14 +442,17 @@ class _AntTabItemStyle extends StateStyle {
   Style get style {
     AntThemeData themeData = AntTheme.of(context);
     return Style(
-        color: active ? themeData.colorPrimary : null,
-        backgroundColor: Colors.white,
-        padding: StylePadding.symmetric(vertical: 8, horizontal: 8),
-        borderBottom: active
-            ? StyleBorder(
+      color: active ? themeData.colorPrimary : null,
+      backgroundColor: Colors.white,
+      padding: StylePadding.symmetric(vertical: 8, horizontal: 8),
+      borderBottom:
+          active
+              ? StyleBorder(
                 color: themeData.colorPrimary,
                 width: 1,
-                style: BorderStyle.solid)
-            : null);
+                style: BorderStyle.solid,
+              )
+              : null,
+    );
   }
 }

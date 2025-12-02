@@ -277,7 +277,7 @@ class _RateItemState extends State<_RateItem> {
                 //当前值大于当前位半值，为当前半值
                 widget.onValueChange.call(widget.index + 0.5);
               } else {
-                print("左侧其他情况");
+
               }
             } else {
               //点击位置在右侧
@@ -292,7 +292,7 @@ class _RateItemState extends State<_RateItem> {
                 //原值小于当前半值，则为当前满值
                 widget.onValueChange.call(widget.index + 1);
               } else {
-                print("右侧其他情况");
+
               }
             }
           }

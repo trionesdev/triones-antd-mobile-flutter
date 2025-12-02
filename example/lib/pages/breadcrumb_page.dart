@@ -12,11 +12,11 @@ class BreadcrumbPage extends StatefulWidget {
 
 class _BreadcrumbPageState extends State<BreadcrumbPage> {
   final _breadcrumbs = [
-    AntBreadcrumbItemRecord(title: '首页'),
-    AntBreadcrumbItemRecord(title: '应用中心'),
-    AntBreadcrumbItemRecord(title: '应用列表'),
-    AntBreadcrumbItemRecord(title: '书阙'),
-    AntBreadcrumbItemRecord(title: '文章'),
+    AntBreadcrumbItemStruct(title: '首页'),
+    AntBreadcrumbItemStruct(title: '应用中心'),
+    AntBreadcrumbItemStruct(title: '应用列表'),
+    AntBreadcrumbItemStruct(title: '书阙'),
+    AntBreadcrumbItemStruct(title: '文章'),
   ];
 
   @override

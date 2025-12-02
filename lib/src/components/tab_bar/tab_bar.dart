@@ -1,31 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
-
+/// @component AntTabBar
 class AntTabBar extends StatefulWidget {
-  const AntTabBar(
-      {super.key,
-      this.padding,
-      this.height = 54,
-      this.children,
-      this.color,
-      this.activeColor,
-      this.activeKey,
-      this.defaultActiveKey,
-      this.onChange,
-      this.decoration,
-      this.style});
+  const AntTabBar({
+    super.key,
+    this.padding,
+    this.height = 54,
+    this.children,
+    this.color,
+    this.activeColor,
+    this.activeKey,
+    this.defaultActiveKey,
+    this.onChange,
+    this.decoration,
+    this.style,
+  });
 
+  /// @description 样式
+  /// @default null
   final StateStyle? style;
+
+  /// @description 装饰
+  /// @default null
   final BoxDecoration? decoration;
+
+  /// @description 边距
+  /// @default null
   final EdgeInsetsGeometry? padding;
+
+  /// @description 高度
+  /// @default 54
   final double? height;
+
+  /// @description 颜色
+  /// @default null
   final Color? color;
+
+  /// @description 激活颜色
+  /// @default null
   final Color? activeColor;
+
+  /// @description 当前激活的tabKey
+  /// @default null
   final String? activeKey;
+
+  /// @description 默认激活的tabKey
+  /// @default null
   final String? defaultActiveKey;
+
+  /// @description 切换回调
+  /// @default null
   final Function(String key)? onChange;
-  final List<AntTabBarItem>? children;
+
+  /// @description 子组件
+  /// @default null
+  final List<Widget>? children;
 
   static AntTabBarState? maybeOf(BuildContext context) {
     _AntTabBarScope? scope =
@@ -92,8 +122,10 @@ class AntTabBarState extends State<AntTabBar> with MaterialStateMixin {
   @override
   void initState() {
     super.initState();
+    List<AntTabBarItem> items =
+        widget.children?.whereType<AntTabBarItem>().toList() ?? [];
     _currentActiveKey =
-        (widget.activeKey ?? widget.defaultActiveKey) ?? widget.children?.first.antKey;
+        (widget.activeKey ?? widget.defaultActiveKey) ?? items.first.antKey;
   }
 
   @override
@@ -112,24 +144,27 @@ class AntTabBarState extends State<AntTabBar> with MaterialStateMixin {
     stateStyle = stateStyle.merge(widget.style);
 
     return PopScope(
-        child: _AntTabBarScope(
-            tabBarState: this,
-            generation: _generation,
-            child: Container(
-              decoration: widget.decoration ??
-                  stateStyle.resolve(materialStates)?.decoration,
-              child: SafeArea(
-                  child: BottomAppBar(
-                color: Colors.transparent,
-                height: widget.height!,
-                padding: widget.padding ??
-                    stateStyle.resolve(materialStates)?.computedPadding,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: widget.children ?? [],
-                ),
-              )),
-            )));
+      child: _AntTabBarScope(
+        tabBarState: this,
+        generation: _generation,
+        child: Container(
+          decoration:
+              widget.decoration ??
+              stateStyle.resolve(materialStates)?.decoration,
+          child: BottomAppBar(
+            color: Colors.transparent,
+            height: widget.height!,
+            padding:
+                widget.padding ??
+                stateStyle.resolve(materialStates)?.computedPadding,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: widget.children ?? [],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -141,12 +176,12 @@ class _AntTabBarStyle extends StateStyle {
 }
 
 class _AntTabBarScope extends InheritedWidget {
-  const _AntTabBarScope(
-      {required super.child,
-      required int generation,
-      required AntTabBarState tabBarState})
-      : _generation = generation,
-        _tabBarState = tabBarState;
+  const _AntTabBarScope({
+    required super.child,
+    required int generation,
+    required AntTabBarState tabBarState,
+  }) : _generation = generation,
+       _tabBarState = tabBarState;
   final int _generation;
   final AntTabBarState _tabBarState;
 
@@ -156,16 +191,17 @@ class _AntTabBarScope extends InheritedWidget {
 }
 
 class AntTabBarItem extends StatefulWidget {
-  const AntTabBarItem(
-      {super.key,
-      required this.antKey,
-      this.child,
-      this.icon,
-      this.label,
-      this.onPressed,
-      this.color,
-      this.activeColor,
-      this.stopPropagation=true});
+  const AntTabBarItem({
+    super.key,
+    required this.antKey,
+    this.child,
+    this.icon,
+    this.label,
+    this.onPressed,
+    this.color,
+    this.activeColor,
+    this.stopPropagation = true,
+  });
 
   final String antKey;
   final Widget? child;
@@ -182,6 +218,7 @@ class AntTabBarItem extends StatefulWidget {
 
 class AntTabBarItemState extends State<AntTabBarItem> {
   _AntTabBarScope? _ancestor;
+
   Color? get color {
     AntTabBarState? tabBar = AntTabBar.maybeOf(context);
     if (widget.color != null) {
@@ -218,28 +255,26 @@ class AntTabBarItemState extends State<AntTabBarItem> {
     if (widget.icon is Icon) {
       Icon iconIcon = widget.icon as Icon;
       return WidgetUtils.iconMerge(
-          Icon(
-            iconIcon.icon,
-            color: isActive ? activeColor : color,
-          ),
-          iconIcon);
+        Icon(iconIcon.icon, color: isActive ? activeColor : color),
+        iconIcon,
+      );
     }
     return widget.icon!;
   }
 
-  Widget label(){
-    if(widget.label is Text){
+  Widget label() {
+    if (widget.label is Text) {
       Text text = widget.label as Text;
       return WidgetUtils.textMerge(
-          Text(
-            text.data ?? '',
-            style: TextStyle(fontSize: 12, color: isActive ? activeColor : color),
-          ),
-          text);
+        Text(
+          text.data ?? '',
+          style: TextStyle(fontSize: 12, color: isActive ? activeColor : color),
+        ),
+        text,
+      );
     }
     return widget.label!;
   }
-
 
   @override
   void didChangeDependencies() {
@@ -267,16 +302,15 @@ class AntTabBarItemState extends State<AntTabBarItem> {
     }
 
     return Flexible(
-        flex: 1,
-        child: GestureDetector(
-          onTap: () {
-            tabBar?._setCurrentActiveKey(widget.antKey);
-            widget.onPressed?.call(widget.antKey);
-          },
-          child: widget.child ??
-              Column(
-                children: children,
-              ),
-        ));
+      flex: 1,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          tabBar?._setCurrentActiveKey(widget.antKey);
+          widget.onPressed?.call(widget.antKey);
+        },
+        child: widget.child ?? Column(children: children),
+      ),
+    );
   }
 }

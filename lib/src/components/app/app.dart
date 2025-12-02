@@ -21,6 +21,7 @@ material.ThemeMode toMaterialThemeMode(AntThemeMode value) {
   }
 }
 
+///@component App 应用
 class AntApp extends StatelessWidget {
   const AntApp({
     super.key,

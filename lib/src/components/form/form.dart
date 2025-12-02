@@ -2,17 +2,10 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
-enum AntFormLayout { horizontal, vertical }
+// 以Field作为基础，所有的属性和操作都在FieldState内部进行处理。
 
-enum AntLabelAlign { left, right }
-
-class AntFormCol {
-  const AntFormCol({this.flex, this.span});
-
-  final double? flex;
-  final int? span;
-}
-
+//region form
+/// @component AntForm 表单
 class AntForm extends StatefulWidget {
   const AntForm({
     super.key,
@@ -20,23 +13,47 @@ class AntForm extends StatefulWidget {
     this.rowSpacing,
     this.columnSpacing,
     this.layout = AntFormLayout.horizontal,
-    // this.children,
     this.child,
     this.labelCol,
     this.wrapperCol,
     this.labelAlign = AntLabelAlign.left,
-
+    this.size = AntSize.middle,
   });
 
+  /// @description 子项间距
+  /// @default null
   final double? spacing;
-  final double? rowSpacing;
-  final double? columnSpacing;
-  final AntFormLayout? layout;
-  final AntLabelAlign? labelAlign;
-  final AntFormCol? labelCol;
-  final AntFormCol? wrapperCol;
 
-  // final List<Widget>? children;
+  /// @description 行间距
+  /// @default null
+  final double? rowSpacing;
+
+  /// @description 列间距
+  /// @default null
+  final double? columnSpacing;
+
+  /// @description 表单布局
+  /// @default horizontal
+  final AntFormLayout? layout;
+
+  /// @description 表单标签对齐方式
+  /// @default left
+  final AntLabelAlign? labelAlign;
+
+  /// @description 表单标签宽度
+  /// @default null
+  final AntCol? labelCol;
+
+  /// @description 表单内容宽度
+  /// @default null
+  final AntCol? wrapperCol;
+
+  /// @description 表单大小
+  /// @default middle
+  final AntSize? size;
+
+  /// @description 子项
+  /// @default null
   final Widget? child;
 
   static AntFormState? maybeOf(BuildContext context) {
@@ -57,10 +74,9 @@ class AntForm extends StatefulWidget {
 class AntFormState extends State<AntForm> {
   int _generation = 0;
   Map<dynamic, dynamic>? _formValues = {};
-  bool _hasInteractedByUser = false;
   List<Map<String, dynamic>> errorFields = [];
   final Map<String, ValueNotifier> _watches = {};
-  final Set<AntFormItemState<dynamic>> _fields = <AntFormItemState<dynamic>>{};
+  final Set<AntFieldState> _fields = <AntFieldState>{};
 
   AntFormLayout? get layout => widget.layout;
 
@@ -68,9 +84,9 @@ class AntFormState extends State<AntForm> {
 
   double? get columnSpacing => widget.columnSpacing;
 
-  AntFormCol? get labelCol => widget.labelCol;
+  AntCol? get labelCol => widget.labelCol;
 
-  AntFormCol? get wrapperCol => widget.wrapperCol;
+  AntCol? get wrapperCol => widget.wrapperCol;
 
   AntLabelAlign? get labelAlign => widget.labelAlign;
 
@@ -80,11 +96,11 @@ class AntFormState extends State<AntForm> {
     return notifier;
   }
 
-  void _registerFieldWatch(AntFormItemState<dynamic>? field) {
-    if(field?.widget.notifier == null || field?.name == null){
+  void _registerFieldWatch(AntFieldState? field) {
+    if (field?.widget.notifier == null || field?.mergedName == null) {
       return;
     }
-    _watches[field!.name!.jsonValue] = field.widget.notifier!;
+    _watches[field!.mergedName.jsonValue] = field.widget.notifier!;
   }
 
   void _watchFieldChange(NamePath? path, dynamic value) {
@@ -93,117 +109,104 @@ class AntFormState extends State<AntForm> {
     }
   }
 
-  void _fieldDidChange(NamePath? path, dynamic value) {
+  void _fieldDidChange(NamePath path, dynamic value) {
     _watchFieldChange(path, value);
-    MapUtils.setPathValue(_formValues, path?.value, value);
+    MapUtils.setPathValue(_formValues, path.value, value);
     _forceRebuild();
   }
 
   void _forceRebuild() {
-    setState(() {
-      ++_generation;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _generation++;
+      });
     });
   }
 
   /// 如果子项是后注册的，判断是否需要填充设置的值
-  void _formValuesSet(AntFormItemState<dynamic> field) {
-    if (field.name == null) {
+  void _formValuesSet(AntFieldState field) {
+    if (field.mergedName == null || field.mergedName!.value.isEmpty) {
       return;
     }
-    Map<String, dynamic> pathMap = MapUtils.flattenMap(_formValues ?? {});
-    if (pathMap.containsKey(field.name?.jsonValue)) {
-      _watchFieldChange(field.name,pathMap[field.name?.jsonValue]);
-      field._formDidChange(pathMap[field.name?.jsonValue]);
-    } else {
-      if (field.initialValue != null) {
-        MapUtils.setPathValue(
-            _formValues, field.name!.value, field.initialValue);
-      }
+    var fieldValue = MapUtils.getPathValue(_formValues, field.mergedName.value);
+    if (fieldValue != null) {
+      field._formDidChange(fieldValue);
     }
   }
 
-  void _register(AntFormItemState<dynamic> field) {
+  void _register<T>(AntFieldState<T?> field) {
     _fields.add(field);
     _registerFieldWatch(field);
     _formValuesSet(field);
   }
 
-  void _unregister(AntFormItemState<dynamic> field) {
+  void _unregister<T>(AntFieldState<T?> field) {
     _fields.remove(field);
-    _watches.remove(field.name?.jsonValue);
+    _watches.remove(field.mergedName.jsonValue);
   }
 
   void save() {
-    for (final AntFormItemState<dynamic> field in _fields) {
+    for (final AntFieldState field in _fields) {
       field.save();
     }
   }
 
-  void reset() {
-    // print(_formValues);
-    for (final AntFormItemState<dynamic> field in _fields) {
-      print(field.name?.jsonValue);
-      if(field.name!=null){
-        setFieldValue(field.name!, field.initialValue);
+  void reset<T>() {
+    for (final AntFieldState field in _fields) {
+      if (field.mergedName != null && field.mergedName.value.isNotEmpty) {
+        setFieldValue(field.mergedName, field.initialValue);
       }
     }
-    _hasInteractedByUser = false;
     _forceRebuild();
   }
 
   void setFieldsValue(Map<dynamic, dynamic>? values) {
     _formValues = values ?? {};
-    Map<String, dynamic> pathMap = MapUtils.flattenMap(values ?? {});
-
-    for (final AntFormItemState<dynamic> field in _fields) {
-      if (field.name != null && field.name!.value.isNotEmpty) {
-        if (pathMap.containsKey(field.name!.value.join("."))) {
-          var value = pathMap[field.name!.value.join(".")];
-          _watchFieldChange(field.name, value);
-          field._formDidChange(value);
-        }
-      }
-    }
     _forceRebuild();
   }
 
   void setFieldValue(NamePath name, dynamic value) {
-
     _formValues = _formValues ?? {};
     MapUtils.setPathValue(_formValues, name.value, value);
 
-    var field = _fields.firstWhereOrNull((field){
-      return field.name?.jsonValue == name.jsonValue;
+    var field = _fields.firstWhereOrNull((field) {
+      return field.mergedName.jsonValue == name.jsonValue;
     });
-    if(field != null){
-      _watchFieldChange(field.name, value);
+    if (field != null) {
+      _watchFieldChange(field.mergedName, value);
       field._formDidChange(value);
+      _forceRebuild();
     }
-    _forceRebuild();
   }
 
-  bool _validate() {
+  bool _validate({List<NamePath>? nameList}) {
     errorFields = [];
     bool hasError = false;
-    String errorMessage = '';
-    for (final AntFormItemState<dynamic> field in _fields) {
-      if (!field.validate()) {
-        if (field.name != null) {
-          errorFields
-              .add({"name": field.name?.value, "errors": field.getErrorText()});
+    for (final AntFieldState field in _fields) {
+      if ((nameList == null || nameList.isEmpty) ||
+          nameList.contains(field.mergedName)) {
+        if (!field.validate()) {
+          if (field.mergedName != null && field.mergedName.value.isNotEmpty) {
+            errorFields.add({
+              "name": field.mergedName?.value,
+              "errors": field.getErrorText(),
+            });
+          }
+          hasError = true;
         }
-        hasError = true;
       }
     }
+    _forceRebuild();
     return !hasError;
   }
 
-  Map<dynamic, dynamic> getFieldsValue() {
-    Map<dynamic, dynamic> values = {};
-    for (final AntFormItemState<dynamic> field in _fields) {
-      Map<dynamic, dynamic> fieldValues = values;
-      if (field.name != null && field.name!.value.isNotEmpty) {
-        List<dynamic> paths = field.name!.value;
+  /// 获取表单的值
+  Map<String, dynamic?> getFieldsValue() {
+    Map<String, dynamic?> values = {};
+    for (final AntFieldState field in _fields) {
+      dynamic fieldValues = values;
+      if (field.mergedName != null && field.mergedName!.value.isNotEmpty) {
+        List<dynamic?> paths = field.mergedName!.value;
         for (int i = 0; i < paths.length; i++) {
           if (i < paths.length - 1) {
             fieldValues[paths[i]] ??= {};
@@ -214,138 +217,395 @@ class AntFormState extends State<AntForm> {
         }
       }
     }
+
     return values;
   }
 
-  Future<Map<dynamic, dynamic>> validateFields() async {
+  Future<Map<String, dynamic>> validateFields({
+    List<NamePath>? nameList,
+  }) async {
     if (!_validate()) {
       throw Exception({errorFields});
     }
     return getFieldsValue();
-    // return Future.value(values);
   }
 
   dynamic getFieldValue(NamePath name) {
-    AntFormItemState<dynamic>? field = _fields.firstWhereOrNull((element) {
-      return element.name == name;
+    AntFieldState? field = _fields.firstWhereOrNull((element) {
+      return element.mergedName == name;
     });
-    return field?._value;
+    return field?._value ?? MapUtils.getPathValue(_formValues, name.value);
   }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
-        child: _AntFormScope(
-            formState: this,
-            generation: _generation,
-            child: widget.child ?? Container()));
+      child: _AntFormScope(
+        formState: this,
+        generation: _generation,
+        child: widget.child ?? Container(),
+      ),
+    );
   }
 }
-
 
 class _AntFormScope extends InheritedWidget {
   const _AntFormScope({
     required super.child,
     required AntFormState formState,
     required int generation,
-  })  : _formState = formState,
-        _generation = generation;
+  }) : _formState = formState,
+       _generation = generation;
 
   final AntFormState _formState;
 
-  /// Incremented every time a form field has changed. This lets us know when
-  /// to rebuild the form.
   final int _generation;
 
-  /// The [Form] associated with this widget.
   AntForm get form => _formState.widget;
 
   @override
   bool updateShouldNotify(_AntFormScope old) => _generation != old._generation;
 }
+//endregion
 
-class NamePath {
-  List<dynamic> _namePaths = [];
+//region field
+class Field<T> extends StatefulWidget {
+  const Field({
+    super.key,
+    this.isList,
+    this.name,
+    required this.child,
+    this.onSaved,
+    this.validator,
+    this.notifier,
+    this.value,
+    this.initialValue,
+    this.restorationId,
+  });
 
-  NamePath(dynamic namePath) {
-    if (namePath is List) {
-      _namePaths = namePath;
-    } else {
-      _namePaths = [namePath];
-    }
+  final bool? isList;
+  final NamePath? name;
+  final Widget child;
+  final FormItemSetter<T>? onSaved;
+  final FormItemValidator<T>? validator;
+  final ValueNotifier<T>? notifier;
+  final T? value;
+  final T? initialValue;
+  final String? restorationId;
+
+  static AntFieldState<T?>? maybeOf<T>(BuildContext context) {
+    final _FieldScope<T?>? scope =
+        context.dependOnInheritedWidgetOfExactType<_FieldScope<T?>>();
+    return scope?._fieldState;
   }
-
-  List<dynamic> get value => _namePaths;
 
   @override
-  bool operator ==(Object other) {
-    if (other is! NamePath) {
-      return false;
-    }
-    return jsonValue == other.jsonValue;
-  }
-
-  String get jsonValue => _namePaths.map((item) {
-        return item.toString();
-      }).join(".");
+  State<StatefulWidget> createState() => AntFieldState<T>();
 }
 
-typedef FormItemBuilder<T> = Widget Function(AntFormItemState<T> field);
-typedef FormItemValidator<T> = String? Function(T? value);
-typedef FormItemSetter<T> = void Function(T? newValue);
+class AntFieldState<T> extends State<Field<T?>> with RestorationMixin {
+  _AntFormScope? _formScope;
+  _FieldScope? _fieldScope;
+  late final RestorableStringN _errorText = RestorableStringN(null);
+  final RestorableBool _hasInteractedByUser = RestorableBool(false);
+  int _generation = 0;
 
-enum AntFormLabelVerticalAlign { start, center, end }
+  /// 获取 合并后的 name
+  NamePath get mergedName {
+    ///这里的 AntFieldState 不能带类型，如果上层是FormList 会找不到
+    AntFieldState? fieldState = _fieldScope?.fieldState;
+    if (fieldState?.mergedName != null && widget.name != null) {
+      return NamePath([...fieldState!.mergedName.value, ...widget.name!.value]);
+    } else {
+      return widget.name ?? NamePath([]);
+    }
+  }
 
-class AntFormItem<T> extends StatefulWidget {
+  T? get initialValue => widget.initialValue;
+
+  T? get value {
+    return _value;
+  }
+
+  T? _value;
+
+  /// 获取组件传入name
+  NamePath? get name {
+    return widget.name;
+  }
+
+  String? get errorText => _errorText.value;
+
+  bool get hasError => _errorText.value != null;
+
+  bool get hasInteractedByUser => _hasInteractedByUser.value;
+
+  String? getErrorText() {
+    return _errorText.value;
+  }
+
+  void _formDidChange(T? value) {
+    _value = value;
+  }
+
+  void save() {
+    widget.onSaved?.call(value);
+  }
+
+  bool validate() {
+    _validate();
+    return !hasError;
+  }
+
+  void _validate() {
+    if (widget.validator != null) {
+      _errorText.value = widget.validator!(_value);
+    } else {
+      _errorText.value = null;
+    }
+  }
+
+  void didChange(T? value) {
+    if (mergedName == null || mergedName.isEmpty) {
+      return;
+    }
+    if (value == _value) {
+      return;
+    }
+    _value = value;
+    AntFormState? formState = _formScope?._formState;
+    _validate();
+    if (formState != null) {
+      formState._fieldDidChange(mergedName, value);
+      return;
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _value = widget.value ?? widget.initialValue;
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _formScope = context.dependOnInheritedWidgetOfExactType<_AntFormScope>();
+    _fieldScope = context.dependOnInheritedWidgetOfExactType<_FieldScope>();
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(Field<T?> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.name != widget.name) {
+      _generation++;
+    }
+    if (oldWidget.value != widget.value) {
+      _value = widget.value ?? widget.initialValue;
+    }
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    if (widget.name != null) {
+      _formScope?._formState._unregister(this);
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.name != null) {
+      _formScope!._formState._register(this);
+    }
+
+    return PopScope(
+      child: _FieldScope<T?>(
+        fieldState: this,
+        generation: _generation,
+        child: widget.child,
+      ),
+    );
+  }
+
+  @override
+  String? get restorationId => widget.restorationId;
+
+  @override
+  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
+    registerForRestoration(_errorText, 'error_text');
+  }
+}
+
+class _FieldScope<T> extends InheritedWidget {
+  const _FieldScope({
+    required super.child,
+    required AntFieldState<T?> fieldState,
+    required int generation,
+  }) : _fieldState = fieldState,
+       _generation = generation;
+  final AntFieldState<T?> _fieldState;
+  final int _generation;
+
+  AntFieldState<T?> get fieldState => _fieldState;
+
+  @override
+  bool updateShouldNotify(covariant _FieldScope oldWidget) {
+    return _generation != oldWidget._generation;
+  }
+}
+//endregion
+
+//region form item
+/// @component AntFormItem 表单项
+class AntFormItem<T> extends StatelessWidget {
+  const AntFormItem({
+    super.key,
+    this.layout,
+    this.name,
+    this.label,
+    this.labelWidget,
+    this.labelCol,
+    this.wrapperCol,
+    this.labelAlign,
+
+    /// @description 组件
+    /// @default null
+      this.builder,
+
+    /// @description 保存回调
+    this.onSaved,
+
+    /// @description 初始值
+    this.initialValue,
+
+    /// @description 验证器
+    this.validator,
+
+    this.restorationId,
+
+    /// @description 是否必填
+    /// @default false
+    this.required,
+
+    /// @description 组件样式
+    this.style,
+    this.notifier,
+
+    /// @description 是否隐藏
+    /// @default false
+    this.hidden = false,
+
+    /// @description 是否无样式
+    /// @default false
+    this.noStyle = false,
+  });
+
   final AntFormLayout? layout;
   final NamePath? name;
-  final Widget? label;
-  final AntFormCol? labelCol;
-  final AntFormCol? wrapperCol;
+  final Widget? labelWidget;
+  final String? label;
+  final AntCol? labelCol;
+  final AntCol? wrapperCol;
   final AntLabelAlign? labelAlign;
-  final Widget? child;
-  final FormItemBuilder<T> builder;
-  final FormItemSetter<T>? onSaved;
+
+  final FormItemBuilder<T?>? builder;
+  final FormItemSetter<T?>? onSaved;
   final T? initialValue;
   final FormItemValidator<T>? validator;
   final String? restorationId;
   final bool? required;
   final StateStyle? style;
   final ValueNotifier<T>? notifier;
-
-  const AntFormItem(
-      {super.key,
-      this.initialValue,
-      this.validator,
-      this.restorationId,
-      this.child,
-      this.layout,
-      this.name,
-      this.label,
-      required this.builder,
-      this.onSaved,
-      this.required,
-      this.style,
-      this.labelCol,
-      this.wrapperCol,
-      this.labelAlign,
-      this.notifier
-      });
+  final bool hidden;
+  final bool? noStyle;
 
   @override
-  State<StatefulWidget> createState() => AntFormItemState<T>();
+  Widget build(BuildContext context) {
+    return Offstage(
+      offstage: hidden,
+      child: Field<T?>(
+        name: name,
+        restorationId: restorationId,
+        initialValue: initialValue,
+        validator: validator,
+        onSaved: onSaved,
+        notifier: notifier,
+
+        child: InternalFormItem<T?>(
+          layout: layout,
+          labelWidget: labelWidget,
+          label: label,
+          labelCol: labelCol,
+          wrapperCol: wrapperCol,
+          labelAlign: labelAlign,
+          builder: builder,
+          required: required,
+          noStyle: noStyle,
+          style: style,
+        ),
+      ),
+    );
+  }
 }
 
-class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
-  late T? _value;
-  late final RestorableStringN _errorText = RestorableStringN(null);
-  final RestorableBool _hasInteractedByUser = RestorableBool(false);
+class InternalFormItem<T> extends StatefulWidget {
+  final AntFormLayout? layout;
+  final AntSize? size;
+  final Widget? labelWidget;
+  final String? label;
+  final AntCol? labelCol;
+  final AntCol? wrapperCol;
+  final AntLabelAlign? labelAlign;
+  final Widget? child;
+  final FormItemBuilder<T?>? builder;
+  final T? initialValue;
+  final String? restorationId;
+  final bool? required;
+  final bool? noStyle;
+  final StateStyle? style;
 
-  T? get value => _value;
+  const InternalFormItem({
+    super.key,
+    this.initialValue,
+    this.restorationId,
+    this.child,
+    this.layout,
+    this.label,
+    this.labelWidget,
+      this.builder,
+    this.labelCol,
+    this.wrapperCol,
+    this.labelAlign,
+    this.size,
+    this.required,
+    this.noStyle,
+    this.style,
+  });
 
-  NamePath? get name => widget.name;
+  @override
+  State<StatefulWidget> createState() => InternalFormItemState<T?>();
+}
 
-  T? get initialValue => widget.initialValue;
+class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
+  double get height {
+    AntFormState? formState = AntForm.maybeOf(context);
+    AntSize size = widget.size ?? formState?.widget.size ?? AntSize.middle;
+    switch (size) {
+      case AntSize.large:
+        return 48;
+      case AntSize.middle:
+        return 32;
+      case AntSize.small:
+        return 24;
+    }
+  }
 
   AntFormLayout? get layout {
     if (widget.layout != null) {
@@ -355,7 +615,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     }
   }
 
-  AntFormCol? get labelCol {
+  AntCol? get labelCol {
     if (widget.labelCol != null) {
       return widget.labelCol;
     } else {
@@ -363,7 +623,7 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     }
   }
 
-  AntFormCol? get wrapperCol {
+  AntCol? get wrapperCol {
     if (widget.wrapperCol != null) {
       return widget.wrapperCol;
     } else {
@@ -379,112 +639,39 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     }
   }
 
-  String? get errorText => _errorText.value;
-
-  bool get hasError => _errorText.value != null;
-
-  bool get hasInteractedByUser => _hasInteractedByUser.value;
-
-  String? getErrorText() {
-    return errorText;
-  }
-
-  void save() {
-    widget.onSaved?.call(value);
-  }
-
-  // void setFormSettings({}){}
-
-  void reset() {
-    _value = widget.initialValue;
-    _hasInteractedByUser.value = false;
-    _errorText.value = null;
-    // setState(() {
-    //   _value = widget.initialValue;
-    //   _hasInteractedByUser.value = false;
-    //   _errorText.value = null;
-    // });
-  }
-
-  bool validate() {
-    setState(() {
-      _validate();
-    });
-    return !hasError;
-  }
-
-  void _validate() {
-    if (widget.validator != null) {
-      _errorText.value = widget.validator!(_value);
-    } else {
-      _errorText.value = null;
-    }
-  }
-
-  void didChange(T? value) {
-    if (value == _value) {
-      return;
-    }
-    print("form item changed:" + value.toString());
-    AntFormState? formState = AntForm.maybeOf(context);
-    _value = value;
-    _validate();
-    if (formState != null) {
-      formState._fieldDidChange(widget.name, value);
-      return;
-    }
-    setState(() {});
-  }
-
-  /// form 触发的边跟
-  void _formDidChange(T? value) {
-    print("form item ${name?.jsonValue} changed:" + value.toString());
-    _value = value;
-  }
-
-  @override
-  void deactivate() {
-    AntForm.maybeOf(context)?._unregister(this);
-    super.deactivate();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _value = widget.initialValue;
-  }
-
   Widget _labelCol(Widget fieldLabel) {
     if (labelCol?.flex != null) {
       return Container(
         width: labelCol!.flex,
-        constraints: BoxConstraints(minHeight: 32),
+        constraints: BoxConstraints(minHeight: height),
         child: fieldLabel,
       );
     } else if (labelCol?.span != null) {
       return Expanded(
-          flex: labelCol!.span!,
-          child: Container(
-            constraints: BoxConstraints(minHeight: 32),
-            child: fieldLabel,
-          ));
+        flex: labelCol!.span!,
+        child: Container(
+          constraints: BoxConstraints(minHeight: height),
+          child: fieldLabel,
+        ),
+      );
     } else if (wrapperCol?.flex != null) {
       return Expanded(
         child: Container(
-          constraints: BoxConstraints(minHeight: 32),
+          constraints: BoxConstraints(minHeight: height),
           child: fieldLabel,
         ),
       );
     } else if (wrapperCol?.span != null) {
       return Expanded(
-          flex: 24 - wrapperCol!.span!,
-          child: Container(
-            constraints: BoxConstraints(minHeight: 32),
-            child: fieldLabel,
-          ));
+        flex: 24 - wrapperCol!.span!,
+        child: Container(
+          constraints: BoxConstraints(minHeight: height),
+          child: fieldLabel,
+        ),
+      );
     } else {
       return Container(
-        constraints: BoxConstraints(minHeight: 32),
+        constraints: BoxConstraints(minHeight: height),
         child: fieldLabel,
       );
     }
@@ -494,46 +681,56 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     if (wrapperCol?.flex != null) {
       return Container(
         alignment: Alignment.centerLeft,
-        constraints: BoxConstraints(minHeight: 32),
+        constraints: BoxConstraints(minHeight: height),
         width: wrapperCol!.flex,
         child: fieldInput,
       );
     } else if (wrapperCol?.span != null) {
       return Expanded(
-          flex: wrapperCol!.span!,
-          child: Container(
-            alignment: Alignment.centerLeft,
-            constraints: BoxConstraints(minHeight: 32),
-            child: fieldInput,
-          ));
+        flex: wrapperCol!.span!,
+        child: Container(
+          alignment: Alignment.centerLeft,
+          constraints: BoxConstraints(minHeight: height),
+          child: fieldInput,
+        ),
+      );
     } else if (labelCol?.flex != null) {
       return Expanded(
-          child: Container(
-        alignment: Alignment.centerLeft,
-        constraints: BoxConstraints(minHeight: 32),
-        child: fieldInput,
-      ));
+        child: Container(
+          alignment: Alignment.centerLeft,
+          constraints: BoxConstraints(minHeight: height),
+          child: fieldInput,
+        ),
+      );
     } else if (labelCol?.span != null) {
       return Expanded(
-          flex: 24 - labelCol!.span!,
-          child: Container(
-            alignment: Alignment.centerLeft,
-            constraints: BoxConstraints(minHeight: 32),
-            child: fieldInput,
-          ));
+        flex: 24 - labelCol!.span!,
+        child: Container(
+          alignment: Alignment.centerLeft,
+          constraints: BoxConstraints(minHeight: height),
+          child: fieldInput,
+        ),
+      );
     } else {
       return Expanded(
-          child: Container(
-        alignment: Alignment.centerLeft,
-        constraints: BoxConstraints(minHeight: 32),
-        child: fieldInput,
-      ));
+        child: Container(
+          alignment: Alignment.centerLeft,
+          constraints: BoxConstraints(minHeight: height),
+          child: fieldInput,
+        ),
+      );
     }
   }
 
   @override
+  void initState() {}
+
+  @override
+  void didChangeDependencies() {}
+
+  @override
   Widget build(BuildContext context) {
-    AntForm.maybeOf(context)?._register(this);
+    AntFieldState<T?>? fieldState = Field.maybeOf<T?>(context);
 
     StateStyle stateStyle = _AntFormItemStyle();
     stateStyle = stateStyle.merge(widget.style);
@@ -542,91 +739,96 @@ class AntFormItemState<T> extends State<AntFormItem<T>> with RestorationMixin {
     if (widget.label != null) {
       List<Widget> fieldLabelChildren = [];
       if (widget.required == true) {
-        if(layout==AntFormLayout.vertical){
-          fieldLabelChildren.add(Container(
-            width: 0,
-            child: Text(
-              "*",
-              style: TextStyle(color: Colors.red),
+        if (layout == AntFormLayout.vertical) {
+          fieldLabelChildren.add(
+            SizedBox(
+              width: 0,
+              child: Text("*", style: TextStyle(color: Colors.red)),
             ),
-          ));
-        }else{
-          fieldLabelChildren.add(Container(
-            width: 0,
-            transform: Matrix4.translationValues(-8.0, 0.0, 0.0),
-            child: Text(
-              "*",
-              style: TextStyle(color: Colors.red),
+          );
+        } else {
+          fieldLabelChildren.add(
+            Container(
+              padding: EdgeInsets.only(left: 0, right: 0, top: 0),
+              // width: 0,
+              // transform: Matrix4.translationValues(-8.0, 0.0, 0.0),
+              child: Text("*", style: TextStyle(color: Colors.red)),
             ),
-          ));
+          );
         }
       }
-      fieldLabelChildren.add(widget.label!);
-      Widget fieldLabel = Container(
-        // padding: (layout==AntFormLayout.horizontal)?EdgeInsets.only(left: 8):null,
-        child: Row(
-          mainAxisAlignment: labelAlign == AntLabelAlign.left
-              ? MainAxisAlignment.start
-              : MainAxisAlignment.end,
-          children: fieldLabelChildren,
-        ),
+      fieldLabelChildren.add(widget.labelWidget ?? Text(widget.label ?? ""));
+      Widget fieldLabel = Row(
+        mainAxisAlignment:
+            labelAlign == AntLabelAlign.left
+                ? MainAxisAlignment.start
+                : MainAxisAlignment.end,
+        children: fieldLabelChildren,
       );
-
       fieldItemChildren.add(_labelCol(fieldLabel));
     }
     if (widget.builder != null) {
-      var child = widget.builder(this);
+      var child = widget.builder!(fieldState!);
       List<Widget> filedInputChildren = [child];
-      if (errorText != null) {
-        filedInputChildren.add(Container(
-          padding: EdgeInsets.only(left: 0, right: 0, top: 0),
-          child: Text(
-            errorText!,
-            style: TextStyle(fontSize: 12, color: Colors.red),
+      if (fieldState.errorText != null) {
+        filedInputChildren.add(
+          Container(
+            padding: EdgeInsets.only(left: 0, right: 0, top: 0),
+            child: Text(
+              fieldState.errorText ?? "",
+              style: TextStyle(fontSize: 12, color: Colors.red),
+            ),
           ),
-        ));
+        );
       }
 
       Widget fieldItem = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: filedInputChildren,
       );
-      Widget filedInput = layout == AntFormLayout.horizontal
-          ? _wrapperCol(fieldItem)
-          : fieldItem;
+      Widget filedInput =
+          layout == AntFormLayout.horizontal
+              ? _wrapperCol(fieldItem)
+              : fieldItem;
       fieldItemChildren.add(filedInput);
+    }
+
+    if (widget.noStyle == true) {
+      if (widget.builder != null) {
+        return widget.builder!(fieldState!);
+      } else {
+        return Container();
+      }
     }
 
     return Container(
       decoration: stateStyle.resolve(<WidgetState>{})?.decoration,
       padding: stateStyle.resolve(<WidgetState>{})?.computedPadding,
       margin: stateStyle.resolve(<WidgetState>{})?.computedMargin,
-      child: layout == AntFormLayout.horizontal
-          ? Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: AntForm.maybeOf(context)?.rowSpacing ?? 0,
-              children: fieldItemChildren,
-            )
-          : Column(
-              crossAxisAlignment: labelAlign == AntLabelAlign.left
-                  ? CrossAxisAlignment.start
-                  : CrossAxisAlignment.end,
-              spacing: AntForm.maybeOf(context)?.columnSpacing ?? 0,
-              children: fieldItemChildren,
-            ),
+      child:
+          layout == AntFormLayout.horizontal
+              ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: AntForm.maybeOf(context)?.rowSpacing ?? 0,
+                children: fieldItemChildren,
+              )
+              : Column(
+                crossAxisAlignment:
+                    labelAlign == AntLabelAlign.left
+                        ? CrossAxisAlignment.start
+                        : CrossAxisAlignment.end,
+                spacing: AntForm.maybeOf(context)?.columnSpacing ?? 0,
+                children: fieldItemChildren,
+              ),
     );
     // return child;
   }
-
-  @override
-  String? get restorationId => widget.restorationId;
-
-  @override
-  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
-    registerForRestoration(_errorText, 'error_text');
-    // registerForRestoration(_hasInteractedByUser, 'has_interacted_by_user');
-  }
 }
+//endregion
+
+typedef FormItemBuilder<T> = Widget Function(AntFieldState<T> field);
+typedef FormItemValidator<T> = String? Function(T? value);
+typedef FormItemSetter<T> = void Function(T? newValue);
 
 class _AntFormItemStyle extends StateStyle {
   const _AntFormItemStyle();
@@ -634,8 +836,122 @@ class _AntFormItemStyle extends StateStyle {
   @override
   Style get style {
     return Style(
-        padding: StylePadding(left: 8, right: 8),
-        // margin: StyleMargin(bottom: 8)
-        );
+      // padding: StylePadding(left: 8, right: 8),
+      // margin: StyleMargin(bottom: 8)
+    );
+  }
+}
+
+typedef AntFormListBuilder =
+    Widget Function(
+      BuildContext context,
+      List<AntFormListField> fields,
+      AntFormListOperations operations,
+    );
+
+/// @component AntFormList 表单列表
+class AntFormList extends StatefulWidget {
+  const AntFormList({super.key, this.name, this.builder});
+
+  /// @description 组件名称
+  /// @default null
+  final NamePath? name;
+
+  /// @description 表单列表子组件
+  /// @default null
+  final AntFormListBuilder? builder;
+
+  @override
+  State<StatefulWidget> createState() => AntFormListState();
+}
+
+class AntFormListState extends State<AntFormList> {
+  _AntFormScope? _formScope;
+
+  NamePath get mergedName {
+    AntFieldState? fieldState = Field.maybeOf(context);
+    if (fieldState?.mergedName != null && widget.name != null) {
+      return NamePath([...fieldState!.mergedName.value, ...widget.name!.value]);
+    } else {
+      return widget.name ?? NamePath([]);
+    }
+  }
+
+  List<AntFormListField> get fields {
+    AntFormState? formState = AntForm.maybeOf(context);
+    var listValue = MapUtils.getPathValue(
+      formState!._formValues,
+      mergedName.value,
+    );
+    if (listValue == null) {
+      return [];
+    } else if (listValue is List) {
+      return listValue.map((e) {
+        int index = listValue.indexOf(e);
+        return AntFormListField(name: NamePath(index), index: index);
+      }).toList();
+    } else {
+      return [];
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    _formScope = context.dependOnInheritedWidgetOfExactType<_AntFormScope>();
+    super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    AntFormState? formState = _formScope?._formState;
+    return Field(
+      isList: true,
+      name: widget.name,
+      child:
+          widget.builder != null
+              ? widget.builder!(
+                context,
+                fields,
+                AntFormListOperations(
+                  add: (dynamic defaultValue) {
+                    List<dynamic>? listValue =
+                        MapUtils.getPathValue(
+                              formState!._formValues,
+                              mergedName.value,
+                            )
+                            as List<dynamic>?;
+                    if (listValue is List) {
+                      listValue.add(defaultValue);
+                    } else {
+                      listValue = [defaultValue];
+                    }
+                    formState.setFieldValue(mergedName, listValue);
+                  },
+                  remove: (int index) {
+                    List<dynamic>? listValue =
+                        MapUtils.getPathValue(
+                              formState!._formValues,
+                              mergedName.value,
+                            )
+                            as List<dynamic>?;
+                    if (listValue is List) {
+                      listValue.removeAt(index);
+                    }
+                    formState.setFieldValue(mergedName, listValue);
+                  },
+                ),
+              )
+              : Container(),
+    );
   }
 }

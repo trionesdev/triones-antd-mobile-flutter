@@ -19,8 +19,10 @@ class AntToastRoute<T> extends PopupRoute<T> {
   Widget? contentRender() {
     if (content is Text) {
       Text contentText = content as Text;
-      return Text(contentText.data!,
-          style: TextStyle(color: Colors.white).merge(contentText.style));
+      return Text(
+        contentText.data!,
+        style: TextStyle(color: Colors.white).merge(contentText.style),
+      );
     } else {
       return content;
     }
@@ -56,9 +58,12 @@ class AntToastRoute<T> extends PopupRoute<T> {
   Duration get transitionDuration => Duration(milliseconds: 200);
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
-    StateStyle stateStyle = _AntToastStyle();
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
+    StateStyle stateStyle = _AntToastStyle(context: context);
     stateStyle = stateStyle.merge(style);
     return Ant(
       color: Colors.transparent,
@@ -77,7 +82,7 @@ class AntToastRoute<T> extends PopupRoute<T> {
                   color: icon!.color ?? Colors.white,
                   size: icon!.size ?? 36,
                 ),
-              if (content != null) contentRender()!
+              if (content != null) contentRender()!,
             ],
           ),
         ),
@@ -87,11 +92,17 @@ class AntToastRoute<T> extends PopupRoute<T> {
 }
 
 class _AntToastStyle extends StateStyle {
+  const _AntToastStyle({required this.context});
+
+  final BuildContext context;
+
   @override
   Style get style {
+    AntThemeData themeData = AntTheme.of(context);
     return Style(
-        borderRadius: 6,
-        backgroundColor: Colors.black54,
-        padding: StylePadding.all(16));
+      borderRadius: themeData.borderRadius,
+      backgroundColor: Colors.black54,
+      padding: StylePadding.all(16),
+    );
   }
 }

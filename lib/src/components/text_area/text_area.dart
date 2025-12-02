@@ -67,7 +67,7 @@ class _AntTextAreaState extends State<AntTextArea> with MaterialStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    StateStyle style = _AntTextAreaStyle();
+    StateStyle style = _AntTextAreaStyle(context: context);
     style = style.merge(widget.style);
 
     return Container(
@@ -92,13 +92,12 @@ class _AntTextAreaState extends State<AntTextArea> with MaterialStateMixin {
           contentPadding: EdgeInsets.zero,
         ),
         onChanged: (value) {
-          print("input changed:" + value);
           if (widget.onChange != null) {
             widget.onChange!(value);
           }
         },
         onEditingComplete: () {
-          print("input c:" + _controller.text);
+
         },
       ),
     );
@@ -106,13 +105,16 @@ class _AntTextAreaState extends State<AntTextArea> with MaterialStateMixin {
 }
 
 class _AntTextAreaStyle extends StateStyle {
-  const _AntTextAreaStyle();
+  const _AntTextAreaStyle({required this.context});
+
+  final BuildContext context;
 
   @override
   Style get style {
+    AntThemeData themeData = AntTheme.of(context);
     return Style(
       fontSize: 14,
-      borderRadius: 6,
+      borderRadius: themeData.borderRadius,
       padding: StylePadding(left: 0, right: 0, top: 0, bottom: 0),
     );
   }

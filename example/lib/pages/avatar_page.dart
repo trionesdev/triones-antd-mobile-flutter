@@ -24,14 +24,14 @@ class _AvatarPageState extends State<AvatarPage>{
               spacing: 10,
               children: [
                 AntSpace(children: [
-                  AntAvatar(shape: AntAvatarShape.circle,size: 64,icon: Icon(Icons.person),),
-                  AntAvatar(shape: AntAvatarShape.circle,size: 40,icon: Icon(Icons.person),),
-                  AntAvatar(shape: AntAvatarShape.circle,size: 32,icon: Icon(Icons.person),),
+                  AntAvatar(shape: AntAvatarShape.circle,diameter: 64,icon: Icon(Icons.person),),
+                  AntAvatar(shape: AntAvatarShape.circle,diameter: 40,icon: Icon(Icons.person),),
+                  AntAvatar(shape: AntAvatarShape.circle,diameter: 32,icon: Icon(Icons.person),),
                 ],),
                 AntSpace(children: [
-                  AntAvatar(shape: AntAvatarShape.square,size: 64,icon: Icon(Icons.person),),
-                  AntAvatar(shape: AntAvatarShape.square,size: 40,icon: Icon(Icons.person),),
-                  AntAvatar(shape: AntAvatarShape.square,size: 32,icon: Icon(Icons.person),),
+                  AntAvatar(shape: AntAvatarShape.square,diameter: 64,icon: Icon(Icons.person),),
+                  AntAvatar(shape: AntAvatarShape.square,diameter: 40,icon: Icon(Icons.person),),
+                  AntAvatar(shape: AntAvatarShape.square,diameter: 32,icon: Icon(Icons.person),),
                 ],)
               ],
             ),)

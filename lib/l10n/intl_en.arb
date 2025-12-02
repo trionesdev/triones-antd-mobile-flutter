@@ -1,0 +1,15 @@
+{
+  "@@locale": "en",
+  "button_ok": "Ok",
+  "button_cancel": "Cancel",
+  "button_close": "Close",
+  "button_confirm": "Confirm",
+  "calendar_mon": "Mon",
+  "calendar_tue": "Tue",
+  "calendar_wed": "Wed",
+  "calendar_thu": "Thu",
+  "calendar_fir": "Fir",
+  "calendar_sat": "Sat",
+  "calendar_sun": "Sun",
+  "cascader_placeholder":"Please Select"
+}
