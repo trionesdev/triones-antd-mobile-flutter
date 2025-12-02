@@ -27,7 +27,7 @@
 | titleStyle  | 样式      | TextStyle?     | null           |
 | labelCol    | 左侧标签列   | AntCol?        | null           |
 | labelAlign  | 左侧标签对齐  | AntLabelAlign? | null           |
-| children    | 子组件     | List<Widget>?  | null           |
+| children    | 子组件     | `List<Widget>?`  | null           |
 | showDivider | 是否显示分割线 | bool           | false          |
 | arrow       | 是否显示箭头  | bool           | true           |
 

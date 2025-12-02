@@ -26,6 +26,7 @@ import 'package:antd_flutter_example/pages/mask_page.dart';
 import 'package:antd_flutter_example/pages/modal_page.dart';
 import 'package:antd_flutter_example/pages/picker_page.dart';
 import 'package:antd_flutter_example/pages/popup_page.dart';
+import 'package:antd_flutter_example/pages/process_page.dart';
 import 'package:antd_flutter_example/pages/radio_page.dart';
 import 'package:antd_flutter_example/pages/rate_page.dart';
 import 'package:antd_flutter_example/pages/scaffold_page.dart';
@@ -111,6 +112,7 @@ class MyApp extends StatelessWidget {
         '/empty': (context) => EmptyPage(),
         '/breadcrumb': (context) => BreadcrumbPage(),
         '/tabs': (context) => TabsPage(),
+        '/process': (context) => ProcessPage(),
         '/radio': (context) => RadioPage(),
         '/checkbox': (context) => CheckboxPage(),
         '/dialog': (context) => DialogPage(),
@@ -383,6 +385,12 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text('Tabs 标签页'),
               onTap: () {
                 Navigator.pushNamed(context, '/tabs');
+              },
+            ),
+            material.ListTile(
+              title: Text('Process 进度条'),
+              onTap: () {
+                Navigator.pushNamed(context, '/process');
               },
             ),
             material.ListTile(

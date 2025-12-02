@@ -27,7 +27,7 @@ AppBar 是页面顶部导航栏组件，通常包含返回按钮、页面标题�
 | leading              | 左侧返回图标后面的内容       | Widget?               | null |
 | title                | 标题                | Widget?               | null |
 | titleText            | 显示标题的文本           | String?               | null |
-| actions              | 右侧操作按钮            | List<Widget>?         | null |
+| actions              | 右侧操作按钮            | `List<Widget>?`         | null |
 | toolbarHeight        | 顶部导航栏高度           | double?               | null |
 | bottom               | 底部内容              | PreferredSizeWidget?  | null |
 | centerTitle          | 是否居中显示            | bool?                 | true |

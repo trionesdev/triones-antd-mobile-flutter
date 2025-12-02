@@ -29,8 +29,8 @@
 | 属性         | 说明              | 类型                              | 默认值  |
 |------------|-----------------|---------------------------------|------|
 | mouth      | 选中月份            | DateTime?                       | null |
-| value      | 选中日期            | List<DateTime?>?                | null |
-| onChange   | 选中日期变化回调        | ValueChanged<List<DateTime?>?>? | null |
+| value      | 选中日期            | `List<DateTime?>?`                | null |
+| onChange   | 选中日期变化回调        | `ValueChanged<List<DateTime?>?>?` | null |
 | onRendered | 渲染完成回调，返回当前组件高度 | ValueChanged<double?>?          | null |
 
 ### 组件特性

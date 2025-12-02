@@ -28,7 +28,7 @@
 | activeKey        | 当前激活的tabKey | String?               | null |
 | defaultActiveKey | 默认激活的tabKey | String?               | null |
 | onChange         | 切换回调        | Function(String key)? | null |
-| children         | 子组件         | List<Widget>?         | null |
+| children         | 子组件         | `List<Widget>?`         | null |
 
 ### AntTabBarItem
 

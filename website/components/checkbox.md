@@ -27,23 +27,23 @@
 | disabled       | 是否禁用     | bool?               | false |
 | checkedIcon    | 选中图标     | Widget?             | null  |
 | uncheckedIcon  | 未选中图标    | Widget?             | null  |
-| onChange       | 选中状态变化回调 | ValueChanged<bool>? | null  |
-| onTap          | 点击回调     | ValueChanged<void>? | null  |
+| onChange       | 选中状态变化回调 | `ValueChanged<bool>?` | null  |
+| onTap          | 点击回调     | `ValueChanged<void>?` | null  |
 | value          | 值        | dynamic             | null  |
 | iconSize       | 图标大小     | double?             | null  |
 | spacing        | 间距       | double?             | 4     |
 
 ### AntCheckboxGroup 组件参数
 
-| 属性           | 说明       | 类型                            | 默认值                |
-|--------------|----------|-------------------------------|--------------------|
-| layout       | 布局方向     | AntLayout                     | AntLayout.vertical |
-| defaultValue | 默认值      | List<dynamic>?                | null               |
-| value        | 当前值      | List<dynamic>?                | null               |
-| disabled     | 是否禁用     | bool                          | false              |
-| iconSize     | 图标大小     | double?                       | null               |
-| onChange     | 选中状态变化回调 | ValueChanged<List<dynamic>?>? | null               |
-| children     | 子组件      | List<AntCheckbox>?            | null               |
+| 属性           | 说明       | 类型                            | 默认值  |
+|--------------|----------|-------------------------------|------|
+| layout       | 布局方向     | AntLayout                     | `AntLayout.vertical`     |
+| defaultValue | 默认值      | `List<dynamic>?`                | null |
+| value        | 当前值      | `List<dynamic>?`                | null |
+| disabled     | 是否禁用     | bool                          | false |
+| iconSize     | 图标大小     | double?                       | null |
+| onChange     | 选中状态变化回调 | `ValueChanged<List<dynamic>?>?` | null |
+| children     | 子组件      | `List<AntCheckbox>?`            | null |
 
 ### 组件特性
 

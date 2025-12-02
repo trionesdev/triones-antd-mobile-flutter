@@ -1,4 +1,4 @@
-/# Space 间距
+# Space 间距
 
 设置组件之间的间距。
 
@@ -20,7 +20,7 @@
 | style | 样式 | StateStyle? | null |
 | decoration | 装饰 | BoxDecoration? | null |
 | direction | 排列方向 | AntSpaceDirection? | horizontal |
-| children | 子项 | List<Widget>? | null |
+| children | 子项 | `List<Widget>?` | null |
 | spacing | 间隔 | double? | 2 |
 | split | 分割线 | Widget? | null |
 

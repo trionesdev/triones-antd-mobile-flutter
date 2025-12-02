@@ -34,6 +34,7 @@
 - [x] Page 页面
 - [x] Picker 选择器
 - [x] Popup 弹出层
+- [x] Process 进度条
 - [x] Radio 单选框
 - [x] Rate 评分
 - [x] Scaffold 脚手架

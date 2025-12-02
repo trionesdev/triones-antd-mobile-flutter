@@ -20,7 +20,7 @@ Breadcrumb组件用于显示当前页面在系统层级结构中的位置，并�
 
 | 属性         | 说明    | 类型                                                         | 默认值  |
 |------------|-------|------------------------------------------------------------|------|
-| items      | 面包屑项  | List<AntBreadcrumbItemStruct>?                             | null |
+| items      | 面包屑项  | `List<AntBreadcrumbItemStruct>?`                             | null |
 | separator  | 分隔符   | Widget?                                                    | null |
 | itemRender | 自定义渲染 | Widget? Function(AntBreadcrumbItemStruct item, int index)? | null |
 

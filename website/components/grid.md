@@ -15,12 +15,12 @@
 
 ### AntGrid 属性
 
-| 属性         | 说明   | 类型                 | 默认值  |
-|------------|------|--------------------|------|
-| columns    | 列数   | int?               | 1    |
-| spacing    | 子项间距 | double?            | 0    |
-| children   | 子项   | List<AntGridItem>? | null |
-| decoration | 装饰   | BoxDecoration?     | null |
+| 属性         | 说明   | 类型                   | 默认值  |
+|------------|------|----------------------|------|
+| columns    | 列数   | int?                 | 1    |
+| spacing    | 子项间距 | double?              | 0    |
+| children   | 子项   | `List<AntGridItem>?` | null |
+| decoration | 装饰   | `BoxDecoration?`     | null |
 
 ### AntGridItem 属性
 

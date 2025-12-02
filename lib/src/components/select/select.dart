@@ -3,13 +3,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
+/// @component AntSelect 列表选择器
 class AntSelect extends StatefulWidget {
   const AntSelect({
     super.key,
+    this.cellLabel,
     /**
      * 显示的标签
      */
-    this.cellLabel,
+    this.cellLabelText,
     this.mode,
     this.pickerMode = AntSelectPickerMode.popup,
     this.showSearch = false,
@@ -42,24 +44,82 @@ class AntSelect extends StatefulWidget {
     this.onOpenChange,
   });
 
-  final String? cellLabel;
+  final Widget? cellLabel;
+
+  /// @description 显示的标签
+  /// @default  null
+  final String? cellLabelText;
+
+  /// @description 选择模式(是否可以多选)
+  /// @default  null
   final AntSelectMode? mode;
+
+  /// @description 选择器模式
+  /// @default  AntSelectPickerMode.popup
   final AntSelectPickerMode pickerMode;
+
+  /// @description 是否显示搜索框
+  /// @default  false
   final bool showSearch;
+
+  /// @description 顶部栏
+  /// @default  null
   final PreferredSizeWidget? appBar;
+
+  /// @description 标题
+  /// @default  null
   final String? title;
+
+  /// @description 占位符
+  /// @default  null
   final String? placeholder;
+
+  /// @description 搜索框占位符
+  /// @default  null
   final String? searchPlaceholder;
+
+  /// @description 是否显示箭头
+  /// @default  false
   final bool arrow;
+
+  /// @description 字段名
+  /// @default  AntFieldsNames(label: NamePath("label"),value: NamePath("value"))
   final AntFieldsNames? fieldsNames;
+
+  /// @description 选项数据源
+  /// @default  []
   final List<dynamic> options;
+
+  /// @description 选项构建器
+  /// @default  null
   final AntSelectOptionBuilder? optionBuilder;
+
+  /// @description 搜索框回调
+  /// @default  null
   final ValueChanged<dynamic>? onSearch;
+
+  /// @description 值
+  /// @default  null
   final dynamic value;
+
+  /// @description 值选项
+  /// @default  null
   final dynamic valueOption;
+
+  /// @description 值改变回调
+  /// @default  null
   final AntSelectValueChanged? onChange;
+
+  /// @description 刷新事件
+  /// @default  null
   final AsyncCallback? onRefresh;
+
+  /// @description 滚动到底部事件
+  /// @default  null
   final AsyncCallback? onScrollToLower;
+
+  /// @description 打开状态改变回调
+  /// @default  null
   final ValueChanged<bool>? onOpenChange;
 
   @override
@@ -76,7 +136,6 @@ class AntSelectState extends State<AntSelect> {
   dynamic _value;
   bool _multipleValue = false;
   bool _isOpen = false;
-
 
   Widget? get content {
     if (_value == null) {
@@ -104,11 +163,9 @@ class AntSelectState extends State<AntSelect> {
               MapUtils.getPathValue(item, _fieldsNames.value?.value),
             );
           })
-          .map(
-            (item){
-              return MapUtils.getPathValue(item, _fieldsNames.label?.value);
-            },
-          );
+          .map((item) {
+            return MapUtils.getPathValue(item, _fieldsNames.label?.value);
+          });
       return (labels.isNotEmpty) ? Text(labels.join(",")) : null;
     } else {
       var labelItem = widget.options.firstWhereOrNull((item) {
@@ -174,7 +231,8 @@ class AntSelectState extends State<AntSelect> {
     return AntCell(
       placeholderText: widget.placeholder,
       arrow: widget.arrow,
-      labelText: widget.cellLabel,
+      label: widget.cellLabel,
+      labelText: widget.cellLabelText,
       child: content,
       onTap: () {
         _isOpen = true;
@@ -209,61 +267,63 @@ class AntSelectState extends State<AntSelect> {
               fullscreenDialog: true, // 关键参数
               builder:
                   (context) => AntScaffold(
-                    appBar: widget.appBar ?? AntAppBar(
-                      title:
-                      widget.title != null
-                          ? Text(
-                          widget.title??""
-                      )
-                          : null,
-                      onBack: () {
-                        Navigator.of(context).maybePop(true).then((_) {});
-                      },
-                    ),
+                    appBar:
+                        widget.appBar ??
+                        AntAppBar(
+                          title:
+                              widget.title != null
+                                  ? Text(widget.title ?? "")
+                                  : null,
+                          onBack: () {
+                            Navigator.of(context).maybePop(true).then((_) {});
+                          },
+                        ),
                     body: selectPanel,
-                    bottomNavigationBar: SafeArea(child: Container(
-                      padding: EdgeInsets.all(8),
-                      child: Row(
-                        spacing: 8,
-                        children: [
-                          Expanded(
-                            child: AntButton(
-                              size: AntSize.large,
-                              type: AntButtonType.text,
-                              text:
-                              AntdLocalizations.of(
-                                context,
-                              )?.button_cancel ??
-                                  "取消",
-                              onPressed: () {
-                                Navigator.of(
-                                  context,
-                                ).maybePop(true).then((_) {});
-                              },
+                    bottomNavigationBar: SafeArea(
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        child: Row(
+                          spacing: 8,
+                          children: [
+                            Expanded(
+                              child: AntButton(
+                                size: AntSize.large,
+                                type: AntButtonType.text,
+                                text:
+                                    AntdLocalizations.of(
+                                      context,
+                                    )?.button_cancel ??
+                                    "取消",
+                                onPressed: () {
+                                  Navigator.of(
+                                    context,
+                                  ).maybePop(true).then((_) {});
+                                },
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: AntButton(
-                              size: AntSize.large,
-                              type: AntButtonType.primary,
-                              text:
-                              AntdLocalizations.of(context)?.button_ok ??
-                                  "确定",
-                              onPressed: () {
-                                Navigator.of(context).maybePop(true).then((
+                            Expanded(
+                              child: AntButton(
+                                size: AntSize.large,
+                                type: AntButtonType.primary,
+                                text:
+                                    AntdLocalizations.of(context)?.button_ok ??
+                                    "确定",
+                                onPressed: () {
+                                  Navigator.of(context).maybePop(true).then((
                                     _,
-                                    ) {
-                                  widget.onChange?.call(
-                                    _value,
-                                    valueOption(_value),
-                                  );
-                                });
-                              },
+                                  ) {
+                                    widget.onChange?.call(
+                                      _value,
+                                      valueOption(_value),
+                                    );
+                                  });
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    )),
+                    ),
                   ),
             ),
           );

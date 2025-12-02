@@ -15,22 +15,22 @@
 
 输入框的属性说明如下：
 
-| 属性           | 说明     | 类型                    | 默认值    |
-|--------------|--------|-----------------------|--------|
-| size         | 组件大小   | AntSize               | middle |
-| height       | 输入框高度  | double?               | null   |
-| placeholder  | 提示文本   | String?               | null   |
-| type         | 输入框类型  | AntInputType?         | text   |
-| prefix       | 前缀     | Widget?               | null   |
-| suffix       | 后缀     | Widget?               | null   |
-| value        | 当前值    | String?               | null   |
-| defaultValue | 默认值    | String?               | null   |
-| disabled     | 是否禁用   | bool                  | false  |
-| onChange     | 值改变回调  | ValueChanged<String>? | null   |
-| decoration   | 输入框装饰  | BoxDecoration?        | null   |
-| style        | 样式     | StateStyle?           | null   |
-| onBlur       | 失去焦点回调 | ValueGetter<void>?    | null   |
-| onFocus      | 获得焦点回调 | ValueGetter<void>?    | null   |
+| 属性           | 说明     | 类型                      | 默认值    |
+|--------------|--------|-------------------------|--------|
+| size         | 组件大小   | AntSize                 | middle |
+| height       | 输入框高度  | double?                 | null   |
+| placeholder  | 提示文本   | String?                 | null   |
+| type         | 输入框类型  | AntInputType?           | text   |
+| prefix       | 前缀     | Widget?                 | null   |
+| suffix       | 后缀     | Widget?                 | null   |
+| value        | 当前值    | String?                 | null   |
+| defaultValue | 默认值    | String?                 | null   |
+| disabled     | 是否禁用   | bool                    | false  |
+| onChange     | 值改变回调  | `ValueChanged<String>?` | null   |
+| decoration   | 输入框装饰  | BoxDecoration?          | null   |
+| style        | 样式     | StateStyle?             | null   |
+| onBlur       | 失去焦点回调 | `ValueGetter<void>?`    | null   |
+| onFocus      | 获得焦点回调 | `ValueGetter<void>?`    | null   |
 
 ### AntInputType 枚举值
 
