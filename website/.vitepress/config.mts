@@ -72,6 +72,7 @@ export default defineConfig({
                         {text: 'Radio  单选框', link: '/components/radio'},
                         {text: 'Rate  评分', link: '/components/rate'},
                         {text: 'Switch  开关', link: '/components/switch'},
+                        {text: 'Select  列表选择器', link: '/components/select'},
                         {text: 'InputNumber  数字输入框', link: '/components/input-number'},
                         {text: 'TextArea  文本域', link: '/components/text-area'},
                         {text: 'ImagesWall  图片墙', link: '/components/images-wall'},
@@ -85,6 +86,7 @@ export default defineConfig({
                         {text: 'Dialog  对话框', link: '/components/dialog'},
                         {text: 'Empty  空状态', link: '/components/empty'},
                         {text: 'Toast 轻提示', link: '/components/toast'},
+                        {text: 'Process  进度条', link: '/components/process'},
                     ]
                 }
             ],

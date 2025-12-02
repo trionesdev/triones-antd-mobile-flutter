@@ -8,8 +8,7 @@
 
 ## 代码演示
 
-```dart
- 
+```dart src=../example/lib/pages/loading_page.dart preview=/loading
 ```
 
 ## API
@@ -20,3 +19,5 @@
 |-----------------|------|--------|-------------|
 | color           | 颜色   | Color? | Colors.grey |
 | backgroundColor | 背景颜色 | Color? | null        |
+| size            | 大小   | double? | 48.0       |
+| strokeWidth     | 线条宽度 | double? | 4.0        |

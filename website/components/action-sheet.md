@@ -24,7 +24,7 @@
 | closeOnMaskClick | 是否点击遮罩关闭 | bool?                           | false |
 | title            | 标题       | Widget?                         | null  |
 | titleText        | 标题文本     | String?                         | null  |
-| actions          | 动作列表     | List<AntActionSheetItemStruct>? | null  |
+| actions          | 动作列表     | `List<AntActionSheetItemStruct>?` | null  |
 | showCancelButton | 是否显示取消按钮 | bool?                           | true  |
 | cancel           | 取消按钮     | Widget?                         | null  |
 | itemStyle        | 动作样式     | StateStyle?                     | null  |
@@ -41,7 +41,7 @@
 
 | 参数               | 说明       | 类型                              | 默认值  |
 |------------------|----------|---------------------------------|------|
-| actions          | 动作列表     | List<AntActionSheetItemStruct>? | null |
+| actions          | 动作列表     | `List<AntActionSheetItemStruct>?` | null |
 | showCancelButton | 是否显示取消按钮 | bool?                           | true |
 | titleText        | 标题文本     | String?                         | null |
 | title            | 标题       | Widget?                         | null |

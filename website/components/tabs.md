@@ -21,9 +21,9 @@
 | --- | --- | --- | --- |
 | defaultActiveKey | 默认激活的tabKey | String? | null |
 | activeKey | 当前激活的tabKey | String? | null |
-| items | 子项 | List<AntTabItemStruct>? | null |
+| items | 子项 | `List<AntTabItemStruct>?` | null |
 | stretch | 是否拉伸 | bool | true |
-| children | 子项 | List<AntTab>? | null |
+| children | 子项 | `List<AntTab>?` | null |
 | decoration | 装饰 | BoxDecoration? | null |
 | tabDecoration | tab项的样式 | BoxDecoration? | null |
 | style | 样式 | StateStyle? | null |
