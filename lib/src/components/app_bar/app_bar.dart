@@ -114,8 +114,8 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             children: [
               Container(
-                padding: EdgeInsets.only(left: 8),
-                child: backIcon ?? Icon(AntIcons.leftOutline),
+                padding: EdgeInsets.only(left: 16),
+                child: backIcon ?? Icon(AntIcons.leftOutline, size: 16),
               ),
               if (showBackText) finalBackText,
             ],
