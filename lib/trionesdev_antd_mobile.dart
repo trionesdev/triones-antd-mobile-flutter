@@ -23,6 +23,7 @@ export 'src/components/tab_bar/tab_bar.dart';
 export 'src/components/card/card.dart';
 export 'src/components/list/list.dart';
 export 'src/components/space/space.dart';
+export 'src/components/steps/steps.dart';
 export 'src/components/search_bar/search_bar.dart';
 export 'src/components/tag/tag.dart';
 export 'src/components/popup/popup.dart';

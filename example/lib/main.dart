@@ -48,6 +48,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 import 'pages/calendar_page.dart';
+import 'pages/steps_page.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
@@ -67,12 +68,9 @@ class MyApp extends StatelessWidget {
         AntdLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate
+        GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales:  [
-        material.Locale('zh'),
-        material.Locale('en'),
-      ],
+      supportedLocales: [material.Locale('zh'), material.Locale('en')],
       theme: AntThemeData(
         // colorPrimary: material.Colors.amber,
       ),
@@ -102,6 +100,7 @@ class MyApp extends StatelessWidget {
         '/toast': (context) => ToastPage(),
         '/divider': (context) => DividerPage(),
         '/alert': (context) => AlertPage(),
+        '/steps': (context) => StepsPage(),
         '/switch': (context) => SwitchPage(),
         '/mask': (context) => MaskPage(),
         '/badge': (context) => BadgePage(),
@@ -325,6 +324,12 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text('Alert 告警提示'),
               onTap: () {
                 Navigator.pushNamed(context, '/alert');
+              },
+            ),
+            material.ListTile(
+              title: Text('Steps 步骤条'),
+              onTap: () {
+                Navigator.pushNamed(context, '/steps');
               },
             ),
             material.ListTile(

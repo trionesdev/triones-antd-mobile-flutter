@@ -112,20 +112,20 @@ class CircleProcessPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = math.min(size.width, size.height) / 2 - strokeWidth / 2;
     final backgroundPaint =
-        Paint()
-          ..color = railColor ?? Colors.grey
-          ..style =
-              PaintingStyle
-                  .stroke // 描边
-          ..strokeWidth = strokeWidth;
+    Paint()
+      ..color = railColor ?? Colors.grey
+      ..style =
+          PaintingStyle
+              .stroke // 描边
+      ..strokeWidth = strokeWidth;
     canvas.drawCircle(center, radius, backgroundPaint);
 
     final progressPaint =
-        Paint()
-          ..color = strokeColor ?? Colors.blue
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = strokeWidth
-          ..strokeCap = finalStrokeLineCap;
+    Paint()
+      ..color = strokeColor ?? Colors.blue
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = finalStrokeLineCap;
 
     // 计算进度的弧度
     // 完整的圆是 2 * math.pi
@@ -160,7 +160,10 @@ class CircleProcessPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CircleProcessPainter oldDelegate) {
-    return false;
+    return oldDelegate.percent != percent || oldDelegate.status != status ||
+        oldDelegate.strokeColor != strokeColor ||
+        oldDelegate.railColor != railColor
+        || oldDelegate.strokeLineCap != strokeLineCap;
   }
 }
 
@@ -176,6 +179,7 @@ class CircleProcess extends StatelessWidget {
     this.size = AntSize.middle,
     this.diameter,
     this.strokeLineCap = AntStrokeLineCap.round,
+    this.strokeWidth = 6,
   });
 
   final Format? format;
@@ -203,6 +207,10 @@ class CircleProcess extends StatelessWidget {
   /// @default null
   final Color? strokeColor;
   final AntStrokeLineCap strokeLineCap;
+
+  /// @description 进度条的宽度
+  /// @default 6
+  final double strokeWidth;
 
   double get computedWidth {
     if (diameter != null) {
@@ -268,6 +276,7 @@ class CircleProcess extends StatelessWidget {
           showInfo: showInfo,
           status: status,
           strokeLineCap: strokeLineCap,
+          strokeWidth: strokeWidth,
         ),
       ),
     );
