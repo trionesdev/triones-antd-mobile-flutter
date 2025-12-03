@@ -38,7 +38,7 @@ class VerticalStepItem extends StatefulWidget {
 }
 
 class _VerticalStepItemState extends State<VerticalStepItem> {
-  GlobalKey _myWidgetKey = GlobalKey();
+  final GlobalKey _myWidgetKey = GlobalKey();
   double _height = 24;
 
   double get _width {
@@ -88,7 +88,8 @@ class _VerticalStepItemState extends State<VerticalStepItem> {
         // mainAxisSize: MainAxisSize.max,
         children: [
           SizedBox(
-            height: 8 + (_iconSize >= 24 ? 0 : (20 - _iconSize).abs() / 2),
+            // height: 8 + (_iconSize >= 24 ? 0 : (24 - _iconSize).abs() / 2),
+            height: 8,
             child: Visibility(
               visible: !widget.isFirst,
               child: CustomPaint(
@@ -136,6 +137,7 @@ class _VerticalStepItemState extends State<VerticalStepItem> {
   Widget build(BuildContext context) {
     return Row(
       key: _myWidgetKey,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         verticalStepIcon(context),
         Expanded(

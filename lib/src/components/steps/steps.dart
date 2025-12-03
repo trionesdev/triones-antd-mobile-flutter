@@ -11,6 +11,7 @@ class AntSteps extends StatefulWidget {
     this.iconSize,
     this.defaultIconSize = 24,
     this.current = 0,
+    this.stretch = false,
     this.items,
     this.children,
   });
@@ -19,6 +20,7 @@ class AntSteps extends StatefulWidget {
   final int? current;
   final double? iconSize;
   final double defaultIconSize;
+  final bool stretch;
   final List<AntStepItemStruct>? items;
   final List<AntStepItem>? children;
 
@@ -41,11 +43,15 @@ class AntStepsState extends State<AntSteps> {
       case AntStepsDirection.horizontal:
         List<Widget> children = [];
         for (var element in _children) {
-          children.add(Expanded(child: element));
+          children.add(Flexible(
+              fit: widget.stretch? FlexFit.tight : FlexFit.loose,
+              child: element));
+          // children.add(element);
         }
         return Row(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: children ?? [],
         );
       case AntStepsDirection.vertical:
@@ -174,7 +180,7 @@ class _StepItemState extends State<AntStepItem> {
           current: _stepsScope?._stepsState.widget.current ?? 0,
           icon: widget.icon,
           iconSize: widget.iconSize ?? _stepsScope?._stepsState.widget.iconSize,
-
+          stretch: _stepsScope?._stepsState.widget.stretch ?? false,
           title: widget.title,
           subTitle: widget.subTitle,
           status: widget.status,
