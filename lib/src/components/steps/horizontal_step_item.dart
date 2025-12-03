@@ -73,8 +73,13 @@ class _HorizontalStepItemState extends State<HorizontalStepItem> {
         Expanded(
           child: Visibility(
             visible: !widget.isFirst,
-            child: CustomPaint(
-              painter: _HorizontalLinePainter(color: beforeLineColor(context)),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: 16),
+              child: CustomPaint(
+                painter: _HorizontalLinePainter(
+                  color: beforeLineColor(context),
+                ),
+              ),
             ),
           ),
         ),
@@ -88,8 +93,11 @@ class _HorizontalStepItemState extends State<HorizontalStepItem> {
         Expanded(
           child: Visibility(
             visible: !widget.isLast,
-            child: CustomPaint(
-              painter: _HorizontalLinePainter(color: afterLineColor(context)),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: 16),
+              child: CustomPaint(
+                painter: _HorizontalLinePainter(color: afterLineColor(context)),
+              ),
             ),
           ),
         ),
@@ -99,7 +107,6 @@ class _HorizontalStepItemState extends State<HorizontalStepItem> {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

@@ -9,6 +9,7 @@ class AntSteps extends StatefulWidget {
     super.key,
     this.direction = AntStepsDirection.horizontal,
     this.iconSize,
+    this.defaultIconSize = 24,
     this.current = 0,
     this.items,
     this.children,
@@ -17,6 +18,7 @@ class AntSteps extends StatefulWidget {
   final AntStepsDirection direction;
   final int? current;
   final double? iconSize;
+  final double defaultIconSize;
   final List<AntStepItemStruct>? items;
   final List<AntStepItem>? children;
 
@@ -171,7 +173,8 @@ class _StepItemState extends State<AntStepItem> {
           index: _index,
           current: _stepsScope?._stepsState.widget.current ?? 0,
           icon: widget.icon,
-          iconSize: widget.iconSize,
+          iconSize: widget.iconSize ?? _stepsScope?._stepsState.widget.iconSize,
+
           title: widget.title,
           subTitle: widget.subTitle,
           status: widget.status,
@@ -185,7 +188,8 @@ class _StepItemState extends State<AntStepItem> {
           index: _index,
           current: _stepsScope?._stepsState.widget.current ?? 0,
           icon: widget.icon,
-          iconSize: widget.iconSize,
+          iconSize: widget.iconSize ?? _stepsScope?._stepsState.widget.iconSize,
+          defaultIconSize: _stepsScope?._stepsState.widget.defaultIconSize,
           title: widget.title,
           subTitle: widget.subTitle,
         );

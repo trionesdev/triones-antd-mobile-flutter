@@ -25,7 +25,7 @@ class VerticalStepItem extends StatefulWidget {
   final int? index;
   final int? current;
   final double? iconSize;
-  final double defaultIconSize;
+  final double? defaultIconSize;
   final bool disabled;
   final Widget? icon;
   final AntStepStatus status;
@@ -43,7 +43,7 @@ class _VerticalStepItemState extends State<VerticalStepItem> {
 
   double get _width {
     double width =
-        (widget.icon != null ? widget.iconSize ?? widget.defaultIconSize : 10);
+        (widget.icon != null ? widget.iconSize ?? widget.defaultIconSize! : 10);
     if (width < 24) {
       width = 24;
     }
@@ -51,7 +51,7 @@ class _VerticalStepItemState extends State<VerticalStepItem> {
   }
 
   double get _iconSize {
-    return widget.icon != null ? widget.iconSize ?? widget.defaultIconSize : 10;
+    return widget.icon != null ? widget.iconSize ?? widget.defaultIconSize! : 10;
   }
 
   Color beforeLineColor(BuildContext context) {
@@ -88,7 +88,7 @@ class _VerticalStepItemState extends State<VerticalStepItem> {
         // mainAxisSize: MainAxisSize.max,
         children: [
           SizedBox(
-            height: 8 + (_iconSize >= 24 ? 0 : (24 - _iconSize).abs() / 2),
+            height: 8 + (_iconSize >= 24 ? 0 : (20 - _iconSize).abs() / 2),
             child: Visibility(
               visible: !widget.isFirst,
               child: CustomPaint(
