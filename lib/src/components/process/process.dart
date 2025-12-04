@@ -20,6 +20,7 @@ class AntProcess extends StatelessWidget {
     this.diameter,
     this.positionAlign = AntPercentPositionAlign.end,
     this.positionType = AntPercentPositionType.outer,
+    this.strokeWidth = 6,
   });
 
   /// @description 格式化进度百分比
@@ -63,6 +64,7 @@ class AntProcess extends StatelessWidget {
   /// @description 进度百分比的位置类型，只对type="line"有效
   /// @default outer
   final AntPercentPositionType positionType;
+  final double strokeWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +92,7 @@ class AntProcess extends StatelessWidget {
           strokeColor: strokeColor,
           size: size,
           diameter: diameter,
+          strokeWidth: strokeWidth,
         );
     }
     return Container();
