@@ -48,13 +48,15 @@ class CircleProcessPainter extends CustomPainter {
   }
 
   double computedIconSize(Size size) {
-    double iconSize = (size.width / 2 - strokeWidth / 2) / 2;
-    if (iconSize < 20) {
-      return 12;
-    } else if (iconSize < 24) {
-      return 14;
+    double iconSize = (size.width / 2 - strokeWidth / 2) / 3;
+    if (iconSize < 36) {
+      return 10;
     }
-    return 24;
+
+    if (iconSize >= 48) {
+      return 24;
+    }
+    return iconSize;
   }
 
   TextSpan textSpan(Size size) {
