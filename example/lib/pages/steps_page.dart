@@ -25,7 +25,7 @@ class _StepsPageState extends State<StepsPage> {
                 child: AntSteps(
                   current: 1,
                   // itemMinWidth: 120,
-                  stretch:  false,
+                  stretch: false,
                   children: [
                     AntStepItem(
                       title: Text("步骤1"),
@@ -52,8 +52,8 @@ class _StepsPageState extends State<StepsPage> {
                       icon: Icon(Icons.access_time_filled, color: Colors.grey),
                     ),
                     AntStepItem(
-                      title: Text("步骤6",softWrap: false ),
-                      subTitle: Text("描述信息",softWrap: false, maxLines: 1,),
+                      title: Text("步骤6", softWrap: false),
+                      subTitle: Text("描述信息", softWrap: false, maxLines: 1),
                       icon: Icon(Icons.access_time_filled, color: Colors.grey),
                     ),
                   ],
@@ -64,7 +64,7 @@ class _StepsPageState extends State<StepsPage> {
               title: "基础用法（拉伸）",
               child: AntSteps(
                 current: 1,
-                stretch:  true,
+                stretch: true,
                 children: [
                   AntStepItem(title: Text("步骤1")),
                   AntStepItem(title: Text("步骤2"), subTitle: Text("描述信息")),
@@ -79,7 +79,7 @@ class _StepsPageState extends State<StepsPage> {
               title: "横向步骤条失败",
               child: AntSteps(
                 current: 2,
-                stretch:  true,
+                stretch: true,
                 children: [
                   AntStepItem(title: Text("步骤1")),
                   AntStepItem(title: Text("步骤2"), subTitle: Text("描述信息")),
@@ -164,6 +164,56 @@ class _StepsPageState extends State<StepsPage> {
                     ),
                   ),
                 ],
+              ),
+            ),
+            DemoBlock(
+              title: "扩展使用",
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                child: AntSteps(
+                  current: 1,
+                  // itemMinWidth: 120,
+                  stretch: false,
+                  children: [
+                    AntStepItem(
+                      // title: Text("步骤1"),
+                      icon: AntProcess(
+                        type: AntProcessType.circle,
+                        percent: 50,
+                        diameter: 30,
+                        strokeWidth: 2,
+                      ),
+                    ),
+                    AntStepItem(
+                      // title: Text("步骤1"),
+                      icon: AntProcess(
+                        type: AntProcessType.circle,
+                        percent: 50,
+                        diameter: 30,
+                        strokeWidth: 2,
+                      ),
+                    ),
+                    AntStepItem(
+                      // title: Text("步骤1"),
+                      icon: AntProcess(
+                        type: AntProcessType.circle,
+                        percent: 50,
+                        diameter: 30,
+                        strokeWidth: 2,
+                      ),
+                    ),
+                    AntStepItem(
+                      // title: Text("步骤1"),
+                      icon: AntProcess(
+                        type: AntProcessType.circle,
+                        percent: 50,
+                        diameter: 30,
+                        strokeWidth: 2,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

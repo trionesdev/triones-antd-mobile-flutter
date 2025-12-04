@@ -44,10 +44,10 @@ class HorizontalStepItem extends StatefulWidget {
 class _HorizontalStepItemState extends State<HorizontalStepItem> {
   final double _minLineWidth = 16.0;
   final GlobalKey _iconKey = GlobalKey();
-  final GlobalKey _textKey = GlobalKey();
+  final GlobalKey _textRowKey = GlobalKey();
   double? _iconWidth;
-  double? _iconRowWidth;
-  double? _iconLineWidth;
+  late double? _iconRowWidth = 42.0;
+  late double? _iconLineWidth = _minLineWidth;
 
   Color beforeLineColor(BuildContext context) {
     AntThemeData theme = AntTheme.of(context);
@@ -87,7 +87,7 @@ class _HorizontalStepItemState extends State<HorizontalStepItem> {
           child: Opacity(
             opacity: widget.isFirst ? 0 : 1,
             child: Container(
-              width: _iconLineWidth,
+              width: widget.stretch ? null : _iconLineWidth,
               constraints: BoxConstraints(minWidth: _minLineWidth),
               child: CustomPaint(
                 painter: _HorizontalLinePainter(
@@ -124,7 +124,7 @@ class _HorizontalStepItemState extends State<HorizontalStepItem> {
           child: Opacity(
             opacity: widget.isLast ? 0 : 1,
             child: Container(
-              width: _iconLineWidth,
+              width: widget.stretch ? null : _iconLineWidth,
               constraints: BoxConstraints(minWidth: _minLineWidth),
               child: CustomPaint(
                 painter: _HorizontalLinePainter(color: afterLineColor(context)),
@@ -144,71 +144,69 @@ class _HorizontalStepItemState extends State<HorizontalStepItem> {
     if (widget.stretch) {
       return;
     }
-    final RenderBox? iconRenderBox =
-        _iconKey.currentContext?.findRenderObject() as RenderBox?;
-    final RenderBox? textRenderBox =
-        _textKey.currentContext?.findRenderObject() as RenderBox?;
-
-    if (iconRenderBox != null && textRenderBox != null) {
-      if (textRenderBox.size.width >
-          (iconRenderBox.size.width + _minLineWidth * 2)) {
-        _iconRowWidth = textRenderBox.size.width;
+    setState(() {
+      final RenderBox? iconRenderBox = _iconKey.currentContext?.findRenderObject() as RenderBox?;
+      final RenderBox? textRowRenderBox = _textRowKey.currentContext?.findRenderObject() as RenderBox?;
+      if ( iconRenderBox?.size != null && textRowRenderBox?.size != null) {
+        if (textRowRenderBox!.size.width > (iconRenderBox!.size.width + _minLineWidth * 2)) {
+          _iconRowWidth = textRowRenderBox.size.width;
+        } else {
+          _iconRowWidth = iconRenderBox.size.width + _minLineWidth * 2;
+        }
       } else {
-        _iconRowWidth = iconRenderBox.size.width + _minLineWidth * 2;
+        _iconRowWidth = ((iconRenderBox?.size.width ?? 10) + _minLineWidth * 2);
       }
-    } else {
-      _iconRowWidth = iconRenderBox?.size.width ?? 10 + _minLineWidth * 2;
-    }
-    _iconWidth = iconRenderBox?.size.width;
-    if (_iconRowWidth != null &&
-        widget.minWidth != null &&
-        _iconRowWidth! < widget.minWidth!) {
-      _iconRowWidth = widget.minWidth;
-    }
+      _iconWidth = iconRenderBox?.size.width;
+      if (_iconRowWidth != null && widget.minWidth != null && _iconRowWidth! < widget.minWidth!) {
+        _iconRowWidth = widget.minWidth;
+      }
 
-    if (iconRenderBox != null) {
-      _iconLineWidth = (_iconRowWidth! - iconRenderBox!.size.width) / 2;
-    }
+      if (iconRenderBox?.size != null) {
+        _iconLineWidth = (_iconRowWidth! - iconRenderBox!.size.width) / 2;
+      }
+    });
   }
 
   @override
   void initState() {
-    updateSize();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      updateSize();
+    });
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant HorizontalStepItem oldWidget) {
-    updateSize();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      updateSize();
+    });
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: _iconRowWidth,
+      width: widget.stretch?null: _iconRowWidth,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             decoration: BoxDecoration(),
             // clipBehavior: Clip.hardEdge,
-            width: _iconRowWidth,
+            width: widget.stretch?null:_iconRowWidth,
             child: horizontalStepIcon(context),
           ),
           if (hasText)
             NotificationListener<SizeChangedLayoutNotification>(
               onNotification: (notification) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  setState(() {
-                    updateSize();
-                  });
+                  updateSize();
                 });
                 return true;
               },
               child: SizeChangedLayoutNotifier(
                 child: Container(
-                  key: _textKey,
+                  key: _textRowKey,
                   padding: EdgeInsets.all(8),
                   child: Column(
                     children: [
