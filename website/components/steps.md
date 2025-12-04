@@ -17,49 +17,49 @@
 
 ### AntSteps 组件参数
 
-| 属性 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| direction | 步骤条方向 | AntStepsDirection | AntStepsDirection.horizontal |
-| current | 指定当前步骤，从 0 开始记数。在子 Step 元素中，可以通过 status 属性覆盖状态 | int? | 0 |
-| iconSize | 指定图标大小 | double? | null |
-| defaultIconSize | 默认图标大小 | double | 24 |
-| stretch | 是否拉伸，只对 type='horizontal' 的有效 | bool | true |
-| itemMinWidth | 步骤条子项最小宽度, 仅在 type='horizontal' 时有效 | double? | null |
-| items | 步骤条子项 | `List<AntStepItemStruct>?` | null |
-| children | 步骤条子项 | `List<AntStepItem>?` | null |
+| 属性              | 说明                                             | 类型                         | 默认值                          |
+|-----------------|------------------------------------------------|----------------------------|------------------------------|
+| direction       | 步骤条方向                                          | AntStepsDirection          | AntStepsDirection.horizontal |
+| current         | 指定当前步骤，从 0 开始记数。在子 Step 元素中，可以通过 status 属性覆盖状态 | int?                       | 0                            |
+| iconSize        | 指定图标大小                                         | double?                    | null                         |
+| defaultIconSize | 默认图标大小                                         | double                     | 24                           |
+| stretch         | 是否拉伸，只对 type='horizontal' 的有效                  | bool                       | true                         |
+| itemMinWidth    | 步骤条子项最小宽度, 仅在 type='horizontal' 时有效            | double?                    | null                         |
+| items           | 步骤条子项                                          | `List<AntStepItemStruct>?` | null                         |
+| children        | 步骤条子项                                          | `List<AntStepItem>?`       | null                         |
 
 ### AntStepItem 组件参数
 
-| 属性 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| disabled | 是否禁用 | bool | false |
-| icon | 图标 | Widget? | null |
-| iconSize | 指定图标大小 | double? | null |
-| status | 指定状态。当不配置该属性时，会使用 Steps 的 current 来自动指定状态；如果该属性与 current 指定的状态不匹配会覆盖自动匹配的状态 | AntStepStatus | AntStepStatus.wait |
-| title | 标题 | Widget? | null |
-| subTitle | 子标题 | Widget? | null |
-| child | 子组件 | Widget? | null |
+| 属性       | 说明                                                                          | 类型            | 默认值                |
+|----------|-----------------------------------------------------------------------------|---------------|--------------------|
+| disabled | 是否禁用                                                                        | bool          | false              |
+| icon     | 图标                                                                          | Widget?       | null               |
+| iconSize | 指定图标大小                                                                      | double?       | null               |
+| status   | 指定状态。当不配置该属性时，会使用 Steps 的 current 来自动指定状态；如果该属性与 current 指定的状态不匹配会覆盖自动匹配的状态 | AntStepStatus | AntStepStatus.wait |
+| title    | 标题                                                                          | Widget?       | null               |
+| subTitle | 子标题                                                                         | Widget?       | null               |
+| child    | 子组件                                                                         | Widget?       | null               |
 
 ### AntStepsDirection 枚举值
 
-| 值 | 说明 |
-| --- | --- |
+| 值          | 说明   |
+|------------|------|
 | horizontal | 水平方向 |
-| vertical | 垂直方向 |
+| vertical   | 垂直方向 |
 
 ### AntStepStatus 枚举值
 
-| 值 | 说明 |
-| --- | --- |
-| wait | 等待进行 |
+| 值       | 说明   |
+|---------|------|
+| wait    | 等待进行 |
 | process | 正在进行 |
-| finish | 已完成 |
-| error | 出错 |
+| finish  | 已完成  |
+| error   | 出错   |
 
 ### AntStepItemStruct 属性
 
-| 属性 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
+| 属性   | 说明 | 类型      | 默认值  |
+|------|----|---------|------|
 | icon | 图标 | Widget? | null |
 
 ### 组件特性
