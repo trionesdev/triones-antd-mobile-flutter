@@ -81,7 +81,7 @@ class CircleProcessPainter extends CustomPainter {
       return TextSpan(
         text: String.fromCharCode(iconData.codePoint),
         style: TextStyle(
-          color: strokeColor,
+          color: innerStrokeColor,
           fontSize: computedIconSize(size),
           fontFamily: iconData.fontFamily,
           package: iconData.fontPackage,
@@ -255,7 +255,7 @@ class CircleProcess extends StatelessWidget {
       return strokeColor!;
     } else {
       AntThemeData theme = AntTheme.of(context);
-      if (percent == 100) {
+      if (percent >= 100) {
         return theme.colorSuccess;
       } else if (status == AntProcessStatus.exception) {
         return theme.colorError;
