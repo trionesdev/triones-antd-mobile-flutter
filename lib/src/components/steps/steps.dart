@@ -11,17 +11,35 @@ class AntSteps extends StatefulWidget {
     this.iconSize,
     this.defaultIconSize = 24,
     this.current = 0,
-    this.stretch = false,
+    this.stretch = true,
+    this.itemMinWidth,
     this.items,
     this.children,
   });
 
+  /// @description 步骤条方向
+  /// @default AntStepsDirection.horizontal
   final AntStepsDirection direction;
+  /// @description 指定当前步骤，从 0 开始记数。在子 Step 元素中，可以通过 status 属性覆盖状态
+  /// @default 0
   final int? current;
+  /// @description 指定图标大小
+  /// @default null
   final double? iconSize;
+  /// @description 默认图标大小
+  /// @default 24
   final double defaultIconSize;
+  /// @description 是否拉伸，只对 type='horizontal' 的有效
+  /// @default true
   final bool stretch;
+  /// @description 步骤条子项最小宽度, 仅在 type='horizontal' 时有效
+  /// @default null
+  final double? itemMinWidth;
+  /// @description 步骤条子项
+  /// @default null
   final List<AntStepItemStruct>? items;
+  /// @description 步骤条子项
+  /// @default null
   final List<AntStepItem>? children;
 
   static AntStepsState? maybeOf(BuildContext context) {
@@ -43,10 +61,13 @@ class AntStepsState extends State<AntSteps> {
       case AntStepsDirection.horizontal:
         List<Widget> children = [];
         for (var element in _children) {
-          children.add(Flexible(
-              fit: widget.stretch? FlexFit.tight : FlexFit.loose,
-              child: element));
-          // children.add(element);
+          if(widget.stretch){
+            children.add(Flexible(
+                fit: widget.stretch? FlexFit.tight : FlexFit.loose,
+                child: element));
+          }else{
+            children.add(element);
+          }
         }
         return Row(
           mainAxisSize: MainAxisSize.min,
@@ -119,24 +140,33 @@ class _AntStepsScope extends InheritedWidget {
 class AntStepItem extends StatefulWidget {
   const AntStepItem({
     super.key,
-
-    this.current,
     this.disabled = false,
     this.icon,
     this.iconSize,
     this.status = AntStepStatus.wait,
     this.subTitle,
     this.title,
+    this.child,
   });
 
-
-  final int? current;
   final bool disabled;
+  /// @description 图标
+  /// @default null
   final Widget? icon;
+  /// @description 指定图标大小
+  /// @default null
   final double? iconSize;
+  /// @description 指定状态。当不配置该属性时，会使用 Steps 的 current 来自动指定状态；如果该属性与 current 指定的状态不匹配会覆盖自动匹配的状态
+  /// @default AntStepStatus.wait
   final AntStepStatus status;
-  final Widget? subTitle;
+  /// @description 标题
+  /// @default null
   final Widget? title;
+  /// @description 子标题
+  /// @default null
+  final Widget? subTitle;
+  final Widget? child;
+
 
   @override
   State<StatefulWidget> createState() => _StepItemState();
@@ -181,11 +211,12 @@ class _StepItemState extends State<AntStepItem> {
           icon: widget.icon,
           iconSize: widget.iconSize ?? _stepsScope?._stepsState.widget.iconSize,
           stretch: _stepsScope?._stepsState.widget.stretch ?? false,
+          minWidth: _stepsScope?._stepsState.widget.itemMinWidth,
           title: widget.title,
           subTitle: widget.subTitle,
           status: widget.status,
           disabled: widget.disabled,
-
+          child: widget.child,
         );
       case AntStepsDirection.vertical:
         return VerticalStepItem(
@@ -198,6 +229,9 @@ class _StepItemState extends State<AntStepItem> {
           defaultIconSize: _stepsScope?._stepsState.widget.defaultIconSize,
           title: widget.title,
           subTitle: widget.subTitle,
+          status: widget.status,
+          disabled: widget.disabled,
+          child: widget.child,
         );
     }
   }

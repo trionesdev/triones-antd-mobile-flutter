@@ -19,6 +19,7 @@ class HorizontalStepItem extends StatefulWidget {
     this.subTitle,
     this.title,
     this.child,
+    this.minWidth,
   });
 
   final bool isFirst;
@@ -34,15 +35,19 @@ class HorizontalStepItem extends StatefulWidget {
   final Widget? subTitle;
   final Widget? title;
   final Widget? child;
+  final double? minWidth;
 
   @override
   State<StatefulWidget> createState() => _HorizontalStepItemState();
 }
 
 class _HorizontalStepItemState extends State<HorizontalStepItem> {
+  final double _minLineWidth = 16.0;
   final GlobalKey _iconKey = GlobalKey();
   final GlobalKey _textKey = GlobalKey();
-    double? _iconWidth  ;
+  double? _iconWidth;
+  double? _iconRowWidth;
+  double? _iconLineWidth;
 
   Color beforeLineColor(BuildContext context) {
     AntThemeData theme = AntTheme.of(context);
@@ -74,16 +79,16 @@ class _HorizontalStepItemState extends State<HorizontalStepItem> {
   Widget horizontalStepIcon(BuildContext context) {
     AntThemeData theme = AntTheme.of(context);
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      // mainAxisSize: MainAxisSize.min,
       children: [
         Flexible(
           flex: 1,
-          // fit: widget.stretch? FlexFit.tight: FlexFit.loose,
-          fit:  FlexFit.tight ,
-          child: Visibility(
-            visible: !widget.isFirst,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minWidth: 16),
+          fit: widget.stretch ? FlexFit.tight : FlexFit.loose,
+          child: Opacity(
+            opacity: widget.isFirst ? 0 : 1,
+            child: Container(
+              width: _iconLineWidth,
+              constraints: BoxConstraints(minWidth: _minLineWidth),
               child: CustomPaint(
                 painter: _HorizontalLinePainter(
                   color: beforeLineColor(context),
@@ -92,21 +97,35 @@ class _HorizontalStepItemState extends State<HorizontalStepItem> {
             ),
           ),
         ),
-        widget.icon != null
-            ? SizedBox(
-              width: widget.iconSize ?? 16,
-              height: widget.iconSize ?? 16,
-              child: widget.icon,
-            )
-            : AntStepCirclePoint(color: pointColor(context)),
+        NotificationListener<SizeChangedLayoutNotification>(
+          onNotification: (notification) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              updateSize();
+            });
+            return true;
+          },
+          child: SizeChangedLayoutNotifier(
+            child: Container(
+              key: _iconKey,
+              child:
+                  widget.icon != null
+                      ? SizedBox(
+                        width: widget.iconSize,
+                        height: widget.iconSize,
+                        child: widget.icon,
+                      )
+                      : AntStepCirclePoint(color: pointColor(context)),
+            ),
+          ),
+        ),
         Flexible(
           flex: 1,
-          // fit: widget.stretch? FlexFit.tight: FlexFit.loose,
-          fit:  FlexFit.tight ,
-          child: Visibility(
-            visible: !widget.isLast,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minWidth: 16),
+          fit: widget.stretch ? FlexFit.tight : FlexFit.loose,
+          child: Opacity(
+            opacity: widget.isLast ? 0 : 1,
+            child: Container(
+              width: _iconLineWidth,
+              constraints: BoxConstraints(minWidth: _minLineWidth),
               child: CustomPaint(
                 painter: _HorizontalLinePainter(color: afterLineColor(context)),
               ),
@@ -122,65 +141,61 @@ class _HorizontalStepItemState extends State<HorizontalStepItem> {
   }
 
   void updateSize() {
+    if (widget.stretch) {
+      return;
+    }
     final RenderBox? iconRenderBox =
         _iconKey.currentContext?.findRenderObject() as RenderBox?;
     final RenderBox? textRenderBox =
         _textKey.currentContext?.findRenderObject() as RenderBox?;
-    if(textRenderBox!=null){
 
-    }
-    if(iconRenderBox != null && textRenderBox != null){
-      if(textRenderBox.size.width > iconRenderBox.size.width){
-        _iconWidth = textRenderBox.size.width;
-      }else{
-        _iconWidth = iconRenderBox.size.width;
+    if (iconRenderBox != null && textRenderBox != null) {
+      if (textRenderBox.size.width >
+          (iconRenderBox.size.width + _minLineWidth * 2)) {
+        _iconRowWidth = textRenderBox.size.width;
+      } else {
+        _iconRowWidth = iconRenderBox.size.width + _minLineWidth * 2;
       }
+    } else {
+      _iconRowWidth = iconRenderBox?.size.width ?? 10 + _minLineWidth * 2;
     }
-    print(iconRenderBox?.size);
-    print(textRenderBox?.size);
-    print(_iconWidth);
+    _iconWidth = iconRenderBox?.size.width;
+    if (_iconRowWidth != null &&
+        widget.minWidth != null &&
+        _iconRowWidth! < widget.minWidth!) {
+      _iconRowWidth = widget.minWidth;
+    }
+
+    if (iconRenderBox != null) {
+      _iconLineWidth = (_iconRowWidth! - iconRenderBox!.size.width) / 2;
+    }
   }
 
   @override
   void initState() {
-    // _iconWidth = 90;
     updateSize();
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant HorizontalStepItem oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // _iconWidth = 90;
     updateSize();
+    super.didUpdateWidget(oldWidget);
   }
-
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // width: 60,
+    return SizedBox(
+      width: _iconRowWidth,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          NotificationListener<SizeChangedLayoutNotification>(
-            onNotification: (notification) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                setState(() {
-                  updateSize();
-                });
-              });
-              return true;
-            },
-            child: SizeChangedLayoutNotifier(
-              child: Container(
-                key: _iconKey,
-                width: _iconWidth  ,
-                child: horizontalStepIcon(context),
-              ),
-            ),
+          Container(
+            decoration: BoxDecoration(),
+            // clipBehavior: Clip.hardEdge,
+            width: _iconRowWidth,
+            child: horizontalStepIcon(context),
           ),
-          // Text("ss"),
           if (hasText)
             NotificationListener<SizeChangedLayoutNotification>(
               onNotification: (notification) {
@@ -199,6 +214,7 @@ class _HorizontalStepItemState extends State<HorizontalStepItem> {
                     children: [
                       if (widget.title != null) widget.title!,
                       if (widget.subTitle != null) widget.subTitle!,
+                      if (widget.child != null) widget.child!,
                     ],
                   ),
                 ),

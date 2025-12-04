@@ -39,7 +39,9 @@ class VerticalStepItem extends StatefulWidget {
 
 class _VerticalStepItemState extends State<VerticalStepItem> {
   final GlobalKey _myWidgetKey = GlobalKey();
-  double _height = 24;
+
+  /// 默认高度 边距8+8，+内容最小高度20
+  double _height = 36;
 
   double get _width {
     double width =
@@ -51,7 +53,9 @@ class _VerticalStepItemState extends State<VerticalStepItem> {
   }
 
   double get _iconSize {
-    return widget.icon != null ? widget.iconSize ?? widget.defaultIconSize! : 10;
+    return widget.icon != null
+        ? widget.iconSize ?? widget.defaultIconSize!
+        : 10;
   }
 
   Color beforeLineColor(BuildContext context) {
@@ -84,35 +88,41 @@ class _VerticalStepItemState extends State<VerticalStepItem> {
     return SizedBox(
       width: _width,
       height: _height,
-      child: Column(
-        // mainAxisSize: MainAxisSize.max,
-        children: [
-          SizedBox(
-            // height: 8 + (_iconSize >= 24 ? 0 : (24 - _iconSize).abs() / 2),
-            height: 8,
-            child: Visibility(
-              visible: !widget.isFirst,
-              child: CustomPaint(
-                painter: _VerticalLinePainter(color: beforeLineColor(context)),
+      child: OverflowBox(
+        minHeight: 8,
+        maxHeight: _height,
+        child: Column(
+          // mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(
+              // height: 8 + (_iconSize >= 24 ? 0 : (24 - _iconSize).abs() / 2),
+              height: 8 + (_iconSize >= 24 ? 0 : (24 - _iconSize).abs() / 2),
+              child: Opacity(
+                opacity: widget.isFirst ? 0 : 1,
+                child: CustomPaint(
+                  painter: _VerticalLinePainter(
+                    color: beforeLineColor(context),
+                  ),
+                ),
               ),
             ),
-          ),
-          widget.icon != null
-              ? SizedBox(
-                // width: _iconSize,
-                // height: _iconSize,
-                child: widget.icon,
-              )
-              : AntStepCirclePoint(color: pointColor(context)),
-          Expanded(
-            child: Visibility(
-              visible: !widget.isLast,
-              child: CustomPaint(
-                painter: _VerticalLinePainter(color: afterLineColor(context)),
+            widget.icon != null
+                ? SizedBox(
+                  // width: _iconSize,
+                  // height: _iconSize,
+                  child: widget.icon,
+                )
+                : AntStepCirclePoint(color: pointColor(context)),
+            Expanded(
+              child: Opacity(
+                opacity: widget.isLast ? 0 : 1,
+                child: CustomPaint(
+                  painter: _VerticalLinePainter(color: afterLineColor(context)),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -156,8 +166,9 @@ class _VerticalStepItemState extends State<VerticalStepItem> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(child: widget.title),
-                    Container(child: widget.subTitle),
+                    if(widget.title!=null) widget.title!,
+                    if(widget.subTitle!=null) widget.subTitle!,
+                    if(widget.child!=null) widget.child!,
                   ],
                 ),
               ),

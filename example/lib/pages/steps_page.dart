@@ -19,8 +19,52 @@ class _StepsPageState extends State<StepsPage> {
           children: [
             DemoBlock(
               title: "基础用法",
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                child: AntSteps(
+                  current: 1,
+                  // itemMinWidth: 120,
+                  stretch:  false,
+                  children: [
+                    AntStepItem(
+                      title: Text("步骤1"),
+                      icon: Icon(Icons.access_time_filled, color: Colors.blue),
+                    ),
+                    AntStepItem(
+                      title: Text("步骤2"),
+                      subTitle: Text("描述信息"),
+                      icon: Icon(Icons.access_time_filled, color: Colors.grey),
+                    ),
+                    AntStepItem(
+                      title: Text("步骤3"),
+                      subTitle: Text("描述信息"),
+                      icon: Icon(Icons.access_time_filled, color: Colors.grey),
+                    ),
+                    AntStepItem(
+                      title: Text("步骤4"),
+                      subTitle: Text("描述信息"),
+                      icon: Icon(Icons.access_time_filled, color: Colors.grey),
+                    ),
+                    AntStepItem(
+                      title: Text("步骤5"),
+                      subTitle: Text("描述信息"),
+                      icon: Icon(Icons.access_time_filled, color: Colors.grey),
+                    ),
+                    AntStepItem(
+                      title: Text("步骤6",softWrap: false ),
+                      subTitle: Text("描述信息",softWrap: false, maxLines: 1,),
+                      icon: Icon(Icons.access_time_filled, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            DemoBlock(
+              title: "基础用法（拉伸）",
               child: AntSteps(
                 current: 1,
+                stretch:  true,
                 children: [
                   AntStepItem(title: Text("步骤1")),
                   AntStepItem(title: Text("步骤2"), subTitle: Text("描述信息")),
@@ -35,6 +79,7 @@ class _StepsPageState extends State<StepsPage> {
               title: "横向步骤条失败",
               child: AntSteps(
                 current: 2,
+                stretch:  true,
                 children: [
                   AntStepItem(title: Text("步骤1")),
                   AntStepItem(title: Text("步骤2"), subTitle: Text("描述信息")),
