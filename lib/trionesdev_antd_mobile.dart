@@ -52,7 +52,7 @@ export 'src/components/breadcrumb/breadcrumb.dart';
 export 'src/components/empty/empty.dart';
 export 'src/components/loading/loading.dart';
 export 'src/components/tabs/tabs.dart';
-export 'src/components/process/index.dart';
+export 'src/components/progress/index.dart';
 export 'src/components/radio/radio.dart';
 export 'src/components/checkbox/checkbox.dart';
 export 'src/components/dialog/dialog.dart';

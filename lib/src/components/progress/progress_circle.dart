@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import '../../../trionesdev_antd_mobile.dart';
 import 'types.dart';
 
-class CircleProcessPainter extends CustomPainter {
-  CircleProcessPainter({
+class ProgressCirclePainter extends CustomPainter {
+  ProgressCirclePainter({
     this.format,
     this.percent = 0,
     this.railColor,
@@ -28,7 +28,7 @@ class CircleProcessPainter extends CustomPainter {
   final Color? railColor;
   final bool showInfo;
 
-  final AntProcessStatus? status;
+  final AntProgressStatus? status;
 
   /// @description 进度条的色彩
   /// @default null
@@ -64,7 +64,7 @@ class CircleProcessPainter extends CustomPainter {
     if (percent >= 100) {
       innerStrokeColor = strokeColor;
     }
-    if (status == AntProcessStatus.exception) {
+    if (status == AntProgressStatus.exception) {
       innerStrokeColor = strokeColor;
     }
     if (format != null) {
@@ -76,7 +76,7 @@ class CircleProcessPainter extends CustomPainter {
         ),
       );
     }
-    if (status == AntProcessStatus.exception) {
+    if (status == AntProgressStatus.exception) {
       IconData iconData = AntIcons.closeOutline;
       return TextSpan(
         text: String.fromCharCode(iconData.codePoint),
@@ -161,7 +161,7 @@ class CircleProcessPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CircleProcessPainter oldDelegate) {
+  bool shouldRepaint(covariant ProgressCirclePainter oldDelegate) {
     return oldDelegate.percent != percent || oldDelegate.status != status ||
         oldDelegate.strokeColor != strokeColor ||
         oldDelegate.railColor != railColor
@@ -169,8 +169,8 @@ class CircleProcessPainter extends CustomPainter {
   }
 }
 
-class CircleProcess extends StatelessWidget {
-  const CircleProcess({
+class ProgressCircle extends StatelessWidget {
+  const ProgressCircle({
     super.key,
     this.format,
     this.percent = 0,
@@ -195,7 +195,7 @@ class CircleProcess extends StatelessWidget {
   final Color? railColor;
   final bool showInfo;
 
-  final AntProcessStatus? status;
+  final AntProgressStatus? status;
 
   /// @description 进度条的大小
   /// @default null
@@ -257,7 +257,7 @@ class CircleProcess extends StatelessWidget {
       AntThemeData theme = AntTheme.of(context);
       if (percent >= 100) {
         return theme.colorSuccess;
-      } else if (status == AntProcessStatus.exception) {
+      } else if (status == AntProgressStatus.exception) {
         return theme.colorError;
       }
       return theme.colorPrimary;
@@ -270,7 +270,7 @@ class CircleProcess extends StatelessWidget {
       width: computedWidth,
       height: computedHeight,
       child: CustomPaint(
-        painter: CircleProcessPainter(
+        painter: ProgressCirclePainter(
           format: format,
           percent: percent,
           railColor: completedRailColor(context),

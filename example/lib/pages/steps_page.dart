@@ -178,8 +178,8 @@ class _StepsPageState extends State<StepsPage> {
                   children: [
                     AntStepItem(
                       // title: Text("步骤1"),
-                      icon: AntProcess(
-                        type: AntProcessType.circle,
+                      icon: AntProgress(
+                        type: AntProgressType.circle,
                         percent: 50,
                         diameter: 30,
                         strokeWidth: 2,
@@ -187,8 +187,8 @@ class _StepsPageState extends State<StepsPage> {
                     ),
                     AntStepItem(
                       // title: Text("步骤1"),
-                      icon: AntProcess(
-                        type: AntProcessType.circle,
+                      icon: AntProgress(
+                        type: AntProgressType.circle,
                         percent: 50,
                         diameter: 30,
                         strokeWidth: 2,
@@ -196,8 +196,8 @@ class _StepsPageState extends State<StepsPage> {
                     ),
                     AntStepItem(
                       // title: Text("步骤1"),
-                      icon: AntProcess(
-                        type: AntProcessType.circle,
+                      icon: AntProgress(
+                        type: AntProgressType.circle,
                         percent: 50,
                         diameter: 30,
                         strokeWidth: 2,
@@ -205,8 +205,8 @@ class _StepsPageState extends State<StepsPage> {
                     ),
                     AntStepItem(
                       // title: Text("步骤1"),
-                      icon: AntProcess(
-                        type: AntProcessType.circle,
+                      icon: AntProgress(
+                        type: AntProgressType.circle,
                         percent: 50,
                         diameter: 30,
                         strokeWidth: 2,

@@ -26,7 +26,7 @@ import 'package:antd_flutter_example/pages/mask_page.dart';
 import 'package:antd_flutter_example/pages/modal_page.dart';
 import 'package:antd_flutter_example/pages/picker_page.dart';
 import 'package:antd_flutter_example/pages/popup_page.dart';
-import 'package:antd_flutter_example/pages/process_page.dart';
+import 'package:antd_flutter_example/pages/progress_page.dart';
 import 'package:antd_flutter_example/pages/radio_page.dart';
 import 'package:antd_flutter_example/pages/rate_page.dart';
 import 'package:antd_flutter_example/pages/scaffold_page.dart';
