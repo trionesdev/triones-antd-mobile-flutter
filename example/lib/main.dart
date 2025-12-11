@@ -111,7 +111,7 @@ class MyApp extends StatelessWidget {
         '/empty': (context) => EmptyPage(),
         '/breadcrumb': (context) => BreadcrumbPage(),
         '/tabs': (context) => TabsPage(),
-        '/process': (context) => ProcessPage(),
+        '/progress': (context) => ProgressPage(),
         '/radio': (context) => RadioPage(),
         '/checkbox': (context) => CheckboxPage(),
         '/dialog': (context) => DialogPage(),
@@ -393,9 +393,9 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             material.ListTile(
-              title: Text('Process 进度条'),
+              title: Text('Progress 进度条'),
               onTap: () {
-                Navigator.pushNamed(context, '/process');
+                Navigator.pushNamed(context, '/progress');
               },
             ),
             material.ListTile(

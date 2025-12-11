@@ -3,18 +3,18 @@ import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 import '../demo_block.dart';
 
-class ProcessPage extends StatefulWidget {
-  const ProcessPage({super.key});
+class ProgressPage extends StatefulWidget {
+  const ProgressPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _ProcessPageState();
+  State<StatefulWidget> createState() => _ProgressPageState();
 }
 
-class _ProcessPageState extends State<ProcessPage> {
+class _ProgressPageState extends State<ProgressPage> {
   @override
   Widget build(BuildContext context) {
     return AntScaffold(
-      appBar: AntAppBar(title: Text("Process 进度条")),
+      appBar: AntAppBar(title: Text("Progress 进度条")),
       body: SingleChildScrollView(
         child: Column(
           children: [
