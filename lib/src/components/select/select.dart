@@ -157,7 +157,7 @@ class AntSelectState extends State<AntSelect> {
             [];
         return (labels.isNotEmpty) ? Text(labels.join(",")) : null;
       } else {
-        var option = widget.initialValueOptions!.firstOrNull((item) {
+        var option = widget.initialValueOptions!.firstWhere((item) {
           return MapUtils.getPathValue(item, _fieldsNames.value?.value) ==
               _value;
         });
