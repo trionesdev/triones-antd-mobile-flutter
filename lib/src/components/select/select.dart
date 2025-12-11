@@ -31,7 +31,7 @@ class AntSelect extends StatefulWidget {
     /**
      * 值选项
      */
-    this.valueOption,
+    this.initialValueOptions,
     /**
      * 选项构建器
      */
@@ -104,7 +104,7 @@ class AntSelect extends StatefulWidget {
 
   /// @description 值选项
   /// @default  null
-  final dynamic valueOption;
+  final List<dynamic>? initialValueOptions;
 
   /// @description 值改变回调
   /// @default  null
@@ -130,8 +130,8 @@ class AntSelectState extends State<AntSelect> {
   final GlobalKey<SelectPanelState> _key = GlobalKey();
   final ValueNotifier<List<dynamic>> _options = ValueNotifier([]);
   late AntFieldsNames _fieldsNames = AntFieldsNames(
-    label: NamePath("label"),
-    value: NamePath("value"),
+    label: widget.fieldsNames?.label ?? NamePath("label"),
+    value: widget.fieldsNames?.value ?? NamePath("value"),
   );
   dynamic _value;
   bool _multipleValue = false;
@@ -141,16 +141,30 @@ class AntSelectState extends State<AntSelect> {
     if (_value == null) {
       return null;
     }
-    if (widget.valueOption != null &&
-        widget.value ==
-            MapUtils.getPathValue(
-              widget.valueOption,
-              _fieldsNames.value?.value,
-            )) {
-      return Text(
-        MapUtils.getPathValue(widget.valueOption, _fieldsNames.label?.value) ??
-            "",
-      );
+    if (widget.initialValueOptions != null &&
+        widget.initialValueOptions!.isNotEmpty) {
+      if (_multipleValue) {
+        var labels =
+            widget.initialValueOptions
+                ?.where((item) {
+                  return (_value as List).contains(
+                    MapUtils.getPathValue(item, _fieldsNames.value?.value),
+                  );
+                })
+                .map((item) {
+                  return MapUtils.getPathValue(item, _fieldsNames.label?.value);
+                }) ??
+            [];
+        return (labels.isNotEmpty) ? Text(labels.join(",")) : null;
+      } else {
+        var option = widget.initialValueOptions!.firstWhere((item) {
+          return MapUtils.getPathValue(item, _fieldsNames.value?.value) ==
+              _value;
+        });
+        return Text(
+          MapUtils.getPathValue(option, _fieldsNames.label?.value) ?? "",
+        );
+      }
     }
 
     if (widget.options.isEmpty) {
@@ -237,6 +251,7 @@ class AntSelectState extends State<AntSelect> {
       onTap: () {
         _isOpen = true;
         widget.onOpenChange?.call(_isOpen);
+
         SelectPanel selectPanel = SelectPanel(
           key: _key,
           multiple: _multipleValue,

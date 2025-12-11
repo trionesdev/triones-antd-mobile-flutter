@@ -1,15 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
+import 'progress_circle.dart';
+import 'progress_line.dart';
 
-import 'circle_process.dart';
-import 'line_process.dart';
-import 'types.dart';
-
-class AntProcess extends StatelessWidget {
-  const AntProcess({
+class AntProgress extends StatelessWidget {
+  const AntProgress({
     super.key,
     this.format,
-    this.type = AntProcessType.line,
+    this.type = AntProgressType.line,
     this.percent = 0,
     this.railColor,
     this.showInfo = true,
@@ -20,6 +18,7 @@ class AntProcess extends StatelessWidget {
     this.diameter,
     this.positionAlign = AntPercentPositionAlign.end,
     this.positionType = AntPercentPositionType.outer,
+    this.strokeWidth = 6,
   });
 
   /// @description 格式化进度百分比
@@ -39,12 +38,12 @@ class AntProcess extends StatelessWidget {
 
   /// @description 进度条的状态
   /// @default null
-  final AntProcessStatus? status;
+  final AntProgressStatus? status;
 
   /// @description 进度条的色彩
   /// @default null
   final Color? strokeColor;
-  final AntProcessType type;
+  final AntProgressType type;
 
   /// @description 进度条的大小
   /// @default null
@@ -63,12 +62,13 @@ class AntProcess extends StatelessWidget {
   /// @description 进度百分比的位置类型，只对type="line"有效
   /// @default outer
   final AntPercentPositionType positionType;
+  final double strokeWidth;
 
   @override
   Widget build(BuildContext context) {
     switch (type) {
-      case AntProcessType.line:
-        return LineProcess(
+      case AntProgressType.line:
+        return ProgressLine(
           format: format,
           percent: percent,
           railColor: railColor,
@@ -80,8 +80,8 @@ class AntProcess extends StatelessWidget {
           positionAlign: positionAlign,
           positionType: positionType,
         );
-      case AntProcessType.circle:
-        return CircleProcess(
+      case AntProgressType.circle:
+        return ProgressCircle(
           format: format,
           percent: percent,
           railColor: railColor,
@@ -90,6 +90,7 @@ class AntProcess extends StatelessWidget {
           strokeColor: strokeColor,
           size: size,
           diameter: diameter,
+          strokeWidth: strokeWidth,
         );
     }
     return Container();

@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 typedef AntListItemBuilder<T> =
-Widget Function(BuildContext context, T item, int index)?;
+    Widget Function(BuildContext context, T item, int index)?;
 
 class AntList<T> extends StatefulWidget {
   const AntList({
     super.key,
+    this.decoration,
+    this.padding,
     this.separator,
     this.empty,
     this.dataSource,
@@ -26,6 +28,8 @@ class AntList<T> extends StatefulWidget {
   });
 
   final StateStyle? style;
+  final BoxDecoration? decoration;
+  final EdgeInsetsGeometry? padding;
   final bool loading;
   final List<Widget>? children;
   final Widget? separator;
@@ -89,29 +93,31 @@ class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
       }
     }
 
-
     return Stack(
       children: [
         Container(
-          decoration: stateStyle
-              .resolve(materialStates)
-              ?.decoration,
-          padding: stateStyle
-              .resolve(materialStates)
-              ?.computedPadding,
+          decoration:
+              widget.decoration ??
+              stateStyle.resolve(materialStates)?.decoration,
+          padding:
+              widget.padding ??
+              stateStyle.resolve(materialStates)?.computedPadding,
           child:
-          children.isNotEmpty
-              ? ListView(
-            padding: widget.pending,
-            controller: _scrollController,
-            shrinkWrap: widget.shrinkWrap,
-            physics: widget.physics,
-            children: children,
-          )
-              : (widget.empty ?? Align(
-            alignment: Alignment(0.0, -0.8),
-            child: AntEmpty(),
-          )),
+              children.isNotEmpty
+                  ? ListView(
+                    padding: widget.pending,
+                    controller: _scrollController,
+                    shrinkWrap: widget.shrinkWrap,
+                    physics: widget.physics,
+                    children: children,
+                  )
+                  : (widget.empty ??
+                      Container(
+                        decoration: BoxDecoration(color: Colors.white),
+                        child: Align(
+                        alignment: Alignment(0.0, -0.8),
+                        child: AntEmpty(),
+                      ),)),
         ),
         if (widget.loading)
           Positioned.fill(child: Align(child: AntSpinLoading())),
@@ -128,7 +134,7 @@ class _AntListStyle extends StateStyle {
 
   @override
   Style get style {
-    return Style(backgroundColor: Colors.white);
+    return Style(backgroundColor: Colors.transparent);
   }
 }
 
@@ -178,12 +184,8 @@ class _AntListItemState extends State<AntListItem> with MaterialStateMixin {
         widget.onTap?.call();
       },
       child: Container(
-        decoration: stateStyle
-            .resolve(materialStates)
-            ?.decoration,
-        padding: stateStyle
-            .resolve(materialStates)
-            ?.computedPadding,
+        decoration: stateStyle.resolve(materialStates)?.decoration,
+        padding: stateStyle.resolve(materialStates)?.computedPadding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           spacing: 2,

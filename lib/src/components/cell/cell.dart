@@ -16,6 +16,7 @@ class AntCellGroup extends StatefulWidget {
     this.children,
     this.showDivider = false,
     this.arrow = true,
+    this.valueTextStyle,
   });
 
   /// @description 大小
@@ -57,6 +58,7 @@ class AntCellGroup extends StatefulWidget {
   /// @description 是否显示箭头
   /// @default true
   final bool arrow;
+  final TextStyle? valueTextStyle;
 
   static AntCellGroupState? maybeOf(BuildContext context) {
     final scope = context.dependOnInheritedWidgetOfExactType<_CellGroupScope>();
@@ -208,6 +210,8 @@ class AntCell extends StatefulWidget {
 }
 
 class _AntCellState extends State<AntCell> {
+  _CellGroupScope? _cellGroupScope;
+
   double get height {
     AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
     AntSize size = widget.size ?? groupState?.widget.size ?? AntSize.middle;
@@ -278,6 +282,13 @@ class _AntCellState extends State<AntCell> {
       );
     }
     return Container(height: height, alignment: labelAlign, child: labelWidget);
+  }
+
+  @override
+  void didChangeDependencies() {
+    _cellGroupScope =
+        context.dependOnInheritedWidgetOfExactType<_CellGroupScope>();
+    super.didChangeDependencies();
   }
 
   @override

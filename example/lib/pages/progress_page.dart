@@ -3,18 +3,18 @@ import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 import '../demo_block.dart';
 
-class ProcessPage extends StatefulWidget {
-  const ProcessPage({super.key});
+class ProgressPage extends StatefulWidget {
+  const ProgressPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _ProcessPageState();
+  State<StatefulWidget> createState() => _ProgressPageState();
 }
 
-class _ProcessPageState extends State<ProcessPage> {
+class _ProgressPageState extends State<ProgressPage> {
   @override
   Widget build(BuildContext context) {
     return AntScaffold(
-      appBar: AntAppBar(title: Text("Process 进度条")),
+      appBar: AntAppBar(title: Text("Progress 进度条")),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -23,11 +23,11 @@ class _ProcessPageState extends State<ProcessPage> {
               child: Column(
                 spacing: 4,
                 children: [
-                  AntProcess(percent: 30),
-                  AntProcess(percent: 50, status: AntProcessStatus.active),
-                  AntProcess(percent: 70, status: AntProcessStatus.exception),
-                  AntProcess(percent: 100),
-                  AntProcess(percent: 50, showInfo: false),
+                  AntProgress(percent: 30),
+                  AntProgress(percent: 50, status: AntProgressStatus.active),
+                  AntProgress(percent: 70, status: AntProgressStatus.exception),
+                  AntProgress(percent: 100),
+                  AntProgress(percent: 50, showInfo: false),
                 ],
               ),
             ),
@@ -36,13 +36,13 @@ class _ProcessPageState extends State<ProcessPage> {
               child: Column(
                 spacing: 4,
                 children: [
-                  AntProcess(percent: 75, type: AntProcessType.circle),
-                  AntProcess(
+                  AntProgress(percent: 75, type: AntProgressType.circle),
+                  AntProgress(
                     percent: 70,
-                    type: AntProcessType.circle,
-                    status: AntProcessStatus.exception,
+                    type: AntProgressType.circle,
+                    status: AntProgressStatus.exception,
                   ),
-                  AntProcess(percent: 100, type: AntProcessType.circle),
+                  AntProgress(percent: 100, type: AntProgressType.circle),
                 ],
               ),
             ),
@@ -51,19 +51,19 @@ class _ProcessPageState extends State<ProcessPage> {
               child: Column(
                 spacing: 4,
                 children: [
-                  AntProcess(percent: 30, size: AntSize.small),
-                  AntProcess(
+                  AntProgress(percent: 30, size: AntSize.small),
+                  AntProgress(
                     percent: 50,
                     size: AntSize.small,
-                    status: AntProcessStatus.active,
+                    status: AntProgressStatus.active,
                   ),
-                  AntProcess(
+                  AntProgress(
                     percent: 70,
                     size: AntSize.small,
-                    status: AntProcessStatus.exception,
+                    status: AntProgressStatus.exception,
                   ),
-                  AntProcess(percent: 100, size: AntSize.small),
-                  AntProcess(percent: 50, size: AntSize.small, showInfo: false),
+                  AntProgress(percent: 100, size: AntSize.small),
+                  AntProgress(percent: 50, size: AntSize.small, showInfo: false),
                 ],
               ),
             ),
@@ -71,14 +71,14 @@ class _ProcessPageState extends State<ProcessPage> {
               title: "自定义文字格式",
               child: Column(
                 children: [
-                  AntProcess(
+                  AntProgress(
                     percent: 75,
-                    type: AntProcessType.circle,
+                    type: AntProgressType.circle,
                     format: (percent) => "$percent%",
                   ),
-                  AntProcess(
+                  AntProgress(
                     percent: 100,
-                    type: AntProcessType.circle,
+                    type: AntProgressType.circle,
                     format: (percent) => "完成",
                   ),
                 ],
@@ -89,52 +89,52 @@ class _ProcessPageState extends State<ProcessPage> {
               child: Column(
                 spacing: 8,
                 children: [
-                  AntProcess(
+                  AntProgress(
                     percent: 0,
                     positionType: AntPercentPositionType.inner,
                     height: 20,
                   ),
-                  AntProcess(
+                  AntProgress(
                     percent: 10,
                     positionType: AntPercentPositionType.inner,
                     height: 20,
                   ),
-                  AntProcess(
+                  AntProgress(
                     percent: 50,
                     positionType: AntPercentPositionType.inner,
                     height: 20,
                     positionAlign: AntPercentPositionAlign.start,
                     strokeColor: Colors.green,
                   ),
-                  AntProcess(
+                  AntProgress(
                     percent: 60,
                     positionType: AntPercentPositionType.inner,
                     height: 20,
                     positionAlign: AntPercentPositionAlign.end,
                     strokeColor: Colors.black87,
                   ),
-                  AntProcess(
+                  AntProgress(
                     percent: 100,
                     positionType: AntPercentPositionType.inner,
                     height: 20,
                     positionAlign: AntPercentPositionAlign.center,
                   ),
-                  AntProcess(
+                  AntProgress(
                     percent: 60,
                     positionType: AntPercentPositionType.outer,
                     positionAlign: AntPercentPositionAlign.start,
                   ),
-                  AntProcess(
+                  AntProgress(
                     percent: 100,
                     positionType: AntPercentPositionType.outer,
                     positionAlign: AntPercentPositionAlign.start,
                   ),
-                  AntProcess(
+                  AntProgress(
                     percent: 60,
                     positionType: AntPercentPositionType.outer,
                     positionAlign: AntPercentPositionAlign.center,
                   ),
-                  AntProcess(
+                  AntProgress(
                     percent: 100,
                     positionType: AntPercentPositionType.outer,
                     positionAlign: AntPercentPositionAlign.center,

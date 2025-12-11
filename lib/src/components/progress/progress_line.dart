@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../trionesdev_antd_mobile.dart';
 
-class LineProcessPainter extends CustomPainter {
-  LineProcessPainter({
+class ProgressLinePainter extends CustomPainter {
+  ProgressLinePainter({
     this.format,
     this.percent = 0,
     this.railColor,
@@ -124,13 +124,13 @@ class LineProcessPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant LineProcessPainter oldDelegate) {
+  bool shouldRepaint(covariant ProgressLinePainter oldDelegate) {
     return oldDelegate.percent != percent;
   }
 }
 
-class LineProcess extends StatelessWidget {
-  const LineProcess({
+class ProgressLine extends StatelessWidget {
+  const ProgressLine({
     super.key,
     this.format,
     this.percent = 0,
@@ -155,7 +155,7 @@ class LineProcess extends StatelessWidget {
   /// @default null
   final Color? railColor;
   final bool showInfo;
-  final AntProcessStatus? status;
+  final AntProgressStatus? status;
 
   /// @description 进度条的大小
   /// @default null
@@ -209,7 +209,7 @@ class LineProcess extends StatelessWidget {
       AntThemeData theme = AntTheme.of(context);
       if (percent == 100) {
         return theme.colorSuccess;
-      } else if (status == AntProcessStatus.exception) {
+      } else if (status == AntProgressStatus.exception) {
         return theme.colorError;
       }
       return theme.colorPrimary;
@@ -224,7 +224,7 @@ class LineProcess extends StatelessWidget {
           width: constraints.maxWidth,
           height: computedHeight,
           child: CustomPaint(
-            painter: LineProcessPainter(
+            painter: ProgressLinePainter(
               format: format,
               percent: percent,
               railColor: completedRailColor(context),
@@ -247,10 +247,10 @@ class LineProcess extends StatelessWidget {
       color = theme.colorSuccess;
     }
     switch (status) {
-      case AntProcessStatus.success:
+      case AntProgressStatus.success:
         color = theme.colorSuccess;
         break;
-      case AntProcessStatus.exception:
+      case AntProgressStatus.exception:
         color = theme.colorError;
         break;
       default:
@@ -270,13 +270,13 @@ class LineProcess extends StatelessWidget {
       );
     }
     switch (status) {
-      case AntProcessStatus.success:
+      case AntProgressStatus.success:
         return Icon(
           AntIcons.checkCircleFill,
           size: computedIconSize,
           color: color,
         );
-      case AntProcessStatus.exception:
+      case AntProgressStatus.exception:
         return Icon(
           AntIcons.closeCircleFill,
           size: computedIconSize,

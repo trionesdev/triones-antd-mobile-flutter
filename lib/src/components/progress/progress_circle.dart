@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import '../../../trionesdev_antd_mobile.dart';
 import 'types.dart';
 
-class CircleProcessPainter extends CustomPainter {
-  CircleProcessPainter({
+class ProgressCirclePainter extends CustomPainter {
+  ProgressCirclePainter({
     this.format,
     this.percent = 0,
     this.railColor,
@@ -28,7 +28,7 @@ class CircleProcessPainter extends CustomPainter {
   final Color? railColor;
   final bool showInfo;
 
-  final AntProcessStatus? status;
+  final AntProgressStatus? status;
 
   /// @description 进度条的色彩
   /// @default null
@@ -48,13 +48,15 @@ class CircleProcessPainter extends CustomPainter {
   }
 
   double computedIconSize(Size size) {
-    double iconSize = (size.width / 2 - strokeWidth / 2) / 2;
-    if (iconSize < 20) {
-      return 12;
-    } else if (iconSize < 24) {
-      return 14;
+    double iconSize = (size.width / 2 - strokeWidth / 2) / 3;
+    if (iconSize < 36) {
+      return 10;
     }
-    return 24;
+
+    if (iconSize >= 48) {
+      return 24;
+    }
+    return iconSize;
   }
 
   TextSpan textSpan(Size size) {
@@ -62,7 +64,7 @@ class CircleProcessPainter extends CustomPainter {
     if (percent >= 100) {
       innerStrokeColor = strokeColor;
     }
-    if (status == AntProcessStatus.exception) {
+    if (status == AntProgressStatus.exception) {
       innerStrokeColor = strokeColor;
     }
     if (format != null) {
@@ -74,12 +76,12 @@ class CircleProcessPainter extends CustomPainter {
         ),
       );
     }
-    if (status == AntProcessStatus.exception) {
+    if (status == AntProgressStatus.exception) {
       IconData iconData = AntIcons.closeOutline;
       return TextSpan(
         text: String.fromCharCode(iconData.codePoint),
         style: TextStyle(
-          color: strokeColor,
+          color: innerStrokeColor,
           fontSize: computedIconSize(size),
           fontFamily: iconData.fontFamily,
           package: iconData.fontPackage,
@@ -112,20 +114,20 @@ class CircleProcessPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = math.min(size.width, size.height) / 2 - strokeWidth / 2;
     final backgroundPaint =
-        Paint()
-          ..color = railColor ?? Colors.grey
-          ..style =
-              PaintingStyle
-                  .stroke // 描边
-          ..strokeWidth = strokeWidth;
+    Paint()
+      ..color = railColor ?? Colors.grey
+      ..style =
+          PaintingStyle
+              .stroke // 描边
+      ..strokeWidth = strokeWidth;
     canvas.drawCircle(center, radius, backgroundPaint);
 
     final progressPaint =
-        Paint()
-          ..color = strokeColor ?? Colors.blue
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = strokeWidth
-          ..strokeCap = finalStrokeLineCap;
+    Paint()
+      ..color = strokeColor ?? Colors.blue
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = finalStrokeLineCap;
 
     // 计算进度的弧度
     // 完整的圆是 2 * math.pi
@@ -159,13 +161,16 @@ class CircleProcessPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CircleProcessPainter oldDelegate) {
-    return false;
+  bool shouldRepaint(covariant ProgressCirclePainter oldDelegate) {
+    return oldDelegate.percent != percent || oldDelegate.status != status ||
+        oldDelegate.strokeColor != strokeColor ||
+        oldDelegate.railColor != railColor
+        || oldDelegate.strokeLineCap != strokeLineCap;
   }
 }
 
-class CircleProcess extends StatelessWidget {
-  const CircleProcess({
+class ProgressCircle extends StatelessWidget {
+  const ProgressCircle({
     super.key,
     this.format,
     this.percent = 0,
@@ -176,6 +181,7 @@ class CircleProcess extends StatelessWidget {
     this.size = AntSize.middle,
     this.diameter,
     this.strokeLineCap = AntStrokeLineCap.round,
+    this.strokeWidth = 6,
   });
 
   final Format? format;
@@ -189,7 +195,7 @@ class CircleProcess extends StatelessWidget {
   final Color? railColor;
   final bool showInfo;
 
-  final AntProcessStatus? status;
+  final AntProgressStatus? status;
 
   /// @description 进度条的大小
   /// @default null
@@ -203,6 +209,10 @@ class CircleProcess extends StatelessWidget {
   /// @default null
   final Color? strokeColor;
   final AntStrokeLineCap strokeLineCap;
+
+  /// @description 进度条的宽度
+  /// @default 6
+  final double strokeWidth;
 
   double get computedWidth {
     if (diameter != null) {
@@ -245,9 +255,9 @@ class CircleProcess extends StatelessWidget {
       return strokeColor!;
     } else {
       AntThemeData theme = AntTheme.of(context);
-      if (percent == 100) {
+      if (percent >= 100) {
         return theme.colorSuccess;
-      } else if (status == AntProcessStatus.exception) {
+      } else if (status == AntProgressStatus.exception) {
         return theme.colorError;
       }
       return theme.colorPrimary;
@@ -260,7 +270,7 @@ class CircleProcess extends StatelessWidget {
       width: computedWidth,
       height: computedHeight,
       child: CustomPaint(
-        painter: CircleProcessPainter(
+        painter: ProgressCirclePainter(
           format: format,
           percent: percent,
           railColor: completedRailColor(context),
@@ -268,6 +278,7 @@ class CircleProcess extends StatelessWidget {
           showInfo: showInfo,
           status: status,
           strokeLineCap: strokeLineCap,
+          strokeWidth: strokeWidth,
         ),
       ),
     );

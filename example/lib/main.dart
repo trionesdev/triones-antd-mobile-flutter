@@ -26,7 +26,7 @@ import 'package:antd_flutter_example/pages/mask_page.dart';
 import 'package:antd_flutter_example/pages/modal_page.dart';
 import 'package:antd_flutter_example/pages/picker_page.dart';
 import 'package:antd_flutter_example/pages/popup_page.dart';
-import 'package:antd_flutter_example/pages/process_page.dart';
+import 'package:antd_flutter_example/pages/progress_page.dart';
 import 'package:antd_flutter_example/pages/radio_page.dart';
 import 'package:antd_flutter_example/pages/rate_page.dart';
 import 'package:antd_flutter_example/pages/scaffold_page.dart';
@@ -48,6 +48,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 import 'pages/calendar_page.dart';
+import 'pages/steps_page.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
@@ -67,12 +68,9 @@ class MyApp extends StatelessWidget {
         AntdLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate
+        GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales:  [
-        material.Locale('zh'),
-        material.Locale('en'),
-      ],
+      supportedLocales: [material.Locale('zh'), material.Locale('en')],
       theme: AntThemeData(
         // colorPrimary: material.Colors.amber,
       ),
@@ -102,6 +100,7 @@ class MyApp extends StatelessWidget {
         '/toast': (context) => ToastPage(),
         '/divider': (context) => DividerPage(),
         '/alert': (context) => AlertPage(),
+        '/steps': (context) => StepsPage(),
         '/switch': (context) => SwitchPage(),
         '/mask': (context) => MaskPage(),
         '/badge': (context) => BadgePage(),
@@ -112,7 +111,7 @@ class MyApp extends StatelessWidget {
         '/empty': (context) => EmptyPage(),
         '/breadcrumb': (context) => BreadcrumbPage(),
         '/tabs': (context) => TabsPage(),
-        '/process': (context) => ProcessPage(),
+        '/progress': (context) => ProgressPage(),
         '/radio': (context) => RadioPage(),
         '/checkbox': (context) => CheckboxPage(),
         '/dialog': (context) => DialogPage(),
@@ -328,6 +327,12 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             material.ListTile(
+              title: Text('Steps 步骤条'),
+              onTap: () {
+                Navigator.pushNamed(context, '/steps');
+              },
+            ),
+            material.ListTile(
               title: Text('Switch 开关'),
               onTap: () {
                 Navigator.pushNamed(context, '/switch');
@@ -388,9 +393,9 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             material.ListTile(
-              title: Text('Process 进度条'),
+              title: Text('Progress 进度条'),
               onTap: () {
-                Navigator.pushNamed(context, '/process');
+                Navigator.pushNamed(context, '/progress');
               },
             ),
             material.ListTile(

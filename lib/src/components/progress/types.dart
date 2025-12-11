@@ -1,6 +1,6 @@
-enum AntProcessType { line, circle }
+enum AntProgressType { line, circle }
 
-enum AntProcessStatus{
+enum AntProgressStatus{
   success,
   exception,
   normal,

@@ -112,10 +112,11 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
             Navigator.maybePop(context);
           },
           child: Row(
+            spacing: 4,
             children: [
               Container(
                 padding: EdgeInsets.only(left: 8),
-                child: backIcon ?? Icon(AntIcons.leftOutline),
+                child: backIcon ?? Icon(AntIcons.leftOutline, size: 16),
               ),
               if (showBackText) finalBackText,
             ],
@@ -153,6 +154,7 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: backgroundColor ?? themeData.colorBgBase,
       centerTitle: centerTitle,
       flexibleSpace: Container(decoration: decoration),
+      actionsPadding: EdgeInsets.only(right: 8),
       systemOverlayStyle: systemUiOverlayStyle,
     );
   }

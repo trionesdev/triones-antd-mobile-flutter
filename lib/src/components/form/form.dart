@@ -469,15 +469,15 @@ class AntFormItem<T> extends StatelessWidget {
     super.key,
     this.layout,
     this.name,
+    this.labelText,
     this.label,
-    this.labelWidget,
     this.labelCol,
     this.wrapperCol,
     this.labelAlign,
 
     /// @description 组件
     /// @default null
-      this.builder,
+    this.builder,
 
     /// @description 保存回调
     this.onSaved,
@@ -509,8 +509,8 @@ class AntFormItem<T> extends StatelessWidget {
 
   final AntFormLayout? layout;
   final NamePath? name;
-  final Widget? labelWidget;
-  final String? label;
+  final Widget? label;
+  final String? labelText;
   final AntCol? labelCol;
   final AntCol? wrapperCol;
   final AntLabelAlign? labelAlign;
@@ -540,8 +540,8 @@ class AntFormItem<T> extends StatelessWidget {
 
         child: InternalFormItem<T?>(
           layout: layout,
-          labelWidget: labelWidget,
           label: label,
+          labelText: labelText,
           labelCol: labelCol,
           wrapperCol: wrapperCol,
           labelAlign: labelAlign,
@@ -558,8 +558,8 @@ class AntFormItem<T> extends StatelessWidget {
 class InternalFormItem<T> extends StatefulWidget {
   final AntFormLayout? layout;
   final AntSize? size;
-  final Widget? labelWidget;
-  final String? label;
+  final Widget? label;
+  final String? labelText;
   final AntCol? labelCol;
   final AntCol? wrapperCol;
   final AntLabelAlign? labelAlign;
@@ -577,9 +577,9 @@ class InternalFormItem<T> extends StatefulWidget {
     this.restorationId,
     this.child,
     this.layout,
+    this.labelText,
     this.label,
-    this.labelWidget,
-      this.builder,
+    this.builder,
     this.labelCol,
     this.wrapperCol,
     this.labelAlign,
@@ -736,7 +736,7 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
     stateStyle = stateStyle.merge(widget.style);
 
     List<Widget> fieldItemChildren = [];
-    if (widget.label != null) {
+    if (widget.label != null || widget.labelText != null) {
       List<Widget> fieldLabelChildren = [];
       if (widget.required == true) {
         if (layout == AntFormLayout.vertical) {
@@ -757,7 +757,7 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
           );
         }
       }
-      fieldLabelChildren.add(widget.labelWidget ?? Text(widget.label ?? ""));
+      fieldLabelChildren.add(widget.label ?? Text(widget.labelText ?? ""));
       Widget fieldLabel = Row(
         mainAxisAlignment:
             labelAlign == AntLabelAlign.left

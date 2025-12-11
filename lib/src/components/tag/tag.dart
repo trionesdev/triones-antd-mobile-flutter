@@ -178,11 +178,12 @@ class _AntTagStyle extends StateStyle {
 
   @override
   Style get style {
+    AntThemeData themeData = AntTheme.of(context);
     return Style(
       color: textColor(),
       backgroundColor: backgroundColor(),
       padding: StylePadding(top: 1, bottom: 1, left: 8, right: 8),
-      borderRadius: 6,
+      borderRadius: themeData.borderRadius,
       border: computedBorder(),
     );
   }

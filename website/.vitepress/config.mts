@@ -42,6 +42,7 @@ export default defineConfig({
                         {text: 'AppBar 导航栏', link: '/components/app-bar'},
                         {text: 'TabBar 标签栏', link: '/components/tab-bar'},
                         {text: 'Tabs 标签页', link: '/components/tabs'},
+                        {text: 'Steps 步骤条', link: '/components/steps'},
                         {text: 'Breadcrumb 面包屑', link: '/components/breadcrumb'},
                     ]
                 },
@@ -87,7 +88,7 @@ export default defineConfig({
                         {text: 'Dialog  对话框', link: '/components/dialog'},
                         {text: 'Empty  空状态', link: '/components/empty'},
                         {text: 'Toast 轻提示', link: '/components/toast'},
-                        {text: 'Process  进度条', link: '/components/process'},
+                        {text: 'Progress  进度条', link: '/components/progress'},
                     ]
                 }
             ],

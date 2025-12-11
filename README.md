@@ -41,6 +41,7 @@
 - [x] SearchBar 搜索框
 - [x] Select 选择器
 - [x] Space 间隔
+- [x] Steps 步骤条
 - [x] Switch 开关
 - [x] TabBar 标签栏
 - [x] Tabs 标签页

@@ -324,7 +324,7 @@ class _AntCheckboxState extends State<AntCheckbox> {
               alignment: Alignment.center,
               child: UnconstrainedBox(child: Container(child: icon())),
             ),
-            if (widget.label != null) label(),
+            if (widget.label != null || widget.labelText != null ) label(),
           ],
         ),
       ),

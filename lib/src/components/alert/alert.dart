@@ -97,6 +97,7 @@ class _AntAlertState extends State<AntAlert> with MaterialStateMixin {
     if(widget.messageText != null){
       return Text(widget.messageText!);
     }
+    return null;
   }
 
   bool get showDescription{
