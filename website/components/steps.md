@@ -23,8 +23,8 @@
 | current         | 指定当前步骤，从 0 开始记数。在子 Step 元素中，可以通过 status 属性覆盖状态 | int?                       | 0                            |
 | iconSize        | 指定图标大小                                         | double?                    | null                         |
 | defaultIconSize | 默认图标大小                                         | double                     | 24                           |
-| stretch         | 是否拉伸，只对 type='horizontal' 的有效                  | bool                       | true                         |
-| itemMinWidth    | 步骤条子项最小宽度, 仅在 type='horizontal' 时有效            | double?                    | null                         |
+| stretch         | 是否拉伸，只对 direction='horizontal' 的有效             | bool                       | true                         |
+| itemMinWidth    | 步骤条子项最小宽度, 仅在 direction='horizontal' 时有效       | double?                    | null                         |
 | items           | 步骤条子项                                          | `List<AntStepItemStruct>?` | null                         |
 | children        | 步骤条子项                                          | `List<AntStepItem>?`       | null                         |
 
@@ -58,9 +58,15 @@
 
 ### AntStepItemStruct 属性
 
-| 属性   | 说明 | 类型      | 默认值  |
-|------|----|---------|------|
-| icon | 图标 | Widget? | null |
+| 属性       | 说明   | 类型            | 默认值                   |
+|----------|------|---------------|-----------------------|
+| disabled | 是否禁用 | bool          | false                 |
+| icon     | 图标   | Widget?       | null                  |
+| iconSize | 图标大小 | double?       | null                  |
+| status   | 状态   | AntStepStatus | AntStepStatus.process |
+| title    | 标题   | Widget?       | null                  |
+| subTitle | 子标题  | Widget?       | null                  |
+| child    | 子组件  | Widget?       | null                  |
 
 ### 组件特性
 

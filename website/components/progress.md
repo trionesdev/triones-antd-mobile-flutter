@@ -1,4 +1,4 @@
-# Process 进度条
+# Progress 进度条
 
 展示操作的当前进度。
 
@@ -8,38 +8,39 @@
 
 ## 代码演示
 
-```dart src=../example/lib/pages/process_page.dart preview=/process
+```dart src=../example/lib/pages/progress_page.dart preview=/progress
 ```
 
 ## API
 
-### AntProcess
+### AntProgress
 
 进度条的属性说明如下：
 
 | 属性            | 说明                                 | 类型                      | 默认值                      |
 |---------------|------------------------------------|-------------------------|--------------------------|
 | format        | 格式化进度百分比                           | Format?                 | (percent) => percent + % |
-| type          | 进度条类型                              | AntProcessType          | line                     |
+| type          | 进度条类型                              | AntProgressType         | line                     |
 | percent       | 进度百分比                              | double                  | 0                        |
 | railColor     | 未完成的分段的颜色                          | Color?                  | null                     |
 | showInfo      | 是否显示进度数值或状态图标                      | bool                    | true                     |
-| status        | 进度条的状态                             | AntProcessStatus?       | null                     |
+| status        | 进度条的状态                             | AntProgressStatus?      | null                     |
 | strokeColor   | 进度条的色彩                             | Color?                  | null                     |
 | size          | 进度条的大小                             | AntSize                 | middle                   |
 | height        | 进度条的高度，只对type="line"有效，将覆盖size效果   | double?                 | null                     |
 | diameter      | 进度条的直径，只对type="circle"有效，将覆盖size效果 | double?                 | null                     |
 | positionAlign | 进度百分比的位置对齐方式，只对type="line"有效       | AntPercentPositionAlign | end                      |
 | positionType  | 进度百分比的位置类型，只对type="line"有效         | AntPercentPositionType  | outer                    |
+| strokeWidth   | 进度条的宽度，只对type="circle"有效               | double                  | 6                        |
 
-### AntProcessType 枚举值
+### AntProgressType 枚举值
 
 | 值      | 说明    |
 |--------|-------|
 | line   | 线性进度条 |
 | circle | 环形进度条 |
 
-### AntProcessStatus 枚举值
+### AntProgressStatus 枚举值
 
 | 值         | 说明   |
 |-----------|------|

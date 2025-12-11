@@ -48,7 +48,7 @@ class _FormPageState extends State<FormPage> {
                 child: Column(
                   children: [
                     AntFormItem<String>(
-                      labelWidget: Text("年龄"),
+                      label: Text("年龄"),
                       name: NamePath('age'),
                       builder: (field) {
                         return AntInput(
@@ -58,7 +58,7 @@ class _FormPageState extends State<FormPage> {
                       },
                     ),
                     AntFormItem(
-                      labelWidget: Text("性别"),
+                      label: Text("性别"),
                       name: NamePath(['gender']),
                       builder: (AntFieldState field) {
                         return AntInput(
@@ -130,7 +130,7 @@ class _FormPageState extends State<FormPage> {
                 child: Column(
                   children: [
                     AntFormItem(
-                      labelWidget: Text("用户名"),
+                      label: Text("用户名"),
                       name: NamePath(['username']),
                       validator: (value) {
                         if (value == null) {
@@ -169,7 +169,7 @@ class _FormPageState extends State<FormPage> {
                 child: Column(
                   children: [
                     AntFormItem(
-                      labelWidget: Text("用户名"),
+                      label: Text("用户名"),
                       name: NamePath(['username']),
                       validator: (value) {
                         if (value == null) {
@@ -198,7 +198,7 @@ class _FormPageState extends State<FormPage> {
                 child: Column(
                   children: [
                     AntFormItem(
-                      labelWidget: Text("用户名"),
+                      label: Text("用户名"),
                       name: NamePath(['username']),
                       validator: (value) {
                         if (value == null) {
@@ -228,7 +228,7 @@ class _FormPageState extends State<FormPage> {
                 child: Column(
                   children: [
                     AntFormItem(
-                      labelWidget: Text("年龄"),
+                      label: Text("年龄"),
                       name: NamePath('age'),
                       builder: (AntFieldState field) {
                         return AntInput(
@@ -238,7 +238,7 @@ class _FormPageState extends State<FormPage> {
                       },
                     ),
                     AntFormItem(
-                      labelWidget: Text("性别"),
+                      label: Text("性别"),
                       name: NamePath(['gender']),
                       builder: (AntFieldState field) {
                         return AntInput(
@@ -258,7 +258,7 @@ class _FormPageState extends State<FormPage> {
                 child: Column(
                   children: [
                     AntFormItem(
-                      labelWidget: Text("名称"),
+                      label: Text("名称"),
                       name: NamePath(['name']),
                       builder: (AntFieldState state) {
                         return AntInput(
@@ -276,7 +276,7 @@ class _FormPageState extends State<FormPage> {
                               Expanded(
                                 child: AntFormItem<String?>(
                                   name: field.name,
-                                  labelWidget: Text("Item"),
+                                  label: Text("Item"),
                                   builder: (AntFieldState state) {
                                     return AntInput(
                                       value: state.value,
@@ -323,7 +323,7 @@ class _FormPageState extends State<FormPage> {
                             ...fields.map((field) {
                               return AntFormItem<String>(
                                 name: NamePath([field.index, "name"]),
-                                labelWidget: Text("Item"),
+                                label: Text("Item"),
                                 builder: (AntFieldState<String?> state) {
                                   return AntInput(
                                     value: state.value?.toString(),
@@ -358,7 +358,7 @@ class _FormPageState extends State<FormPage> {
                 child: Column(
                   children: [
                     AntFormItem(
-                      labelWidget: Text("名称"),
+                      label: Text("名称"),
                       name: NamePath(['name']),
                       builder: (AntFieldState state) {
                         return AntInput(
@@ -378,7 +378,7 @@ class _FormPageState extends State<FormPage> {
                                   Expanded(
                                     child: AntFormItem<String>(
                                       name: NamePath([field.index, "itemName"]),
-                                      labelWidget: Text("Item"),
+                                      label: Text("Item"),
                                       builder: ( state) {
                                         return AntInput(
                                           placeholder: "请输入",
@@ -408,7 +408,7 @@ class _FormPageState extends State<FormPage> {
                                             field1.index,
                                             "name",
                                           ]),
-                                          labelWidget: Text("SubItem"),
+                                          label: Text("SubItem"),
                                           builder: (  state) {
                                             return AntInput(
                                               value: state.value?.toString(),

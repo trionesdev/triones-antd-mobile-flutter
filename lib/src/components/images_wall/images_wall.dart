@@ -337,6 +337,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
     }
 
     return GridView(
+      padding: EdgeInsets.all(4),
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: widget.crossAxisCount!,

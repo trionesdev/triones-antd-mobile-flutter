@@ -149,10 +149,11 @@ class _AntRadioGroupScope extends InheritedWidget {
 
 abstract class AntRadioBase extends StatefulWidget {
   const AntRadioBase(
-      {super.key, this.value, this.label, this.disabled = false});
+      {super.key, this.value, this.label, this.labelText, this.disabled = false});
 
   final dynamic value;
   final Widget? label;
+  final String? labelText;
   final bool disabled;
 }
 
@@ -211,6 +212,7 @@ mixin RadioStateMixin<T extends AntRadioBase> on State<T> {
 class AntRadio extends AntRadioBase {
   const AntRadio({super.key,
     super.label,
+    super.labelText,
     this.block = false,
     this.checked,
     this.defaultChecked = false,
@@ -262,7 +264,7 @@ class _AntRadioState extends State<AntRadio> with RadioStateMixin {
     if (widget.block) {
       return Expanded(child: widget.label ?? Text(""));
     } else {
-      return widget.label ?? Text("");
+      return widget.label ?? Text(widget.labelText?? "");
     }
   }
 
@@ -422,6 +424,12 @@ class _AntRadioButtonState extends State<AntRadioButton>
             text);
       }
       return text;
+    }
+    if (widget.labelText != null ) {
+      return Text(
+        widget.labelText ?? "",
+        style: TextStyle(color: themeData.colorPrimary),
+      );
     }
     return widget.label;
   }

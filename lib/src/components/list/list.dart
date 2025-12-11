@@ -134,7 +134,7 @@ class _AntListStyle extends StateStyle {
 
   @override
   Style get style {
-    return Style(backgroundColor: Colors.white);
+    return Style(backgroundColor: Colors.transparent);
   }
 }
 
