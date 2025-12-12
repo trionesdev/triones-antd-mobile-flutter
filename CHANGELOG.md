@@ -5,3 +5,7 @@
 ## 0.0.3
 
 * 添加组件，VerificationCodeInput,Process
+
+## 0.0.4
+
+* 添加组件，Steps
