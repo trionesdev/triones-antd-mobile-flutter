@@ -29,6 +29,7 @@ jobs:
           flutter pub get
           flutter build web --base-href "/triones-antd-mobile-flutter/web/"
           echo pwd
+          mkdir -p ../website/public/web
           cp -r build/web/* ../website/public/web
 
       - name: Install pnpm
