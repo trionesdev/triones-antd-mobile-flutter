@@ -141,31 +141,33 @@ class AntSelectState extends State<AntSelect> {
     if (_value == null) {
       return null;
     }
+
+    //region 先匹配初始化选项，当初始化选项匹配成功，则不再匹配选项数据源
     if (widget.initialValueOptions != null &&
         widget.initialValueOptions!.isNotEmpty) {
-      if (_multipleValue) {
+      if(_multipleValue){
         var labels =
             widget.initialValueOptions
                 ?.where((item) {
-                  return (_value as List).contains(
-                    MapUtils.getPathValue(item, _fieldsNames.value?.value),
-                  );
-                })
+              return (_value as List).contains(
+                MapUtils.getPathValue(item, _fieldsNames.value?.value),
+              );
+            })
                 .map((item) {
-                  return MapUtils.getPathValue(item, _fieldsNames.label?.value);
-                }) ??
-            [];
+              return MapUtils.getPathValue(item, _fieldsNames.label?.value);
+            }) ??
+                [];
         return (labels.isNotEmpty) ? Text(labels.join(",")) : null;
-      } else {
-        var option = widget.initialValueOptions!.firstWhere((item) {
-          return MapUtils.getPathValue(item, _fieldsNames.value?.value) ==
-              _value;
+      }else{
+        var option =  widget.initialValueOptions?.firstWhereOrNull((item){
+            return MapUtils.getPathValue(item, _fieldsNames.value?.value)==_value;
         });
-        return Text(
-          MapUtils.getPathValue(option, _fieldsNames.label?.value) ?? "",
-        );
+        if(option!=null){
+          return Text(MapUtils.getPathValue(option, _fieldsNames.label?.value));
+        }
       }
     }
+    //endregion
 
     if (widget.options.isEmpty) {
       return null;

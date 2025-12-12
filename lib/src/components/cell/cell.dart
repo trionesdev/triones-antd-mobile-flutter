@@ -111,11 +111,12 @@ class AntCellGroupState extends State<AntCellGroup> {
         groupState: this,
         generation: _generation,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             if (widget.title != null)
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
+                  horizontal: 8,
                   vertical: 8,
                 ),
                 child:
