@@ -16,8 +16,8 @@ class AntProgress extends StatelessWidget {
     this.size = AntSize.middle,
     this.height,
     this.diameter,
-    this.positionAlign = AntPercentPositionAlign.end,
-    this.positionType = AntPercentPositionType.outer,
+    this.percentPositionAlign = AntPercentPositionAlign.end,
+    this.percentPositionType = AntPercentPositionType.outer,
     this.strokeWidth = 6,
   });
 
@@ -58,10 +58,10 @@ class AntProgress extends StatelessWidget {
   final double? diameter;
   /// @description 进度百分比的位置对齐方式，只对type="line"有效
   /// @default end
-  final AntPercentPositionAlign positionAlign;
+  final AntPercentPositionAlign percentPositionAlign;
   /// @description 进度百分比的位置类型，只对type="line"有效
   /// @default outer
-  final AntPercentPositionType positionType;
+  final AntPercentPositionType percentPositionType;
   final double strokeWidth;
 
   @override
@@ -77,8 +77,8 @@ class AntProgress extends StatelessWidget {
           strokeColor: strokeColor,
           size: size,
           height: height,
-          positionAlign: positionAlign,
-          positionType: positionType,
+          percentPositionAlign: percentPositionAlign,
+          percentPositionType: percentPositionType,
         );
       case AntProgressType.circle:
         return ProgressCircle(

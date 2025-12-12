@@ -11,8 +11,8 @@ class ProgressLinePainter extends CustomPainter {
     required this.strokeColor,
     this.strokeLineCap = AntStrokeLineCap.round,
     this.height,
-    this.positionAlign = AntPercentPositionAlign.end,
-    this.positionType = AntPercentPositionType.outer,
+    this.percentPositionAlign = AntPercentPositionAlign.end,
+    this.percentPositionType = AntPercentPositionType.outer,
   });
 
   final Format? format;
@@ -34,8 +34,8 @@ class ProgressLinePainter extends CustomPainter {
   final Color strokeColor;
   final AntStrokeLineCap strokeLineCap;
   final double? height;
-  final AntPercentPositionAlign positionAlign;
-  final AntPercentPositionType positionType;
+  final AntPercentPositionAlign percentPositionAlign;
+  final AntPercentPositionType percentPositionType;
 
   double get finalHeight {
     return 20;
@@ -90,7 +90,7 @@ class ProgressLinePainter extends CustomPainter {
         progressPaint,
       );
     }
-    if (showInfo && positionType == AntPercentPositionType.inner) {
+    if (showInfo && percentPositionType == AntPercentPositionType.inner) {
       final textPainter = TextPainter(
         text: TextSpan(
           text:
@@ -108,10 +108,10 @@ class ProgressLinePainter extends CustomPainter {
         maxWidth: size.width,
       );
       var xCenter = (progressWidth - textPainter.width) / 2;
-      if (positionAlign == AntPercentPositionAlign.start) {
+      if (percentPositionAlign == AntPercentPositionAlign.start) {
         xCenter = 4;
       }
-      if (positionAlign == AntPercentPositionAlign.end) {
+      if (percentPositionAlign == AntPercentPositionAlign.end) {
         xCenter = progressWidth - textPainter.width - 4;
       }
       if (xCenter < 0) {
@@ -141,8 +141,8 @@ class ProgressLine extends StatelessWidget {
     this.strokeColor,
     this.strokeLineCap = AntStrokeLineCap.round,
     this.height,
-    this.positionAlign = AntPercentPositionAlign.end,
-    this.positionType = AntPercentPositionType.outer,
+    this.percentPositionAlign = AntPercentPositionAlign.end,
+    this.percentPositionType = AntPercentPositionType.outer,
   });
 
   final Format? format;
@@ -166,8 +166,8 @@ class ProgressLine extends StatelessWidget {
   final Color? strokeColor;
   final AntStrokeLineCap strokeLineCap;
   final double? height;
-  final AntPercentPositionAlign positionAlign;
-  final AntPercentPositionType positionType;
+  final AntPercentPositionAlign percentPositionAlign;
+  final AntPercentPositionType percentPositionType;
 
   double get computedHeight {
     if (height != null) {
@@ -230,8 +230,8 @@ class ProgressLine extends StatelessWidget {
               railColor: completedRailColor(context),
               showInfo: showInfo,
               strokeColor: completedStrokeColor(context),
-              positionAlign: positionAlign,
-              positionType: positionType,
+              percentPositionAlign: percentPositionAlign,
+              percentPositionType: percentPositionType,
             ),
           ),
         );
@@ -293,8 +293,8 @@ class ProgressLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (showInfo) {
-      if (positionType == AntPercentPositionType.outer) {
-        if (positionAlign == AntPercentPositionAlign.center) {
+      if (percentPositionType == AntPercentPositionType.outer) {
+        if (percentPositionAlign == AntPercentPositionAlign.center) {
           return Column(
             spacing: 4,
             children: [process(context), statusIcon(context)],
@@ -303,10 +303,10 @@ class ProgressLine extends StatelessWidget {
           return Row(
             spacing: 8,
             children: [
-              if (positionAlign == AntPercentPositionAlign.start)
+              if (percentPositionAlign == AntPercentPositionAlign.start)
                 statusIcon(context),
               Expanded(child: process(context)),
-              if (positionAlign == AntPercentPositionAlign.end)
+              if (percentPositionAlign == AntPercentPositionAlign.end)
                 statusIcon(context),
             ],
           );
