@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trionesdev_antd_mobile/src/components/constants.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 enum AntInputType { text, password, number }
@@ -92,11 +93,11 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     }
     switch (widget.size) {
       case AntSize.large:
-        return 48;
+        return sizeLg;
       case AntSize.middle:
-        return 32;
+        return sizeMd;
       case AntSize.small:
-        return 24;
+        return sizeSm;
     }
   }
 

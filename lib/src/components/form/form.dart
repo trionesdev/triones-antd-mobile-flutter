@@ -2,6 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
+import '../constants.dart';
+
 // 以Field作为基础，所有的属性和操作都在FieldState内部进行处理。
 
 //region form
@@ -599,11 +601,11 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
     AntSize size = widget.size ?? formState?.widget.size ?? AntSize.middle;
     switch (size) {
       case AntSize.large:
-        return 48;
+        return sizeLg;
       case AntSize.middle:
-        return 32;
+        return sizeMd;
       case AntSize.small:
-        return 24;
+        return sizeSm;
     }
   }
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
+import '../constants.dart';
+
 /// @component AntInputNumber 数字输入框
 class AntInputNumber extends StatefulWidget {
   const AntInputNumber({
@@ -65,11 +67,11 @@ class _AntInputNumberState extends State<AntInputNumber> {
   double get _height {
     switch (widget.size) {
       case AntSize.large:
-        return 48;
+        return sizeLg;
       case AntSize.middle:
-        return 32;
+        return sizeMd;
       case AntSize.small:
-        return 24;
+        return sizeSm;
     }
   }
 

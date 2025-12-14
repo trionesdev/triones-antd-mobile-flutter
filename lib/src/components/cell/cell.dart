@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trionesdev_antd_mobile/src/components/constants.dart';
 import 'package:trionesdev_antd_mobile/src/components/types.dart';
 import 'package:trionesdev_antd_mobile/src/icons/icons.dart';
 
@@ -218,11 +219,11 @@ class _AntCellState extends State<AntCell> {
     AntSize size = widget.size ?? groupState?.widget.size ?? AntSize.middle;
     switch (size) {
       case AntSize.large:
-        return 48;
+        return sizeLg;
       case AntSize.middle:
-        return 32;
+        return sizeMd;
       case AntSize.small:
-        return 24;
+        return sizeSm;
     }
   }
 

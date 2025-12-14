@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trionesdev_antd_mobile/src/components/constants.dart';
 
 import '../../../trionesdev_antd_mobile.dart';
 
@@ -48,13 +49,13 @@ class _AvatarState extends State<AntAvatar> with MaterialStateMixin {
     }
     switch (widget.size) {
       case AntSize.large:
-        return 48;
+        return sizeLg;
       case AntSize.middle:
-        return 32;
+        return sizeMd;
       case AntSize.small:
-        return 24;
+        return sizeSm;
       case null:
-        return 32;
+        return sizeMd;
     }
   }
 
@@ -64,13 +65,13 @@ class _AvatarState extends State<AntAvatar> with MaterialStateMixin {
     }
     switch (widget.size) {
       case AntSize.large:
-        return 48;
+        return sizeLg;
       case AntSize.middle:
-        return 32;
+        return sizeMd;
       case AntSize.small:
-        return 24;
+        return sizeSm;
       case null:
-        return 32;
+        return sizeMd;
     }
   }
 

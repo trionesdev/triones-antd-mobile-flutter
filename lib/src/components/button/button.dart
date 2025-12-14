@@ -1,6 +1,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:trionesdev_antd_mobile/src/components/constants.dart';
 import '../../../trionesdev_antd_mobile.dart';
 
 enum AntButtonType { primary, text, link }
@@ -90,11 +91,11 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
   double? get height {
     switch (widget.size) {
       case AntSize.large:
-        return 48;
+        return sizeLg;
       case AntSize.middle:
-        return 32;
+        return sizeMd;
       case AntSize.small:
-        return 24;
+        return sizeSm;
     }
   }
 
@@ -105,11 +106,11 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
     if (widget.text == null && widget.child == null) {
       switch (widget.size) {
         case AntSize.large:
-          return 48;
+          return sizeLg;
         case AntSize.middle:
-          return 32;
+          return sizeMd;
         case AntSize.small:
-          return 24;
+          return sizeSm;
       }
     }
     return null;
