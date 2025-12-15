@@ -104,7 +104,8 @@ class _SearchBarState extends State<AntSearchBar> with MaterialStateMixin {
             },
             placeholder: widget.placeholder,
             prefix: widget.searchIcon ??
-                Icon(Icons.search, color: Color(0xffD5D5D5), size: 20),
+                Icon(AntIcons.searchOutline, color: Color(0xffD5D5D5), size: 16),
+
             suffix: cancelIcon,
             onFocus: () {
               setState(() {

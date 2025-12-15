@@ -195,12 +195,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
             })(),
         decoration: InputDecoration(
           prefixIcon:
-              widget.prefix != null
-                  ? Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [widget.prefix ?? SizedBox.shrink()],
-                  )
-                  : null,
+              widget.prefix ,
           suffixIcon: suffixIcon,
           hintText: widget.placeholder,
           hintStyle: TextStyle(color: Colors.grey),
