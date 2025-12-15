@@ -56,8 +56,9 @@ class _InputPageState extends State<InputPage> {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black),
                   ),
+                  padding: EdgeInsets.symmetric(horizontal: 4),
                   placeholder: "请输入内容",
-                  height: 48,
+                  size: AntSize.large,
                   suffix: Icon(Icons.add),
                   // height: 24,
                 ),
