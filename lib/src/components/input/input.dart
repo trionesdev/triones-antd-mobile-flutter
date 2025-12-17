@@ -10,6 +10,7 @@ class AntInput extends StatefulWidget {
   const AntInput({
     super.key,
     this.size = AntSize.middle,
+    this.readOnly = false,
     this.placeholder,
     this.type = AntInputType.text,
     this.prefix,
@@ -19,6 +20,7 @@ class AntInput extends StatefulWidget {
     this.disabled = false,
     this.onChange,
     this.decoration,
+    this.padding,
     this.height,
     this.style,
     this.onBlur,
@@ -26,7 +28,7 @@ class AntInput extends StatefulWidget {
   });
 
   final StateStyle? style;
-
+  final bool readOnly;
   /// @description 组件大小
   /// @default middle
   final AntSize size;
@@ -69,6 +71,7 @@ class AntInput extends StatefulWidget {
   /// @description 输入框装饰
   /// @default null
   final BoxDecoration? decoration;
+  final EdgeInsetsGeometry? padding;
 
   /// @description 失去焦点回调
   /// @default null
@@ -91,6 +94,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     if (widget.height != null) {
       return widget.height;
     }
+
     switch (widget.size) {
       case AntSize.large:
         return sizeLg;
@@ -177,13 +181,15 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
       decoration:
           widget.decoration ?? style.resolve(materialStates)?.decoration,
       height: height,
-      padding: style.resolve(materialStates)?.computedPadding,
+      padding: widget.padding ?? style.resolve(materialStates)?.computedPadding,
       child: TextField(
+        readOnly:  widget.readOnly,
         enabled: !widget.disabled,
         controller: _controller,
         focusNode: _focusNode,
         obscureText: widget.type == AntInputType.password && passwordVisible,
-        cursorColor: Colors.grey,
+        cursorColor: Colors.black,
+        cursorWidth: 1,
         style: TextStyle(fontSize: style.resolve(materialStates)?.fontSize),
         keyboardType:
             (() {
@@ -200,7 +206,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
           hintText: widget.placeholder,
           hintStyle: TextStyle(color: Colors.grey),
           // 提示文本
-          border: OutlineInputBorder(borderSide: BorderSide.none),
+          border: OutlineInputBorder(borderSide: BorderSide.none,gapPadding: 0),
           contentPadding: EdgeInsets.zero,
         ),
         inputFormatters: [
