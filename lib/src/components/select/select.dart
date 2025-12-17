@@ -138,43 +138,43 @@ class AntSelectState extends State<AntSelect> {
   bool _isOpen = false;
 
   Widget? get content {
-    if (_value == null) {
+    if (_value == null || (_multipleValue && _value.isEmpty)) {
       return null;
     }
 
-    //region 先匹配初始化选项，当初始化选项匹配成功，则不再匹配选项数据源
-    if (widget.initialValueOptions != null &&
-        widget.initialValueOptions!.isNotEmpty) {
-      if (_multipleValue) {
-        var labels =
-            widget.initialValueOptions
-                ?.where((item) {
-              return (_value as List).contains(
-                MapUtils.getPathValue(item, _fieldsNames.value?.value),
-              );
-            })
-                .map((item) {
-              return MapUtils.getPathValue(item, _fieldsNames.label?.value);
-            }) ??
-                [];
-        return (labels.isNotEmpty) ? Text(labels.join(",")) : null;
-      } else {
-        var option = widget.initialValueOptions?.firstWhereOrNull((item) {
-          return MapUtils.getPathValue(item, _fieldsNames.value?.value) ==
-              _value;
-        });
-        if (option != null) {
-          return Text(MapUtils.getPathValue(option, _fieldsNames.label?.value)??"");
-        }
-      }
-    }
-    //endregion
+    // //region 先匹配初始化选项，当初始化选项匹配成功，则不再匹配选项数据源
+    // if (widget.initialValueOptions != null &&
+    //     widget.initialValueOptions!.isNotEmpty) {
+    //   if (_multipleValue) {
+    //     var labels =
+    //         widget.initialValueOptions
+    //             ?.where((item) {
+    //           return (_value as List).contains(
+    //             MapUtils.getPathValue(item, _fieldsNames.value?.value),
+    //           );
+    //         })
+    //             .map((item) {
+    //           return MapUtils.getPathValue(item, _fieldsNames.label?.value);
+    //         }) ??
+    //             [];
+    //     return (labels.isNotEmpty) ? Text(labels.join(",")) : null;
+    //   } else {
+    //     var option = widget.initialValueOptions?.firstWhereOrNull((item) {
+    //       return MapUtils.getPathValue(item, _fieldsNames.value?.value) ==
+    //           _value;
+    //     });
+    //     if (option != null) {
+    //       return Text(MapUtils.getPathValue(option, _fieldsNames.label?.value)??"");
+    //     }
+    //   }
+    // }
+    // //endregion
 
-    if (widget.options.isEmpty) {
+    if (_options.value.isEmpty) {
       return null;
     }
     if (_multipleValue) {
-      var labels = widget.options
+      var labels = _options.value
           .where((item) {
         return (_value as List).contains(
           MapUtils.getPathValue(item, _fieldsNames.value?.value),
@@ -185,9 +185,10 @@ class AntSelectState extends State<AntSelect> {
       });
       return (labels.isNotEmpty) ? Text(labels.join(",")) : null;
     } else {
-      var labelItem = widget.options.firstWhereOrNull((item) {
+      var labelItem = _options.value.firstWhereOrNull((item) {
         return MapUtils.getPathValue(item, _fieldsNames.value?.value) == _value;
       });
+
       return labelItem != null
           ? Text(
         MapUtils.getPathValue(labelItem, _fieldsNames.label?.value) ?? "",
@@ -212,6 +213,26 @@ class AntSelectState extends State<AntSelect> {
     }
   }
 
+  List<dynamic> mergeOptions() {
+    List<dynamic> list = [];
+    if (widget.options != null && widget.options.isNotEmpty) {
+      list.addAll(widget.options);
+    }
+    if (widget.initialValueOptions != null &&
+        widget.initialValueOptions!.isNotEmpty) {
+      widget.initialValueOptions?.forEach((item) {
+        var existsItem = list.firstWhereOrNull((listItem) {
+          return listItem[_fieldsNames.value?.value] ==
+              item[_fieldsNames.value?.value];
+        });
+        if (existsItem == null) {
+          list.add(item);
+        }
+      });
+    }
+    return list;
+  }
+
   @override
   void initState() {
     _multipleValue = widget.mode != null;
@@ -219,7 +240,7 @@ class AntSelectState extends State<AntSelect> {
       label: widget.fieldsNames?.label ?? NamePath("label"),
       value: widget.fieldsNames?.value ?? NamePath("value"),
     );
-    _options.value = widget.options ?? [];
+    _options.value = mergeOptions();
     _value = widget.value;
     super.initState();
   }
@@ -233,11 +254,12 @@ class AntSelectState extends State<AntSelect> {
     if (widget.mode != oldWidget.mode) {
       _multipleValue = widget.mode != null;
     }
+    if (widget.options != oldWidget.options ||
+        widget.initialValueOptions != oldWidget.initialValueOptions) {
+      _options.value = mergeOptions();
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.options != oldWidget.options) {
-        _options.value = widget.options ?? [];
-        _key.currentState?.refreshUI();
-      }
+      _key.currentState?.refreshUI();
     });
   }
 
