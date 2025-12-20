@@ -17,6 +17,7 @@ class AntSelect extends StatefulWidget {
     this.showSearch = false,
     this.appBar,
     this.title,
+    this.titleText,
     this.placeholder,
     this.arrow = false,
     this.fieldsNames,
@@ -68,7 +69,8 @@ class AntSelect extends StatefulWidget {
 
   /// @description 标题
   /// @default  null
-  final String? title;
+  final Widget? title;
+  final String? titleText;
 
   /// @description 占位符
   /// @default  null
@@ -263,6 +265,16 @@ class AntSelectState extends State<AntSelect> {
     });
   }
 
+  Widget? _title(){
+    if(widget.title!=null){
+      return widget.title!;
+    }
+    if(widget.titleText!=null){
+      return Text(widget.titleText!);
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     AntThemeData theme = AntTheme.of(context);
@@ -311,10 +323,7 @@ class AntSelectState extends State<AntSelect> {
                     appBar:
                     widget.appBar ??
                         AntAppBar(
-                          title:
-                          widget.title != null
-                              ? Text(widget.title ?? "")
-                              : null,
+                          title:_title(),
                           onBack: () {
                             Navigator.of(context).maybePop(true).then((_) {});
                           },
@@ -414,13 +423,7 @@ class AntSelectState extends State<AntSelect> {
                               },
                             ),
                             Container(
-                              child:
-                              widget.title != null
-                                  ? Text(
-                                widget.title!,
-                                style: TextStyle(color: Colors.black),
-                              )
-                                  : null,
+                              child:_title()
                             ),
                             AntButton(
                               type: AntButtonType.text,
