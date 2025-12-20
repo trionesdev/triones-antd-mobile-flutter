@@ -180,7 +180,7 @@ class _AntCardHeaderStyle extends StateStyle {
         width: 1,
         style: BorderStyle.solid,
       ),
-      padding: StylePadding.symmetric(horizontal: 12, vertical: 12),
+      padding: StylePadding.symmetric(horizontal: 8, vertical: 8),
     );
   }
 }
@@ -214,7 +214,7 @@ class _AntCardFooterStyle extends StateStyle {
         width: 1,
         style: BorderStyle.solid,
       ),
-      padding: StylePadding.symmetric(horizontal: 12, vertical: 8),
+      padding: StylePadding.symmetric(horizontal: 8, vertical: 8),
     );
   }
 }
