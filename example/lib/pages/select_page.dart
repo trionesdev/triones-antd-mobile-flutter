@@ -107,7 +107,7 @@ class SelectPageState extends State<SelectPage> {
                   AntSelect(
                     options: options,
                     placeholder: "请选择",
-                    title: "选择",
+                    titleText: "选择",
                     arrow: true,
                     pickerMode: AntSelectPickerMode.page,
                     showSearch:  true,
