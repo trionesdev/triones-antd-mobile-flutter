@@ -29,6 +29,7 @@ class AntSelect extends StatefulWidget {
      * 值
      */
     this.value,
+    this.labelInValue = false,
     /**
      * 值选项
      */
@@ -104,6 +105,9 @@ class AntSelect extends StatefulWidget {
   /// @default  null
   final dynamic value;
 
+  /// @description 是否把每个选项的 label 包装到 value 中，会把 Select 的 value 类型从 string 变为 { value: string, label: ReactNode } 的格式
+  final bool labelInValue;
+
   /// @description 值选项
   /// @default  null
   final List<dynamic>? initialValueOptions;
@@ -143,75 +147,80 @@ class AntSelectState extends State<AntSelect> {
     if (_value == null || (_multipleValue && _value.isEmpty)) {
       return null;
     }
-
-    // //region 先匹配初始化选项，当初始化选项匹配成功，则不再匹配选项数据源
-    // if (widget.initialValueOptions != null &&
-    //     widget.initialValueOptions!.isNotEmpty) {
-    //   if (_multipleValue) {
-    //     var labels =
-    //         widget.initialValueOptions
-    //             ?.where((item) {
-    //           return (_value as List).contains(
-    //             MapUtils.getPathValue(item, _fieldsNames.value?.value),
-    //           );
-    //         })
-    //             .map((item) {
-    //           return MapUtils.getPathValue(item, _fieldsNames.label?.value);
-    //         }) ??
-    //             [];
-    //     return (labels.isNotEmpty) ? Text(labels.join(",")) : null;
-    //   } else {
-    //     var option = widget.initialValueOptions?.firstWhereOrNull((item) {
-    //       return MapUtils.getPathValue(item, _fieldsNames.value?.value) ==
-    //           _value;
-    //     });
-    //     if (option != null) {
-    //       return Text(MapUtils.getPathValue(option, _fieldsNames.label?.value)??"");
-    //     }
-    //   }
-    // }
-    // //endregion
-
-    if (_options.value.isEmpty) {
-      return null;
-    }
-    if (_multipleValue) {
-      var labels = _options.value
-          .where((item) {
-        return (_value as List).contains(
-          MapUtils.getPathValue(item, _fieldsNames.value?.value),
-        );
-      })
-          .map((item) {
-        return MapUtils.getPathValue(item, _fieldsNames.label?.value);
-      });
-      return (labels.isNotEmpty) ? Text(labels.join(",")) : null;
+    if (widget.labelInValue) {
+      if (_multipleValue) {
+        String labels = (_value as List)
+            .map((item) {
+              return item?["label"] ?? "";
+            })
+            .join(",");
+        return Text(labels);
+      } else {
+        return Text(_value?["label"] ?? "");
+      }
     } else {
-      var labelItem = _options.value.firstWhereOrNull((item) {
-        return MapUtils.getPathValue(item, _fieldsNames.value?.value) == _value;
-      });
+      if (_options.value.isEmpty) {
+        return null;
+      }
+      if (_multipleValue) {
+        var labels = _options.value
+            .where((item) {
+              return (_value as List).contains(
+                MapUtils.getPathValue(item, _fieldsNames.value?.value),
+              );
+            })
+            .map((item) {
+              return MapUtils.getPathValue(item, _fieldsNames.label?.value);
+            });
+        return (labels.isNotEmpty) ? Text(labels.join(",")) : null;
+      } else {
+        var labelItem = _options.value.firstWhereOrNull((item) {
+          return MapUtils.getPathValue(item, _fieldsNames.value?.value) ==
+              _value;
+        });
 
-      return labelItem != null
-          ? Text(
-        MapUtils.getPathValue(labelItem, _fieldsNames.label?.value) ?? "",
-      )
-          : null;
+        return labelItem != null
+            ? Text(
+              MapUtils.getPathValue(labelItem, _fieldsNames.label?.value) ?? "",
+            )
+            : null;
+      }
     }
   }
 
   dynamic valueOption(dynamic value) {
     if (_multipleValue) {
-      return widget.options
-          .where((item) {
-        return (value as List).contains(
-          MapUtils.getPathValue(item, _fieldsNames.value?.value),
-        );
-      })
-          .map((item) => item);
+      if (widget.labelInValue) {
+        return _options.value
+            .where((item) {
+              return (value as List)
+                  .map((vItem) => vItem?["value"])
+                  .contains(
+                    MapUtils.getPathValue(item, _fieldsNames.value?.value),
+                  );
+            })
+            .map((item) => item);
+      } else {
+        return _options.value
+            .where((item) {
+              return (value as List).contains(
+                MapUtils.getPathValue(item, _fieldsNames.value?.value),
+              );
+            })
+            .map((item) => item);
+      }
     } else {
-      return widget.options.firstWhereOrNull((item) {
-        return MapUtils.getPathValue(item, _fieldsNames.value?.value) == value;
-      });
+      if (widget.labelInValue) {
+        return _options.value.firstWhereOrNull((item) {
+          return MapUtils.getPathValue(item, _fieldsNames.value?.value) ==
+              value?["value"];
+        });
+      } else {
+        return _options.value.firstWhereOrNull((item) {
+          return MapUtils.getPathValue(item, _fieldsNames.value?.value) ==
+              value;
+        });
+      }
     }
   }
 
@@ -235,6 +244,26 @@ class AntSelectState extends State<AntSelect> {
     return list;
   }
 
+  void setValueFromWidgetValue(){
+    if (widget.labelInValue) {
+      if (_multipleValue) {
+        if(_value == null || _value.isEmpty){
+          _value = [];
+        }
+        _value =
+            (widget.value as List).map((item) {
+              return Map<String, dynamic>.from(item);
+            }).toList();
+      } else {
+        if (_value != null){
+          _value = Map<String, dynamic>.from(widget.value);
+        }
+      }
+    } else {
+      _value = widget.value;
+    }
+  }
+
   @override
   void initState() {
     _multipleValue = widget.mode != null;
@@ -243,7 +272,7 @@ class AntSelectState extends State<AntSelect> {
       value: widget.fieldsNames?.value ?? NamePath("value"),
     );
     _options.value = mergeOptions();
-    _value = widget.value;
+    setValueFromWidgetValue();
     super.initState();
   }
 
@@ -251,7 +280,7 @@ class AntSelectState extends State<AntSelect> {
   void didUpdateWidget(covariant AntSelect oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.value != _value) {
-      _value = widget.value;
+      setValueFromWidgetValue();
     }
     if (widget.mode != oldWidget.mode) {
       _multipleValue = widget.mode != null;
@@ -265,11 +294,11 @@ class AntSelectState extends State<AntSelect> {
     });
   }
 
-  Widget? _title(){
-    if(widget.title!=null){
+  Widget? _title() {
+    if (widget.title != null) {
       return widget.title!;
     }
-    if(widget.titleText!=null){
+    if (widget.titleText != null) {
       return Text(widget.titleText!);
     }
     return null;
@@ -299,6 +328,7 @@ class AntSelectState extends State<AntSelect> {
           searchPlaceholder: widget.searchPlaceholder,
           options: _options,
           value: _value,
+          labelInValue: widget.labelInValue,
           optionBuilder: widget.optionBuilder,
           onChange: (value) {
             setState(() {
@@ -318,12 +348,11 @@ class AntSelectState extends State<AntSelect> {
             MaterialPageRoute(
               fullscreenDialog: true, // 关键参数
               builder:
-                  (context) =>
-                  AntScaffold(
+                  (context) => AntScaffold(
                     appBar:
-                    widget.appBar ??
+                        widget.appBar ??
                         AntAppBar(
-                          title:_title(),
+                          title: _title(),
                           onBack: () {
                             Navigator.of(context).maybePop(true).then((_) {});
                           },
@@ -340,11 +369,9 @@ class AntSelectState extends State<AntSelect> {
                                 size: AntSize.large,
                                 type: AntButtonType.text,
                                 text:
-                                AntdLocalizations
-                                    .of(
-                                  context,
-                                )
-                                    ?.button_cancel ??
+                                    AntdLocalizations.of(
+                                      context,
+                                    )?.button_cancel ??
                                     "取消",
                                 onPressed: () {
                                   Navigator.of(
@@ -358,13 +385,12 @@ class AntSelectState extends State<AntSelect> {
                                 size: AntSize.large,
                                 type: AntButtonType.primary,
                                 text:
-                                AntdLocalizations
-                                    .of(context)
-                                    ?.button_ok ??
+                                    AntdLocalizations.of(context)?.button_ok ??
                                     "确定",
                                 onPressed: () {
                                   Navigator.of(context).maybePop(true).then((
-                                      _,) {
+                                    _,
+                                  ) {
                                     widget.onChange?.call(
                                       _value,
                                       valueOption(_value),
@@ -388,10 +414,7 @@ class AntSelectState extends State<AntSelect> {
             builder: (context) {
               return SafeArea(
                 child: SizedBox(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height - 100,
+                  height: MediaQuery.of(context).size.height - 100,
                   child: Column(
                     children: [
                       Container(
@@ -410,11 +433,9 @@ class AntSelectState extends State<AntSelect> {
                             AntButton(
                               type: AntButtonType.text,
                               text:
-                              AntdLocalizations
-                                  .of(
-                                context,
-                              )
-                                  ?.button_cancel ??
+                                  AntdLocalizations.of(
+                                    context,
+                                  )?.button_cancel ??
                                   "取消",
                               onPressed: () {
                                 Navigator.of(
@@ -422,15 +443,11 @@ class AntSelectState extends State<AntSelect> {
                                 ).maybePop(true).then((_) {});
                               },
                             ),
-                            Container(
-                              child:_title()
-                            ),
+                            Container(child: _title()),
                             AntButton(
                               type: AntButtonType.text,
                               text:
-                              AntdLocalizations
-                                  .of(context)
-                                  ?.button_ok ??
+                                  AntdLocalizations.of(context)?.button_ok ??
                                   "确定",
                               style: StateStyle(
                                 style: Style(color: theme.colorPrimary),

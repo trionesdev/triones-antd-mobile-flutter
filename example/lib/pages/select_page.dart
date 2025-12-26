@@ -66,7 +66,12 @@ class SelectPageState extends State<SelectPage> {
               title: "多选模式",
               child: Column(
                 children: [
-                  AntSelect(options: options, placeholder: "请选择", arrow: true,mode: AntSelectMode.multiple,),
+                  AntSelect(
+                    options: options,
+                    placeholder: "请选择",
+                    arrow: true,
+                    mode: AntSelectMode.multiple,
+                  ),
                 ],
               ),
             ),
@@ -79,9 +84,9 @@ class SelectPageState extends State<SelectPage> {
                     placeholder: "请选择",
                     arrow: true,
                     pickerMode: AntSelectPickerMode.popup,
-                    showSearch:  true,
+                    showSearch: true,
                     onSearch: (value) {
-                      print("search Value:"+value.toString());
+                      print("search Value:" + value.toString());
                     },
                     onRefresh: () async {
                       setState(() {
@@ -110,9 +115,9 @@ class SelectPageState extends State<SelectPage> {
                     titleText: "选择",
                     arrow: true,
                     pickerMode: AntSelectPickerMode.page,
-                    showSearch:  true,
+                    showSearch: true,
                     onSearch: (value) {
-                      print("search Value:"+value.toString());
+                      print("search Value:" + value.toString());
                     },
                     onRefresh: () async {
                       setState(() {
@@ -131,32 +136,91 @@ class SelectPageState extends State<SelectPage> {
                 ],
               ),
             ),
-            AntButton(text: "重置",onPressed: () {
-              setState(() {
-                 options = [
-                  {"value": "1", "label": "选项1"},
-                  {"value": "2", "label": "选项2"},
-                  {"value": "3", "label": "选项3"},
-                  {"value": "4", "label": "选项4"},
-                  {"value": "5", "label": "选项5"},
-                  {"value": "6", "label": "选项6"},
-                  {"value": "7", "label": "选项7"},
-                  {"value": "8", "label": "选项8"},
-                  {"value": "9", "label": "选项9"},
-                  {"value": "10", "label": "选项10"},
-                  {"value": "11", "label": "选项11"},
-                  {"value": "12", "label": "选项12"},
-                  {"value": "13", "label": "选项13"},
-                  {"value": "14", "label": "选项14"},
-                  {"value": "15", "label": "选项15"},
-                  {"value": "16", "label": "选项16"},
-                  {"value": "17", "label": "选项17"},
-                  {"value": "18", "label": "选项18"},
-                  {"value": "19", "label": "选项19"},
-                  {"value": "20", "label": "选项20"},
-                ];
-              });
-            },)
+            DemoBlock(
+              title: "LabelInValue",
+              child: Column(
+                children: [
+                  AntSelect(
+                    options: options,
+                    placeholder: "请选择",
+                    arrow: true,
+                    labelInValue: true,
+                    onChange: (value, option) {
+                      print("value:" + value.toString());
+                      print("option:" + option.toString());
+                    },
+                  ),
+                ],
+              ),
+            ),
+            DemoBlock(
+              title: "LabelInValue 回填值",
+              child: Column(
+                children: [
+                  AntSelect(
+                    options: options,
+                    placeholder: "请选择",
+                    arrow: true,
+                    labelInValue: true,
+                    value: {"value": "1", "label": "选项1"},
+                    onChange: (value, option) {
+                      print("value:" + value.toString());
+                      print("option:" + option.toString());
+                    },
+                  ),
+                ],
+              ),
+            ),
+            DemoBlock(
+              title: "LabelInValue 回填值",
+              child: Column(
+                children: [
+                  AntSelect(
+                    options: options,
+                    placeholder: "请选择",
+                    mode: AntSelectMode.multiple,
+                    arrow: true,
+                    labelInValue: true,
+                    value: [
+                      {"value": "1", "label": "选项1"},
+                      {"value": "2", "label": "选项2"},
+                    ],
+                    onChange: (value, option) {
+
+                    },
+                  ),
+                ],
+              ),
+            ),
+            AntButton(
+              text: "重置",
+              onPressed: () {
+                setState(() {
+                  options = [
+                    {"value": "1", "label": "选项1"},
+                    {"value": "2", "label": "选项2"},
+                    {"value": "3", "label": "选项3"},
+                    {"value": "4", "label": "选项4"},
+                    {"value": "5", "label": "选项5"},
+                    {"value": "6", "label": "选项6"},
+                    {"value": "7", "label": "选项7"},
+                    {"value": "8", "label": "选项8"},
+                    {"value": "9", "label": "选项9"},
+                    {"value": "10", "label": "选项10"},
+                    {"value": "11", "label": "选项11"},
+                    {"value": "12", "label": "选项12"},
+                    {"value": "13", "label": "选项13"},
+                    {"value": "14", "label": "选项14"},
+                    {"value": "15", "label": "选项15"},
+                    {"value": "16", "label": "选项16"},
+                    {"value": "17", "label": "选项17"},
+                    {"value": "18", "label": "选项18"},
+                    {"value": "19", "label": "选项19"},
+                    {"value": "20", "label": "选项20"},
+                  ];
+                });
+              },
+            ),
           ],
         ),
       ),

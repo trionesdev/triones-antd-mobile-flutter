@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
@@ -14,6 +15,7 @@ class SelectPanel extends StatefulWidget {
     this.onChange,
     this.searchPlaceholder,
     this.value,
+    this.labelInValue = false,
     this.optionBuilder,
     this.onRefresh,
     //距顶部多远时（单位px），触发 scrolltoupper 事件
@@ -31,6 +33,7 @@ class SelectPanel extends StatefulWidget {
   final ValueNotifier<List<dynamic>> options;
   final ValueChanged<dynamic>? onSearch;
   final dynamic value;
+  final bool labelInValue;
   final ValueChanged<dynamic>? onChange;
   final AntSelectOptionBuilder? optionBuilder;
   final AsyncCallback? onRefresh;
@@ -57,16 +60,38 @@ class SelectPanelState extends State<SelectPanel> {
 
   void selectItem(value) {
     setState(() {
-      if (widget.multiple == true) {
-        _value ??= [];
-        if (_value.contains(value)) {
-          _value.remove(value);
+      if (widget.labelInValue) {
+        if (widget.multiple == true) {
+          _value ??= [];
+          var existsItem = (_value as List).firstWhereOrNull((item) {
+            return item?["value"] == value?["value"];
+          });
+          if (existsItem != null) {
+            _value =
+                (_value as List).where((item) {
+                  return item?["value"] != value?["value"];
+                }).toList();
+          } else {
+            _value.add(Map<String, dynamic>.from(value));
+          }
         } else {
-          _value.add(value);
+          _value = value;
         }
+      } else {
+        if (widget.multiple == true) {
+          _value ??= [];
+          if (_value.contains(value)) {
+            _value.remove(value);
+          } else {
+            _value.add(value);
+          }
+        } else {
+          _value = value;
+        }
+      }
+      if (widget.multiple == true) {
         widget.onChange?.call(_value);
       } else {
-        _value = value;
         Navigator.of(context).maybePop(true).then((_) {
           widget.onChange?.call(_value);
         });
@@ -107,12 +132,25 @@ class SelectPanelState extends State<SelectPanel> {
       if (_value == null || _value.isEmpty) {
         return false;
       }
-      return _value.contains(MapUtils.getPathValue(item, _fieldsNames.value?.value));
+      if (widget.labelInValue) {
+        return (_value as List)
+            .map((vItem) => vItem?["value"])
+            .contains(MapUtils.getPathValue(item, _fieldsNames.value?.value));
+      } else {
+        return _value.contains(
+          MapUtils.getPathValue(item, _fieldsNames.value?.value),
+        );
+      }
     } else {
       if (_value == null) {
         return false;
       }
-      return _value == MapUtils.getPathValue(item, _fieldsNames.value?.value);
+      if (widget.labelInValue) {
+        return _value?["value"] ==
+            MapUtils.getPathValue(item, _fieldsNames.value?.value);
+      } else {
+        return _value == MapUtils.getPathValue(item, _fieldsNames.value?.value);
+      }
     }
   }
 
@@ -148,7 +186,22 @@ class SelectPanelState extends State<SelectPanel> {
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
-                    selectItem(MapUtils.getPathValue(item, _fieldsNames.value?.value));
+                    if (widget.labelInValue) {
+                      selectItem({
+                        "label": MapUtils.getPathValue(
+                          item,
+                          _fieldsNames.label?.value,
+                        ),
+                        "value": MapUtils.getPathValue(
+                          item,
+                          _fieldsNames.value?.value,
+                        ),
+                      });
+                    } else {
+                      selectItem(
+                        MapUtils.getPathValue(item, _fieldsNames.value?.value),
+                      );
+                    }
                   },
                   child:
                       widget.optionBuilder != null
@@ -164,7 +217,11 @@ class SelectPanelState extends State<SelectPanel> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  MapUtils.getPathValue(item, _fieldsNames.label?.value) ?? "",
+                                  MapUtils.getPathValue(
+                                        item,
+                                        _fieldsNames.label?.value,
+                                      ) ??
+                                      "",
                                   style: TextStyle(
                                     color:
                                         selected
