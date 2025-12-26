@@ -247,15 +247,16 @@ class AntSelectState extends State<AntSelect> {
   void setValueFromWidgetValue(){
     if (widget.labelInValue) {
       if (_multipleValue) {
-        if(_value == null || _value.isEmpty){
+        if(widget.value == null || widget.value.isEmpty){
           _value = [];
+        }else{
+          _value =
+              (widget.value as List).map((item) {
+                return Map<String, dynamic>.from(item);
+              }).toList();
         }
-        _value =
-            (widget.value as List).map((item) {
-              return Map<String, dynamic>.from(item);
-            }).toList();
       } else {
-        if (_value != null){
+        if (widget.value != null){
           _value = Map<String, dynamic>.from(widget.value);
         }
       }
