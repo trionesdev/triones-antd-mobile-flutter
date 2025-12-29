@@ -291,6 +291,7 @@ class _AntImagesWallState extends State<AntImagesWall> {
           onRemove: (uid) {
             setState(() {
               _images.removeWhere((element) => element.uid == uid);
+              widget.onChange?.call(_images);
             });
           },
         ),
