@@ -14,6 +14,7 @@ class AntCellGroup extends StatefulWidget {
     this.titleText,
     this.labelCol,
     this.labelAlign,
+    this.wrapperAlign = AntAlign.left,
     this.children,
     this.showDivider = false,
     this.arrow = true,
@@ -47,6 +48,7 @@ class AntCellGroup extends StatefulWidget {
   /// @description 左侧标签对齐
   /// @default null
   final AntLabelAlign? labelAlign;
+  final AntAlign? wrapperAlign;
 
   /// @description 子组件
   /// @default null
@@ -116,10 +118,7 @@ class AntCellGroupState extends State<AntCellGroup> {
           children: [
             if (widget.title != null)
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 8,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 child:
                     widget.title ??
                     Text(
@@ -151,6 +150,7 @@ class AntCell extends StatefulWidget {
     this.labelStyle,
     this.labelCol,
     this.labelAlign,
+    this.wrapperAlign,
     this.value,
     this.child,
     this.onTap,
@@ -195,6 +195,7 @@ class AntCell extends StatefulWidget {
   /// @description 左侧标签对齐
   /// @default null
   final AntLabelAlign? labelAlign;
+  final AntAlign? wrapperAlign;
 
   /// @description 值
   /// @default null
@@ -259,6 +260,18 @@ class _AntCellState extends State<AntCell> {
     return Alignment.centerLeft;
   }
 
+  Alignment get contentAlign {
+    AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
+    if (widget.wrapperAlign == AntAlign.right) {
+      return Alignment.centerRight;
+    }
+    if (groupState != null &&
+        groupState.widget.wrapperAlign == AntAlign.right) {
+      return Alignment.centerRight;
+    }
+    return Alignment.centerLeft;
+  }
+
   Widget get label {
     AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
     AntCol? labelCol = widget.labelCol ?? groupState?.widget.labelCol;
@@ -313,7 +326,9 @@ class _AntCellState extends State<AntCell> {
                 constraints: BoxConstraints(minHeight: height),
                 child: Row(
                   children: [
-                    Expanded(child: child),
+                    Expanded(
+                      child: Container(alignment: contentAlign, child: child),
+                    ),
                     if (widget.arrow == true)
                       widget.icon ??
                           Icon(
