@@ -52,7 +52,6 @@ class AntDatePickerView extends StatefulWidget {
   const AntDatePickerView({
     super.key,
     this.mode = AntDatePickerMode.date,
-    this.format,
     this.showTime = false,
     this.timeFormat,
     this.minDate,
@@ -64,18 +63,45 @@ class AntDatePickerView extends StatefulWidget {
     this.onCancel,
   });
 
+  /// @description 标题Widget
+  /// @default null
   final Widget? title;
-  final String? titleText;
-  final AntDatePickerMode mode;
-  final String? format;
-  final bool showTime;
-  final String? timeFormat;
-  final DateTime? value;
-  final ValueChanged<DateTime?>? onOk;
-  final Function? onCancel;
 
+  /// @description 标题文字
+  /// @default null
+  final String? titleText;
+
+  /// @description 显示模式
+  /// @default AntDatePickerMode.date
+  final AntDatePickerMode mode;
+
+  /// @description 显示时间, 仅在mode为AntDatePickerMode.date时有效
+  /// @default false
+  final bool showTime;
+
+  /// @description 时间格式
+  /// @default null
+  final String? timeFormat;
+
+  /// @description 默认值
+  /// @default null
+  final DateTime? value;
+
+  /// @description 最小日期
+  /// @default null
   final DateTime? minDate;
+
+  /// @description 最大日期
+  /// @default null
   final DateTime? maxDate;
+
+  /// @description 点击确定按钮回调
+  /// @default null
+  final ValueChanged<DateTime?>? onOk;
+
+  /// @description 点击取消按钮回调
+  /// @default null
+  final Function? onCancel;
 
   @override
   State<StatefulWidget> createState() => _AntDatePickerViewState();

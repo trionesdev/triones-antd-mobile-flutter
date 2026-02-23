@@ -61,18 +61,21 @@ Future<T?> showAntCascaderPicker<T>({
     context: context,
     minHeight: minHeight,
     maxHeight: maxHeight,
-    child: AntCascaderPickerView(
-      itemHeight: itemHeight,
-      options: options,
-      value: value,
-      onOk: (value) {
-        Navigator.of(context).pop();
-        onOk?.call(value);
-      },
-      onCancel: () {
-        Navigator.of(context).pop();
-        onCancel?.call();
-      },
+    child: SafeArea(
+      bottom: true,
+      child: AntCascaderPickerView(
+        itemHeight: itemHeight,
+        options: options,
+        value: value,
+        onOk: (value) {
+          Navigator.of(context).pop();
+          onOk?.call(value);
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+          onCancel?.call();
+        },
+      ),
     ),
   );
 }
