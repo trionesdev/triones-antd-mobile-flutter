@@ -18,7 +18,7 @@ class AntPickerMultiView extends StatefulWidget {
 
   final Widget? title;
   final List<List<AntPickerOption>>? columns;
-  final List<String>? value;
+  final List<String?>? value;
   final Function? onCancel;
   final ValueChanged<List<AntPickerOption?>>? onOk;
   final double? itemHeight;

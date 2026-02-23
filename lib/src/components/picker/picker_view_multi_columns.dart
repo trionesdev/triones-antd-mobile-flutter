@@ -14,7 +14,7 @@ class AntPickerViewMultiColumns extends StatefulWidget {
       this.height});
 
   final List<List<AntPickerOption>>? columns;
-  final List<String>? value;
+  final List<String?>? value;
   final double? itemHeight;
   final double? height;
   final void Function(AntPickerOption? value, int index)? onColumnSelected;

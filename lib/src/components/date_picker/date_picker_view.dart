@@ -53,6 +53,7 @@ class AntDatePickerView extends StatefulWidget {
 class _AntDatePickerViewState extends State<AntDatePickerView> {
   String _cleanFormat = '';
   InternalValueType _internalValue = const InternalValueType();
+  List<String?> _pickerValue = [];
   List<List<AntPickerOption>>? _columns = [];
   List<AntPickerOption> hours = List.generate(
     24,
