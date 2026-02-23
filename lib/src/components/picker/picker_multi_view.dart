@@ -12,17 +12,21 @@ class AntPickerMultiView extends StatefulWidget {
     this.onCancel,
     this.value,
     this.title,
+    this.titleText,
     this.itemHeight = 34,
     this.onColumnSelected,
+    this.onChange,
   });
 
   final Widget? title;
+  final String? titleText;
   final List<List<AntPickerOption>>? columns;
   final List<String?>? value;
   final Function? onCancel;
   final ValueChanged<List<AntPickerOption?>>? onOk;
   final double? itemHeight;
   final void Function(AntPickerOption? value, int index)? onColumnSelected;
+  final void Function(List<AntPickerOption?>? value)? onChange;
 
   @override
   State<StatefulWidget> createState() => _AntPickerMultiViewState();
@@ -38,7 +42,7 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
     _value = List.filled(widget.columns?.length ?? 0, null);
     if (widget.value != null && widget.value!.isNotEmpty) {
       for (int i = 0; i < (widget.columns?.length ?? 0); i++) {
-        if (i< widget.value!.length && widget.value?[i] != null) {
+        if (i < widget.value!.length && widget.value?[i] != null) {
           _value[i] = widget.columns![i].firstWhere((option) {
             return option.value == widget.value?[i];
           });
@@ -77,8 +81,12 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
                   widget.onCancel?.call();
                 },
               ),
-              if (widget.title != null)
-                Expanded(child: Center(child: widget.title!)),
+              if (widget.title != null || widget.titleText != null)
+                Expanded(
+                  child: Center(
+                    child: widget.title ?? Text(widget.titleText ?? ""),
+                  ),
+                ),
               GestureDetector(
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 16),
@@ -101,9 +109,14 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
               return AntPickerViewMultiColumns(
                 columns: widget.columns,
                 itemHeight: widget.itemHeight,
-                value: widget.value,
+                value: _value.map((e) => e?.value).toList(),
                 onColumnSelected: (value, index) {
+                  _value[index] = value;
                   widget.onColumnSelected?.call(value, index);
+                },
+                onChange: (value, index) {
+                  _value[index] = value;
+                  widget.onChange?.call(_value);
                 },
               );
             },

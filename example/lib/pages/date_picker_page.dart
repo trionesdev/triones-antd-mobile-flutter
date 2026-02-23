@@ -24,9 +24,71 @@ class _DatePickerPageState extends State<DatePickerPage> {
                   AntButton(
                     text: "基本用法",
                     onPressed: () {
-                      showAntDatePicker(context: context, onOk: (value) {
-                        print(value);
-                      });
+                      showAntDatePicker(
+                        context: context,
+                        onOk: (value) {
+                          print(value);
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            DemoBlock(
+              title: "带时间",
+              child: Column(
+                children: [
+                  AntButton(
+                    text: "基本用法(带时间)",
+                    onPressed: () {
+                      showAntDatePicker(
+                        context: context,
+                        showTime: true,
+                        onOk: (value) {
+                          print(value);
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            DemoBlock(
+              title: "时间模式",
+              child: Column(
+                children: [
+                  AntButton(
+                    text: "时间模式",
+                    onPressed: () {
+                      showAntDatePicker(
+                        context: context,
+                        mode: AntDatePickerMode.time,
+                        onOk: (value) {
+                          print(value);
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            DemoBlock(
+              title: "时间模式(格式化)",
+              child: Column(
+                children: [
+                  AntButton(
+                    text: "时间模式(格式化)",
+                    onPressed: () {
+                      showAntDatePicker(
+                        context: context,
+                        titleText: "时间模式(格式化)",
+                        mode: AntDatePickerMode.time,
+                        timeFormat: "HH:mm",
+                        onOk: (value) {
+                          print(value);
+                        },
+                      );
                     },
                   ),
                 ],

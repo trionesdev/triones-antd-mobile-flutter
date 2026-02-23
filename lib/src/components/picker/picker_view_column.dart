@@ -5,12 +5,14 @@ class AntPickerViewColumn extends StatefulWidget {
   const AntPickerViewColumn({
     super.key,
     this.options,
+    this.onSelectedItemChanged,
     this.onSelected,
     this.value,
     this.itemHeight = 34,
   });
 
   final List<AntPickerOption>? options;
+  final ValueChanged<AntPickerOption?>? onSelectedItemChanged;
   final ValueChanged<AntPickerOption?>? onSelected;
   final AntPickerOption? value;
   final double? itemHeight;
@@ -63,27 +65,38 @@ class _AntPickerViewColumnState extends State<AntPickerViewColumn> {
 
   @override
   Widget build(BuildContext context) {
-    return ListWheelScrollView(
-      controller: _controller,
-      itemExtent: widget.itemHeight!,
-      // 条目固定高度
-      diameterRatio: 1.5,
-      // 滚轮直径比例
-      perspective: 0.003,
-      // 3D透视效果
-      physics: FixedExtentScrollPhysics(),
-      // 物理效果
-      useMagnifier: true,
-      // 放大镜效果
-      magnification: 1.2,
-      // 放大系数
-      onSelectedItemChanged: (index) {
-        widget.onSelected?.call(widget.options?[index]);
+    return NotificationListener(
+      onNotification: (notification) {
+        if (notification is ScrollEndNotification) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            widget.onSelected?.call(widget.options?[_controller.selectedItem]);
+          });
+          return true;
+        }
+        return false;
       },
-      children:
-          (widget.options ?? []).map((option) {
-            return Center(child: Text(option.label ?? ''));
-          }).toList(),
+      child: ListWheelScrollView(
+        controller: _controller,
+        itemExtent: widget.itemHeight!,
+        // 条目固定高度
+        diameterRatio: 1.5,
+        // 滚轮直径比例
+        perspective: 0.003,
+        // 3D透视效果
+        physics: FixedExtentScrollPhysics(),
+        // 物理效果
+        useMagnifier: true,
+        // 放大镜效果
+        magnification: 1.2,
+        // 放大系数
+        onSelectedItemChanged: (index) {
+          widget.onSelectedItemChanged?.call(widget.options?[index]);
+        },
+        children:
+            (widget.options ?? []).map((option) {
+              return Center(child: Text(option.label ?? ''));
+            }).toList(),
+      ),
     );
   }
 }

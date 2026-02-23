@@ -8,7 +8,8 @@ Future<T?> showAntDatePicker<T>({
   AntDatePickerMode mode = AntDatePickerMode.date,
   Widget? title,
   String? titleText,
-  String? format,
+  bool showTime = false,
+  String? timeFormat,
   DateTime? value,
   ValueChanged<DateTime?>? onOk,
   DateTime? minDate,
@@ -21,11 +22,15 @@ Future<T?> showAntDatePicker<T>({
       mode: mode,
       title: title,
       titleText: titleText,
-      format: format,
+      showTime: showTime,
+      timeFormat: timeFormat,
       value: value,
       onOk: (date) {
         Navigator.of(context).pop();
         onOk?.call(date);
+      },
+      onCancel: () {
+        Navigator.of(context).pop();
       },
       minDate: minDate,
     ),
