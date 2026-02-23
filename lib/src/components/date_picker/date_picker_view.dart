@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../picker/index.dart';
 import '../picker/picker_multi_view.dart';
@@ -25,9 +26,9 @@ class DateValue {
     dateValue.year = year ?? now.year;
     dateValue.month = month ?? now.month;
     dateValue.day = day ?? now.day;
-    dateValue.hour = hour ?? now.hour;
-    dateValue.minute = minute ?? now.minute;
-    dateValue.second = second ?? now.second;
+    dateValue.hour = hour ?? 0;
+    dateValue.minute = minute ?? 0;
+    dateValue.second = second ?? 0;
     return dateValue;
   }
 
@@ -100,29 +101,31 @@ class _AntDatePickerViewState extends State<AntDatePickerView> {
   final List<int> _seconds = List.generate(60, (index) => index);
 
   List<int> generateYears() {
+    DateTime now = DateTime.now();
+    int startYear = now.year - 50;
+    int endYear = now.year + 50;
     if (widget.minDate != null && widget.maxDate != null) {
-      return List.generate(
-        widget.maxDate!.month - widget.minDate!.month + 1,
-        (index) => widget.minDate!.month + index,
-      );
+      startYear = widget.minDate!.year;
+      endYear = widget.maxDate!.year;
     }
     if (widget.minDate != null) {
-      int startYear = widget.minDate!.year;
-      return List.generate(
-        DateTime.now().year - startYear,
-        (index) => startYear + index,
-      );
+      startYear = widget.minDate!.year;
     }
     if (widget.maxDate != null) {
-      return List.generate(widget.maxDate!.month - 1, (index) => index + 1);
+      endYear = widget.maxDate!.year;
     }
-    int startYear = DateTime.now().year + 30 - 100;
-    return List.generate(100, (index) => startYear + index);
+    return List.generate(endYear - startYear + 1, (index) => startYear + index);
   }
 
   List<int> generateMonths() {
     int startMonth = 1;
     int endMonth = 12;
+    if (widget.minDate != null && widget.minDate!.year == _internalValue.year) {
+      startMonth = widget.minDate!.month;
+    }
+    if (widget.maxDate != null && widget.maxDate!.year == _internalValue.year) {
+      endMonth = widget.maxDate!.month;
+    }
     return List.generate(
       endMonth - startMonth + 1,
       (index) => startMonth + index,
@@ -137,6 +140,16 @@ class _AntDatePickerViewState extends State<AntDatePickerView> {
           (month ?? _internalValue.month) + 1,
           0,
         ).day;
+    if (widget.minDate != null &&
+        widget.minDate!.year == _internalValue.year &&
+        widget.minDate!.month == _internalValue.month) {
+      startDay = widget.minDate!.day;
+    }
+    if (widget.maxDate != null &&
+        widget.maxDate!.year == _internalValue.year &&
+        widget.maxDate!.month == _internalValue.month) {
+      endDay = widget.maxDate!.day;
+    }
     return List.generate(endDay - startDay + 1, (index) => startDay + index);
   }
 
@@ -263,16 +276,25 @@ class _AntDatePickerViewState extends State<AntDatePickerView> {
     return pickerValue;
   }
 
+  // 更新列数据,如果新的数据列与之前一致，则不重新渲染
   void reRenderColumns(DateValue newDate) {
+    List<int> currentMonths = List.from(_months);
+    List<int> currentDays = List.from(_days);
     if (newDate.year != _internalValue.year) {
-      _years = generateYears();
-      _months = generateMonths();
+      currentMonths = generateMonths();
     }
     if (newDate.month != _internalValue.month) {
-      _days = generateDays(year: newDate.year, month: newDate.month);
+      currentDays = generateDays(year: newDate.year, month: newDate.month);
     }
-    setState(() {
-      _columns = generateColumns();
+    if (listEquals(currentMonths, _months) && listEquals(currentDays, _days)) {
+      return;
+    }
+    _months = currentMonths;
+    _days = currentDays;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        _columns = generateColumns();
+      });
     });
   }
 
@@ -317,6 +339,34 @@ class _AntDatePickerViewState extends State<AntDatePickerView> {
           }
         }
       }
+    } else if (widget.mode == AntDatePickerMode.time) {
+      if (_cleanTimeFormat.isNotEmpty) {
+        if (hasHour) {
+          if (value?[0]?.value != null) {
+            internalValueType.hour = int.parse(value![0]!.value!);
+          }
+        }
+        if (hasMinute) {
+          if (value?[1]?.value != null) {
+            internalValueType.minute = int.parse(value![1]!.value!);
+          }
+        }
+        if (hasSecond) {
+          if (value?[2]?.value != null) {
+            internalValueType.second = int.parse(value![2]!.value!);
+          }
+        }
+      } else {
+        if (value?[1]?.value != null) {
+          internalValueType.hour = int.parse(value![1]!.value!);
+        }
+        if (value?[2]?.value != null) {
+          internalValueType.minute = int.parse(value![2]!.value!);
+        }
+        if (value?[3]?.value != null) {
+          internalValueType.second = int.parse(value![3]!.value!);
+        }
+      }
     }
     return internalValueType;
   }
@@ -329,9 +379,9 @@ class _AntDatePickerViewState extends State<AntDatePickerView> {
       year: widget.value?.year ?? now.year,
       month: widget.value?.month ?? now.month,
       day: widget.value?.day ?? now.day,
-      hour: widget.value?.hour ?? now.hour,
-      minute: widget.value?.minute ?? now.minute,
-      second: widget.value?.second ?? now.second,
+      hour: widget.value?.hour ?? 0,
+      minute: widget.value?.minute ?? 0,
+      second: widget.value?.second ?? 0,
     );
     _pickerValue = generatePickerValue();
     _years = generateYears();
@@ -351,12 +401,12 @@ class _AntDatePickerViewState extends State<AntDatePickerView> {
       onChange: (value) {
         DateValue internalValue = updateInternalValue(value);
         reRenderColumns(internalValue);
-        // ss(internalValue);
         _internalValue = internalValue;
       },
       onColumnSelected: (index, value) {},
       onOk: (value) {
-        widget.onOk?.call(_internalValue.toDateTime());
+        DateValue internalValue = updateInternalValue(value);
+        widget.onOk?.call(internalValue.toDateTime());
       },
       onCancel: () {
         widget.onCancel?.call();

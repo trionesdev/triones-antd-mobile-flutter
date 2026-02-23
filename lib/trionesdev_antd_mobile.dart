@@ -56,6 +56,7 @@ export 'src/components/progress/index.dart';
 export 'src/components/radio/radio.dart';
 export 'src/components/checkbox/checkbox.dart';
 export 'src/components/date_picker/index.dart';
+export 'src/components/date_picker_cell/index.dart';
 export 'src/components/dialog/dialog.dart';
 export 'src/components/rate/rate.dart';
 export 'src/components/input_number/input_number.dart';

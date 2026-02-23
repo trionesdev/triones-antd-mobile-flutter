@@ -25,6 +25,8 @@ Future<T?> showAntDatePicker<T>({
       showTime: showTime,
       timeFormat: timeFormat,
       value: value,
+      minDate: minDate,
+      maxDate: maxDate,
       onOk: (date) {
         Navigator.of(context).pop();
         onOk?.call(date);
@@ -32,7 +34,6 @@ Future<T?> showAntDatePicker<T>({
       onCancel: () {
         Navigator.of(context).pop();
       },
-      minDate: minDate,
     ),
   );
 }
