@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 import 'package:trionesdev_antd_mobile/src/components/picker/picker_multi_view.dart';
 import 'package:trionesdev_antd_mobile/src/components/picker/picker_view.dart';
 
 class AntPicker {
-  static void show({required BuildContext context,
+  static Future<T?> show<T>({
+    required BuildContext context,
     double? minHeight,
     double? maxHeight,
     Widget? title,
@@ -13,30 +15,24 @@ class AntPicker {
     ValueChanged<AntPickerOption?>? onOk,
     Function? onCancel,
     double? itemHeight = 34,
-    bool? isScrollControlled = false,
+    bool isScrollControlled = false,
   }) {
-    AntPopup.show(
-        context: context,
-        minHeight: minHeight,
-        maxHeight: maxHeight,
-        isScrollControlled: isScrollControlled,
-        child: AntPickerView(
-          itemHeight: itemHeight,
-          title: title,
-          value: value,
-          options: options,
-          onOk: (value) {
-            Navigator.of(context).pop();
-            onOk?.call(value);
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-            onCancel?.call();
-          },
-        ));
+    return showPicker(
+      context: context,
+      minHeight: minHeight,
+      maxHeight: maxHeight,
+      title: title,
+      options: options,
+      value: value,
+      onOk: onOk,
+      onCancel: onCancel,
+      itemHeight: itemHeight,
+      isScrollControlled: isScrollControlled,
+    );
   }
 
-  static void showMulti({required BuildContext context,
+  static Future<T?> showMulti<T>({
+    required BuildContext context,
     double? minHeight,
     double? maxHeight,
     Widget? title,
@@ -46,30 +42,21 @@ class AntPicker {
     Function? onCancel,
     void Function(AntPickerOption? value, int index)? onColumnSelected,
     double? itemHeight = 34,
-    bool? isScrollControlled = false,
+    bool isScrollControlled = false,
   }) {
-    AntPopup.show(
-        context: context,
-        minHeight: minHeight,
-        maxHeight: maxHeight,
-        isScrollControlled: isScrollControlled,
-        child: AntPickerMultiView(
-          itemHeight: itemHeight,
-          title: title,
-          value: value,
-          columns: options,
-          onOk: (value) {
-            Navigator.of(context).pop();
-            onOk?.call(value);
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-            onCancel?.call();
-          },
-          onColumnSelected: (value, index) {
-            onColumnSelected?.call(value, index);
-          },
-        ));
+    return showMultiPicker(
+      context: context,
+      minHeight: minHeight,
+      maxHeight: maxHeight,
+      title: title,
+      options: options,
+      value: value,
+      onOk: onOk,
+      onCancel: onCancel,
+      onColumnSelected: onColumnSelected,
+      itemHeight: itemHeight,
+      isScrollControlled: isScrollControlled,
+    );
   }
 }
 
@@ -83,27 +70,27 @@ Future<T?> showPicker<T>({
   ValueChanged<AntPickerOption?>? onOk,
   Function? onCancel,
   double? itemHeight = 34,
-  bool? isScrollControlled = false,
+  bool isScrollControlled = false,
 }) {
-  return AntPopup.show<T>(
-      context: context,
-      minHeight: minHeight,
-      maxHeight: maxHeight,
-      isScrollControlled: isScrollControlled,
-      child: AntPickerView(
-          itemHeight: itemHeight,
-          title: title,
-          value: value,
-          options: options,
-          onOk: (value) {
-            Navigator.of(context).pop();
-            onOk?.call(value);
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-            onCancel?.call();
-          }
-      )
+  return showModalBottomSheet(
+    context: context,
+    isScrollControlled: isScrollControlled,
+    builder: (context) {
+      return AntPickerView(
+        itemHeight: itemHeight,
+        title: title,
+        value: value,
+        options: options,
+        onOk: (value) {
+          Navigator.of(context).pop();
+          onOk?.call(value);
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+          onCancel?.call();
+        },
+      );
+    },
   );
 }
 
@@ -118,14 +105,13 @@ Future<T?> showMultiPicker<T>({
   Function? onCancel,
   void Function(AntPickerOption? value, int index)? onColumnSelected,
   double? itemHeight = 34,
-  bool? isScrollControlled = false,
+  bool isScrollControlled = false,
 }) {
-  return AntPopup.show<T>(
-      context: context,
-      minHeight: minHeight,
-      maxHeight: maxHeight,
-      isScrollControlled: isScrollControlled,
-      child: AntPickerMultiView(
+  return showModalBottomSheet(
+    context: context,
+    isScrollControlled: isScrollControlled,
+    builder: (context) {
+      return AntPickerMultiView(
         itemHeight: itemHeight,
         title: title,
         value: value,
@@ -138,6 +124,7 @@ Future<T?> showMultiPicker<T>({
           Navigator.of(context).pop();
           onCancel?.call();
         },
-      )
+      );
+    },
   );
 }

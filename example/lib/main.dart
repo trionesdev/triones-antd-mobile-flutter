@@ -48,6 +48,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 import 'pages/calendar_page.dart';
+import 'pages/date_picker_cell_page.dart';
+import 'pages/date_picker_page.dart';
 import 'pages/steps_page.dart';
 
 void main() {
@@ -114,6 +116,8 @@ class MyApp extends StatelessWidget {
         '/progress': (context) => ProgressPage(),
         '/radio': (context) => RadioPage(),
         '/checkbox': (context) => CheckboxPage(),
+        '/date-picker-cell': (context) => DatePickerCellPage(),
+        '/date-picker': (context) => DatePickerPage(),
         '/dialog': (context) => DialogPage(),
         '/rate': (context) => RatePage(),
         '/input-number': (context) => InputNumberPage(),
@@ -444,6 +448,18 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text('Collapse 折叠面板'),
               onTap: () {
                 Navigator.pushNamed(context, '/collapse');
+              },
+            ),
+            material.ListTile(
+              title: Text('DatePickerCell 日期选择器单元格'),
+              onTap: () {
+                Navigator.pushNamed(context, '/date-picker-cell');
+              },
+            ),
+            material.ListTile(
+              title: Text('DatePicker 日期选择器'),
+              onTap: () {
+                Navigator.pushNamed(context, '/date-picker');
               },
             ),
             material.ListTile(
