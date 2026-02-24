@@ -18,9 +18,9 @@
 - [x] CascaderPicker 级联选择
 - [x] Cell 列表项(单元格)
 - [x] Collapse 折叠面板
-- [ x] DatePicker 日期选择器
-- [ x] DatePickerCell 日期选择器单元格
-- [ x] Checkbox 复选框
+- [x] DatePicker 日期选择器
+- [x] DatePickerCell 日期选择器单元格
+- [x] Checkbox 复选框
 - [x] Dialog 对话框
 - [x] Divider 分割线
 - [x] Empty 空状态
