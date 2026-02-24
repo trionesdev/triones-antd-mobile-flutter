@@ -34,12 +34,11 @@ class _AntPickerViewMultiColumnsState extends State<AntPickerViewMultiColumns> {
   List<AntPickerOption?> _value = [];
 
   AntPickerOption? _getOptionByValue(int columnIndex) {
-    if (widget.columns != null &&
-        widget.value != null &&
+    if (widget.value != null &&
         widget.value!.isNotEmpty) {
-      if (widget.columns!.length > columnIndex &&
+      if (_columns.length > columnIndex &&
           widget.value!.length > columnIndex) {
-        return widget.columns![columnIndex].firstWhereOrNull((option) {
+        return _columns[columnIndex].firstWhereOrNull((option) {
           return option.value == widget.value![columnIndex];
         });
       }
