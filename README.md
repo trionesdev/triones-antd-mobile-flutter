@@ -3,6 +3,7 @@
 [![pub package](https://img.shields.io/pub/v/trionesdev_antd_mobile.svg)](https://pub.dev/packages/trionesdev_antd_mobile)
 
 ## 组件目录
+
 - [x] ActionSheet 操作面板
 - [x] Alert 告警提示
 - [x] AppBar 导航栏
@@ -10,14 +11,16 @@
 - [x] Badge 徽标
 - [x] Breadcrumb 面包屑
 - [x] Button 按钮
-- [x] Calendar  日历
+- [x] Calendar 日历
 - [x] CalendarDatetimePicker 日历时间选择器
 - [x] CalendarPicker 日历选择器
 - [x] Card 卡片
 - [x] CascaderPicker 级联选择
 - [x] Cell 列表项(单元格)
 - [x] Collapse 折叠面板
-- [x] Checkbox 复选框
+- [ x] DatePicker 日期选择器
+- [ x] DatePickerCell 日期选择器单元格
+- [ x] Checkbox 复选框
 - [x] Dialog 对话框
 - [x] Divider 分割线
 - [x] Empty 空状态
@@ -52,6 +55,7 @@
 - [x] VerificationCodeInput 验证码输入框
 
 ## 直接使用
+
 ```dart
 void main() {
   // debugPaintSizeEnabled = true;
@@ -70,7 +74,6 @@ class MyApp extends StatelessWidget {
         // colorPrimary: material.Colors.amber,
       ),
       routes: {
-
       },
       home: const MyHomePage(title: 'Ant Mobile Flutter Demo Home Page'),
     );
@@ -79,41 +82,51 @@ class MyApp extends StatelessWidget {
 ```
 
 ## 使用Getx
+
 1. 直接使用Getx
+
 ```dart
+
 AntThemeData antThemeData = AntThemeData();
-AntTheme(
-  data: antThemeData,
-  child: GetMaterialApp(
-        title: 'TrionesDev',
-        theme: antThemeData.toMaterialThemeData(),
-        getPages: Routes.routes,
-        home: const HomePage(),
-        onInit: ()  {
-        
-        },
-        onReady: () {},
-    )
+AntTheme
+(
+data: antThemeData,
+child: GetMaterialApp(
+title: 'TrionesDev',
+theme: antThemeData.toMaterialThemeData(),
+getPages: Routes.routes,
+home: const HomePage(),
+onInit: () {
+
+},
+onReady: () {},
+)
 )
 ```
+
 2. 使用封装的AntGetx组件
-地址: https://github.com/trionesdev/triones-get-antd
+   地址: https://github.com/trionesdev/triones-get-antd
 
 使用方法
-```dart
-  runApp(GetAntApp(
-    title: 'TrionesDev',
-    theme: AntThemeData(),
-    getPages: Routes.routes,
-    home: const HomeLayout(),
-    onInit: ()  async {
 
-    },
-    onReady: () {},
-  ));
+```dart
+  runApp
+(
+GetAntApp(
+title: 'TrionesDev',
+theme: AntThemeData(),
+getPages: Routes.routes,
+home: const HomeLayout(),
+onInit: () async {
+
+},
+onReady: () {},
+)
+);
 ```
 
 #### 互相吹捧，共同进步
+
 > 留言回复不及时，可以通过关注公众号联系我们
 <div style="width: 100%;text-align: center;">
    <img src="images/shuque_wx.jpg" width="200px" alt="">
