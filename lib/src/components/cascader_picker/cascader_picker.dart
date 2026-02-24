@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
@@ -12,7 +13,7 @@ class AntCascaderPickerOption {
 }
 
 class AntCascaderPicker {
-  static void show({
+  static Future<T?> show<T>({
     required BuildContext context,
     double? minHeight,
     double? maxHeight,
@@ -22,26 +23,15 @@ class AntCascaderPicker {
     ValueChanged<List<AntCascaderPickerOption?>?>? onOk,
     Function? onCancel,
   }) {
-    AntPopup.show(
+    return showAntCascaderPicker(
       context: context,
       minHeight: minHeight,
       maxHeight: maxHeight,
-      child: SafeArea(
-        bottom: true,
-        child: AntCascaderPickerView(
-          itemHeight: itemHeight,
-          options: options,
-          value: value,
-          onOk: (value) {
-            Navigator.of(context).pop();
-            onOk?.call(value);
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-            onCancel?.call();
-          },
-        ),
-      ),
+      itemHeight: itemHeight,
+      options: options,
+      value: value,
+      onOk: onOk,
+      onCancel: onCancel,
     );
   }
 }
@@ -57,25 +47,25 @@ Future<T?> showAntCascaderPicker<T>({
   ValueChanged<List<AntCascaderPickerOption?>?>? onOk,
   Function? onCancel,
 }) {
-  return showAntPopup(
+  return showModalBottomSheet(
     context: context,
-    minHeight: minHeight,
-    maxHeight: maxHeight,
-    child: SafeArea(
-      bottom: true,
-      child: AntCascaderPickerView(
-        itemHeight: itemHeight,
-        options: options,
-        value: value,
-        onOk: (value) {
-          Navigator.of(context).pop();
-          onOk?.call(value);
-        },
-        onCancel: () {
-          Navigator.of(context).pop();
-          onCancel?.call();
-        },
-      ),
-    ),
+    builder: (context) {
+      return SafeArea(
+        bottom: true,
+        child: AntCascaderPickerView(
+          itemHeight: itemHeight,
+          options: options,
+          value: value,
+          onOk: (value) {
+            Navigator.of(context).pop();
+            onOk?.call(value);
+          },
+          onCancel: () {
+            Navigator.of(context).pop();
+            onCancel?.call();
+          },
+        ),
+      );
+    },
   );
 }

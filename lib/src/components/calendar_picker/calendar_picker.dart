@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../trionesdev_antd_mobile.dart';
@@ -8,17 +9,7 @@ class AntCalendarPicker {
     DateTime? value,
     ValueChanged<DateTime?>? onOk,
   }) {
-    return AntPopup.show(
-      context: context,
-      maxHeight: 1000,
-      child: AntCalendarPickerView(
-        value: value,
-        onOk: (date) {
-          Navigator.of(context).pop();
-          onOk?.call(date);
-        },
-      ),
-    );
+    return showAntCalendarPicker(context: context, value: value, onOk: onOk);
   }
 }
 
@@ -28,16 +19,10 @@ class AntCalendarRangePicker {
     List<DateTime>? value,
     ValueChanged<List<DateTime?>?>? onOk,
   }) {
-    return AntPopup.show(
+    return showAntCalendarRangePicker(
       context: context,
-      maxHeight: 1000,
-      child: AntCalendarRangePickerView(
-        value: value,
-        onOk: (date) {
-          Navigator.of(context).pop();
-          onOk?.call(date);
-        },
-      )
+      value: value,
+      onOk: onOk,
     );
   }
 }
@@ -48,16 +33,17 @@ Future<T?> showAntCalendarPicker<T>({
   DateTime? value,
   ValueChanged<DateTime?>? onOk,
 }) {
-  return showAntPopup(
+  return showModalBottomSheet(
     context: context,
-    maxHeight: 1000,
-    child: AntCalendarPickerView(
-      value: value,
-      onOk: (date) {
-        Navigator.of(context).pop();
-        onOk?.call(date);
-      },
-    ),
+    builder: (context) {
+      return AntCalendarPickerView(
+        value: value,
+        onOk: (date) {
+          Navigator.of(context).pop();
+          onOk?.call(date);
+        },
+      );
+    },
   );
 }
 
@@ -67,15 +53,16 @@ Future<T?> showAntCalendarRangePicker<T>({
   List<DateTime>? value,
   ValueChanged<List<DateTime?>?>? onOk,
 }) {
-  return showAntPopup(
+  return showModalBottomSheet(
     context: context,
-    maxHeight: 1000,
-    child: AntCalendarRangePickerView(
-      value: value,
-      onOk: (date) {
-        Navigator.of(context).pop();
-        onOk?.call(date);
-      },
-    ),
+    builder: (BuildContext context) {
+      return AntCalendarRangePickerView(
+        value: value,
+        onOk: (date) {
+          Navigator.of(context).pop();
+          onOk?.call(date);
+        },
+      );
+    },
   );
 }
