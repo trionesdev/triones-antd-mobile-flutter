@@ -14,7 +14,8 @@ class AntPickerMultiView extends StatefulWidget {
     this.title,
     this.titleText,
     this.itemHeight = 34,
-    this.onColumnSelected,
+    this.onSelectedItemChanged,
+    this.onColumnSelectedChanged,
     this.onChange,
   });
 
@@ -25,7 +26,9 @@ class AntPickerMultiView extends StatefulWidget {
   final Function? onCancel;
   final ValueChanged<List<AntPickerOption?>>? onOk;
   final double? itemHeight;
-  final void Function(AntPickerOption? value, int index)? onColumnSelected;
+  final void Function(AntPickerOption? value, int index)? onSelectedItemChanged;
+  final void Function(AntPickerOption? value, int index)?
+  onColumnSelectedChanged;
   final void Function(List<AntPickerOption?>? value)? onChange;
 
   @override
@@ -56,6 +59,16 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
       }
     }
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(AntPickerMultiView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -110,12 +123,13 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
                 columns: widget.columns,
                 itemHeight: widget.itemHeight,
                 value: _value.map((e) => e?.value).toList(),
-                onColumnSelected: (value, index) {
+                onSelectedItemChanged: (value, index) {
                   _value[index] = value;
-                  widget.onColumnSelected?.call(value, index);
+                  widget.onSelectedItemChanged?.call(value, index);
                 },
                 onChange: (value, index) {
                   _value[index] = value;
+                  widget.onColumnSelectedChanged?.call(value, index);
                   widget.onChange?.call(_value);
                 },
               );

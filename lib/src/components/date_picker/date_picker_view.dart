@@ -418,6 +418,27 @@ class _AntDatePickerViewState extends State<AntDatePickerView> {
   }
 
   @override
+  void didUpdateWidget(AntDatePickerView oldWidget) {
+
+    // if (oldWidget.value != widget.value) {
+    //   _internalValue = DateValue.newDate(
+    //     year: widget.value?.year ?? DateTime.now().year,
+    //     month: widget.value?.month ?? DateTime.now().month,
+    //     day: widget.value?.day ?? DateTime.now().day,
+    //     hour: widget.value?.hour ?? 0,
+    //     minute: widget.value?.minute ?? 0,
+    //     second: widget.value?.second ?? 0,
+    //   );
+    // }
+    super.didUpdateWidget(oldWidget);
+   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AntPickerMultiView(
       title: widget.title,
@@ -429,7 +450,6 @@ class _AntDatePickerViewState extends State<AntDatePickerView> {
         reRenderColumns(internalValue);
         _internalValue = internalValue;
       },
-      onColumnSelected: (index, value) {},
       onOk: (value) {
         DateValue internalValue = updateInternalValue(value);
         widget.onOk?.call(internalValue.toDateTime());

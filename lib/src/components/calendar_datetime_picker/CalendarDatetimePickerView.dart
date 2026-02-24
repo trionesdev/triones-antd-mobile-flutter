@@ -113,7 +113,7 @@ class _AntCalendarDatetimePickerViewState
                   '${_selectedDateTime.value?.hour ?? 0}',
                   '${_selectedDateTime.value?.minute ?? 0}'
                 ],
-                onColumnSelected: (value, index) {
+                onSelectedItemChanged: (value, index) {
                   if (index == 0) {
                     _selectedDateTime.value = _selectedDateTime.value
                         ?.copyWith(hour: int.parse(value!.value!));

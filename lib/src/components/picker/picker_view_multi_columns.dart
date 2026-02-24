@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'picker_view_column.dart';
@@ -9,7 +10,7 @@ class AntPickerViewMultiColumns extends StatefulWidget {
     super.key,
     this.columns,
     this.itemHeight,
-    this.onColumnSelected,
+    this.onSelectedItemChanged,
     this.onChange,
     this.value,
     this.onOk,
@@ -20,7 +21,7 @@ class AntPickerViewMultiColumns extends StatefulWidget {
   final List<String?>? value;
   final double? itemHeight;
   final double? height;
-  final void Function(AntPickerOption? value, int index)? onColumnSelected;
+  final void Function(AntPickerOption? value, int index)? onSelectedItemChanged;
   final void Function(AntPickerOption? value, int index)? onChange;
   final void Function(List<AntPickerOption?> value)? onOk;
 
@@ -29,6 +30,7 @@ class AntPickerViewMultiColumns extends StatefulWidget {
 }
 
 class _AntPickerViewMultiColumnsState extends State<AntPickerViewMultiColumns> {
+  List<List<AntPickerOption>> _columns = [];
   List<AntPickerOption?> _value = [];
 
   AntPickerOption? _getOptionByValue(int columnIndex) {
@@ -46,20 +48,20 @@ class _AntPickerViewMultiColumnsState extends State<AntPickerViewMultiColumns> {
   }
 
   void generateValueOptions() {
-    _value = List.filled(widget.columns?.length ?? 0, null);
+    _value = List.filled(_columns.length ?? 0, null);
     if (widget.value != null && widget.value!.isNotEmpty) {
-      for (int i = 0; i < (widget.columns?.length ?? 0); i++) {
+      for (int i = 0; i < (_columns.length ?? 0); i++) {
         if (i < widget.value!.length && widget.value?[i] != null) {
-          _value[i] = widget.columns![i].firstWhere((option) {
+          _value[i] = _columns[i].firstWhere((option) {
             return option.value == widget.value?[i];
           });
         } else {
-          _value[i] = widget.columns![i].first;
+          _value[i] = _columns[i].first;
         }
       }
     } else {
-      for (int i = 0; i < (widget.columns?.length ?? 0); i++) {
-        _value[i] = widget.columns![i].first;
+      for (int i = 0; i < (_columns.length ?? 0); i++) {
+        _value[i] = _columns[i].first;
       }
     }
     // widget.onOk?.call(_value);
@@ -67,8 +69,18 @@ class _AntPickerViewMultiColumnsState extends State<AntPickerViewMultiColumns> {
 
   @override
   void initState() {
+    _columns = widget.columns ?? [];
     generateValueOptions();
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(AntPickerViewMultiColumns oldWidget) {
+    if (!listEquals(oldWidget.columns, widget.columns)) {
+      _columns = widget.columns ?? [];
+      generateValueOptions();
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -82,19 +94,17 @@ class _AntPickerViewMultiColumnsState extends State<AntPickerViewMultiColumns> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children:
-                (widget.columns ?? []).asMap().keys.map((columnIndex) {
+                (_columns ?? []).asMap().keys.map((columnIndex) {
                   return Expanded(
                     child: AntPickerViewColumn(
                       itemHeight: widget.itemHeight,
-                      options: widget.columns![columnIndex] ?? [],
+                      options: _columns[columnIndex] ?? [],
                       onSelected: (option) {
-                        setState(() {
-                          _value[columnIndex] = option!;
-                          widget.onChange?.call(option, columnIndex);
-                        });
+                        _value[columnIndex] = option!;
+                        widget.onChange?.call(option, columnIndex);
                       },
                       onSelectedItemChanged: (option) {
-                        widget.onColumnSelected?.call(option, columnIndex);
+                        widget.onSelectedItemChanged?.call(option, columnIndex);
                       },
                       value: _getOptionByValue(columnIndex),
                     ),

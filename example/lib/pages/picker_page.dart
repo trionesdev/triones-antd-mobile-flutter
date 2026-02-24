@@ -43,7 +43,7 @@ class _PickerPageState extends State<PickerPage> {
   ];
 
   final List<AntPickerOption> _optionsHeNan = [
-    AntPickerOption(label: "开封", value: "kaifeng")
+    AntPickerOption(label: "开封", value: "kaifeng"),
   ];
 
   List<List<AntPickerOption>> _options2 = [
@@ -55,61 +55,71 @@ class _PickerPageState extends State<PickerPage> {
     [
       AntPickerOption(label: "南京", value: "nanjing"),
       AntPickerOption(label: "苏州", value: "suzhou"),
-    ]
+    ],
   ];
 
   @override
   Widget build(BuildContext context) {
     return AntScaffold(
-        appBar: AntAppBar(title: Text('Picker')),
-        body: SingleChildScrollView(
-          child: Column(spacing: 10, children: [
+      appBar: AntAppBar(title: Text('Picker')),
+      body: SingleChildScrollView(
+        child: Column(
+          spacing: 10,
+          children: [
             DemoBlock(
               title: "基本用法",
               child: Column(
                 children: [
                   AntButton(
-                      text: '选择',
-                      block: true,
-                      onPressed: () {
-                        AntPicker.show(
-                            context: context,
-                            options: _options1,
-                            title: Text("选择日期"),
-                            maxHeight: 400,
-                            onOk: (value) {
-                              print(value);
-                            });
-                      })
+                    text: '选择',
+                    block: true,
+                    onPressed: () {
+                      AntPicker.show(
+                        context: context,
+                        options: _options1,
+                        title: Text("选择日期"),
+                        maxHeight: 400,
+                        onOk: (value) {
+                          print(value);
+                        },
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
             DemoBlock(
-                title: "多列选择",
-                child: Column(children: [
+              title: "多列选择",
+              child: Column(
+                children: [
                   AntButton(
-                      text: "默认值",
-                      block: true,
-                      onPressed: () {
-                        AntPicker.showMulti(
-                            context: context,
-                            title: Text("选择日期"),
-                            options: _columns,
-                            value: ["Fri", "pm"],
-                            maxHeight: 400,
-                            onOk: (value) {
-                              print(value);
-                            });
-                      })
-                ])),
+                    text: "默认值",
+                    block: true,
+                    onPressed: () {
+                      AntPicker.showMulti(
+                        context: context,
+                        title: Text("选择日期"),
+                        options: _columns,
+                        value: ["Fri", "pm"],
+                        maxHeight: 400,
+                        onOk: (value) {
+                          print(value);
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
             DemoBlock(
               title: "联动效果",
-              child: Column(children: [
-                AntButton(
-                  text: "联动效果",
-                  block: true,
-                  onPressed: () {
-                    AntPicker.showMulti(
+              child: Column(
+                children: [
+                  AntButton(
+                    text: "联动效果",
+                    block: true,
+                    onPressed: () {
+                      showMultiPicker(
                         context: context,
                         title: Text("选择地区"),
                         options: _options2,
@@ -117,24 +127,32 @@ class _PickerPageState extends State<PickerPage> {
                         onOk: (value) {
                           print(value);
                         },
-                        onColumnSelected: (value, index) {
-                          if (index == 0) {
-                            if (value?.value == "zhejiang") {
-                              _options2[1] = _optionsZheJiang;
+                        onColumnSelectedChanged: (value, index) {
+                          print('column $index selected: ${value?.value}');
+                          setState(() {
+                            if (index == 0) {
+                              if (value?.value == "zhejiang") {
+                                _options2[1] = _optionsZheJiang;
+                              }
+                              if (value?.value == "jiangsu") {
+                                _options2[1] = _optionsJiangSu;
+                              }
+                              if (value?.value == "heinan") {
+                                _options2[1] = _optionsHeNan;
+                              }
+                              _options2 = List.from(_options2);
                             }
-                            if (value?.value == "jiangsu") {
-                              _options2[1] = _optionsJiangSu;
-                            }
-                            if (value?.value == "heinan") {
-                              _options2[1] = _optionsHeNan;
-                            }
-                          }
-                        });
-                  },
-                )
-              ]),
-            )
-          ]),
-        ));
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

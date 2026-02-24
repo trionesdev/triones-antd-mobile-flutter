@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 import 'package:trionesdev_antd_mobile/src/components/picker/picker_multi_view.dart';
 import 'package:trionesdev_antd_mobile/src/components/picker/picker_view.dart';
@@ -16,6 +15,7 @@ class AntPicker {
     Function? onCancel,
     double? itemHeight = 34,
     bool isScrollControlled = false,
+    bool round = true,
   }) {
     return showPicker(
       context: context,
@@ -28,6 +28,7 @@ class AntPicker {
       onCancel: onCancel,
       itemHeight: itemHeight,
       isScrollControlled: isScrollControlled,
+      round: round,
     );
   }
 
@@ -40,9 +41,12 @@ class AntPicker {
     List<String>? value,
     ValueChanged<List<AntPickerOption?>>? onOk,
     Function? onCancel,
-    void Function(AntPickerOption? value, int index)? onColumnSelected,
+    Function(AntPickerOption? value, int index)? onSelectedItemChanged,
+    Function(AntPickerOption? value, int index)? onColumnSelectedChanged,
+    Function(List<AntPickerOption?>? value)? onChange,
     double? itemHeight = 34,
     bool isScrollControlled = false,
+    bool round = true,
   }) {
     return showMultiPicker(
       context: context,
@@ -53,9 +57,12 @@ class AntPicker {
       value: value,
       onOk: onOk,
       onCancel: onCancel,
-      onColumnSelected: onColumnSelected,
+      onSelectedItemChanged: onSelectedItemChanged,
+      onColumnSelectedChanged: onColumnSelectedChanged,
+      onChange: onChange,
       itemHeight: itemHeight,
       isScrollControlled: isScrollControlled,
+      round: round,
     );
   }
 }
@@ -71,10 +78,18 @@ Future<T?> showPicker<T>({
   Function? onCancel,
   double? itemHeight = 34,
   bool isScrollControlled = false,
+  bool round = true,
 }) {
+  AntThemeData theme = AntTheme.of(context);
   return showModalBottomSheet(
     context: context,
     isScrollControlled: isScrollControlled,
+    shape: RoundedRectangleBorder(
+      borderRadius:
+          (round
+              ? BorderRadius.circular(theme.borderRadius)
+              : BorderRadius.zero),
+    ),
     builder: (context) {
       return AntPickerView(
         itemHeight: itemHeight,
@@ -103,12 +118,22 @@ Future<T?> showMultiPicker<T>({
   List<String>? value,
   ValueChanged<List<AntPickerOption?>>? onOk,
   Function? onCancel,
-  void Function(AntPickerOption? value, int index)? onColumnSelected,
+  Function(AntPickerOption? value, int index)? onSelectedItemChanged,
+  Function(AntPickerOption? value, int index)? onColumnSelectedChanged,
+  Function(List<AntPickerOption?>? value)? onChange,
   double? itemHeight = 34,
   bool isScrollControlled = false,
+  bool round = true,
 }) {
+  AntThemeData theme = AntTheme.of(context);
   return showModalBottomSheet(
     context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius:
+          (round
+              ? BorderRadius.circular(theme.borderRadius)
+              : BorderRadius.zero),
+    ),
     isScrollControlled: isScrollControlled,
     builder: (context) {
       return AntPickerMultiView(
@@ -116,6 +141,9 @@ Future<T?> showMultiPicker<T>({
         title: title,
         value: value,
         columns: options,
+        onSelectedItemChanged: onSelectedItemChanged,
+        onColumnSelectedChanged: onColumnSelectedChanged,
+        onChange: onChange,
         onOk: (value) {
           Navigator.of(context).pop();
           onOk?.call(value);
