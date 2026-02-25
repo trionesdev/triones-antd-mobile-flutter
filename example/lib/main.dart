@@ -6,6 +6,7 @@ import 'package:antd_flutter_example/pages/badge_page.dart';
 import 'package:antd_flutter_example/pages/breadcrumb_page.dart';
 import 'package:antd_flutter_example/pages/button_page.dart';
 import 'package:antd_flutter_example/pages/calendar_datetime_picker_page.dart';
+import 'package:antd_flutter_example/pages/calendar_picker_cell_page.dart';
 import 'package:antd_flutter_example/pages/calendar_picker_page.dart';
 import 'package:antd_flutter_example/pages/card_page.dart';
 import 'package:antd_flutter_example/pages/cascader_picker_page.dart';
@@ -47,6 +48,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
+import 'pages/calendar_datetime_picker_cell_page.dart';
 import 'pages/calendar_page.dart';
 import 'pages/date_picker_cell_page.dart';
 import 'pages/date_picker_page.dart';
@@ -80,6 +82,7 @@ class MyApp extends StatelessWidget {
         '/scaffold': (context) => ScaffoldPage(),
         '/avatar': (context) => AvatarPage(),
         '/button': (context) => ButtonPage(),
+        '/calendar-datetime-picker-cell': (context) => CalendarDatetimePickerCellPage(),
         '/input': (context) => InputPage(),
         '/form': (context) => FormPage(),
         '/app-bar': (context) => AppBarPage(),
@@ -94,6 +97,7 @@ class MyApp extends StatelessWidget {
         '/picker': (context) => PickerPage(),
         '/cascader-picker': (context) => CascaderPickerPage(),
         '/cell': (context) => CellPage(),
+        '/calendar-picker-cell': (context) => CalendarPickerCellPage(),
         '/calendar-picker': (context) => CalendarPickerPage(),
         '/calendar': (context) => CalendarPage(),
         '/card': (context) => CardPage(),
@@ -199,6 +203,12 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             material.ListTile(
+              title: Text('CalendarDatetimePickerCell 日历时间选择单元格'),
+              onTap: () {
+                Navigator.pushNamed(context, '/calendar-datetime-picker-cell');
+              },
+            ),
+            material.ListTile(
               title: Text('Input 输入框'),
               onTap: () {
                 Navigator.pushNamed(context, '/input');
@@ -280,6 +290,12 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text('Cell 单元格'),
               onTap: () {
                 Navigator.pushNamed(context, '/cell');
+              },
+            ),
+            material.ListTile(
+              title: Text('CalendarPickerCell 日历选择器单元格'),
+              onTap: () {
+                Navigator.pushNamed(context, '/calendar-picker-cell');
               },
             ),
             material.ListTile(

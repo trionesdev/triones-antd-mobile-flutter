@@ -112,7 +112,7 @@ class AntCalendarState extends State<AntCalendar> {
 
   @override
   void initState() {
-    _currentMouth = widget.mouth ?? DateTime.now();
+    _currentMouth = widget.mouth ?? widget.value ?? DateTime.now();
     _value = widget.value;
     super.initState();
   }

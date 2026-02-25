@@ -35,6 +35,7 @@ Future<T?> showAntCalendarPicker<T>({
 }) {
   return showModalBottomSheet(
     context: context,
+    isScrollControlled: true,
     builder: (context) {
       return AntCalendarPickerView(
         value: value,
@@ -55,6 +56,7 @@ Future<T?> showAntCalendarRangePicker<T>({
 }) {
   return showModalBottomSheet(
     context: context,
+    isScrollControlled: true,
     builder: (BuildContext context) {
       return AntCalendarRangePickerView(
         value: value,

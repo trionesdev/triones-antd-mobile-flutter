@@ -1,28 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
-class AntDatePickerCell extends StatefulWidget {
-  const AntDatePickerCell({
+import '../../../trionesdev_antd_mobile.dart';
+
+class AntCalendarDateTimePickerCell extends StatefulWidget {
+  const AntCalendarDateTimePickerCell({
     super.key,
     this.placeholder,
     this.placeholderText,
     this.label,
     this.labelText,
     this.labelCol,
-    this.labelAlign = AntLabelAlign.left,
+    this.labelAlign,
     this.wrapperAlign = AntAlign.right,
-    this.format,
     this.title,
     this.titleText,
-    this.mode = AntDatePickerMode.date,
-    this.showTime = false,
-    this.timeFormat,
     this.value,
-    this.onCancel,
-    this.minDate,
-    this.maxDate,
+    this.format,
   });
 
   /// @description 占位符
@@ -61,43 +55,20 @@ class AntDatePickerCell extends StatefulWidget {
   /// @default null
   final String? titleText;
 
-  /// @description 模式
-  /// @default AntDatePickerMode.date
-  final AntDatePickerMode mode;
+  /// @description 值
+  /// @default null
+  final DateTime? value;
 
   /// @description 格式
   /// @default null
   final String? format;
 
-  /// @description 是否显示时间
-  /// @default false
-  final bool showTime;
-
-  /// @description 时间格式，仅在mode为AntDatePickerMode.date，showTime=ture,或者mode为AntDatePickerMode.time时有效
-  /// @default null
-  final String? timeFormat;
-
-  /// @description 值
-  /// @default null
-  final DateTime? value;
-
-  /// @description 取消回调
-  /// @default null
-  final Function? onCancel;
-
-  /// @description 最小日期，有效到日期单位
-  /// @default null
-  final DateTime? minDate;
-
-  /// @description 最大日期，有效到日期单位
-  /// @default null
-  final DateTime? maxDate;
-
   @override
-  State<StatefulWidget> createState() => _AntDatePickerCellState();
+  State<StatefulWidget> createState() => _AntCalendarDateTimePickerCellState();
 }
 
-class _AntDatePickerCellState extends State<AntDatePickerCell> {
+class _AntCalendarDateTimePickerCellState
+    extends State<AntCalendarDateTimePickerCell> {
   DateTime? _value;
 
   Widget? get content {
@@ -105,15 +76,7 @@ class _AntDatePickerCellState extends State<AntDatePickerCell> {
       if (widget.format != null) {
         return Text(DateFormat(widget.format).format(_value!));
       }
-      if (widget.mode == AntDatePickerMode.date) {
-        if (widget.showTime) {
-          return Text(DateFormat("yyyy-MM-dd HH:mm:ss").format(_value!));
-        }
-        return Text(DateFormat("yyyy-MM-dd").format(_value!));
-      } else if (widget.mode == AntDatePickerMode.time) {
-        return Text(DateFormat("HH:mm:ss").format(_value!));
-      }
-      return Text(DateFormat("yyyy-MM-dd").format(_value!));
+      return Text(DateFormat("yyyy-MM-dd HH:mm:ss").format(_value!));
     }
     return null;
   }
@@ -125,16 +88,11 @@ class _AntDatePickerCellState extends State<AntDatePickerCell> {
   }
 
   @override
-  void didUpdateWidget(AntDatePickerCell oldWidget) {
+  void didUpdateWidget(AntCalendarDateTimePickerCell oldWidget) {
     if (oldWidget.value != widget.value) {
       _value = widget.value;
     }
     super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -147,14 +105,9 @@ class _AntDatePickerCellState extends State<AntDatePickerCell> {
       wrapperAlign: widget.wrapperAlign,
       child: content,
       onTap: () {
-        showAntDatePicker(
+        showAntCalendarDatetimePicker(
           context: context,
-          mode: widget.mode,
-          showTime: widget.showTime,
-          timeFormat: widget.timeFormat,
           value: _value,
-          minDate: widget.minDate,
-          maxDate: widget.maxDate,
           onOk: (DateTime? value) {
             setState(() {
               _value = value;

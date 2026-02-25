@@ -8,11 +8,29 @@ enum AntPopupPosition { top, bottom, left, right, center }
 class AntPopup {
   static Future<T?> show<T>({
     required BuildContext context,
+
+    /// @description 背景颜色
+    /// @default Colors.white
     Color? color = Colors.white,
+
+    /// @description 弹出位置
+    /// @default AntPopupPosition.bottom
     AntPopupPosition position = AntPopupPosition.bottom,
+
+    /// @description 宽度, 仅在position为AntPopupPosition.left,AntPopupPosition.right时有效
+    /// @default null
     double? width,
+
+    /// @description 高度, 仅在position为AntPopupPosition.top,AntPopupPosition.bottom时有效
+    /// @default null
     double? height,
+
+    /// @description 是否圆角
+    /// @default true
     bool round = true,
+
+    /// @description 弹窗内容
+    /// @default null
     Widget? child,
   }) {
     return showAntPopup<T>(
