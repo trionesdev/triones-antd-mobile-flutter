@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 import 'package:trionesdev_antd_mobile/src/components/picker/picker_view_multi_columns.dart';
@@ -26,10 +27,9 @@ class AntPickerMultiView extends StatefulWidget {
   final Function? onCancel;
   final ValueChanged<List<AntPickerOption?>>? onOk;
   final double? itemHeight;
-  final void Function(AntPickerOption? value, int index)? onSelectedItemChanged;
-  final void Function(AntPickerOption? value, int index)?
-  onColumnSelectedChanged;
-  final void Function(List<AntPickerOption?>? value)? onChange;
+  final Function(AntPickerOption? value, int index)? onSelectedItemChanged;
+  final Function(AntPickerOption? value, int index)? onColumnSelectedChanged;
+  final Function(List<AntPickerOption?>? value)? onChange;
 
   @override
   State<StatefulWidget> createState() => _AntPickerMultiViewState();
@@ -38,31 +38,20 @@ class AntPickerMultiView extends StatefulWidget {
 class _AntPickerMultiViewState extends State<AntPickerMultiView>
     with MaterialStateMixin {
   // double viewHeight = 0;
+  bool _cascade = false;
   List<AntPickerOption?> _value = [];
 
   @override
   void initState() {
-    _value = List.filled(widget.columns?.length ?? 0, null);
-    if (widget.value != null && widget.value!.isNotEmpty) {
-      for (int i = 0; i < (widget.columns?.length ?? 0); i++) {
-        if (i < widget.value!.length && widget.value?[i] != null) {
-          _value[i] = widget.columns![i].firstWhere((option) {
-            return option.value == widget.value?[i];
-          });
-        } else {
-          _value[i] = widget.columns![i].first;
-        }
-      }
-    } else {
-      for (int i = 0; i < (widget.columns?.length ?? 0); i++) {
-        _value[i] = widget.columns![i].first;
-      }
-    }
+    _cascade = (widget.columns != null && widget.columns!.length == 1);
     super.initState();
   }
 
   @override
   void didUpdateWidget(AntPickerMultiView oldWidget) {
+    if (listEquals(widget.columns, oldWidget.columns)) {
+      _cascade = (widget.columns != null && widget.columns!.length == 1);
+    }
     super.didUpdateWidget(oldWidget);
   }
 
@@ -118,19 +107,16 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
         Expanded(
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-              // viewHeight = constraints.maxHeight;
               return AntPickerViewMultiColumns(
+                cascade: _cascade,
                 columns: widget.columns,
                 itemHeight: widget.itemHeight,
-                value: _value.map((e) => e?.value).toList(),
-                onSelectedItemChanged: (value, index) {
-                  _value[index] = value;
-                  widget.onSelectedItemChanged?.call(value, index);
-                },
-                onChange: (value, index) {
-                  _value[index] = value;
-                  widget.onColumnSelectedChanged?.call(value, index);
-                  widget.onChange?.call(_value);
+                value: widget.value,
+                onSelectedItemChanged: widget.onSelectedItemChanged,
+                onColumnSelectedChanged: widget.onColumnSelectedChanged,
+                onChange: (value) {
+                  widget.onChange?.call(value);
+                  _value = value;
                 },
               );
             },

@@ -8,22 +8,29 @@ import 'types.dart';
 class AntPickerViewMultiColumns extends StatefulWidget {
   const AntPickerViewMultiColumns({
     super.key,
-    this.columns,
+    this.cascade = false,
+    this.columns = const [],
     this.itemHeight,
     this.onSelectedItemChanged,
+    this.onColumnSelectedChanged,
     this.onChange,
-    this.value,
+    this.value = const [],
     this.onOk,
     this.height,
   });
 
+  final bool cascade;
   final List<List<AntPickerOption>>? columns;
   final List<String?>? value;
   final double? itemHeight;
   final double? height;
-  final void Function(AntPickerOption? value, int index)? onSelectedItemChanged;
-  final void Function(AntPickerOption? value, int index)? onChange;
-  final void Function(List<AntPickerOption?> value)? onOk;
+  final Function(AntPickerOption? value, int index)? onSelectedItemChanged;
+  final Function(AntPickerOption? value, int index)? onColumnSelectedChanged;
+  final Function(
+    List<AntPickerOption?> value
+  )?
+  onChange;
+  final Function(List<AntPickerOption?> value)? onOk;
 
   @override
   State<StatefulWidget> createState() => _AntPickerViewMultiColumnsState();
@@ -33,51 +40,65 @@ class _AntPickerViewMultiColumnsState extends State<AntPickerViewMultiColumns> {
   List<List<AntPickerOption>> _columns = [];
   List<AntPickerOption?> _value = [];
 
-  AntPickerOption? _getOptionByValue(int columnIndex) {
-    if (widget.value != null &&
-        widget.value!.isNotEmpty) {
-      if (_columns.length > columnIndex &&
-          widget.value!.length > columnIndex) {
-        return _columns[columnIndex].firstWhereOrNull((option) {
-          return option.value == widget.value![columnIndex];
-        });
-      }
-    }
-    return null;
-  }
-
-  void generateValueOptions() {
-    _value = List.filled(_columns.length ?? 0, null);
+  void handleInitialValue() {
+    _columns = List.from(widget.columns ?? []);
+    _value = List.from(List.filled(_columns.length ?? 0, null));
     if (widget.value != null && widget.value!.isNotEmpty) {
       for (int i = 0; i < (_columns.length ?? 0); i++) {
         if (i < widget.value!.length && widget.value?[i] != null) {
-          _value[i] = _columns[i].firstWhere((option) {
+          _value[i] = _columns[i].firstWhereOrNull((option) {
             return option.value == widget.value?[i];
           });
-        } else {
-          _value[i] = _columns[i].first;
+        }
+        if (_value[i] == null) {
+          _value[i] = _columns[i].firstOrNull;
         }
       }
     } else {
       for (int i = 0; i < (_columns.length ?? 0); i++) {
-        _value[i] = _columns[i].first;
+        _value[i] = _columns[i].firstOrNull;
       }
     }
-    // widget.onOk?.call(_value);
+
+    if (_value.lastOrNull?.children != null &&
+        _value.lastOrNull!.children!.isNotEmpty) {
+      while (_value.lastOrNull?.children != null &&
+          _value.lastOrNull!.children!.isNotEmpty) {
+        _columns.add(_value.lastOrNull!.children!);
+        _value.add(_value.lastOrNull!.children!.firstOrNull);
+      }
+    }
+    widget.onChange?.call(_value);
+  }
+
+  void handleColumnSelectedChange(AntPickerOption? option, int columnIndex) {
+    _value[columnIndex] = option;
+    widget.onChange?.call(_value);
+    if (option != null) {
+      if (widget.cascade) {
+        setState(() {
+          _value = _value.take(columnIndex + 1).toList();
+          _columns = _columns.take(columnIndex + 1).toList();
+          while (_value.lastOrNull?.children != null &&
+              _value.lastOrNull!.children!.isNotEmpty) {
+            _columns.add(_value.lastOrNull!.children!);
+            _value.add(_value.lastOrNull!.children!.firstOrNull);
+          }
+        });
+      }
+    }
   }
 
   @override
   void initState() {
-    _columns = widget.columns ?? [];
-    generateValueOptions();
+    handleInitialValue();
     super.initState();
   }
 
   @override
   void didUpdateWidget(AntPickerViewMultiColumns oldWidget) {
     if (!listEquals(oldWidget.columns, widget.columns)) {
-      _columns = widget.columns ?? [];
-      generateValueOptions();
+      handleInitialValue();
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -99,13 +120,12 @@ class _AntPickerViewMultiColumnsState extends State<AntPickerViewMultiColumns> {
                       itemHeight: widget.itemHeight,
                       options: _columns[columnIndex] ?? [],
                       onSelected: (option) {
-                        _value[columnIndex] = option!;
-                        widget.onChange?.call(option, columnIndex);
+                        handleColumnSelectedChange(option, columnIndex);
                       },
                       onSelectedItemChanged: (option) {
                         widget.onSelectedItemChanged?.call(option, columnIndex);
                       },
-                      value: _getOptionByValue(columnIndex),
+                      value: _value.elementAtOrNull(columnIndex),
                     ),
                   );
                 }).toList(),
