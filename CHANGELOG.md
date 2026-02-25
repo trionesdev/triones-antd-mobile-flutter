@@ -12,3 +12,5 @@
 
 ## 0.0.5
 * 修改SearchBar的图标
+## 0.0..6-beta
+* 添加DatePicker,DatePickerCell组件
