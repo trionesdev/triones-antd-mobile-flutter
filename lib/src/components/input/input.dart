@@ -82,6 +82,8 @@ class AntInput extends StatefulWidget {
   /// @description 获得焦点回调
   /// @default null
   final ValueGetter<void>? onFocus;
+  /// @description 对齐方式
+  /// @default start
   final TextAlign? align;
 
   @override
