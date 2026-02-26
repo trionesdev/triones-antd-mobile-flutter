@@ -67,6 +67,16 @@ class _FormPageState extends State<FormPage> {
                         );
                       },
                     ),
+                    AntFormItem(
+                      label: Text("备注"),
+                      name: NamePath(['remark']),
+                      builder: (AntFieldState field) {
+                        return AntTextArea(
+                          value: field.value,
+                          onChange: field.didChange,
+                        );
+                      },
+                    ),
                     AntFormItem<String?>(
                       name: NamePath(['username']),
                       validator: (value) {
@@ -113,7 +123,7 @@ class _FormPageState extends State<FormPage> {
                           text: "赋值",
                           block: true,
                           onPressed: () => {
-                            _formKey.currentState?.setFieldsValue({"age": "1"}),
+                            _formKey.currentState?.setFieldsValue({"age": "1","gender":"男"}),
                           },
                         ),
                       ],

@@ -17,6 +17,7 @@ class AntForm extends StatefulWidget {
     this.layout = AntFormLayout.horizontal,
     this.child,
     this.labelCol,
+    this.labelTextStyle,
     this.wrapperCol,
     this.labelAlign = AntLabelAlign.left,
     this.size = AntSize.middle,
@@ -45,6 +46,7 @@ class AntForm extends StatefulWidget {
   /// @description 表单标签宽度
   /// @default null
   final AntCol? labelCol;
+  final TextStyle? labelTextStyle;
 
   /// @description 表单内容宽度
   /// @default null
@@ -91,6 +93,8 @@ class AntFormState extends State<AntForm> {
   AntCol? get wrapperCol => widget.wrapperCol;
 
   AntLabelAlign? get labelAlign => widget.labelAlign;
+
+  TextStyle? get labelTextStyle => widget.labelTextStyle;
 
   ValueNotifier _registerWatch(NamePath path) {
     var notifier = ValueNotifier(getFieldValue(path));
@@ -473,6 +477,7 @@ class AntFormItem<T> extends StatelessWidget {
     this.name,
     this.labelText,
     this.label,
+    this.labelTextStyle,
     this.labelCol,
     this.wrapperCol,
     this.labelAlign,
@@ -513,6 +518,7 @@ class AntFormItem<T> extends StatelessWidget {
   final NamePath? name;
   final Widget? label;
   final String? labelText;
+  final TextStyle? labelTextStyle;
   final AntCol? labelCol;
   final AntCol? wrapperCol;
   final AntLabelAlign? labelAlign;
@@ -562,6 +568,7 @@ class InternalFormItem<T> extends StatefulWidget {
   final AntSize? size;
   final Widget? label;
   final String? labelText;
+  final TextStyle? labelTextStyle;
   final AntCol? labelCol;
   final AntCol? wrapperCol;
   final AntLabelAlign? labelAlign;
@@ -580,6 +587,7 @@ class InternalFormItem<T> extends StatefulWidget {
     this.child,
     this.layout,
     this.labelText,
+    this.labelTextStyle,
     this.label,
     this.builder,
     this.labelCol,
@@ -641,7 +649,43 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
     }
   }
 
-  Widget _labelCol(Widget fieldLabel) {
+  Widget get label {
+    AntFormState? formState = AntForm.maybeOf(context);
+    List<Widget> fieldLabelChildren = [];
+    if (widget.required == true) {
+      if (layout == AntFormLayout.vertical) {
+        fieldLabelChildren.add(
+          SizedBox(
+            width: 0,
+            child: Text("*", style: TextStyle(color: Colors.red)),
+          ),
+        );
+      } else {
+        fieldLabelChildren.add(
+          Container(
+            padding: EdgeInsets.only(left: 0, right: 0, top: 0),
+            // width: 0,
+            // transform: Matrix4.translationValues(-8.0, 0.0, 0.0),
+            child: Text("*", style: TextStyle(color: Colors.red)),
+          ),
+        );
+      }
+    }
+    fieldLabelChildren.add(
+      widget.label ??
+          Text(
+            widget.labelText ?? "",
+            style: widget.labelTextStyle ?? formState?.labelTextStyle,
+          ),
+    );
+    Widget fieldLabel = Row(
+      mainAxisAlignment:
+          labelAlign == AntLabelAlign.left
+              ? MainAxisAlignment.start
+              : MainAxisAlignment.end,
+      children: fieldLabelChildren,
+    );
+
     if (labelCol?.flex != null) {
       return Container(
         width: labelCol!.flex,
@@ -739,35 +783,7 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
 
     List<Widget> fieldItemChildren = [];
     if (widget.label != null || widget.labelText != null) {
-      List<Widget> fieldLabelChildren = [];
-      if (widget.required == true) {
-        if (layout == AntFormLayout.vertical) {
-          fieldLabelChildren.add(
-            SizedBox(
-              width: 0,
-              child: Text("*", style: TextStyle(color: Colors.red)),
-            ),
-          );
-        } else {
-          fieldLabelChildren.add(
-            Container(
-              padding: EdgeInsets.only(left: 0, right: 0, top: 0),
-              // width: 0,
-              // transform: Matrix4.translationValues(-8.0, 0.0, 0.0),
-              child: Text("*", style: TextStyle(color: Colors.red)),
-            ),
-          );
-        }
-      }
-      fieldLabelChildren.add(widget.label ?? Text(widget.labelText ?? ""));
-      Widget fieldLabel = Row(
-        mainAxisAlignment:
-            labelAlign == AntLabelAlign.left
-                ? MainAxisAlignment.start
-                : MainAxisAlignment.end,
-        children: fieldLabelChildren,
-      );
-      fieldItemChildren.add(_labelCol(fieldLabel));
+      fieldItemChildren.add(label);
     }
     if (widget.builder != null) {
       var child = widget.builder!(fieldState!);
@@ -810,7 +826,9 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
       child:
           layout == AntFormLayout.horizontal
               ? Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
                 spacing: AntForm.maybeOf(context)?.rowSpacing ?? 0,
                 children: fieldItemChildren,
               )
