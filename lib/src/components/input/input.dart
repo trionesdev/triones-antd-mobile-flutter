@@ -25,10 +25,12 @@ class AntInput extends StatefulWidget {
     this.style,
     this.onBlur,
     this.onFocus,
+    this.align,
   });
 
   final StateStyle? style;
   final bool readOnly;
+
   /// @description 组件大小
   /// @default middle
   final AntSize size;
@@ -80,6 +82,7 @@ class AntInput extends StatefulWidget {
   /// @description 获得焦点回调
   /// @default null
   final ValueGetter<void>? onFocus;
+  final TextAlign? align;
 
   @override
   State<StatefulWidget> createState() => _InputState();
@@ -183,7 +186,8 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
       height: height,
       padding: widget.padding ?? style.resolve(materialStates)?.computedPadding,
       child: TextField(
-        readOnly:  widget.readOnly,
+        textAlign: widget.align ?? TextAlign.start,
+        readOnly: widget.readOnly,
         enabled: !widget.disabled,
         controller: _controller,
         focusNode: _focusNode,
@@ -200,13 +204,15 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
               }
             })(),
         decoration: InputDecoration(
-          prefixIcon:
-              widget.prefix ,
+          prefixIcon: widget.prefix,
           suffixIcon: suffixIcon,
           hintText: widget.placeholder,
           hintStyle: TextStyle(color: Colors.grey),
           // 提示文本
-          border: OutlineInputBorder(borderSide: BorderSide.none,gapPadding: 0),
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            gapPadding: 0,
+          ),
           contentPadding: EdgeInsets.zero,
         ),
         inputFormatters: [
