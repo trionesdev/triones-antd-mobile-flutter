@@ -82,6 +82,9 @@ class _CascaderPickerPageState extends State<CascaderPickerPage> {
                       maxHeight: 400,
                       onOk: (value) {
                         print(value);
+                        showAntToast(
+                            context: context, content: Text("已选择${value
+                            ?.map((e) => e?.label).join('->')}"));
                       });
                 }),
           )

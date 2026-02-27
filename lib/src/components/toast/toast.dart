@@ -7,30 +7,40 @@ import 'package:trionesdev_antd_mobile/src/components/toast/toast_route.dart';
 class AntToast {
   static void show({
     required BuildContext context,
+    /// @description 内容
+    /// @default null
     Widget? content,
+    /// @description 图标
+    /// @default null
     Icon? icon,
+    /// @description 位置
+    /// @default null
     AntToastPosition? position,
     int? duration = 2000,
     Function? afterClose,
   }) {
-    Navigator.push(
-      context,
-      AntToastRoute(icon: icon, content: content, position: position),
+    showAntToast(
+      context: context,
+      content: content,
+      icon: icon,
+      position: position,
+      duration: duration,
+      afterClose: afterClose,
     );
-    Future.delayed(Duration(milliseconds: duration ?? 2000)).then((_) {
-      if (context.mounted) {
-        Navigator.of(context).pop();
-      }
-      afterClose?.call();
-    });
   }
 }
 
 /// 显示轻提示
 Future<T?> showAntToast<T>({
   required BuildContext context,
+  /// @description 内容
+  /// @default null
   Widget? content,
+  /// @description 图标
+  /// @default null
   Icon? icon,
+  /// @description 位置
+  /// @default null
   AntToastPosition? position,
   int? duration = 2000,
   Function? afterClose,
