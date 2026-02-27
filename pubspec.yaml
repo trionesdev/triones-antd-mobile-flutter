@@ -1,6 +1,6 @@
 name: trionesdev_antd_mobile
-description: "antd ui"
-version: 0.0.5-beta.0
+description: "Antd UI，Flutter Mobile UI Kit by TrionesDev"
+version: 0.0.5-beta.1
 homepage: https://github.com/trionesdev/triones-antd-mobile-flutter
 
 environment:
@@ -31,7 +31,7 @@ dev_dependencies:
 flutter:
   generate: true
   assets:
-#    - assets/fonts/iconfont.json
+    #    - assets/fonts/iconfont.json
     - assets/images/empty.svg
     - assets/images/default-image.svg
     - assets/images/default-image.png
