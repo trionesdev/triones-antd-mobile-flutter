@@ -87,7 +87,7 @@ class _FormPageState extends State<FormPage> {
                       },
                       builder: (AntFieldState field) {
                         return AntInput(
-                          align: TextAlign.end,
+                          align: AntInputAlign.right,
                           value: field.value,
                           onChange: field.didChange,
                           placeholder: '请输入用户名',

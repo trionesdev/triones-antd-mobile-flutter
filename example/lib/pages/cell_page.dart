@@ -35,7 +35,12 @@ class _CellPageState extends State<CellPage> {
             DemoBlock(
               title: "单元格组",
               child: AntCellGroup(
-                children: [AntCell(labelText: "单元格", child: Text("内容"))],
+                arrow: true,
+                wrapperAlign: AntAlign.right,
+                children: [
+                  AntCell(labelText: "单元格1", child: Text("内容1")),
+                  AntCell(labelText: "单元格2", child: Text("内容2")),
+                ],
               ),
             ),
           ],

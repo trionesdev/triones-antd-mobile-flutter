@@ -13,8 +13,10 @@ class AntAlert extends StatefulWidget {
     this.closable,
     this.message,
     this.messageText,
+    this.messageTextStyle,
     this.description,
     this.descriptionText,
+    this.descriptionTextStyle,
     this.icon,
     this.type = AntAlertType.info,
     this.onClose,
@@ -35,6 +37,10 @@ class AntAlert extends StatefulWidget {
   /// @default null
   final String? messageText;
 
+  /// @description 消息样式, 只对messageText 生效
+  /// @default null
+  final TextStyle? messageTextStyle;
+
   /// @description 描述,与descriptionText二选一，优选使用description
   /// @default null
   final Text? description;
@@ -42,6 +48,10 @@ class AntAlert extends StatefulWidget {
   /// @description 描述文本,与description二选一，优选使用description
   /// @default null
   final String? descriptionText;
+
+  /// @description 描述样式, 只对descriptionText 生效
+  /// @default null
+  final TextStyle? descriptionTextStyle;
 
   /// @description 图标
   /// @default null
@@ -90,26 +100,26 @@ class _AntAlertState extends State<AntAlert> with MaterialStateMixin {
     }
   }
 
-  Widget? get message{
-    if(widget.message != null){
+  Widget? get message {
+    if (widget.message != null) {
       return widget.message;
     }
-    if(widget.messageText != null){
-      return Text(widget.messageText!);
+    if (widget.messageText != null) {
+      return Text(widget.messageText!, style: widget.messageTextStyle);
     }
     return null;
   }
 
-  bool get showDescription{
+  bool get showDescription {
     return widget.description != null || widget.descriptionText != null;
   }
 
-  Widget? get description{
-    if(widget.description != null){
+  Widget? get description {
+    if (widget.description != null) {
       return widget.description;
     }
-    if(widget.descriptionText != null){
-      return Text(widget.descriptionText!);
+    if (widget.descriptionText != null) {
+      return Text(widget.descriptionText!, style: widget.descriptionTextStyle);
     }
     return null;
   }
@@ -127,7 +137,7 @@ class _AntAlertState extends State<AntAlert> with MaterialStateMixin {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment:
-            (showDescription)
+                (showDescription)
                     ? CrossAxisAlignment.start
                     : CrossAxisAlignment.center,
             children: [
@@ -136,12 +146,8 @@ class _AntAlertState extends State<AntAlert> with MaterialStateMixin {
               Expanded(
                 child: Column(
                   children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: message,
-                    ),
-                    if (showDescription)
-                      Container(child: description),
+                    Container(alignment: Alignment.centerLeft, child: message),
+                    if (showDescription) Container(child: description),
                   ],
                 ),
               ),

@@ -22,6 +22,7 @@ class AntButton extends StatefulWidget {
     this.danger,
     this.disabled,
     this.text,
+    this.textStyle,
     this.icon,
     this.onPressed,
     this.variant,
@@ -54,6 +55,10 @@ class AntButton extends StatefulWidget {
   /// @description 按钮文字
   /// @default null
   final String? text;
+
+  /// @description 按钮文字样式
+  /// @default null
+  final TextStyle? textStyle;
 
   /// @description 按钮图标
   /// @default null
@@ -165,7 +170,10 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
       if (widget.text != null) {
         return Text(
           widget.text ?? '',
-          style: TextStyle(color: style?.color, fontSize: style?.fontSize),
+          style: TextStyle(
+            color: style?.color,
+            fontSize: style?.fontSize,
+          ).merge(widget.textStyle),
         );
       }
       return Container();

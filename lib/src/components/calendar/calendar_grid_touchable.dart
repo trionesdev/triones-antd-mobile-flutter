@@ -6,7 +6,7 @@ import 'calendar_grid.dart';
 class AntCalendarGridTouchable extends StatefulWidget {
   const AntCalendarGridTouchable({
     super.key,
-    this.mouth,
+    this.month,
     this.value,
     this.onChange,
     this.range = false,
@@ -17,7 +17,7 @@ class AntCalendarGridTouchable extends StatefulWidget {
 
   /// @description 月份
   /// @default null
-  final DateTime? mouth;
+  final DateTime? month;
 
   /// @description 选中值
   /// @default null
@@ -48,7 +48,7 @@ class AntCalendarGridTouchable extends StatefulWidget {
 }
 
 class _AntCalendarGridTouchableState extends State<AntCalendarGridTouchable> {
-  late DateTime _currentMouth;
+  late DateTime _currentMonth;
   List<DateTime> _mouths = [];
   PageController _controller = PageController();
   double? _pageHeight = 300;
@@ -72,10 +72,10 @@ class _AntCalendarGridTouchableState extends State<AntCalendarGridTouchable> {
 
   void mouthChange(DateTime newMouth) {
     setState(() {
-      _currentMouth = DateTime(newMouth.year, newMouth.month);
-      _mouths = generateMouths(_currentMouth!);
+      _currentMonth = DateTime(newMouth.year, newMouth.month);
+      _mouths = generateMouths(_currentMonth!);
       _controller.jumpToPage(1);
-      widget.onMouthChange?.call(_currentMouth);
+      widget.onMouthChange?.call(_currentMonth);
     });
   }
 
@@ -83,17 +83,17 @@ class _AntCalendarGridTouchableState extends State<AntCalendarGridTouchable> {
   void initState() {
     super.initState();
 
-    _currentMouth = widget.mouth ?? DateTime.now();
-    _mouths = generateMouths(_currentMouth!);
+    _currentMonth = widget.month ?? DateTime.now();
+    _mouths = generateMouths(_currentMonth!);
     _controller = PageController(initialPage: 1);
   }
 
   @override
   void didUpdateWidget(covariant AntCalendarGridTouchable oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.mouth != widget.mouth) {
-      _currentMouth = widget.mouth ?? DateTime.now();
-      _mouths = generateMouths(_currentMouth!);
+    if (oldWidget.month != widget.month) {
+      _currentMonth = widget.month ?? DateTime.now();
+      _mouths = generateMouths(_currentMonth!);
       _controller = PageController(initialPage: 1);
     }
   }
@@ -123,18 +123,18 @@ class _AntCalendarGridTouchableState extends State<AntCalendarGridTouchable> {
                     if (index == 0) {
                       setState(() {
                         DateTime firstMouth = _mouths.first;
-                        _currentMouth = firstMouth;
+                        _currentMonth = firstMouth;
                         _mouths = generateMouths(firstMouth);
                         _controller.jumpToPage(1);
-                        widget.onMouthChange?.call(_currentMouth);
+                        widget.onMouthChange?.call(_currentMonth);
                       });
                     } else if (index == _mouths.length - 1) {
                       setState(() {
                         DateTime lastMouth = _mouths.last;
-                        _currentMouth = lastMouth;
+                        _currentMonth = lastMouth;
                         _mouths = generateMouths(lastMouth);
                         _controller.jumpToPage(1);
-                        widget.onMouthChange?.call(_currentMouth);
+                        widget.onMouthChange?.call(_currentMonth);
                       });
                     }
                   },
@@ -149,7 +149,7 @@ class _AntCalendarGridTouchableState extends State<AntCalendarGridTouchable> {
                         onSelected: (date) {
                           widget.onSelected?.call(date);
                           setState(() {});
-                          if (date.month != _currentMouth!.month) {
+                          if (date.month != _currentMonth!.month) {
                             mouthChange(date);
                           }
                         },

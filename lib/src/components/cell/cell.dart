@@ -337,7 +337,7 @@ class _AntCellState extends State<AntCell> {
     AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
     return widget.arrowIcon ??
         groupState?.widget.arrowIcon ??
-        Icon(AntIcons.rightOutline, size: 16, color: Colors.grey);
+        Icon(AntIcons.rightOutline, size: 14, color: Colors.grey);
   }
 
   @override
@@ -349,6 +349,7 @@ class _AntCellState extends State<AntCell> {
 
   @override
   Widget build(BuildContext context) {
+    AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: height),
       child: Row(
@@ -372,7 +373,9 @@ class _AntCellState extends State<AntCell> {
                       child: Container(alignment: contentAlign, child: child),
                     ),
                     if (widget.extra != null) widget.extra!,
-                    if (widget.arrow == true) arrowIcon,
+                    if (widget.arrow == true ||
+                        groupState?.widget.arrow == true)
+                      arrowIcon,
                   ],
                 ),
               ),

@@ -8,6 +8,7 @@ class AntEmpty extends StatelessWidget {
     this.image,
     this.description,
     this.descriptionText,
+    this.descriptionTextStyle,
   });
 
   /// @description 图片
@@ -22,12 +23,16 @@ class AntEmpty extends StatelessWidget {
   /// @default null
   final String? descriptionText;
 
+  /// @description 描述样式
+  /// @default null
+  final TextStyle? descriptionTextStyle;
+
   Widget? get _description {
     if (description != null) {
       return description;
     }
     if (descriptionText != null) {
-      return Text(descriptionText!);
+      return Text(descriptionText!, style: descriptionTextStyle);
     }
     return null;
   }

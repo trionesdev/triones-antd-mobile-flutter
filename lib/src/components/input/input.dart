@@ -5,6 +5,8 @@ import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 enum AntInputType { text, password, number }
 
+enum AntInputAlign { left, right }
+
 /// @component AntInput 输入框
 class AntInput extends StatefulWidget {
   const AntInput({
@@ -29,6 +31,9 @@ class AntInput extends StatefulWidget {
   });
 
   final StateStyle? style;
+
+  /// @description 是否只读
+  /// @default false
   final bool readOnly;
 
   /// @description 组件大小
@@ -82,9 +87,10 @@ class AntInput extends StatefulWidget {
   /// @description 获得焦点回调
   /// @default null
   final ValueGetter<void>? onFocus;
+
   /// @description 对齐方式
   /// @default start
-  final TextAlign? align;
+  final AntInputAlign? align;
 
   @override
   State<StatefulWidget> createState() => _InputState();
@@ -107,6 +113,27 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
         return sizeMd;
       case AntSize.small:
         return sizeSm;
+    }
+  }
+
+  double? iconSize() {
+    if (widget.height != null) {
+      double size = widget.height! * 7 / 10;
+      if (size <= 40) {
+        return size;
+      }
+    }
+    return null;
+  }
+
+  TextAlign get textAlign {
+    switch (widget.align) {
+      case AntInputAlign.left:
+        return TextAlign.start;
+      case AntInputAlign.right:
+        return TextAlign.end;
+      default:
+        return TextAlign.start;
     }
   }
 
@@ -139,16 +166,6 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     _focusNode.removeListener(() {});
     _focusNode.dispose();
     super.dispose();
-  }
-
-  double? iconSize() {
-    if (widget.height != null) {
-      double size = widget.height! * 7 / 10;
-      if (size <= 40) {
-        return size;
-      }
-    }
-    return null;
   }
 
   @override
@@ -188,7 +205,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
       height: height,
       padding: widget.padding ?? style.resolve(materialStates)?.computedPadding,
       child: TextField(
-        textAlign: widget.align ?? TextAlign.start,
+        textAlign: textAlign,
         readOnly: widget.readOnly,
         enabled: !widget.disabled,
         controller: _controller,
