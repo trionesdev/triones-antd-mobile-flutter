@@ -407,6 +407,12 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             material.ListTile(
+              title: Text('TabBar 导航栏'),
+              onTap: () {
+                Navigator.pushNamed(context, '/tab-bar');
+              },
+            ),
+            material.ListTile(
               title: Text('Tabs 标签页'),
               onTap: () {
                 Navigator.pushNamed(context, '/tabs');

@@ -196,7 +196,10 @@ class AntTabBarItem extends StatefulWidget {
     required this.antKey,
     this.child,
     this.icon,
+    this.activeIcon,
     this.label,
+    this.labelText,
+    this.labelTextStyle,
     this.onPressed,
     this.color,
     this.activeColor,
@@ -206,7 +209,10 @@ class AntTabBarItem extends StatefulWidget {
   final String antKey;
   final Widget? child;
   final Widget? icon;
+  final Widget? activeIcon;
   final Widget? label;
+  final String? labelText;
+  final TextStyle? labelTextStyle;
   final Function(String key)? onPressed;
   final Color? color;
   final Color? activeColor;
@@ -252,6 +258,11 @@ class AntTabBarItemState extends State<AntTabBarItem> {
   }
 
   Widget icon() {
+    if (isActive) {
+      if (widget.activeIcon is Icon) {
+        return widget.activeIcon as Icon;
+      }
+    }
     if (widget.icon is Icon) {
       Icon iconIcon = widget.icon as Icon;
       return WidgetUtils.iconMerge(
@@ -262,18 +273,33 @@ class AntTabBarItemState extends State<AntTabBarItem> {
     return widget.icon!;
   }
 
-  Widget label() {
-    if (widget.label is Text) {
-      Text text = widget.label as Text;
-      return WidgetUtils.textMerge(
-        Text(
-          text.data ?? '',
-          style: TextStyle(fontSize: 12, color: isActive ? activeColor : color),
-        ),
-        text,
+  Widget? get label {
+    if (widget.label != null) {
+      if (widget.label is Text) {
+        Text labelText = widget.label as Text;
+        return WidgetUtils.textMerge(
+          Text(
+            labelText.data ?? '',
+            style: TextStyle(
+              fontSize: 12,
+              color: isActive ? activeColor : color,
+            ).merge(widget.labelTextStyle),
+          ),
+          labelText,
+        );
+      }
+      return widget.label!;
+    }
+    if (widget.labelText != null) {
+      return Text(
+        widget.labelText!,
+        style: TextStyle(
+          fontSize: 12,
+          color: isActive ? activeColor : color,
+        ).merge(widget.labelTextStyle),
       );
     }
-    return widget.label!;
+    return null;
   }
 
   @override
@@ -297,8 +323,8 @@ class AntTabBarItemState extends State<AntTabBarItem> {
     if (widget.icon != null) {
       children.add(icon());
     }
-    if (widget.label != null) {
-      children.add(label());
+    if (widget.label != null || widget.labelText != null) {
+      children.add(label! ?? SizedBox.shrink());
     }
 
     return Flexible(
