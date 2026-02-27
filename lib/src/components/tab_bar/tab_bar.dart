@@ -244,7 +244,7 @@ class AntTabBarItemState extends State<AntTabBarItem> {
     if (tabBar?.activeColor != null) {
       return tabBar?.activeColor;
     }
-    return AntTheme.of(context).colorPrimary;
+    return AntTheme.of(context).colorPrimaryText;
   }
 
   bool get isActive {
