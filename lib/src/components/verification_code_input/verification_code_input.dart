@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
+typedef OnIntervalRender = Widget Function(int seconds);
+
 /// @component VerificationCodeInput 验证码输入框
 class AntVerificationCodeInput extends StatefulWidget {
   const AntVerificationCodeInput({
@@ -21,10 +23,12 @@ class AntVerificationCodeInput extends StatefulWidget {
     this.decoration,
     this.sendText = "获取验证码",
     this.resendText = "重新发送",
+    this.textStyle,
     this.intervalSeconds = 60,
     this.onBlur,
     this.onFocus,
     this.onSend,
+    this.onIntervalRender,
   });
 
   /// @description 样式
@@ -74,6 +78,7 @@ class AntVerificationCodeInput extends StatefulWidget {
   /// @description 重新发送按钮文本
   /// @default 重新发送
   final String? resendText;
+  final TextStyle? textStyle;
 
   /// @description 验证码发送间隔
   /// @default 60
@@ -88,6 +93,11 @@ class AntVerificationCodeInput extends StatefulWidget {
   /// @description 验证码发送回调
   /// @default null
   final AsyncValueGetter<bool>? onSend;
+
+  /// @description 验证码发送间隔回调,自定义显示文本
+  /// @default null
+  final OnIntervalRender? onIntervalRender;
+
 
   @override
   State<StatefulWidget> createState() => _VerificationCodeInputState();
@@ -127,9 +137,12 @@ class _VerificationCodeInputState extends State<AntVerificationCodeInput> {
 
   Widget get text {
     if (_intervalSeconds > 0) {
+      if (widget.onIntervalRender != null) {
+        return widget.onIntervalRender!(_intervalSeconds);
+      }
       return Text("${_intervalSeconds}s", style: TextStyle(color: Colors.grey));
     }
-    return Text(_isResend ? widget.resendText! : widget.sendText!);
+    return Text(_isResend ? widget.resendText! : widget.sendText!, style: widget.textStyle,);
   }
 
   @override
