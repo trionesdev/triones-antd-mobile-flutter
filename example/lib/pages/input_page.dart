@@ -91,6 +91,18 @@ class _InputPageState extends State<InputPage> {
                 spacing: 10,
                 children: [
                   AntInput(
+                    variant: AntInputVariant.outlined,
+                    borderRadius: BorderRadius.circular(90),
+                    gapPadding: 20,
+                    placeholder: "请输入内容",
+                  ),
+                  AntInput(
+                    variant: AntInputVariant.filled,
+                    borderRadius: BorderRadius.circular(90),
+                    gapPadding: 20,
+                    placeholder: "请输入内容",
+                  ),
+                  AntInput(
                     style: StateStyle(
                       style: Style(
                         borderRadius: 0,

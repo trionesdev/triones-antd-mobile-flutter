@@ -16,6 +16,7 @@ class AntInput extends StatefulWidget {
     this.size = AntSize.middle,
     this.readOnly = false,
     this.placeholder,
+    this.placeholderTextStyle,
     this.type = AntInputType.text,
     this.prefix,
     this.suffix,
@@ -34,6 +35,7 @@ class AntInput extends StatefulWidget {
     this.borderRadius,
     this.border,
     this.focusedBorder,
+    this.gapPadding,
   });
 
   final StateStyle? style;
@@ -52,6 +54,7 @@ class AntInput extends StatefulWidget {
   /// @description 提示文本
   /// @default null
   final String? placeholder;
+  final TextStyle? placeholderTextStyle;
 
   /// @description 输入框类型
   /// @default text
@@ -113,6 +116,9 @@ class AntInput extends StatefulWidget {
   /// @description 选中时的边框
   /// @default null
   final BorderSide? focusedBorder;
+  /// @description 边框与内容之间的间距
+  /// @default null
+  final double? gapPadding;
 
   @override
   State<StatefulWidget> createState() => _InputState();
@@ -164,20 +170,26 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     BorderSide borderSide = widget.border ?? BorderSide(color: Colors.black);
     BorderRadius borderRadius =
         widget.borderRadius ?? BorderRadius.circular(theme.borderRadius);
+    double gapPadding = widget.gapPadding ?? 4;
     switch (widget.variant) {
       case AntInputVariant.outlined:
         return OutlineInputBorder(
           borderSide: borderSide,
           borderRadius: borderRadius,
+          gapPadding: gapPadding,
         );
       case AntInputVariant.borderless:
-        return OutlineInputBorder(borderSide: BorderSide.none);
+        return OutlineInputBorder(borderSide: BorderSide.none, gapPadding: gapPadding);
       case AntInputVariant.filled:
-        return OutlineInputBorder(borderSide: BorderSide.none);
+        return OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: borderRadius,
+          gapPadding: gapPadding,
+        );
       case AntInputVariant.underlined:
         return UnderlineInputBorder(borderSide: borderSide);
       default:
-        return OutlineInputBorder(borderSide: BorderSide.none);
+        return OutlineInputBorder(borderSide: BorderSide.none, gapPadding: gapPadding);
     }
   }
 
@@ -187,20 +199,26 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
         widget.borderRadius ?? BorderRadius.circular(theme.borderRadius);
     BorderSide focusedBorderSide =
         widget.focusedBorder ?? BorderSide(color: theme.colorPrimary);
+    double gapPadding = widget.gapPadding ?? 4;
     switch (widget.variant) {
       case AntInputVariant.outlined:
         return OutlineInputBorder(
           borderSide: focusedBorderSide,
           borderRadius: borderRadius,
+          gapPadding: gapPadding,
         );
       case AntInputVariant.borderless:
-        return OutlineInputBorder(borderSide: BorderSide.none);
+        return OutlineInputBorder(borderSide: BorderSide.none, gapPadding: gapPadding);
       case AntInputVariant.filled:
-        return OutlineInputBorder(borderSide: BorderSide.none);
+        return OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: borderRadius,
+          gapPadding: gapPadding,
+        );
       case AntInputVariant.underlined:
         return UnderlineInputBorder(borderSide: focusedBorderSide);
       default:
-        return OutlineInputBorder(borderSide: BorderSide.none);
+        return OutlineInputBorder(borderSide: BorderSide.none, gapPadding: gapPadding);
     }
   }
 
@@ -326,7 +344,8 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
             minWidth: height!,
           ),
           hintText: widget.placeholder,
-          hintStyle: TextStyle(color: Colors.grey),
+          hintStyle: TextStyle(color: Colors.grey).merge(
+              widget.placeholderTextStyle),
           // 提示文本
           border: border,
           focusColor: theme.colorPrimary,
