@@ -21,3 +21,6 @@
 
 ## 0.0.5-beta.3
 * 优化Input组件
+
+## 0.0.5-beta.4
+* 优化 AntVerificationCodeInput，Input 组件
