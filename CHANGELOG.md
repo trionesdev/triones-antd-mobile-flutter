@@ -16,3 +16,5 @@
 * 添加DatePicker,DatePickerCell组件
 ## 0.0.5-beta.1
 * 优化Cell组件
+## 0.0.5-beta.2
+* 优化Input组件，增加 variant 属性，支持 多种变体

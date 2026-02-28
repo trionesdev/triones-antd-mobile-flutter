@@ -13,7 +13,7 @@ export 'src/components/ant.dart';
 export 'src/components/app/app.dart';
 export 'src/components/avatar/avatar.dart';
 export 'src/components/button/button.dart';
-export 'src/components/input/input.dart';
+export 'src/components/input/index.dart';
 export 'src/components/text_area/text_area.dart';
 export 'src/components/form/index.dart';
 export 'src/components/scaffold/scaffold.dart';

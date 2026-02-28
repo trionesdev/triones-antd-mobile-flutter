@@ -7,6 +7,8 @@ enum AntInputType { text, password, number }
 
 enum AntInputAlign { left, right }
 
+enum AntInputVariant { outlined, borderless, filled, underlined }
+
 /// @component AntInput 输入框
 class AntInput extends StatefulWidget {
   const AntInput({
@@ -28,6 +30,10 @@ class AntInput extends StatefulWidget {
     this.onBlur,
     this.onFocus,
     this.align,
+    this.variant = AntInputVariant.borderless,
+    this.borderRadius,
+    this.border,
+    this.focusedBorder,
   });
 
   final StateStyle? style;
@@ -92,6 +98,22 @@ class AntInput extends StatefulWidget {
   /// @default start
   final AntInputAlign? align;
 
+  /// @description 输入框样式
+  /// @default borderless
+  final AntInputVariant? variant;
+
+  /// @description 边框圆角
+  /// @default null
+  final BorderRadius? borderRadius;
+
+  /// @description 边框
+  /// @default null
+  final BorderSide? border;
+
+  /// @description 选中时的边框
+  /// @default null
+  final BorderSide? focusedBorder;
+
   @override
   State<StatefulWidget> createState() => _InputState();
 }
@@ -137,6 +159,77 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     }
   }
 
+  InputBorder? get border {
+    AntThemeData theme = AntTheme.of(context);
+    BorderSide borderSide = widget.border ?? BorderSide(color: Colors.black);
+    BorderRadius borderRadius =
+        widget.borderRadius ?? BorderRadius.circular(theme.borderRadius);
+    switch (widget.variant) {
+      case AntInputVariant.outlined:
+        return OutlineInputBorder(
+          borderSide: borderSide,
+          borderRadius: borderRadius,
+        );
+      case AntInputVariant.borderless:
+        return OutlineInputBorder(borderSide: BorderSide.none);
+      case AntInputVariant.filled:
+        return OutlineInputBorder(borderSide: BorderSide.none);
+      case AntInputVariant.underlined:
+        return UnderlineInputBorder(borderSide: borderSide);
+      default:
+        return OutlineInputBorder(borderSide: BorderSide.none);
+    }
+  }
+
+  InputBorder? get focusedBorder {
+    AntThemeData theme = AntTheme.of(context);
+    BorderRadius borderRadius =
+        widget.borderRadius ?? BorderRadius.circular(theme.borderRadius);
+    BorderSide focusedBorderSide =
+        widget.focusedBorder ?? BorderSide(color: theme.colorPrimary);
+    switch (widget.variant) {
+      case AntInputVariant.outlined:
+        return OutlineInputBorder(
+          borderSide: focusedBorderSide,
+          borderRadius: borderRadius,
+        );
+      case AntInputVariant.borderless:
+        return OutlineInputBorder(borderSide: BorderSide.none);
+      case AntInputVariant.filled:
+        return OutlineInputBorder(borderSide: BorderSide.none);
+      case AntInputVariant.underlined:
+        return UnderlineInputBorder(borderSide: focusedBorderSide);
+      default:
+        return OutlineInputBorder(borderSide: BorderSide.none);
+    }
+  }
+
+  EdgeInsetsGeometry? contentPadding(StateStyle style) {
+    double minVertical = (height! <= 13) ? 0 : (height! - 13) / 2;
+
+    EdgeInsetsGeometry? padding =
+        widget.padding ?? style.resolve(materialStates)?.computedPadding;
+
+    if (padding != null) {
+      EdgeInsets edgeInsets = padding.resolve(Directionality.of(context));
+      double top = edgeInsets.top;
+      double bottom = edgeInsets.bottom;
+      if (edgeInsets.top < minVertical) {
+        top = minVertical;
+      }
+      if (edgeInsets.bottom < minVertical) {
+        bottom = minVertical;
+      }
+      return EdgeInsets.fromLTRB(
+        edgeInsets.left,
+        top,
+        edgeInsets.right,
+        bottom,
+      );
+    }
+    return EdgeInsets.symmetric(vertical: minVertical);
+  }
+
   @override
   void didUpdateWidget(AntInput oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -170,6 +263,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    AntThemeData theme = AntTheme.of(context);
     StateStyle style = _AntInputStyle();
     style = style.merge(widget.style);
 
@@ -202,8 +296,8 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     return Container(
       decoration:
           widget.decoration ?? style.resolve(materialStates)?.decoration,
-      height: height,
-      padding: widget.padding ?? style.resolve(materialStates)?.computedPadding,
+      // height: height,
+      // padding: widget.padding ?? style.resolve(materialStates)?.computedPadding,
       child: TextField(
         textAlign: textAlign,
         readOnly: widget.readOnly,
@@ -213,6 +307,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
         obscureText: widget.type == AntInputType.password && passwordVisible,
         cursorColor: Colors.black,
         cursorWidth: 1,
+        textAlignVertical: TextAlignVertical.center,
         style: TextStyle(fontSize: style.resolve(materialStates)?.fontSize),
         keyboardType:
             (() {
@@ -223,16 +318,22 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
               }
             })(),
         decoration: InputDecoration(
+          isDense: true,
           prefixIcon: widget.prefix,
           suffixIcon: suffixIcon,
+          suffixIconConstraints: BoxConstraints(
+            maxHeight: height!,
+            minWidth: height!,
+          ),
           hintText: widget.placeholder,
           hintStyle: TextStyle(color: Colors.grey),
           // 提示文本
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            gapPadding: 0,
-          ),
-          contentPadding: EdgeInsets.zero,
+          border: border,
+          focusColor: theme.colorPrimary,
+          focusedBorder: focusedBorder,
+          filled: widget.variant == AntInputVariant.filled,
+          fillColor: theme.colorFillTertiary,
+          contentPadding: contentPadding(style),
         ),
         inputFormatters: [
           if (widget.type == AntInputType.number)
