@@ -107,7 +107,7 @@ import{_ as s,c as a,o as t,ae as p}from"./chunks/framework.CJ_HZlMT.js";const q
                   <span class="token function">AntSelect</span><span class="token punctuation">(</span>
                     <span class="token literal-property property">options</span><span class="token operator">:</span> options<span class="token punctuation">,</span>
                     <span class="token literal-property property">placeholder</span><span class="token operator">:</span> <span class="token string">&quot;请选择&quot;</span><span class="token punctuation">,</span>
-                    <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">&quot;选择&quot;</span><span class="token punctuation">,</span>
+                    <span class="token literal-property property">titleText</span><span class="token operator">:</span> <span class="token string">&quot;选择&quot;</span><span class="token punctuation">,</span>
                     <span class="token literal-property property">arrow</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
                     <span class="token literal-property property">pickerMode</span><span class="token operator">:</span> AntSelectPickerMode<span class="token punctuation">.</span>page<span class="token punctuation">,</span>
                     <span class="token literal-property property">showSearch</span><span class="token operator">:</span>  <span class="token boolean">true</span><span class="token punctuation">,</span>

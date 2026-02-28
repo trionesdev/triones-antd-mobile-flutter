@@ -2745,6 +2745,7 @@ flutter_plugin_android_lifecycle
 image_picker_for_web
 image_picker_macos
 image_picker_platform_interface
+vector_graphics_compiler
 
 Copyright 2013 The Flutter Authors
 
@@ -5321,7 +5322,6 @@ image_picker_windows
 plugin_platform_interface
 vector_graphics
 vector_graphics_codec
-vector_graphics_compiler
 
 Copyright 2013 The Flutter Authors. All rights reserved.
 
