@@ -35,7 +35,7 @@ class AntInput extends StatefulWidget {
     this.borderRadius,
     this.border,
     this.focusedBorder,
-    this.gapPadding,
+    this.gapPadding = 4,
   });
 
   final StateStyle? style;
@@ -116,6 +116,7 @@ class AntInput extends StatefulWidget {
   /// @description 选中时的边框
   /// @default null
   final BorderSide? focusedBorder;
+
   /// @description 边框与内容之间的间距
   /// @default null
   final double? gapPadding;
@@ -179,7 +180,10 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
           gapPadding: gapPadding,
         );
       case AntInputVariant.borderless:
-        return OutlineInputBorder(borderSide: BorderSide.none, gapPadding: gapPadding);
+        return OutlineInputBorder(
+          borderSide: BorderSide.none,
+          gapPadding: gapPadding,
+        );
       case AntInputVariant.filled:
         return OutlineInputBorder(
           borderSide: BorderSide.none,
@@ -189,7 +193,10 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
       case AntInputVariant.underlined:
         return UnderlineInputBorder(borderSide: borderSide);
       default:
-        return OutlineInputBorder(borderSide: BorderSide.none, gapPadding: gapPadding);
+        return OutlineInputBorder(
+          borderSide: BorderSide.none,
+          gapPadding: gapPadding,
+        );
     }
   }
 
@@ -208,7 +215,10 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
           gapPadding: gapPadding,
         );
       case AntInputVariant.borderless:
-        return OutlineInputBorder(borderSide: BorderSide.none, gapPadding: gapPadding);
+        return OutlineInputBorder(
+          borderSide: BorderSide.none,
+          gapPadding: gapPadding,
+        );
       case AntInputVariant.filled:
         return OutlineInputBorder(
           borderSide: BorderSide.none,
@@ -218,7 +228,10 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
       case AntInputVariant.underlined:
         return UnderlineInputBorder(borderSide: focusedBorderSide);
       default:
-        return OutlineInputBorder(borderSide: BorderSide.none, gapPadding: gapPadding);
+        return OutlineInputBorder(
+          borderSide: BorderSide.none,
+          gapPadding: gapPadding,
+        );
     }
   }
 
@@ -246,6 +259,42 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
       );
     }
     return EdgeInsets.symmetric(vertical: minVertical);
+  }
+
+  Widget? get suffixIcon {
+    if (widget.type == AntInputType.password || widget.suffix != null) {
+      double rightPadding = widget.gapPadding ?? 4;
+      if (widget.variant == AntInputVariant.underlined) {
+        rightPadding = 0;
+      }
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (widget.type == AntInputType.password)
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  passwordVisible = !passwordVisible;
+                });
+              },
+              child: Icon(
+                passwordVisible
+                    ? AntIcons.eyeInvisibleOutline
+                    : AntIcons.eyeOutline,
+                size: iconSize(),
+              ),
+            ),
+          if (widget.suffix != null)
+            Container(
+              padding: EdgeInsets.only(right: rightPadding),
+              child: widget.suffix!,
+            ),
+        ],
+      );
+    }
+    return null;
   }
 
   @override
@@ -285,32 +334,6 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     StateStyle style = _AntInputStyle();
     style = style.merge(widget.style);
 
-    Widget? suffixIcon;
-    if (widget.type == AntInputType.password || widget.suffix != null) {
-      suffixIcon = Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (widget.type == AntInputType.password)
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  passwordVisible = !passwordVisible;
-                });
-              },
-              child: Icon(
-                passwordVisible
-                    ? AntIcons.eyeInvisibleOutline
-                    : AntIcons.eyeOutline,
-                size: iconSize(),
-              ),
-            ),
-          if (widget.suffix != null) widget.suffix!,
-        ],
-      );
-    }
-
     return Container(
       decoration:
           widget.decoration ?? style.resolve(materialStates)?.decoration,
@@ -344,8 +367,9 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
             minWidth: height!,
           ),
           hintText: widget.placeholder,
-          hintStyle: TextStyle(color: Colors.grey).merge(
-              widget.placeholderTextStyle),
+          hintStyle: TextStyle(
+            color: Colors.grey,
+          ).merge(widget.placeholderTextStyle),
           // 提示文本
           border: border,
           focusColor: theme.colorPrimary,

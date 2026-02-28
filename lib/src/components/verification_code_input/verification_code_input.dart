@@ -29,6 +29,12 @@ class AntVerificationCodeInput extends StatefulWidget {
     this.onFocus,
     this.onSend,
     this.onIntervalRender,
+    this.variant = AntInputVariant.borderless,
+    this.borderRadius,
+    this.border,
+    this.focusedBorder,
+    this.gapPadding,
+
   });
 
   /// @description 样式
@@ -98,6 +104,25 @@ class AntVerificationCodeInput extends StatefulWidget {
   /// @default null
   final OnIntervalRender? onIntervalRender;
 
+  /// @description 输入框样式
+  /// @default borderless
+  final AntInputVariant? variant;
+
+  /// @description 边框圆角
+  /// @default null
+  final BorderRadius? borderRadius;
+
+  /// @description 边框
+  /// @default null
+  final BorderSide? border;
+
+  /// @description 选中时的边框
+  /// @default null
+  final BorderSide? focusedBorder;
+  /// @description 边框与内容之间的间距
+  /// @default null
+  final double? gapPadding;
+
 
   @override
   State<StatefulWidget> createState() => _VerificationCodeInputState();
@@ -160,6 +185,11 @@ class _VerificationCodeInputState extends State<AntVerificationCodeInput> {
       decoration: widget.decoration,
       onBlur: widget.onBlur,
       onFocus: widget.onFocus,
+      variant: widget.variant,
+      borderRadius: widget.borderRadius,
+      border: widget.border,
+      focusedBorder: widget.focusedBorder,
+      gapPadding: widget.gapPadding,
       suffix: GestureDetector(
         onTap: () {
           if (_timer == null || !_timer!.isActive) {

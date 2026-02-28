@@ -19,7 +19,34 @@ class _VerificationCodeInputPageState extends State<VerificationCodeInputPage> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            DemoBlock(title: "基本使用", child: AntVerificationCodeInput()),
+            DemoBlock(
+              title: "基本使用",
+              child: AntVerificationCodeInput(placeholder: "请输入验证码"),
+            ),
+            DemoBlock(
+              title: "变体",
+              child: Column(
+                spacing: 10,
+                children: [
+                  AntVerificationCodeInput(
+                    variant: AntInputVariant.outlined,
+                    placeholder: "请输入验证码",
+                  ),
+                  AntVerificationCodeInput(
+                    variant: AntInputVariant.filled,
+                    placeholder: "请输入验证码",
+                  ),
+                  AntVerificationCodeInput(
+                    variant: AntInputVariant.borderless,
+                    placeholder: "请输入验证码",
+                  ),
+                  AntVerificationCodeInput(
+                    variant: AntInputVariant.underlined,
+                    placeholder: "请输入验证码",
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
