@@ -1,9 +1,6 @@
 enum AntSize { small, middle, large }
 
-enum AntLayout{
-  horizontal,
-  vertical
-}
+enum AntLayout { horizontal, vertical }
 
 class AntCol {
   const AntCol({this.flex, this.span});
@@ -13,6 +10,8 @@ class AntCol {
 }
 
 enum AntLabelAlign { left, right }
+
+enum AntAlign { left, center, right }
 
 class AntOption {
   String? label;
@@ -46,16 +45,16 @@ class NamePath {
   }
 
   @override
-  bool operator == (Object other) {
+  bool operator ==(Object other) {
     if (other is! NamePath) {
       return false;
     }
     return jsonValue == other.jsonValue;
   }
 
-  String get jsonValue => _namePaths.map((item) {
-    return item.toString();
-  }).join(".");
-
-
+  String get jsonValue => _namePaths
+      .map((item) {
+        return item.toString();
+      })
+      .join(".");
 }

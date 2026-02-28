@@ -21,9 +21,7 @@ class _UploadPageState extends State<UploadPage> {
               title: "点击上传",
               child: Column(
                 children: [
-                  AntUpload(
 
-                  )
                 ],
               ),
             )

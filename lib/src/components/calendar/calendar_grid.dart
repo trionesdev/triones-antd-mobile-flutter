@@ -6,7 +6,7 @@ class AntCalendarDateCell extends StatefulWidget {
   const AntCalendarDateCell({
     super.key,
     required this.date,
-    required this.mouth,
+    required this.month,
     this.value,
     this.range = false,
     this.onSelected,
@@ -15,7 +15,7 @@ class AntCalendarDateCell extends StatefulWidget {
   final List<DateTime?>? value;
   final bool range;
   final DateTime date;
-  final DateTime mouth;
+  final DateTime month;
   final ValueSetter<DateTime>? onSelected;
 
   @override
@@ -25,10 +25,10 @@ class AntCalendarDateCell extends StatefulWidget {
 class AntCalendarDateCellState extends State<AntCalendarDateCell> {
   bool overCurrentMonth() {
     return widget.date.isBefore(
-          DateTime(widget.mouth.year, widget.mouth.month, 1),
+          DateTime(widget.month.year, widget.month.month, 1),
         ) ||
         widget.date.isAfter(
-          DateTime(widget.mouth.year, widget.mouth.month + 1, 0),
+          DateTime(widget.month.year, widget.month.month + 1, 0),
         );
   }
 
@@ -272,7 +272,7 @@ class _AntCalendarGridState extends State<AntCalendarGrid> {
       itemCount: _dates.length,
       itemBuilder: (context, index) {
         return AntCalendarDateCell(
-          mouth: _month!,
+          month: _month!,
           date: _dates[index],
           value: _value,
           range: widget.range,

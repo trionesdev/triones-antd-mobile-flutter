@@ -9,6 +9,7 @@ typedef AntListItemBuilder<T> =
 class AntList<T> extends StatefulWidget {
   const AntList({
     super.key,
+    this.backgroundColor = Colors.white,
     this.decoration,
     this.padding,
     this.separator,
@@ -28,6 +29,7 @@ class AntList<T> extends StatefulWidget {
   });
 
   final StateStyle? style;
+  final Color? backgroundColor;
   final BoxDecoration? decoration;
   final EdgeInsetsGeometry? padding;
   final bool loading;
@@ -115,9 +117,10 @@ class _AntListState<T> extends State<AntList<T>> with MaterialStateMixin {
                       Container(
                         decoration: BoxDecoration(color: Colors.white),
                         child: Align(
-                        alignment: Alignment(0.0, -0.8),
-                        child: AntEmpty(),
-                      ),)),
+                          alignment: Alignment(0.0, -0.8),
+                          child: AntEmpty(),
+                        ),
+                      )),
         ),
         if (widget.loading)
           Positioned.fill(child: Align(child: AntSpinLoading())),
@@ -134,7 +137,7 @@ class _AntListStyle extends StateStyle {
 
   @override
   Style get style {
-    return Style(backgroundColor: Colors.transparent);
+    return Style(backgroundColor: list.backgroundColor);
   }
 }
 

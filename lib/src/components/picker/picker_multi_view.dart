@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 import 'package:trionesdev_antd_mobile/src/components/picker/picker_view_multi_columns.dart';
@@ -5,23 +6,30 @@ import 'package:trionesdev_antd_mobile/src/components/picker/picker_view_multi_c
 import '../theme/theme.dart';
 
 class AntPickerMultiView extends StatefulWidget {
-  const AntPickerMultiView(
-      {super.key,
-        this.columns,
-        this.onOk,
-        this.onCancel,
-        this.value,
-        this.title,
-        this.itemHeight = 34,
-        this.onColumnSelected});
+  const AntPickerMultiView({
+    super.key,
+    this.columns,
+    this.onOk,
+    this.onCancel,
+    this.value,
+    this.title,
+    this.titleText,
+    this.itemHeight = 34,
+    this.onSelectedItemChanged,
+    this.onColumnSelectedChanged,
+    this.onChange,
+  });
 
   final Widget? title;
+  final String? titleText;
   final List<List<AntPickerOption>>? columns;
-  final List<String>? value;
+  final List<String?>? value;
   final Function? onCancel;
   final ValueChanged<List<AntPickerOption?>>? onOk;
   final double? itemHeight;
-  final void Function(AntPickerOption? value, int index)? onColumnSelected;
+  final Function(AntPickerOption? value, int index)? onSelectedItemChanged;
+  final Function(AntPickerOption? value, int index)? onColumnSelectedChanged;
+  final Function(List<AntPickerOption?>? value)? onChange;
 
   @override
   State<StatefulWidget> createState() => _AntPickerMultiViewState();
@@ -30,29 +38,26 @@ class AntPickerMultiView extends StatefulWidget {
 class _AntPickerMultiViewState extends State<AntPickerMultiView>
     with MaterialStateMixin {
   // double viewHeight = 0;
+  bool _cascade = false;
   List<AntPickerOption?> _value = [];
 
   @override
   void initState() {
+    _cascade = (widget.columns != null && widget.columns!.length == 1);
     super.initState();
-    setState(() {
-      _value = List.filled(widget.columns?.length ?? 0, null);
-      if (widget.value != null) {
-        for (int i = 0; i < (widget.columns?.length ?? 0); i++) {
-          if (widget.value?[i] != null) {
-            _value[i] = widget.columns![i].firstWhere((option) {
-              return option.value == widget.value?[i];
-            });
-          } else {
-            _value[i] = widget.columns![i].first;
-          }
-        }
-      } else {
-        for (int i = 0; i < (widget.columns?.length ?? 0); i++) {
-          _value[i] = widget.columns![i].first;
-        }
-      }
-    });
+  }
+
+  @override
+  void didUpdateWidget(AntPickerMultiView oldWidget) {
+    if (listEquals(widget.columns, oldWidget.columns)) {
+      _cascade = (widget.columns != null && widget.columns!.length == 1);
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -64,51 +69,59 @@ class _AntPickerMultiViewState extends State<AntPickerMultiView>
         Container(
           height: 40,
           decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: Colors.grey, width: 0.5),
-            ),
+            border: Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
           ),
-          child:
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            GestureDetector(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  "取消",
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text("取消"),
                 ),
+                onTap: () {
+                  widget.onCancel?.call();
+                },
               ),
-              onTap: () {
-                widget.onCancel?.call();
-              },
-            ),
-            if (widget.title != null)
-              Expanded(
+              if (widget.title != null || widget.titleText != null)
+                Expanded(
                   child: Center(
-                    child: widget.title!,
-                  )),
-            GestureDetector(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text("确定", style: TextStyle(color: theme.colorPrimary)),
+                    child: widget.title ?? Text(widget.titleText ?? ""),
+                  ),
+                ),
+              GestureDetector(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    "确定",
+                    style: TextStyle(color: theme.colorPrimary),
+                  ),
+                ),
+                onTap: () {
+                  widget.onOk?.call(_value);
+                },
               ),
-              onTap: () {
-                widget.onOk?.call(_value);
-              },
-            ),
-          ]),
+            ],
+          ),
         ),
-        Expanded(child: LayoutBuilder(
+        Expanded(
+          child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-              // viewHeight = constraints.maxHeight;
               return AntPickerViewMultiColumns(
+                cascade: _cascade,
                 columns: widget.columns,
                 itemHeight: widget.itemHeight,
                 value: widget.value,
-                onColumnSelected: (value, index) {
-                  widget.onColumnSelected?.call(value, index);
+                onSelectedItemChanged: widget.onSelectedItemChanged,
+                onColumnSelectedChanged: widget.onColumnSelectedChanged,
+                onChange: (value) {
+                  widget.onChange?.call(value);
+                  _value = value;
                 },
               );
-            }))
+            },
+          ),
+        ),
       ],
     );
   }

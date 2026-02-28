@@ -20,10 +20,28 @@ class _CellPageState extends State<CellPage> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            DemoBlock(title: "基本使用", child: AntCell()),
+            DemoBlock(
+              title: "基本使用",
+              child: AntCell(labelText: "单元格", child: Text("内容")),
+            ),
+            DemoBlock(
+              title: "基本使用(内容居右)",
+              child: AntCell(
+                labelText: "单元格",
+                wrapperAlign: AntAlign.right,
+                child: Text("内容"),
+              ),
+            ),
             DemoBlock(
               title: "单元格组",
-              child: AntCellGroup(children: [AntCell(labelText: "单元格")]),
+              child: AntCellGroup(
+                arrow: true,
+                wrapperAlign: AntAlign.right,
+                children: [
+                  AntCell(labelText: "单元格1", child: Text("内容1")),
+                  AntCell(labelText: "单元格2", child: Text("内容2")),
+                ],
+              ),
             ),
           ],
         ),

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../popup/popup.dart';
@@ -17,19 +18,7 @@ class AntCalendarDatetimePicker {
     /// @default null
     ValueChanged<DateTime?>? onOk,
   }) {
-    AntPopup.show(
-      context: context,
-      child: SafeArea(
-        bottom: true,
-        child: AntCalendarDatetimePickerView(
-          value: value,
-          onOk: (date) {
-            Navigator.of(context).pop();
-            onOk?.call(date);
-          },
-        ),
-      ),
-    );
+    showAntCalendarDatetimePicker(context: context, value: value, onOk: onOk);
   }
 }
 
@@ -38,14 +27,20 @@ Future<T?> showAntCalendarDatetimePicker<T>({
   DateTime? value,
   ValueChanged<DateTime?>? onOk,
 }) {
-  return showAntPopup(
+  return showModalBottomSheet(
     context: context,
-    child: AntCalendarDatetimePickerView(
-      value: value,
-      onOk: (date) {
-        Navigator.of(context).pop();
-        onOk?.call(date);
-      },
-    ),
+    isScrollControlled: true,
+    builder: (BuildContext context) {
+      return SafeArea(
+        bottom: true,
+        child: AntCalendarDatetimePickerView(
+          value: value,
+          onOk: (date) {
+            Navigator.of(context).pop();
+            onOk?.call(date);
+          },
+        ),
+      );
+    },
   );
 }

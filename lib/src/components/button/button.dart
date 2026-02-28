@@ -1,6 +1,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:trionesdev_antd_mobile/src/components/constants.dart';
 import '../../../trionesdev_antd_mobile.dart';
 
 enum AntButtonType { primary, text, link }
@@ -21,6 +22,7 @@ class AntButton extends StatefulWidget {
     this.danger,
     this.disabled,
     this.text,
+    this.textStyle,
     this.icon,
     this.onPressed,
     this.variant,
@@ -53,6 +55,10 @@ class AntButton extends StatefulWidget {
   /// @description 按钮文字
   /// @default null
   final String? text;
+
+  /// @description 按钮文字样式
+  /// @default null
+  final TextStyle? textStyle;
 
   /// @description 按钮图标
   /// @default null
@@ -90,11 +96,11 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
   double? get height {
     switch (widget.size) {
       case AntSize.large:
-        return 48;
+        return sizeLg;
       case AntSize.middle:
-        return 32;
+        return sizeMd;
       case AntSize.small:
-        return 24;
+        return sizeSm;
     }
   }
 
@@ -105,11 +111,11 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
     if (widget.text == null && widget.child == null) {
       switch (widget.size) {
         case AntSize.large:
-          return 48;
+          return sizeLg;
         case AntSize.middle:
-          return 32;
+          return sizeMd;
         case AntSize.small:
-          return 24;
+          return sizeSm;
       }
     }
     return null;
@@ -164,7 +170,10 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
       if (widget.text != null) {
         return Text(
           widget.text ?? '',
-          style: TextStyle(color: style?.color, fontSize: style?.fontSize),
+          style: TextStyle(
+            color: style?.color,
+            fontSize: style?.fontSize,
+          ).merge(widget.textStyle),
         );
       }
       return Container();

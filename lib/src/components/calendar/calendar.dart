@@ -3,9 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:trionesdev_antd_mobile/src/components/calendar/calendar_grid_touchable.dart';
 
 class _CalendarHeader extends StatelessWidget {
-  const _CalendarHeader({required this.mouth, this.onMouthChange});
+  const _CalendarHeader({required this.month, this.onMouthChange});
 
-  final DateTime mouth;
+  final DateTime month;
   final ValueChanged<DateTime>? onMouthChange;
 
   @override
@@ -20,7 +20,7 @@ class _CalendarHeader extends StatelessWidget {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  onMouthChange?.call(DateTime(mouth.year - 1, mouth.month));
+                  onMouthChange?.call(DateTime(month.year - 1, month.month));
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 12),
@@ -30,18 +30,18 @@ class _CalendarHeader extends StatelessWidget {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  onMouthChange?.call(DateTime(mouth.year, mouth.month - 1));
+                  onMouthChange?.call(DateTime(month.year, month.month - 1));
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   child: Text("<"),
                 ),
               ),
-              Text(DateFormat("yyyy-MM").format(mouth)),
+              Text(DateFormat("yyyy-MM").format(month)),
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  onMouthChange?.call(DateTime(mouth.year, mouth.month + 1));
+                  onMouthChange?.call(DateTime(month.year, month.month + 1));
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 12),
@@ -51,7 +51,7 @@ class _CalendarHeader extends StatelessWidget {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  onMouthChange?.call(DateTime(mouth.year + 1, mouth.month));
+                  onMouthChange?.call(DateTime(month.year + 1, month.month));
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 12),
@@ -81,14 +81,14 @@ class AntCalendar extends StatefulWidget {
   const AntCalendar({
     super.key,
     this.value,
-    this.mouth,
+    this.month,
     this.onChange,
     this.onRendered,
   });
 
   /// @description 选中月份
   /// @default null
-  final DateTime? mouth;
+  final DateTime? month;
 
   /// @description 选中日期
   /// @default null
@@ -112,7 +112,7 @@ class AntCalendarState extends State<AntCalendar> {
 
   @override
   void initState() {
-    _currentMouth = widget.mouth ?? DateTime.now();
+    _currentMouth = widget.month ?? widget.value ?? DateTime.now();
     _value = widget.value;
     super.initState();
   }
@@ -122,7 +122,7 @@ class AntCalendarState extends State<AntCalendar> {
     return Column(
       children: [
         _CalendarHeader(
-          mouth: _currentMouth,
+          month: _currentMouth,
           onMouthChange: (newMouth) {
             setState(() {
               _currentMouth = newMouth;
@@ -130,7 +130,7 @@ class AntCalendarState extends State<AntCalendar> {
           },
         ),
         AntCalendarGridTouchable(
-          mouth: _currentMouth,
+          month: _currentMouth,
           value: (_value != null) ? [_value] : [],
           onMouthChange: (newMouth) {
             setState(() {
@@ -183,12 +183,12 @@ class AntCalendarRange extends StatefulWidget {
 }
 
 class AntCalendarRangeState extends State<AntCalendarRange> {
-  late DateTime _currentMouth;
+  late DateTime _currentMonth;
   late List<DateTime?>? _value;
 
   @override
   void initState() {
-    _currentMouth = widget.mouth ?? DateTime.now();
+    _currentMonth = widget.mouth ?? DateTime.now();
     _value = widget.value;
     super.initState();
   }
@@ -198,20 +198,20 @@ class AntCalendarRangeState extends State<AntCalendarRange> {
     return Column(
       children: [
         _CalendarHeader(
-          mouth: _currentMouth,
+          month: _currentMonth,
           onMouthChange: (newMouth) {
             setState(() {
-              _currentMouth = newMouth;
+              _currentMonth = newMouth;
             });
           },
         ),
         AntCalendarGridTouchable(
-          mouth: _currentMouth,
+          month: _currentMonth,
           range: true,
           value: _value,
           onMouthChange: (newMouth) {
             setState(() {
-              _currentMouth = newMouth;
+              _currentMonth = newMouth;
             });
           },
           onChange: (value) {

@@ -2,14 +2,17 @@ import 'package:flutter/widgets.dart';
 import 'package:trionesdev_antd_mobile/src/components/picker/types.dart';
 
 class AntPickerViewColumn extends StatefulWidget {
-  const AntPickerViewColumn(
-      {super.key,
-      this.options,
-      this.onSelected,
-      this.value,
-      this.itemHeight = 34});
+  const AntPickerViewColumn({
+    super.key,
+    this.options,
+    this.onSelectedItemChanged,
+    this.onSelected,
+    this.value,
+    this.itemHeight = 34,
+  });
 
   final List<AntPickerOption>? options;
+  final ValueChanged<AntPickerOption?>? onSelectedItemChanged;
   final ValueChanged<AntPickerOption?>? onSelected;
   final AntPickerOption? value;
   final double? itemHeight;
@@ -19,16 +22,19 @@ class AntPickerViewColumn extends StatefulWidget {
 }
 
 class _AntPickerViewColumnState extends State<AntPickerViewColumn> {
-  FixedExtentScrollController _controller =
-      FixedExtentScrollController(initialItem: 0);
+  FixedExtentScrollController _controller = FixedExtentScrollController(
+    initialItem: 0,
+  );
 
   @override
   void initState() {
     super.initState();
     int initItemIndex = 0;
     if (widget.value != null) {
-      initItemIndex = widget.options
-              ?.indexWhere((element) => element.value == widget.value?.value) ??
+      initItemIndex =
+          widget.options?.indexWhere(
+            (element) => element.value == widget.value?.value,
+          ) ??
           0;
     }
     _controller = FixedExtentScrollController(initialItem: initItemIndex);
@@ -39,9 +45,12 @@ class _AntPickerViewColumnState extends State<AntPickerViewColumn> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.value != widget.value) {
       if (widget.value != null) {
-        _controller.jumpToItem(widget.options?.indexWhere(
-                (element) => element.value == widget.value?.value) ??
-            0);
+        _controller.jumpToItem(
+          widget.options?.indexWhere(
+                (element) => element.value == widget.value?.value,
+              ) ??
+              0,
+        );
       } else {
         _controller.jumpToItem(0);
       }
@@ -56,7 +65,17 @@ class _AntPickerViewColumnState extends State<AntPickerViewColumn> {
 
   @override
   Widget build(BuildContext context) {
-    return ListWheelScrollView(
+    return NotificationListener(
+      onNotification: (notification) {
+        if (notification is ScrollEndNotification) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            widget.onSelected?.call(widget.options?[_controller.selectedItem]);
+          });
+          return true;
+        }
+        return false;
+      },
+      child: ListWheelScrollView(
         controller: _controller,
         itemExtent: widget.itemHeight!,
         // 条目固定高度
@@ -71,12 +90,13 @@ class _AntPickerViewColumnState extends State<AntPickerViewColumn> {
         magnification: 1.2,
         // 放大系数
         onSelectedItemChanged: (index) {
-          widget.onSelected?.call(widget.options?[index]);
+          widget.onSelectedItemChanged?.call(widget.options?[index]);
         },
-        children: (widget.options ?? []).map((option) {
-          return Center(
-            child: Text(option.label ?? ''),
-          );
-        }).toList());
+        children:
+            (widget.options ?? []).map((option) {
+              return Center(child: Text(option.label ?? ''));
+            }).toList(),
+      ),
+    );
   }
 }

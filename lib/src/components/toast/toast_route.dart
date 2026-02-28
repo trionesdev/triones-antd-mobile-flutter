@@ -11,9 +11,20 @@ class AntToastRoute<T> extends PopupRoute<T> {
     this.position = AntToastPosition.center,
   });
 
+  /// @description 样式
+  /// @default null
   final StateStyle? style;
+
+  /// @description 图标
+  /// @default null
   final Icon? icon;
+
+  /// @description 内容
+  /// @default null
   final Widget? content;
+
+  /// @description 位置
+  /// @default AntToastPosition.center
   final AntToastPosition? position;
 
   Widget? contentRender() {

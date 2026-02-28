@@ -17,21 +17,21 @@
 
 进度条的属性说明如下：
 
-| 属性            | 说明                                 | 类型                      | 默认值                      |
-|---------------|------------------------------------|-------------------------|--------------------------|
-| format        | 格式化进度百分比                           | Format?                 | (percent) => percent + % |
-| type          | 进度条类型                              | AntProgressType         | line                     |
-| percent       | 进度百分比                              | double                  | 0                        |
-| railColor     | 未完成的分段的颜色                          | Color?                  | null                     |
-| showInfo      | 是否显示进度数值或状态图标                      | bool                    | true                     |
-| status        | 进度条的状态                             | AntProgressStatus?      | null                     |
-| strokeColor   | 进度条的色彩                             | Color?                  | null                     |
-| size          | 进度条的大小                             | AntSize                 | middle                   |
-| height        | 进度条的高度，只对type="line"有效，将覆盖size效果   | double?                 | null                     |
-| diameter      | 进度条的直径，只对type="circle"有效，将覆盖size效果 | double?                 | null                     |
-| positionAlign | 进度百分比的位置对齐方式，只对type="line"有效       | AntPercentPositionAlign | end                      |
-| positionType  | 进度百分比的位置类型，只对type="line"有效         | AntPercentPositionType  | outer                    |
-| strokeWidth   | 进度条的宽度，只对type="circle"有效               | double                  | 6                        |
+| 属性                   | 说明                                 | 类型                      | 默认值                      |
+|----------------------|------------------------------------|-------------------------|--------------------------|
+| format               | 格式化进度百分比                           | Format?                 | (percent) => percent + % |
+| type                 | 进度条类型                              | AntProgressType         | line                     |
+| percent              | 进度百分比                              | double                  | 0                        |
+| railColor            | 未完成的分段的颜色                          | Color?                  | null                     |
+| showInfo             | 是否显示进度数值或状态图标                      | bool                    | true                     |
+| status               | 进度条的状态                             | AntProgressStatus?      | null                     |
+| strokeColor          | 进度条的色彩                             | Color?                  | null                     |
+| size                 | 进度条的大小                             | AntSize                 | middle                   |
+| height               | 进度条的高度，只对type="line"有效，将覆盖size效果   | double?                 | null                     |
+| diameter             | 进度条的直径，只对type="circle"有效，将覆盖size效果 | double?                 | null                     |
+| percentPositionAlign | 进度百分比的位置对齐方式，只对type="line"有效       | AntPercentPositionAlign | end                      |
+| percentPositionType  | 进度百分比的位置类型，只对type="line"有效         | AntPercentPositionType  | outer                    |
+| strokeWidth          | 进度条的宽度，只对type="circle"有效           | double                  | 6                        |
 
 ### AntProgressType 枚举值
 

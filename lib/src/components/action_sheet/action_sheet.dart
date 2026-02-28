@@ -4,14 +4,25 @@ import '../../../trionesdev_antd_mobile.dart';
 import '../theme/theme.dart';
 
 class AntActionSheetItemStruct {
-  AntActionSheetItemStruct({this.labelText, this.label, this.onPressed});
+  AntActionSheetItemStruct({
+    this.labelText,
+    this.label,
+    this.labelTextStyle,
+    this.onPressed,
+  });
 
   /// @description 标签文本
   /// @default null
   final String? labelText;
+
   /// @description 标签Widget
   /// @default null
   final Widget? label;
+
+  /// @description 标签样式
+  /// @default null
+  final TextStyle? labelTextStyle;
+
   /// @description 点击事件
   /// @default null
   final Function? onPressed;
@@ -23,21 +34,27 @@ class AntActionSheet {
     /// @description 上下文
     /// @default null
     required BuildContext context,
+
     /// @description 是否点击遮罩关闭
     /// @default false
     bool? closeOnMaskClick = false,
+
     /// @description 标题
     /// @default null
     Widget? title,
+
     /// @description 标题文本
     /// @default null
     String? titleText,
+
     /// @description 动作列表
     /// @default null
     List<AntActionSheetItemStruct>? actions,
+
     /// @description 是否显示取消按钮
     /// @default true
     bool? showCancelButton = true,
+
     /// @description 取消按钮
     /// @default null
     Widget? cancel,
@@ -71,27 +88,38 @@ class AntActionSheetView extends StatefulWidget {
     this.cancel,
     this.title,
     this.titleText,
+    this.titleTextStyle,
     this.decoration,
   });
 
   /// @description 动作列表
   /// @default null
   final List<AntActionSheetItemStruct>? actions;
+
   /// @description 是否显示取消按钮
   /// @default true
   final bool? showCancelButton;
+
   /// @description 标题文本
   /// @default null
   final String? titleText;
+
   /// @description 标题
   /// @default null
   final Widget? title;
+
+  /// @description 标题样式
+  /// @default null
+  final TextStyle? titleTextStyle;
+
   /// @description 取消按钮
   /// @default null
   final Widget? cancel;
+
   /// @description 动作样式
   /// @default null
   final StateStyle? itemStyle;
+
   /// @description 容器样式
   /// @default null
   final BoxDecoration? decoration;
@@ -119,6 +147,7 @@ class _AntActionSheetViewState extends State<AntActionSheetView>
           ActionItem(
             label: widget.actions!.elementAt(i).label,
             labelText: widget.actions!.elementAt(i).labelText,
+            labelTextStyle: widget.actions!.elementAt(i).labelTextStyle,
             onPressed: widget.actions!.elementAt(i).onPressed,
             style: widget.itemStyle,
             splitLine:
@@ -159,7 +188,12 @@ class _AntActionSheetViewState extends State<AntActionSheetView>
                       padding: EdgeInsets.all(12),
                       width: double.infinity,
                       alignment: Alignment.center,
-                      child: widget.title ?? Text(widget.titleText ?? ""),
+                      child:
+                          widget.title ??
+                          Text(
+                            widget.titleText ?? "",
+                            style: widget.titleTextStyle,
+                          ),
                     ),
                   ...items,
                 ],
@@ -203,10 +237,12 @@ class ActionItem extends StatefulWidget {
     this.style,
     this.splitLine,
     this.labelText,
+    this.labelTextStyle,
   });
 
   final Widget? label;
   final String? labelText;
+  final TextStyle? labelTextStyle;
   final Function? onPressed;
   final StateStyle? style;
   final bool? splitLine;
@@ -249,7 +285,9 @@ class _ActionItemState extends State<ActionItem> with MaterialStateMixin {
           alignment: Alignment.center,
           decoration: stateStyle.resolve(materialStates)?.decoration,
           padding: stateStyle.resolve(materialStates)?.computedPadding,
-          child: widget.label ?? Text(widget.labelText ?? ""),
+          child:
+              widget.label ??
+              Text(widget.labelText ?? "", style: widget.labelTextStyle),
         ),
       ),
     );

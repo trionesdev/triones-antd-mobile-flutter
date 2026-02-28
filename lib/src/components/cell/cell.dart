@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trionesdev_antd_mobile/src/components/constants.dart';
 import 'package:trionesdev_antd_mobile/src/components/types.dart';
 import 'package:trionesdev_antd_mobile/src/icons/icons.dart';
 
@@ -11,12 +12,15 @@ class AntCellGroup extends StatefulWidget {
     this.titleAlign,
     this.titleStyle,
     this.titleText,
+    this.labelTextStyle,
     this.labelCol,
     this.labelAlign,
+    this.wrapperAlign = AntAlign.left,
     this.children,
     this.showDivider = false,
     this.arrow = true,
-    this.valueTextStyle,
+    this.arrowIcon,
+    this.wrapperTextStyle,
   });
 
   /// @description 大小
@@ -43,9 +47,14 @@ class AntCellGroup extends StatefulWidget {
   /// @default null
   final AntCol? labelCol;
 
+  /// @description 标签样式
+  /// @default null
+  final TextStyle? labelTextStyle;
+
   /// @description 左侧标签对齐
   /// @default null
   final AntLabelAlign? labelAlign;
+  final AntAlign? wrapperAlign;
 
   /// @description 子组件
   /// @default null
@@ -58,7 +67,14 @@ class AntCellGroup extends StatefulWidget {
   /// @description 是否显示箭头
   /// @default true
   final bool arrow;
-  final TextStyle? valueTextStyle;
+
+  /// @description 箭头图标
+  /// @default null
+  final Widget? arrowIcon;
+
+  /// @description 值样式
+  /// @default null
+  final TextStyle? wrapperTextStyle;
 
   static AntCellGroupState? maybeOf(BuildContext context) {
     final scope = context.dependOnInheritedWidgetOfExactType<_CellGroupScope>();
@@ -111,13 +127,11 @@ class AntCellGroupState extends State<AntCellGroup> {
         groupState: this,
         generation: _generation,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             if (widget.title != null)
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 child:
                     widget.title ??
                     Text(
@@ -144,13 +158,17 @@ class AntCell extends StatefulWidget {
     this.placeholderText,
     this.placeholder,
     this.icon,
+    this.arrowIcon,
     this.label,
     this.labelText,
-    this.labelStyle,
+    this.labelTextStyle,
     this.labelCol,
     this.labelAlign,
-    this.value,
+    this.wrapperText,
+    this.wrapperTextStyle,
+    this.wrapperAlign,
     this.child,
+    this.extra,
     this.onTap,
   });
 
@@ -174,6 +192,10 @@ class AntCell extends StatefulWidget {
   /// @default null
   final Widget? icon;
 
+  /// @description 箭头图标
+  /// @default null
+  final Widget? arrowIcon;
+
   /// @description 标签
   /// @default null
   final Widget? label;
@@ -182,9 +204,9 @@ class AntCell extends StatefulWidget {
   /// @default null
   final String? labelText;
 
-  /// @description 样式
+  /// @description 标签样式，只对labelText生效
   /// @default null
-  final TextStyle? labelStyle;
+  final TextStyle? labelTextStyle;
 
   /// @description 左侧标签列
   /// @default null
@@ -194,12 +216,22 @@ class AntCell extends StatefulWidget {
   /// @default null
   final AntLabelAlign? labelAlign;
 
+  /// @description 内容对齐方式
+  /// @default null
+  final AntAlign? wrapperAlign;
+
+  /// @description 内容样式,只对wrapperText生效
+  /// @default null
+  final TextStyle? wrapperTextStyle;
+
   /// @description 值
   /// @default null
-  final dynamic? value;
+  final String? wrapperText;
 
   /// @description 子组件
   final Widget? child;
+
+  final Widget? extra;
 
   /// @description 点击回调
   /// @default null
@@ -217,11 +249,11 @@ class _AntCellState extends State<AntCell> {
     AntSize size = widget.size ?? groupState?.widget.size ?? AntSize.middle;
     switch (size) {
       case AntSize.large:
-        return 48;
+        return sizeLg;
       case AntSize.middle:
-        return 32;
+        return sizeMd;
       case AntSize.small:
-        return 24;
+        return sizeSm;
     }
   }
 
@@ -229,10 +261,11 @@ class _AntCellState extends State<AntCell> {
     if (widget.child != null) {
       return widget.child!;
     }
-    if (widget.value != null) {
+    if (widget.wrapperText != null) {
+      AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
       return Text(
-        widget.value?.toString() ?? '',
-        style: TextStyle(color: Colors.black),
+        widget.wrapperText ?? '',
+        style: (widget.wrapperTextStyle ?? groupState?.widget.wrapperTextStyle),
       );
     } else {
       if (widget.placeholder != null) {
@@ -257,12 +290,28 @@ class _AntCellState extends State<AntCell> {
     return Alignment.centerLeft;
   }
 
+  Alignment get contentAlign {
+    AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
+    if (widget.wrapperAlign == AntAlign.right) {
+      return Alignment.centerRight;
+    }
+    if (groupState != null &&
+        groupState.widget.wrapperAlign == AntAlign.right) {
+      return Alignment.centerRight;
+    }
+    return Alignment.centerLeft;
+  }
+
   Widget get label {
     AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
     AntCol? labelCol = widget.labelCol ?? groupState?.widget.labelCol;
 
     Widget labelWidget =
-        widget.label ?? Text(widget.labelText ?? '', style: widget.labelStyle);
+        widget.label ??
+        Text(
+          widget.labelText ?? '',
+          style: (widget.labelTextStyle ?? groupState?.widget.labelTextStyle),
+        );
 
     if (labelCol?.flex != null) {
       return Container(
@@ -284,6 +333,13 @@ class _AntCellState extends State<AntCell> {
     return Container(height: height, alignment: labelAlign, child: labelWidget);
   }
 
+  Widget get arrowIcon {
+    AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
+    return widget.arrowIcon ??
+        groupState?.widget.arrowIcon ??
+        Icon(AntIcons.rightOutline, size: 14, color: Colors.grey);
+  }
+
   @override
   void didChangeDependencies() {
     _cellGroupScope =
@@ -293,11 +349,13 @@ class _AntCellState extends State<AntCell> {
 
   @override
   Widget build(BuildContext context) {
+    AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: height),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (widget.icon != null) widget.icon!,
           if (widget.label != null || widget.labelText != null) label,
           Expanded(
             child: GestureDetector(
@@ -311,14 +369,13 @@ class _AntCellState extends State<AntCell> {
                 constraints: BoxConstraints(minHeight: height),
                 child: Row(
                   children: [
-                    Expanded(child: child),
-                    if (widget.arrow == true)
-                      widget.icon ??
-                          Icon(
-                            AntIcons.rightOutline,
-                            size: 16,
-                            color: Colors.grey,
-                          ),
+                    Expanded(
+                      child: Container(alignment: contentAlign, child: child),
+                    ),
+                    if (widget.extra != null) widget.extra!,
+                    if (widget.arrow == true ||
+                        groupState?.widget.arrow == true)
+                      arrowIcon,
                   ],
                 ),
               ),
