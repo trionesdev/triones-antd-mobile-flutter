@@ -3,8 +3,6 @@
 ## 基础组件
 
 - [Button 按钮](/components/button)
-- [Icon 图标](/components/icon)
-- [Typography 排版](/components/typography)
 
 ## 布局组件
 
@@ -45,7 +43,6 @@
 - [ImagesWall 图片墙](/components/images-wall)
 - [List 列表](/components/list)
 - [Progress 进度条](/components/progress)
-- [Skeleton 骨架屏](/components/skeleton)
 - [Tag 标签](/components/tag)
 - [Timeline 时间轴](/components/timeline)
 
