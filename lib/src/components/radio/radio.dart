@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
-enum AntRadioLayout{
-  horizontal,
-  vertical
-}
+enum AntRadioLayout { horizontal, vertical }
 
 class AntRadioBaseGroup extends StatefulWidget {
-  const AntRadioBaseGroup({super.key,
+  const AntRadioBaseGroup({
+    super.key,
     // this.children,
     this.defaultValue,
     this.disabled = false,
@@ -15,7 +13,8 @@ class AntRadioBaseGroup extends StatefulWidget {
     this.value,
     this.iconSize,
     this.child,
-    this.size});
+    this.size,
+  });
 
   final dynamic defaultValue;
   final dynamic value;
@@ -29,7 +28,7 @@ class AntRadioBaseGroup extends StatefulWidget {
 
   static AntRadioBaseGroupState? maybeOf(BuildContext context) {
     final _AntRadioGroupScope? scope =
-    context.dependOnInheritedWidgetOfExactType<_AntRadioGroupScope>();
+        context.dependOnInheritedWidgetOfExactType<_AntRadioGroupScope>();
     return scope?._radioGroupState;
   }
 
@@ -91,9 +90,7 @@ class AntRadioBaseGroupState extends State<AntRadioBaseGroup> {
 
   int get activeIndex {
     for (int i = 0; i < _radioStates.length; i++) {
-      if (_radioStates
-          .elementAtOrNull(i)
-          ?._checked == true) {
+      if (_radioStates.elementAtOrNull(i)?._checked == true) {
         return i;
       }
     }
@@ -122,20 +119,22 @@ class AntRadioBaseGroupState extends State<AntRadioBaseGroup> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-        child: _AntRadioGroupScope(
-          radioGroupState: this,
-          generation: _generation,
-          child: widget.child!,
-        ));
+      child: _AntRadioGroupScope(
+        radioGroupState: this,
+        generation: _generation,
+        child: widget.child!,
+      ),
+    );
   }
 }
 
 class _AntRadioGroupScope extends InheritedWidget {
-  const _AntRadioGroupScope({required super.child,
+  const _AntRadioGroupScope({
+    required super.child,
     required AntRadioBaseGroupState radioGroupState,
-    required int generation})
-      : _radioGroupState = radioGroupState,
-        _generation = generation;
+    required int generation,
+  }) : _radioGroupState = radioGroupState,
+       _generation = generation;
   final AntRadioBaseGroupState _radioGroupState;
   final int _generation;
 
@@ -148,12 +147,19 @@ class _AntRadioGroupScope extends InheritedWidget {
 }
 
 abstract class AntRadioBase extends StatefulWidget {
-  const AntRadioBase(
-      {super.key, this.value, this.label, this.labelText, this.disabled = false});
+  const AntRadioBase({
+    super.key,
+    this.value,
+    this.label,
+    this.labelText,
+    this.labelTextStyle,
+    this.disabled = false,
+  });
 
   final dynamic value;
   final Widget? label;
   final String? labelText;
+  final TextStyle? labelTextStyle;
   final bool disabled;
 }
 
@@ -161,10 +167,7 @@ mixin RadioStateMixin<T extends AntRadioBase> on State<T> {
   bool _checked = false;
 
   int get childrenCount {
-    return AntRadioBaseGroup
-        .maybeOf(context)
-        ?._radioStates
-        .length ?? 0;
+    return AntRadioBaseGroup.maybeOf(context)?._radioStates.length ?? 0;
   }
 
   int get index {
@@ -172,21 +175,16 @@ mixin RadioStateMixin<T extends AntRadioBase> on State<T> {
   }
 
   int get activeIndex {
-    return AntRadioBaseGroup
-        .maybeOf(context)
-        ?.activeIndex ?? -1;
+    return AntRadioBaseGroup.maybeOf(context)?.activeIndex ?? -1;
   }
 
   bool get _disabled {
     return widget.disabled ??
-        AntRadioBaseGroup
-            .maybeOf(context)
-            ?._disabled ??
+        AntRadioBaseGroup.maybeOf(context)?._disabled ??
         false;
   }
 
   void _groupValueChange(dynamic val) {
-
     if (val == widget.value) {
       if (!_checked) {
         setState(() {
@@ -210,9 +208,11 @@ mixin RadioStateMixin<T extends AntRadioBase> on State<T> {
 }
 
 class AntRadio extends AntRadioBase {
-  const AntRadio({super.key,
+  const AntRadio({
+    super.key,
     super.label,
     super.labelText,
+    super.labelTextStyle,
     this.block = false,
     this.checked,
     this.defaultChecked = false,
@@ -220,9 +220,9 @@ class AntRadio extends AntRadioBase {
     this.checkedIcon,
     this.uncheckedIcon,
     this.onChange,
-    this.onTap,
     super.value,
-    this.iconSize});
+    this.iconSize,
+  });
 
   final bool block;
   final bool? checked;
@@ -230,7 +230,6 @@ class AntRadio extends AntRadioBase {
   final Widget? checkedIcon;
   final Widget? uncheckedIcon;
   final Function(bool val)? onChange;
-  final Function? onTap;
   final double? iconSize;
 
   @override
@@ -240,32 +239,26 @@ class AntRadio extends AntRadioBase {
 class _AntRadioState extends State<AntRadio> with RadioStateMixin {
   double get _iconSize {
     return widget.iconSize ??
-        AntRadioBaseGroup
-            .maybeOf(context)
-            ?._iconSize ??
+        AntRadioBaseGroup.maybeOf(context)?._iconSize ??
         22;
   }
 
   Widget icon() {
     if (_checked) {
-      return widget.checkedIcon ??
-          _DefaultCheckedIcon(
-            iconSize: _iconSize,
-          );
+      return widget.checkedIcon ?? _DefaultCheckedIcon(iconSize: _iconSize);
     } else {
-      return widget.uncheckedIcon ??
-          _DefaultUnCheckedIcon(
-            iconSize: _iconSize,
-          );
+      return widget.uncheckedIcon ?? _DefaultUnCheckedIcon(iconSize: _iconSize);
     }
   }
 
   Widget label() {
+    Widget label =
+        widget.label ??
+        Text(widget.labelText ?? "", style: widget.labelTextStyle);
     if (widget.block) {
-      return Expanded(child: widget.label ?? Text(""));
-    } else {
-      return widget.label ?? Text(widget.labelText?? "");
+      return Expanded(child: label);
     }
+    return label;
   }
 
   void changeChecked(bool val) {
@@ -287,8 +280,9 @@ class _AntRadioState extends State<AntRadio> with RadioStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    AntRadioBaseGroupState? radioGroupState =
-    AntRadioBaseGroup.maybeOf(context);
+    AntRadioBaseGroupState? radioGroupState = AntRadioBaseGroup.maybeOf(
+      context,
+    );
     radioGroupState?._register(this);
     return GestureDetector(
       onTap: () {
@@ -301,16 +295,16 @@ class _AntRadioState extends State<AntRadio> with RadioStateMixin {
           }
           return;
         }
-        setState(() {
-          _checked = !_checked;
-        });
+        if (!_checked) {
+          widget.onChange?.call(true);
+          setState(() {
+            _checked = true;
+          });
+        }
       },
       child: Container(
         padding: EdgeInsets.all(4),
-        child: Row(
-          spacing: 4,
-          children: [icon(), label()],
-        ),
+        child: Row(spacing: 4, children: [icon(), label()]),
       ),
     );
   }
@@ -349,8 +343,9 @@ class _DefaultUnCheckedIcon extends StatelessWidget {
       width: iconSize,
       height: iconSize,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(90)),
-          border: Border.all(color: themeData.colorBorder, width: 1)),
+        borderRadius: BorderRadius.all(Radius.circular(90)),
+        border: Border.all(color: themeData.colorBorder, width: 1),
+      ),
     );
   }
 }
@@ -364,7 +359,7 @@ class AntRadioGroup extends StatelessWidget {
     this.disabled = false,
     this.onChange,
     this.layout = AntRadioLayout.vertical,
-    this.spacing=4,
+    this.spacing = 4,
   });
 
   final AntRadioLayout layout;
@@ -375,12 +370,9 @@ class AntRadioGroup extends StatelessWidget {
   final Function(dynamic val)? onChange;
   final double spacing;
 
-  Widget _children(){
+  Widget _children() {
     if (layout == AntRadioLayout.horizontal) {
-      return Row(
-        spacing: spacing,
-        children: children,
-      );
+      return Row(spacing: spacing, children: children);
     } else {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -417,15 +409,16 @@ class _AntRadioButtonState extends State<AntRadioButton>
       Text text = widget.label as Text;
       if (_checked) {
         return WidgetUtils.textMerge(
-            Text(
-              text.data ?? "",
-              style: TextStyle(color: themeData.colorPrimary),
-            ),
-            text);
+          Text(
+            text.data ?? "",
+            style: TextStyle(color: themeData.colorPrimary),
+          ),
+          text,
+        );
       }
       return text;
     }
-    if (widget.labelText != null ) {
+    if (widget.labelText != null) {
       return Text(
         widget.labelText ?? "",
         style: TextStyle(color: themeData.colorPrimary),
@@ -436,7 +429,8 @@ class _AntRadioButtonState extends State<AntRadioButton>
 
   double? get height {
     AntRadioBaseGroupState? radioGroupState = AntRadioBaseGroup.maybeOf(
-        context);
+      context,
+    );
     switch (radioGroupState?.widget.size) {
       case AntRadioSize.large:
         return 40;
@@ -456,35 +450,40 @@ class _AntRadioButtonState extends State<AntRadioButton>
 
   @override
   Widget build(BuildContext context) {
-    AntRadioBaseGroupState? radioGroupState =
-    AntRadioBaseGroup.maybeOf(context);
+    AntRadioBaseGroupState? radioGroupState = AntRadioBaseGroup.maybeOf(
+      context,
+    );
     radioGroupState?._register(this);
 
     StateStyle stateStyle = AntRadioButtonStyle(
-        context, _checked, index, activeIndex, childrenCount);
+      context,
+      _checked,
+      index,
+      activeIndex,
+      childrenCount,
+    );
 
     return GestureDetector(
       onTap: () {
         if (_disabled) {
           return;
         }
+
         if (radioGroupState != null) {
           if (!_checked) {
             radioGroupState._didValueChange(widget.value);
           }
           return;
         }
-        setState(() {
-          _checked = !_checked;
-        });
+        if (!_checked) {
+          setState(() {
+            _checked = true;
+          });
+        }
       },
       child: Container(
-        decoration: stateStyle
-            .resolve(materialStates)
-            ?.decoration,
-        padding: stateStyle
-            .resolve(materialStates)
-            ?.computedPadding,
+        decoration: stateStyle.resolve(materialStates)?.decoration,
+        padding: stateStyle.resolve(materialStates)?.computedPadding,
         height: height,
         alignment: Alignment.center,
         child: labelWidget,
@@ -494,9 +493,13 @@ class _AntRadioButtonState extends State<AntRadioButton>
 }
 
 class AntRadioButtonStyle extends StateStyle {
-  AntRadioButtonStyle(this.context, this.checked, this.index, this.activeIndex,
-      this.childrenCount)
-      : super();
+  AntRadioButtonStyle(
+    this.context,
+    this.checked,
+    this.index,
+    this.activeIndex,
+    this.childrenCount,
+  ) : super();
   final BuildContext context;
 
   final bool checked;
@@ -511,47 +514,61 @@ class AntRadioButtonStyle extends StateStyle {
     bool isLast = index == childrenCount - 1;
 
     Color borderColor =
-    checked ? themeData.colorPrimary : themeData.colorBorder;
+        checked ? themeData.colorPrimary : themeData.colorBorder;
     bool showLeft = isFirst || activeIndex == index;
-    bool showRight = (isFirst && activeIndex != index + 1) ||
+    bool showRight =
+        (isFirst && activeIndex != index + 1) ||
         isLast ||
         activeIndex == index ||
         (!isFirst && activeIndex != index + 1);
     return Style(
-        padding: StylePadding.symmetric(horizontal: 8),
-        borderTop:
-        StyleBorder(color: borderColor, width: 1, style: BorderStyle.solid),
-        borderBottom:
-        StyleBorder(color: borderColor, width: 1, style: BorderStyle.solid),
-        borderLeft: showLeft
-            ? StyleBorder(
-            color: borderColor, width: 1, style: BorderStyle.solid)
-            : null,
-        borderRight: showRight
-            ? StyleBorder(
-            color: borderColor, width: 1, style: BorderStyle.solid)
-            : null,
-        borderTopLeftRadius: isFirst ? themeData.borderRadius : null,
-        borderBottomLeftRadius: isFirst ? themeData.borderRadius : null,
-        borderTopRightRadius: isLast ? themeData.borderRadius : null,
-        borderBottomRightRadius: isLast ? themeData.borderRadius : null);
+      padding: StylePadding.symmetric(horizontal: 8),
+      borderTop: StyleBorder(
+        color: borderColor,
+        width: 1,
+        style: BorderStyle.solid,
+      ),
+      borderBottom: StyleBorder(
+        color: borderColor,
+        width: 1,
+        style: BorderStyle.solid,
+      ),
+      borderLeft:
+          showLeft
+              ? StyleBorder(
+                color: borderColor,
+                width: 1,
+                style: BorderStyle.solid,
+              )
+              : null,
+      borderRight:
+          showRight
+              ? StyleBorder(
+                color: borderColor,
+                width: 1,
+                style: BorderStyle.solid,
+              )
+              : null,
+      borderTopLeftRadius: isFirst ? themeData.borderRadius : null,
+      borderBottomLeftRadius: isFirst ? themeData.borderRadius : null,
+      borderTopRightRadius: isLast ? themeData.borderRadius : null,
+      borderBottomRightRadius: isLast ? themeData.borderRadius : null,
+    );
   }
 }
 
-enum AntRadioSize {
-  small,
-  middle,
-  large,
-}
+enum AntRadioSize { small, middle, large }
 
 class AntRadioButtonGroup extends StatelessWidget {
-  const AntRadioButtonGroup({super.key,
+  const AntRadioButtonGroup({
+    super.key,
     required this.children,
     this.defaultValue,
     this.value,
     this.disabled = false,
     this.onChange,
-    this.size = AntRadioSize.middle});
+    this.size = AntRadioSize.middle,
+  });
 
   final List<AntRadioButton> children;
   final dynamic defaultValue;
@@ -569,9 +586,10 @@ class AntRadioButtonGroup extends StatelessWidget {
       onChange: onChange,
       size: size,
       child: Row(
-        children: children.map((item) {
-          return Expanded(child: item);
-        }).toList(),
+        children:
+            children.map((item) {
+              return Expanded(child: item);
+            }).toList(),
       ),
     );
   }

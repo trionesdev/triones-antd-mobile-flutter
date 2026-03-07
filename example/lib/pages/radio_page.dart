@@ -24,9 +24,14 @@ class _RadioPageState extends State<RadioPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AntRadio(),
+                    AntRadio(onChange: (val) {
+                      print(val);
+                    },),
                     AntRadio(
                       label: Text("有描述的单选框"),
+                      onChange: (val) {
+                        print(val);
+                      },
                     ),
                   ],
                 ),
