@@ -32,6 +32,7 @@ import 'package:antd_flutter_example/pages/radio_page.dart';
 import 'package:antd_flutter_example/pages/rate_page.dart';
 import 'package:antd_flutter_example/pages/scaffold_page.dart';
 import 'package:antd_flutter_example/pages/search_bar_page.dart';
+import 'package:antd_flutter_example/pages/segmented_page.dart';
 import 'package:antd_flutter_example/pages/select_page.dart';
 import 'package:antd_flutter_example/pages/space_page.dart';
 import 'package:antd_flutter_example/pages/switch_page.dart';
@@ -91,6 +92,7 @@ class MyApp extends StatelessWidget {
         '/list': (context) => ListPage(),
         '/space': (context) => SpacePage(),
         '/search-bar': (context) => SearchBarPage(),
+        '/segmented': (context) => SegmentedPage(),
         '/select': (context) => SelectPage(),
         '/tag': (context) => TagPage(),
         '/popup': (context) => PopupPage(),
@@ -356,6 +358,12 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text('Switch 开关'),
               onTap: () {
                 Navigator.pushNamed(context, '/switch');
+              },
+            ),
+            material.ListTile(
+              title: Text('Segmented 分段控制器'),
+              onTap: () {
+                Navigator.pushNamed(context, '/segmented');
               },
             ),
             material.ListTile(

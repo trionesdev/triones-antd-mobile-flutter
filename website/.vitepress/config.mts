@@ -72,6 +72,7 @@ export default defineConfig({
                         {text: 'CalendarDatetimePicker  日历时间选择器', link: '/components/calendar-datetime-picker'},
                         {text: 'Radio  单选框', link: '/components/radio'},
                         {text: 'Rate  评分', link: '/components/rate'},
+                        {text: 'Segmented  分段控制器', link: '/components/segmented'},
                         {text: 'Switch  开关', link: '/components/switch'},
                         {text: 'Select  列表选择器', link: '/components/select'},
                         {text: 'InputNumber  数字输入框', link: '/components/input-number'},

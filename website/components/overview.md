@@ -23,6 +23,7 @@
 - [InputNumber 数字输入框](/components/input-number)
 - [Checkbox 复选框](/components/checkbox)
 - [Radio 单选框](/components/radio)
+- [Segmented 分段控制器](/components/segmented)
 - [Switch 开关](/components/switch)
 - [Rate 评分](/components/rate)
 - [Select 选择器](/components/select)
