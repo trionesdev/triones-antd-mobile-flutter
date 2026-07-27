@@ -9,6 +9,24 @@ enum AntInputAlign { left, right }
 
 enum AntInputVariant { outlined, borderless, filled, underlined }
 
+/// 允许数字，且至多一个小数点
+class _DecimalTextInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final String text = newValue.text;
+    if (text.isEmpty) {
+      return newValue;
+    }
+    if (!RegExp(r'^\d*\.?\d*$').hasMatch(text)) {
+      return oldValue;
+    }
+    return newValue;
+  }
+}
+
 /// @component AntInput 输入框
 class AntInput extends StatefulWidget {
   const AntInput({
@@ -91,11 +109,11 @@ class AntInput extends StatefulWidget {
 
   /// @description 失去焦点回调
   /// @default null
-  final ValueGetter<void>? onBlur;
+  final VoidCallback? onBlur;
 
   /// @description 获得焦点回调
   /// @default null
-  final ValueGetter<void>? onFocus;
+  final VoidCallback? onFocus;
 
   /// @description 对齐方式
   /// @default start
@@ -128,13 +146,14 @@ class AntInput extends StatefulWidget {
 class _InputState extends State<AntInput> with MaterialStateMixin {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  bool passwordVisible = true;
 
-  double? get height {
+  /// true = 密文（obscure）
+  bool _obscureText = true;
+
+  double get _height {
     if (widget.height != null) {
-      return widget.height;
+      return widget.height!;
     }
-
     switch (widget.size) {
       case AntSize.large:
         return sizeLg;
@@ -145,9 +164,9 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     }
   }
 
-  double? iconSize() {
+  double? get _iconSize {
     if (widget.height != null) {
-      double size = widget.height! * 7 / 10;
+      final double size = widget.height! * 7 / 10;
       if (size <= 40) {
         return size;
       }
@@ -155,33 +174,27 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     return null;
   }
 
-  TextAlign get textAlign {
+  TextAlign get _textAlign {
     switch (widget.align) {
-      case AntInputAlign.left:
-        return TextAlign.start;
       case AntInputAlign.right:
         return TextAlign.end;
-      default:
+      case AntInputAlign.left:
+      case null:
         return TextAlign.start;
     }
   }
 
-  InputBorder? get border {
-    AntThemeData theme = AntTheme.of(context);
-    BorderSide borderSide = widget.border ?? BorderSide(color: Colors.black);
-    BorderRadius borderRadius =
+  InputBorder _border(AntThemeData theme) {
+    final BorderSide borderSide =
+        widget.border ?? BorderSide(color: theme.colorBorder);
+    final BorderRadius borderRadius =
         widget.borderRadius ?? BorderRadius.circular(theme.borderRadius);
-    double gapPadding = widget.gapPadding ?? 4;
+    final double gapPadding = widget.gapPadding ?? 4;
     switch (widget.variant) {
       case AntInputVariant.outlined:
         return OutlineInputBorder(
           borderSide: borderSide,
           borderRadius: borderRadius,
-          gapPadding: gapPadding,
-        );
-      case AntInputVariant.borderless:
-        return OutlineInputBorder(
-          borderSide: BorderSide.none,
           gapPadding: gapPadding,
         );
       case AntInputVariant.filled:
@@ -192,7 +205,8 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
         );
       case AntInputVariant.underlined:
         return UnderlineInputBorder(borderSide: borderSide);
-      default:
+      case AntInputVariant.borderless:
+      case null:
         return OutlineInputBorder(
           borderSide: BorderSide.none,
           gapPadding: gapPadding,
@@ -200,23 +214,17 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     }
   }
 
-  InputBorder? get focusedBorder {
-    AntThemeData theme = AntTheme.of(context);
-    BorderRadius borderRadius =
+  InputBorder _focusedBorder(AntThemeData theme) {
+    final BorderRadius borderRadius =
         widget.borderRadius ?? BorderRadius.circular(theme.borderRadius);
-    BorderSide focusedBorderSide =
+    final BorderSide focusedBorderSide =
         widget.focusedBorder ?? BorderSide(color: theme.colorPrimary);
-    double gapPadding = widget.gapPadding ?? 4;
+    final double gapPadding = widget.gapPadding ?? 4;
     switch (widget.variant) {
       case AntInputVariant.outlined:
         return OutlineInputBorder(
           borderSide: focusedBorderSide,
           borderRadius: borderRadius,
-          gapPadding: gapPadding,
-        );
-      case AntInputVariant.borderless:
-        return OutlineInputBorder(
-          borderSide: BorderSide.none,
           gapPadding: gapPadding,
         );
       case AntInputVariant.filled:
@@ -227,7 +235,8 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
         );
       case AntInputVariant.underlined:
         return UnderlineInputBorder(borderSide: focusedBorderSide);
-      default:
+      case AntInputVariant.borderless:
+      case null:
         return OutlineInputBorder(
           borderSide: BorderSide.none,
           gapPadding: gapPadding,
@@ -235,162 +244,180 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     }
   }
 
-  EdgeInsetsGeometry? contentPadding(StateStyle style) {
-    double minVertical = (height! <= 13) ? 0 : (height! - 13) / 2;
-
-    EdgeInsetsGeometry? padding =
-        widget.padding ?? style.resolve(materialStates)?.computedPadding;
+  EdgeInsetsGeometry _contentPadding(Style? resolved) {
+    final double minVertical = (_height <= 13) ? 0 : (_height - 13) / 2;
+    final EdgeInsetsGeometry? padding =
+        widget.padding ?? resolved?.computedPadding;
 
     if (padding != null) {
-      EdgeInsets edgeInsets = padding.resolve(Directionality.of(context));
-      double top = edgeInsets.top;
-      double bottom = edgeInsets.bottom;
-      if (edgeInsets.top < minVertical) {
-        top = minVertical;
-      }
-      if (edgeInsets.bottom < minVertical) {
-        bottom = minVertical;
-      }
+      final EdgeInsets edgeInsets = padding.resolve(Directionality.of(context));
       return EdgeInsets.fromLTRB(
         edgeInsets.left,
-        top,
+        edgeInsets.top < minVertical ? minVertical : edgeInsets.top,
         edgeInsets.right,
-        bottom,
+        edgeInsets.bottom < minVertical ? minVertical : edgeInsets.bottom,
       );
     }
     return EdgeInsets.symmetric(vertical: minVertical);
   }
 
-  Widget? get suffixIcon {
-    if (widget.type == AntInputType.password || widget.suffix != null) {
-      double rightPadding = widget.gapPadding ?? 4;
-      if (widget.variant == AntInputVariant.underlined) {
-        rightPadding = 0;
-      }
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (widget.type == AntInputType.password)
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  passwordVisible = !passwordVisible;
-                });
-              },
-              child: Icon(
-                passwordVisible
-                    ? AntIcons.eyeInvisibleOutline
-                    : AntIcons.eyeOutline,
-                size: iconSize(),
-              ),
-            ),
-          if (widget.suffix != null)
-            Container(
-              padding: EdgeInsets.only(right: rightPadding),
-              child: widget.suffix!,
-            ),
-        ],
-      );
+  Widget? _suffixIcon() {
+    if (widget.type != AntInputType.password && widget.suffix == null) {
+      return null;
     }
-    return null;
+    double rightPadding = widget.gapPadding ?? 4;
+    if (widget.variant == AntInputVariant.underlined) {
+      rightPadding = 0;
+    }
+    final bool interactionDisabled = widget.disabled || widget.readOnly;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        if (widget.type == AntInputType.password)
+          GestureDetector(
+            onTap: interactionDisabled
+                ? null
+                : () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+            child: Icon(
+              _obscureText
+                  ? AntIcons.eyeInvisibleOutline
+                  : AntIcons.eyeOutline,
+              size: _iconSize,
+            ),
+          ),
+        if (widget.suffix != null)
+          Padding(
+            padding: EdgeInsets.only(right: rightPadding),
+            child: widget.suffix!,
+          ),
+      ],
+    );
   }
 
-  @override
-  void didUpdateWidget(AntInput oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.value != oldWidget.value) {
-      if (widget.value != _controller.text) {
-        _controller.text = widget.value ?? '';
-      }
+  void _syncControllerText(String text) {
+    if (_controller.text == text) {
+      return;
     }
+    final TextSelection oldSelection = _controller.selection;
+    final int maxOffset = text.length;
+    final int base = oldSelection.baseOffset.clamp(0, maxOffset);
+    final int extent = oldSelection.extentOffset.clamp(0, maxOffset);
+    _controller.value = TextEditingValue(
+      text: text,
+      selection: TextSelection(baseOffset: base, extentOffset: extent),
+    );
+  }
+
+  void _handleFocusChange() {
+    setMaterialState(WidgetState.focused, _focusNode.hasFocus);
+    if (_focusNode.hasFocus) {
+      widget.onFocus?.call();
+    } else {
+      widget.onBlur?.call();
+    }
+  }
+
+  void _syncDisabledState() {
+    setMaterialState(WidgetState.disabled, widget.disabled);
   }
 
   @override
   void initState() {
     super.initState();
-    _controller.text = widget.value ?? widget.defaultValue ?? "";
-    _focusNode.addListener(() {
-      setMaterialState(WidgetState.focused, _focusNode.hasFocus);
-      if (_focusNode.hasFocus) {
-        widget.onFocus?.call();
-      } else {
-        widget.onBlur?.call();
-      }
-    });
+    _controller.text = widget.value ?? widget.defaultValue ?? '';
+    _focusNode.addListener(_handleFocusChange);
+    _syncDisabledState();
+  }
+
+  @override
+  void didUpdateWidget(AntInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.disabled != oldWidget.disabled) {
+      _syncDisabledState();
+    }
+    if (widget.value != oldWidget.value &&
+        widget.value != _controller.text) {
+      _syncControllerText(widget.value ?? '');
+    }
   }
 
   @override
   void dispose() {
-    _focusNode.removeListener(() {});
+    _focusNode.removeListener(_handleFocusChange);
     _focusNode.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    AntThemeData theme = AntTheme.of(context);
-    StateStyle style = _AntInputStyle();
-    style = style.merge(widget.style);
+    final AntThemeData theme = AntTheme.of(context);
+    final StateStyle stateStyle = const _AntInputStyle().merge(widget.style);
+    final Style? resolved = stateStyle.resolve(materialStates);
 
-    return Container(
-      decoration:
-          widget.decoration ?? style.resolve(materialStates)?.decoration,
-      // height: height,
-      // padding: widget.padding ?? style.resolve(materialStates)?.computedPadding,
-      child: TextField(
-        textAlign: textAlign,
-        readOnly: widget.readOnly,
-        enabled: !widget.disabled,
-        controller: _controller,
-        focusNode: _focusNode,
-        obscureText: widget.type == AntInputType.password && passwordVisible,
-        cursorColor: Colors.black,
-        cursorWidth: 1,
-        textAlignVertical: TextAlignVertical.center,
-        style: TextStyle(fontSize: style.resolve(materialStates)?.fontSize),
-        keyboardType:
-            (() {
-              if (widget.type == AntInputType.number) {
-                return TextInputType.number;
-              } else {
-                return TextInputType.text;
-              }
-            })(),
-        decoration: InputDecoration(
-          isDense: true,
-          prefixIcon: widget.prefix,
-          suffixIcon: suffixIcon,
-          suffixIconConstraints: BoxConstraints(
-            maxHeight: height!,
-            minWidth: height!,
-          ),
-          hintText: widget.placeholder,
-          hintStyle: TextStyle(
-            color: Colors.grey,
-          ).merge(widget.placeholderTextStyle),
-          // 提示文本
-          border: border,
-          focusColor: theme.colorPrimary,
-          focusedBorder: focusedBorder,
-          filled: widget.variant == AntInputVariant.filled,
-          fillColor: theme.colorFillTertiary,
-          contentPadding: contentPadding(style),
+    Widget field = TextField(
+      textAlign: _textAlign,
+      readOnly: widget.readOnly,
+      enabled: !widget.disabled,
+      controller: _controller,
+      focusNode: _focusNode,
+      obscureText: widget.type == AntInputType.password && _obscureText,
+      cursorColor: theme.colorPrimary,
+      cursorWidth: 1,
+      textAlignVertical: TextAlignVertical.center,
+      style: TextStyle(
+        fontSize: resolved?.fontSize,
+        color: theme.colorText,
+      ),
+      keyboardType: widget.type == AntInputType.number
+          ? const TextInputType.numberWithOptions(decimal: true)
+          : TextInputType.text,
+      decoration: InputDecoration(
+        isDense: true,
+        prefixIcon: widget.prefix,
+        suffixIcon: _suffixIcon(),
+        suffixIconConstraints: BoxConstraints(
+          maxHeight: _height,
+          minWidth: _height,
         ),
-        inputFormatters: [
-          if (widget.type == AntInputType.number)
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
-        ],
-        onChanged: (value) {
-          if (widget.onChange != null) {
-            widget.onChange!(value);
-          }
-        },
-        onTapOutside: (event) {
-          _focusNode.unfocus();
-        },
-        onEditingComplete: () {},
+        hintText: widget.placeholder,
+        hintStyle: TextStyle(
+          color: theme.colorTextPlaceholder,
+        ).merge(widget.placeholderTextStyle),
+        border: _border(theme),
+        enabledBorder: _border(theme),
+        focusColor: theme.colorPrimary,
+        focusedBorder: _focusedBorder(theme),
+        disabledBorder: _border(theme),
+        filled: widget.variant == AntInputVariant.filled,
+        fillColor: theme.colorFillTertiary,
+        contentPadding: _contentPadding(resolved),
+      ),
+      inputFormatters: [
+        if (widget.type == AntInputType.number) _DecimalTextInputFormatter(),
+      ],
+      onChanged: widget.onChange,
+      onTapOutside: (_) {
+        _focusNode.unfocus();
+      },
+    );
+
+    if (widget.disabled) {
+      field = Opacity(opacity: 0.4, child: field);
+    }
+
+    return SizedBox(
+      height: _height,
+      child: Container(
+        decoration: widget.decoration ?? resolved?.decoration,
+        alignment: Alignment.center,
+        child: field,
       ),
     );
   }
