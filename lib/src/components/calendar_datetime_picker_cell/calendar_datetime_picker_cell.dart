@@ -12,7 +12,7 @@ class AntCalendarDateTimePickerCell extends StatefulWidget {
     this.labelText,
     this.labelCol,
     this.labelAlign,
-    this.wrapperAlign = AntAlign.right,
+    this.contentAlign = AntAlign.right,
     this.title,
     this.titleText,
     this.value,
@@ -45,7 +45,7 @@ class AntCalendarDateTimePickerCell extends StatefulWidget {
 
   /// @description 内容对齐方式
   /// @default AntAlign.right
-  final AntAlign? wrapperAlign;
+  final AntAlign? contentAlign;
 
   /// @description 模态框标题
   /// @default null
@@ -102,7 +102,7 @@ class _AntCalendarDateTimePickerCellState
       placeholderText: widget.placeholderText,
       label: widget.label,
       labelText: widget.labelText,
-      wrapperAlign: widget.wrapperAlign,
+      contentAlign: widget.contentAlign,
       child: content,
       onTap: () {
         showAntCalendarDatetimePicker(

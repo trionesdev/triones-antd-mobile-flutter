@@ -28,7 +28,7 @@ class _CellPageState extends State<CellPage> {
               title: "基本使用(内容居右)",
               child: AntCell(
                 labelText: "单元格",
-                wrapperAlign: AntAlign.right,
+                contentAlign: AntAlign.right,
                 child: Text("内容"),
               ),
             ),
@@ -36,7 +36,7 @@ class _CellPageState extends State<CellPage> {
               title: "单元格组",
               child: AntCellGroup(
                 arrow: true,
-                wrapperAlign: AntAlign.right,
+                contentAlign: AntAlign.right,
                 children: [
                   AntCell(labelText: "单元格1", child: Text("内容1")),
                   AntCell(labelText: "单元格2", child: Text("内容2")),

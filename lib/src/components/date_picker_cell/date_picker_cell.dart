@@ -12,7 +12,7 @@ class AntDatePickerCell extends StatefulWidget {
     this.labelText,
     this.labelCol,
     this.labelAlign = AntLabelAlign.left,
-    this.wrapperAlign = AntAlign.right,
+    this.contentAlign = AntAlign.right,
     this.format,
     this.title,
     this.titleText,
@@ -51,7 +51,7 @@ class AntDatePickerCell extends StatefulWidget {
 
   /// @description 内容对齐方式
   /// @default AntAlign.right
-  final AntAlign? wrapperAlign;
+  final AntAlign? contentAlign;
 
   /// @description 模态框标题
   /// @default null
@@ -144,7 +144,7 @@ class _AntDatePickerCellState extends State<AntDatePickerCell> {
       placeholderText: widget.placeholderText,
       label: widget.label,
       labelText: widget.labelText,
-      wrapperAlign: widget.wrapperAlign,
+      contentAlign: widget.contentAlign,
       child: content,
       onTap: () {
         showAntDatePicker(

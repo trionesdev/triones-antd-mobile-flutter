@@ -15,12 +15,12 @@ class AntCellGroup extends StatefulWidget {
     this.labelTextStyle,
     this.labelCol,
     this.labelAlign,
-    this.wrapperAlign = AntAlign.left,
+    this.contentAlign = AntAlign.left,
     this.children,
     this.showDivider = false,
     this.arrow = true,
     this.arrowIcon,
-    this.wrapperTextStyle,
+    this.contentTextStyle,
   });
 
   /// @description 大小
@@ -54,7 +54,7 @@ class AntCellGroup extends StatefulWidget {
   /// @description 左侧标签对齐
   /// @default null
   final AntLabelAlign? labelAlign;
-  final AntAlign? wrapperAlign;
+  final AntAlign? contentAlign;
 
   /// @description 子组件
   /// @default null
@@ -74,7 +74,7 @@ class AntCellGroup extends StatefulWidget {
 
   /// @description 值样式
   /// @default null
-  final TextStyle? wrapperTextStyle;
+  final TextStyle? contentTextStyle;
 
   static AntCellGroupState? maybeOf(BuildContext context) {
     final scope = context.dependOnInheritedWidgetOfExactType<_CellGroupScope>();
@@ -164,9 +164,9 @@ class AntCell extends StatefulWidget {
     this.labelTextStyle,
     this.labelCol,
     this.labelAlign,
-    this.wrapperText,
-    this.wrapperTextStyle,
-    this.wrapperAlign,
+    this.contentText,
+    this.contentTextStyle,
+    this.contentAlign,
     this.child,
     this.extra,
     this.onTap,
@@ -218,15 +218,15 @@ class AntCell extends StatefulWidget {
 
   /// @description 内容对齐方式
   /// @default null
-  final AntAlign? wrapperAlign;
+  final AntAlign? contentAlign;
 
   /// @description 内容样式,只对wrapperText生效
   /// @default null
-  final TextStyle? wrapperTextStyle;
+  final TextStyle? contentTextStyle;
 
   /// @description 值
   /// @default null
-  final String? wrapperText;
+  final String? contentText;
 
   /// @description 子组件
   final Widget? child;
@@ -261,11 +261,11 @@ class _AntCellState extends State<AntCell> {
     if (widget.child != null) {
       return widget.child!;
     }
-    if (widget.wrapperText != null) {
+    if (widget.contentText != null) {
       AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
       return Text(
-        widget.wrapperText ?? '',
-        style: (widget.wrapperTextStyle ?? groupState?.widget.wrapperTextStyle),
+        widget.contentText ?? '',
+        style: (widget.contentTextStyle ?? groupState?.widget.contentTextStyle),
       );
     } else {
       if (widget.placeholder != null) {
@@ -292,11 +292,11 @@ class _AntCellState extends State<AntCell> {
 
   Alignment get contentAlign {
     AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
-    if (widget.wrapperAlign == AntAlign.right) {
+    if (widget.contentAlign == AntAlign.right) {
       return Alignment.centerRight;
     }
     if (groupState != null &&
-        groupState.widget.wrapperAlign == AntAlign.right) {
+        groupState.widget.contentAlign == AntAlign.right) {
       return Alignment.centerRight;
     }
     return Alignment.centerLeft;
