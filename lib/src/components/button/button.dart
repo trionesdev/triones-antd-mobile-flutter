@@ -8,8 +8,6 @@ enum AntButtonType { primary, text, link }
 
 enum AntButtonVariant { outlined, solid, filled, text, link }
 
-enum AntButtonColor { primary, danger }
-
 enum AntButtonShape { circle, round }
 
 /// @component Button 按钮
@@ -93,7 +91,10 @@ class AntButton extends StatefulWidget {
 }
 
 class _ButtonState extends State<AntButton> with MaterialStateMixin {
-  double? get height {
+  bool get _isDisabled =>
+      widget.disabled == true || widget.onPressed == null;
+
+  double get _height {
     switch (widget.size) {
       case AntSize.large:
         return sizeLg;
@@ -104,102 +105,111 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
     }
   }
 
-  double? get width {
-    if ((widget.shape != AntButtonShape.circle && widget.block == true)) {
+  double? get _width {
+    if (widget.shape != AntButtonShape.circle && widget.block == true) {
       return double.infinity;
     }
     if (widget.text == null && widget.child == null) {
-      switch (widget.size) {
-        case AntSize.large:
-          return sizeLg;
-        case AntSize.middle:
-          return sizeMd;
-        case AntSize.small:
-          return sizeSm;
-      }
+      return _height;
     }
     return null;
+  }
+
+  BorderSide? _borderSide(Style? style, AntThemeData theme) {
+    if (widget.variant == AntButtonVariant.outlined ||
+        (widget.variant == null && widget.type == null)) {
+      return BorderSide(
+        color: style?.borderColor ?? theme.colorBorder,
+        width: style?.borderWidth ?? 1,
+      );
+    }
+    return null;
+  }
+
+  ShapeBorder _shapeBorder(Style? style, AntThemeData theme) {
+    final BorderSide side = _borderSide(style, theme) ?? BorderSide.none;
+    if (widget.shape == AntButtonShape.circle && widget.text == null) {
+      return CircleBorder(side: side);
+    }
+    return RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(
+        style?.borderRadius ?? theme.borderRadius,
+      ),
+      side: side,
+    );
+  }
+
+  Widget _content(Style? style) {
+    if (widget.child != null) {
+      return widget.child!;
+    }
+    if (widget.text != null) {
+      return Text(
+        widget.text!,
+        style: TextStyle(
+          color: style?.color,
+          fontSize: style?.fontSize,
+        ).merge(widget.textStyle),
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   @override
   Widget build(BuildContext context) {
     final AntThemeData theme = AntTheme.of(context);
+    final StateStyle stateStyle =
+        _AntButtonStyle(widget, context).merge(widget.style);
+    final Style? style = stateStyle.resolve(materialStates);
 
-    StateStyle stateStyle = _AntButtonStyle(widget, context);
-    stateStyle = stateStyle.merge(widget.style);
-    Style? style = stateStyle.resolve(materialStates);
+    Widget button = MaterialButton(
+      onPressed: _isDisabled ? null : widget.onPressed,
+      shape: _shapeBorder(style, theme),
+      minWidth: 0,
+      height: _height,
+      elevation: 0,
+      highlightElevation: 0,
+      disabledElevation: 0,
+      padding: style?.computedPadding,
+      color: style?.backgroundColor,
+      disabledColor: style?.backgroundColor,
+      child: Row(
+        spacing: 4,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (widget.icon != null) widget.icon!,
+          if (widget.child != null || widget.text != null) _content(style),
+        ],
+      ),
+    );
 
-    BorderSide? buttonBorderSide() {
-      if (widget.variant != null) {
-        if (widget.variant == AntButtonVariant.outlined) {
-          return BorderSide(
-            color: style?.borderColor ?? theme.colorBorder,
-            width: style?.borderWidth ?? 1,
-          );
-        }
-      } else {
-        if (widget.type == null) {
-          return BorderSide(
-            color: style?.borderColor ?? theme.colorBorder,
-            width: style?.borderWidth ?? 1,
-          );
-        }
-      }
-      return null;
-      // return BorderSide.none;
+    if (_isDisabled) {
+      button = Opacity(opacity: 0.4, child: button);
     }
 
-    ShapeBorder? shapeBorder() {
-      AntThemeData theme = AntTheme.of(context);
-      if (widget.shape == AntButtonShape.circle && widget.text == null) {
-        return CircleBorder(side: buttonBorderSide() ?? BorderSide.none);
-      }
-      return RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(
-          stateStyle.resolve(materialStates)?.borderRadius ??
-              theme.borderRadius,
-        ),
-        side: buttonBorderSide() ?? BorderSide.none,
-      );
-    }
-
-    Widget child() {
-      if (widget.child != null) {
-        return widget.child!;
-      }
-      if (widget.text != null) {
-        return Text(
-          widget.text ?? '',
-          style: TextStyle(
-            color: style?.color,
-            fontSize: style?.fontSize,
-          ).merge(widget.textStyle),
-        );
-      }
-      return Container();
-    }
-
-    return Container(
-      width: width,
-      height: height,
-      child: MaterialButton(
-        onPressed: () {
-          widget.onPressed?.call();
-        },
-        shape: shapeBorder(),
-        minWidth: 0,
-        height: height,
-        padding: stateStyle.resolve(materialStates)?.computedPadding,
-        color: stateStyle.resolve(materialStates)?.backgroundColor,
-        child: Row(
-          spacing: 4,
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (widget.icon != null) widget.icon!,
-            if (widget.child != null || widget.text != null) child(),
-          ],
-        ),
+    return Listener(
+      behavior: HitTestBehavior.translucent,
+      onPointerDown: _isDisabled
+          ? null
+          : (_) {
+              setMaterialState(WidgetState.pressed, true);
+            },
+      onPointerUp: _isDisabled
+          ? null
+          : (_) {
+              setMaterialState(WidgetState.pressed, false);
+            },
+      onPointerCancel: _isDisabled
+          ? null
+          : (_) {
+              setMaterialState(WidgetState.pressed, false);
+            },
+      child: SizedBox(
+        width: _width,
+        height: _height,
+        child: button,
       ),
     );
   }
@@ -211,25 +221,29 @@ class _AntButtonStyle extends StateStyle {
   final BuildContext context;
   final AntButton button;
 
-  bool get isIconButton => button.icon != null && button.text == null;
+  AntThemeData get _theme => AntTheme.of(context);
 
-  Color? get iconColor {
-    if ([AntButtonType.primary].contains(button.type) ||
-        [AntButtonVariant.solid].contains(button.variant)) {
-      return Colors.white;
+  bool get isIconButton =>
+      button.icon != null && button.text == null && button.child == null;
+
+  /// 显式 color > danger 错误色 > null
+  Color? get effectiveColor {
+    if (button.color != null) {
+      return button.color;
+    }
+    if (button.danger == true) {
+      return _theme.colorError;
     }
     return null;
   }
 
   Color? get buttonTextColor {
-    if (button.type == AntButtonType.primary) {
+    if (button.type == AntButtonType.primary ||
+        button.variant == AntButtonVariant.solid) {
       return Colors.white;
     }
-    if (button.variant == AntButtonVariant.solid) {
-      return Colors.white;
-    }
-    if (button.color != null) {
-      return button.color;
+    if (effectiveColor != null) {
+      return effectiveColor;
     }
     return Colors.black;
   }
@@ -237,62 +251,44 @@ class _AntButtonStyle extends StateStyle {
   StylePadding? get padding {
     if (isIconButton) {
       return StylePadding();
-    } else {
-      if (button.size == AntSize.small) {
-        return StylePadding(left: 12, right: 12);
-      } else if (button.size == AntSize.middle) {
-        return StylePadding(left: 18, right: 18);
-      } else if (button.size == AntSize.large) {
-        return StylePadding(left: 24, right: 24);
-      }
     }
-    return null;
+    switch (button.size) {
+      case AntSize.small:
+        return StylePadding(left: 12, right: 12);
+      case AntSize.middle:
+        return StylePadding(left: 18, right: 18);
+      case AntSize.large:
+        return StylePadding(left: 24, right: 24);
+    }
   }
 
   Color? get buttonBackgroundColor {
-    AntThemeData themeData = AntTheme.of(context);
     Color? result = Colors.transparent;
+    final Color? tint = effectiveColor;
+
     if (button.type == AntButtonType.primary) {
-      result = themeData.colorPrimary;
-      if (button.color != null) {
-        result = button.color;
-      }
+      result = tint ?? _theme.colorPrimary;
     }
     if (button.variant == AntButtonVariant.solid) {
-      if (button.color != null) {
-        result = button.color;
-      }
+      result = tint ?? _theme.colorPrimary;
     }
     if (button.variant == AntButtonVariant.filled) {
-      result = button.color!.withValues();
+      result = tint ?? _theme.colorPrimary;
     }
     return result;
   }
 
   Color? get buttonBorderColor {
-    AntThemeData themeData = AntTheme.of(context);
-    Color? result;
-    if (button.variant == AntButtonVariant.outlined) {
-      result = themeData.colorBorder;
-      if (button.color != null) {
-        return button.color;
-      }
+    if (button.variant == AntButtonVariant.outlined || button.type == null) {
+      return effectiveColor ?? _theme.colorBorder;
     }
-    if (button.type == null) {
-      result = themeData.colorBorder;
-      if (button.color != null) {
-        return button.color;
-      }
-    }
-    return result;
+    return null;
   }
 
   @override
   Style? get style {
-    AntThemeData themeData = AntTheme.of(context);
-
-    Color? backgroundColor() {
-      Color finalColor = buttonBackgroundColor ?? Colors.white;
+    Color backgroundColor() {
+      final Color finalColor = buttonBackgroundColor ?? Colors.white;
       if (button.variant == AntButtonVariant.filled) {
         return finalColor.withAlpha((255.0 * 0.08).round());
       }
@@ -305,7 +301,7 @@ class _AntButtonStyle extends StateStyle {
       padding: padding,
       borderColor: buttonBorderColor,
       borderRadius:
-          button.shape == AntButtonShape.circle ? 180 : themeData.borderRadius,
+          button.shape == AntButtonShape.circle ? 180 : _theme.borderRadius,
     );
   }
 
@@ -317,7 +313,7 @@ class _AntButtonStyle extends StateStyle {
             AntButtonVariant.outlined,
             AntButtonVariant.text,
           ].contains(button.variant) ||
-          [AntButtonType.text].contains(button.type)) {
+          button.type == AntButtonType.text) {
         return Colors.white;
       }
       return buttonBackgroundColor;
@@ -335,7 +331,6 @@ class _AntButtonStyle extends StateStyle {
         AntButtonVariant.text,
       ].contains(button.variant)) {
         return Colors.white.withAlpha((255.0 * 0.1).round());
-        // return finalColor.withOpacity(0.1);
       }
       return buttonBackgroundColor;
     }
