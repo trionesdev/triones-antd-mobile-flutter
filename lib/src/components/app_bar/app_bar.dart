@@ -42,7 +42,10 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// @description 是否显示返回图标
   /// @default true
   final bool showBack;
-  final Function? onBack;
+
+  /// @description 返回时回调
+  /// @default null
+  final VoidCallback? onBack;
 
   /// @description 左侧返回图标后面的内容
   /// @default null
@@ -84,88 +87,131 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// @default null
   final SystemUiOverlayStyle? systemUiOverlayStyle;
 
-  bool get showBackText {
-    return backText != null || back != null;
-  }
+  @override
+  final Size preferredSize;
 
-  Widget get finalBackText {
+  Widget? _backLabel() {
     if (back != null) {
-      return back!;
+      return back;
     }
     if (backText != null) {
       return Text(backText!);
     }
-    return Container();
+    return null;
   }
 
-  Widget leadingWidget(BuildContext context) {
-    List<Widget> leadingChildren = [];
+  bool get _hasBackLabel => showBack && (back != null || backText != null);
+
+  double? get _leadingWidth {
+    if (!showBack && leading == null) {
+      return null;
+    }
+    // 带返回文案时加宽，避免默认 56 装不下；纯图标保持默认宽度
+    if (_hasBackLabel || leading != null) {
+      return 96;
+    }
+    return null;
+  }
+
+  Widget? _leadingWidget(BuildContext context) {
+    final List<Widget> children = [];
     if (showBack) {
-      leadingChildren.add(
+      final Widget? backLabel = _backLabel();
+      children.add(
         GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
             if (onBack != null) {
-              onBack?.call();
+              onBack!();
               return;
             }
             Navigator.maybePop(context);
           },
-          child: Row(
-            spacing: 4,
-            children: [
-              Container(
-                padding: EdgeInsets.only(left: 8),
-                child: backIcon ?? Icon(AntIcons.leftOutline, size: 16),
-              ),
-              if (showBackText) finalBackText,
-            ],
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: Center(
+                    child: backIcon ??
+                        const Icon(AntIcons.leftOutline, size: 16),
+                  ),
+                ),
+                if (backLabel != null) ...[
+                  const SizedBox(width: 4),
+                  backLabel,
+                ],
+              ],
+            ),
           ),
         ),
       );
     }
     if (leading != null) {
-      leadingChildren.add(leading!);
+      children.add(leading!);
     }
-    return Row(children: leadingChildren);
+    if (children.isEmpty) {
+      return null;
+    }
+    // FittedBox 吸收亚像素取整导致的 0.5px 溢出
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: children,
+      ),
+    );
   }
 
-  Widget? titleWidget(BuildContext context) {
-    AntThemeData themeData = AntTheme.of(context);
-    if (title != null && title is Text) {
-      Text source = title as Text;
+  Widget? _titleWidget(BuildContext context) {
+    final AntThemeData themeData = AntTheme.of(context);
+    final Widget? resolvedTitle =
+        title ?? (titleText != null ? Text(titleText!) : null);
+    if (resolvedTitle is Text) {
       return WidgetUtils.textMerge(
-        Text(source.data!, style: TextStyle(fontSize: themeData.fontSizeLG)),
-        source,
+        Text(
+          resolvedTitle.data ?? '',
+          style: TextStyle(fontSize: themeData.fontSizeLG),
+        ),
+        resolvedTitle,
       );
     }
-    return title;
+    return resolvedTitle;
   }
 
   @override
   Widget build(BuildContext context) {
-    AntThemeData themeData = AntTheme.of(context);
+    final AntThemeData themeData = AntTheme.of(context);
     return AppBar(
-      leading: leadingWidget(context),
+      leading: _leadingWidget(context),
+      leadingWidth: _leadingWidth,
       automaticallyImplyLeading: false,
-      title: titleWidget(context),
+      title: _titleWidget(context),
       actions: actions,
       bottom: bottom,
+      toolbarHeight: toolbarHeight ?? kToolbarHeight,
       backgroundColor: backgroundColor ?? themeData.colorBgBase,
       centerTitle: centerTitle,
-      flexibleSpace: Container(decoration: decoration),
-      actionsPadding: EdgeInsets.only(right: 8),
-      systemOverlayStyle: systemUiOverlayStyle,
+      flexibleSpace:
+          decoration != null ? Container(decoration: decoration) : null,
+      actionsPadding: const EdgeInsets.only(right: 8),
+      systemOverlayStyle:
+          systemUiOverlayStyle ?? themeData.appBarTheme.systemOverlayStyle,
     );
   }
-
-  @override
-  final Size preferredSize;
 }
 
 class _PreferredAppBarSize extends Size {
   _PreferredAppBarSize(this.toolbarHeight, this.bottomHeight)
-    : super.fromHeight((toolbarHeight ?? kToolbarHeight) + (bottomHeight ?? 0));
+    : super.fromHeight(
+        (toolbarHeight ?? kToolbarHeight) + (bottomHeight ?? 0),
+      );
 
   final double? toolbarHeight;
   final double? bottomHeight;
