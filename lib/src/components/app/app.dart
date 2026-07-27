@@ -10,14 +10,15 @@ enum AntThemeMode {
   dark,
 }
 
-material.ThemeMode toMaterialThemeMode(AntThemeMode value) {
+material.ThemeMode toMaterialThemeMode(AntThemeMode? value) {
   switch (value) {
-    case AntThemeMode.system:
-      return material.ThemeMode.system;
     case AntThemeMode.light:
       return material.ThemeMode.light;
     case AntThemeMode.dark:
       return material.ThemeMode.dark;
+    case AntThemeMode.system:
+    case null:
+      return material.ThemeMode.system;
   }
 }
 
@@ -67,7 +68,8 @@ class AntApp extends StatelessWidget {
         routeInformationParser = null,
         routerDelegate = null,
         backButtonDispatcher = null,
-        routerConfig = null;
+        routerConfig = null,
+        _usesRouter = false;
 
   const AntApp.router({
     super.key,
@@ -113,7 +115,10 @@ class AntApp extends StatelessWidget {
         onGenerateInitialRoutes = null,
         onUnknownRoute = null,
         routes = null,
-        initialRoute = null;
+        initialRoute = null,
+        _usesRouter = true;
+
+  final bool _usesRouter;
 
   final GlobalKey<NavigatorState>? navigatorKey;
   final GlobalKey<AntScaffoldMessengerState>? scaffoldMessengerKey;
@@ -159,61 +164,115 @@ class AntApp extends StatelessWidget {
   final bool debugShowMaterialGrid;
   final AnimationStyle? themeAnimationStyle;
 
-  material.ThemeMode getThemeMode() {
-    switch (themeMode) {
-      case AntThemeMode.system:
-        return material.ThemeMode.system;
-      case AntThemeMode.light:
-        return material.ThemeMode.light;
-      case AntThemeMode.dark:
-        return material.ThemeMode.dark;
-      case null:
-        return material.ThemeMode.system;
+  GlobalKey<material.ScaffoldMessengerState>? get _materialScaffoldMessengerKey {
+    final key = scaffoldMessengerKey;
+    if (key == null) {
+      return null;
     }
+    return key as GlobalKey<material.ScaffoldMessengerState>;
+  }
+
+  AntThemeData _resolveAntTheme(BuildContext context) {
+    final brightness = material.Theme.of(context).brightness;
+    if (brightness == Brightness.dark) {
+      return darkTheme ?? theme ?? AntThemeData.fallback();
+    }
+    return theme ?? AntThemeData.fallback();
+  }
+
+  Widget _buildAppChild(BuildContext context, Widget? child) {
+    final Widget content =
+        builder?.call(context, child) ?? child ?? const SizedBox.shrink();
+    return AntTheme(
+      data: _resolveAntTheme(context),
+      child: content,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return AntTheme(
-        data: theme ?? AntThemeData.fallback(),
-        child: material.MaterialApp(
-          navigatorKey: navigatorKey,
-          scaffoldMessengerKey: scaffoldMessengerKey,
-          home: home,
-          routes: routes ?? const <String, WidgetBuilder>{},
-          initialRoute: initialRoute,
-          onGenerateRoute: onGenerateRoute,
-          onGenerateInitialRoutes: onGenerateInitialRoutes,
-          onUnknownRoute: onUnknownRoute,
-          navigatorObservers: navigatorObservers ?? const <NavigatorObserver>[],
-          builder: builder,
-          title: title,
-          onGenerateTitle: onGenerateTitle,
-          color: color,
-          theme: theme?.toMaterialThemeData(),
-          darkTheme: darkTheme?.toMaterialThemeData(),
-          highContrastTheme: highContrastTheme?.toMaterialThemeData(),
-          highContrastDarkTheme: highContrastDarkTheme?.toMaterialThemeData(),
-          themeMode: getThemeMode(),
-          themeAnimationDuration:
-              themeAnimationDuration ?? kThemeAnimationDuration,
-          themeAnimationCurve: themeAnimationCurve ?? Curves.linear,
-          locale: locale,
-          localizationsDelegates: localizationsDelegates,
-          localeListResolutionCallback: localeListResolutionCallback,
-          localeResolutionCallback: localeResolutionCallback,
-          supportedLocales: supportedLocales,
-          debugShowMaterialGrid: debugShowMaterialGrid,
-          showPerformanceOverlay: showPerformanceOverlay,
-          checkerboardRasterCacheImages: checkerboardRasterCacheImages,
-          checkerboardOffscreenLayers: checkerboardOffscreenLayers,
-          showSemanticsDebugger: showSemanticsDebugger,
-          debugShowCheckedModeBanner: debugShowCheckedModeBanner,
-          shortcuts: shortcuts,
-          actions: actions,
-          restorationScopeId: restorationScopeId,
-          scrollBehavior: scrollBehavior,
-          themeAnimationStyle: themeAnimationStyle,
-        ));
+    final material.ThemeMode materialThemeMode = toMaterialThemeMode(themeMode);
+    final Duration animationDuration =
+        themeAnimationDuration ?? kThemeAnimationDuration;
+    final Curve animationCurve = themeAnimationCurve ?? Curves.linear;
+
+    if (_usesRouter) {
+      return material.MaterialApp.router(
+        scaffoldMessengerKey: _materialScaffoldMessengerKey,
+        routeInformationProvider: routeInformationProvider,
+        routeInformationParser: routeInformationParser,
+        routerDelegate: routerDelegate,
+        routerConfig: routerConfig,
+        backButtonDispatcher: backButtonDispatcher,
+        builder: _buildAppChild,
+        title: title,
+        onGenerateTitle: onGenerateTitle,
+        onNavigationNotification: onNavigationNotification,
+        color: color,
+        theme: theme?.toMaterialThemeData(),
+        darkTheme: darkTheme?.toMaterialThemeData(),
+        highContrastTheme: highContrastTheme?.toMaterialThemeData(),
+        highContrastDarkTheme: highContrastDarkTheme?.toMaterialThemeData(),
+        themeMode: materialThemeMode,
+        themeAnimationDuration: animationDuration,
+        themeAnimationCurve: animationCurve,
+        locale: locale,
+        localizationsDelegates: localizationsDelegates,
+        localeListResolutionCallback: localeListResolutionCallback,
+        localeResolutionCallback: localeResolutionCallback,
+        supportedLocales: supportedLocales,
+        debugShowMaterialGrid: debugShowMaterialGrid,
+        showPerformanceOverlay: showPerformanceOverlay,
+        checkerboardRasterCacheImages: checkerboardRasterCacheImages,
+        checkerboardOffscreenLayers: checkerboardOffscreenLayers,
+        showSemanticsDebugger: showSemanticsDebugger,
+        debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+        shortcuts: shortcuts,
+        actions: actions,
+        restorationScopeId: restorationScopeId,
+        scrollBehavior: scrollBehavior,
+        themeAnimationStyle: themeAnimationStyle,
+      );
+    }
+
+    return material.MaterialApp(
+      navigatorKey: navigatorKey,
+      scaffoldMessengerKey: _materialScaffoldMessengerKey,
+      home: home,
+      routes: routes ?? const <String, WidgetBuilder>{},
+      initialRoute: initialRoute,
+      onGenerateRoute: onGenerateRoute,
+      onGenerateInitialRoutes: onGenerateInitialRoutes,
+      onUnknownRoute: onUnknownRoute,
+      onNavigationNotification: onNavigationNotification,
+      navigatorObservers: navigatorObservers ?? const <NavigatorObserver>[],
+      builder: _buildAppChild,
+      title: title ?? '',
+      onGenerateTitle: onGenerateTitle,
+      color: color,
+      theme: theme?.toMaterialThemeData(),
+      darkTheme: darkTheme?.toMaterialThemeData(),
+      highContrastTheme: highContrastTheme?.toMaterialThemeData(),
+      highContrastDarkTheme: highContrastDarkTheme?.toMaterialThemeData(),
+      themeMode: materialThemeMode,
+      themeAnimationDuration: animationDuration,
+      themeAnimationCurve: animationCurve,
+      locale: locale,
+      localizationsDelegates: localizationsDelegates,
+      localeListResolutionCallback: localeListResolutionCallback,
+      localeResolutionCallback: localeResolutionCallback,
+      supportedLocales: supportedLocales,
+      debugShowMaterialGrid: debugShowMaterialGrid,
+      showPerformanceOverlay: showPerformanceOverlay,
+      checkerboardRasterCacheImages: checkerboardRasterCacheImages,
+      checkerboardOffscreenLayers: checkerboardOffscreenLayers,
+      showSemanticsDebugger: showSemanticsDebugger,
+      debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+      shortcuts: shortcuts,
+      actions: actions,
+      restorationScopeId: restorationScopeId,
+      scrollBehavior: scrollBehavior,
+      themeAnimationStyle: themeAnimationStyle,
+    );
   }
 }
