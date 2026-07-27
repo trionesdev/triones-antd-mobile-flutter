@@ -170,6 +170,7 @@ class AntCell extends StatefulWidget {
     this.child,
     this.extra,
     this.onTap,
+    this.value,
   });
 
   /// @description 大小
@@ -237,6 +238,10 @@ class AntCell extends StatefulWidget {
   /// @default null
   final Function? onTap;
 
+  /// @description 值
+  /// @default null
+  final dynamic? value;
+
   @override
   State<StatefulWidget> createState() => _AntCellState();
 }
@@ -261,21 +266,35 @@ class _AntCellState extends State<AntCell> {
     if (widget.child != null) {
       return widget.child!;
     }
+    AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
     if (widget.contentText != null) {
-      AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
       return Text(
         widget.contentText ?? '',
         style: (widget.contentTextStyle ?? groupState?.widget.contentTextStyle),
       );
-    } else {
-      if (widget.placeholder != null) {
-        return widget.placeholder!;
-      }
-      return Text(
-        widget.placeholderText ?? '',
-        style: TextStyle(color: Colors.grey),
-      );
     }
+    if (widget.value != null) {
+      if (widget.value is String) {
+        return Text(
+          widget.value,
+          style:
+              (widget.contentTextStyle ?? groupState?.widget.contentTextStyle),
+        );
+      } else {
+        return Text(
+          widget.value.toString(),
+          style:
+              (widget.contentTextStyle ?? groupState?.widget.contentTextStyle),
+        );
+      }
+    }
+    if (widget.placeholder != null) {
+      return widget.placeholder!;
+    }
+    return Text(
+      widget.placeholderText ?? '',
+      style: TextStyle(color: Colors.grey),
+    );
   }
 
   Alignment get labelAlign {
