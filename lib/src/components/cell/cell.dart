@@ -104,20 +104,68 @@ class _CellGroupScope extends InheritedWidget {
 class AntCellGroupState extends State<AntCellGroup> {
   int _generation = 0;
 
-  Widget get cells {
-    List<Widget> children = [];
-    if (widget.children != null) {
-      for (int i = 0; i < widget.children!.length; i++) {
-        children.add(widget.children!.elementAt(i));
-        if (widget.showDivider) {
-          if (i != widget.children!.length - 1) {
-            children.add(Divider(height: 0));
-          }
-        }
-      }
-      return Column(children: children);
+  bool get _hasTitle =>
+      widget.title != null || (widget.titleText?.isNotEmpty ?? false);
+
+  Alignment get _titleAlignment {
+    switch (widget.titleAlign) {
+      case AntLabelAlign.right:
+        return Alignment.centerRight;
+      case AntLabelAlign.left:
+      case null:
+        return Alignment.centerLeft;
     }
-    return Container();
+  }
+
+  Widget get _titleWidget {
+    return Align(
+      alignment: _titleAlignment,
+      child: widget.title ??
+          Text(
+            widget.titleText ?? '',
+            style: widget.titleStyle ??
+                const TextStyle(fontSize: 14, color: Colors.grey),
+          ),
+    );
+  }
+
+  Widget get _cells {
+    final children = widget.children;
+    if (children == null || children.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final List<Widget> items = [];
+    for (int i = 0; i < children.length; i++) {
+      items.add(children[i]);
+      if (widget.showDivider && i != children.length - 1) {
+        items.add(const Divider(height: 0));
+      }
+    }
+    return Column(children: items);
+  }
+
+  bool _labelColChanged(AntCol? a, AntCol? b) {
+    if (identical(a, b)) return false;
+    if (a == null || b == null) return true;
+    return a.flex != b.flex || a.span != b.span;
+  }
+
+  @override
+  void didUpdateWidget(AntCellGroup oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.size != widget.size ||
+        _labelColChanged(oldWidget.labelCol, widget.labelCol) ||
+        oldWidget.labelAlign != widget.labelAlign ||
+        oldWidget.labelTextStyle != widget.labelTextStyle ||
+        oldWidget.contentAlign != widget.contentAlign ||
+        oldWidget.contentTextStyle != widget.contentTextStyle ||
+        oldWidget.arrow != widget.arrow ||
+        oldWidget.arrowIcon != widget.arrowIcon) {
+      setState(() {
+        _generation++;
+      });
+    }
   }
 
   @override
@@ -129,19 +177,12 @@ class AntCellGroupState extends State<AntCellGroup> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (widget.title != null)
+            if (_hasTitle)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child:
-                    widget.title ??
-                    Text(
-                      widget.titleText ?? '',
-                      style:
-                          widget.titleStyle ??
-                          TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
+                child: _titleWidget,
               ),
-            if (widget.children != null) cells,
+            if (widget.children != null) _cells,
           ],
         ),
       ),
@@ -221,7 +262,7 @@ class AntCell extends StatefulWidget {
   /// @default null
   final AntAlign? contentAlign;
 
-  /// @description 内容样式,只对wrapperText生效
+  /// @description 内容样式,只对contentText生效
   /// @default null
   final TextStyle? contentTextStyle;
 
@@ -236,22 +277,23 @@ class AntCell extends StatefulWidget {
 
   /// @description 点击回调
   /// @default null
-  final Function? onTap;
+  final VoidCallback? onTap;
 
   /// @description 值
   /// @default null
-  final dynamic? value;
+  final dynamic value;
 
   @override
   State<StatefulWidget> createState() => _AntCellState();
 }
 
 class _AntCellState extends State<AntCell> {
-  _CellGroupScope? _cellGroupScope;
+  AntCellGroupState? _groupState;
 
-  double get height {
-    AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
-    AntSize size = widget.size ?? groupState?.widget.size ?? AntSize.middle;
+  AntCellGroup? get _group => _groupState?.widget;
+
+  double get _height {
+    final AntSize size = widget.size ?? _group?.size ?? AntSize.middle;
     switch (size) {
       case AntSize.large:
         return sizeLg;
@@ -262,146 +304,136 @@ class _AntCellState extends State<AntCell> {
     }
   }
 
-  Widget get child {
+  bool get _showArrow => widget.arrow ?? _group?.arrow ?? true;
+
+  Alignment get _labelAlignment {
+    final AntLabelAlign? align = widget.labelAlign ?? _group?.labelAlign;
+    switch (align) {
+      case AntLabelAlign.right:
+        return Alignment.centerRight;
+      case AntLabelAlign.left:
+      case null:
+        return Alignment.centerLeft;
+    }
+  }
+
+  Alignment get _contentAlignment {
+    final AntAlign? align = widget.contentAlign ?? _group?.contentAlign;
+    switch (align) {
+      case AntAlign.right:
+        return Alignment.centerRight;
+      case AntAlign.center:
+        return Alignment.center;
+      case AntAlign.left:
+      case null:
+        return Alignment.centerLeft;
+    }
+  }
+
+  TextStyle? get _contentStyle =>
+      widget.contentTextStyle ?? _group?.contentTextStyle;
+
+  Widget get _content {
     if (widget.child != null) {
       return widget.child!;
     }
-    AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
     if (widget.contentText != null) {
-      return Text(
-        widget.contentText ?? '',
-        style: (widget.contentTextStyle ?? groupState?.widget.contentTextStyle),
-      );
+      return Text(widget.contentText!, style: _contentStyle);
     }
     if (widget.value != null) {
-      if (widget.value is String) {
-        return Text(
-          widget.value,
-          style:
-              (widget.contentTextStyle ?? groupState?.widget.contentTextStyle),
-        );
-      } else {
-        return Text(
-          widget.value.toString(),
-          style:
-              (widget.contentTextStyle ?? groupState?.widget.contentTextStyle),
-        );
-      }
+      return Text(widget.value.toString(), style: _contentStyle);
     }
     if (widget.placeholder != null) {
       return widget.placeholder!;
     }
     return Text(
       widget.placeholderText ?? '',
-      style: TextStyle(color: Colors.grey),
+      style: const TextStyle(color: Colors.grey),
     );
   }
 
-  Alignment get labelAlign {
-    AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
-    if (widget.labelAlign == AntLabelAlign.right) {
-      return Alignment.centerRight;
-    }
-    if (groupState != null &&
-        groupState.widget.labelAlign == AntLabelAlign.right) {
-      return Alignment.centerRight;
-    }
-    return Alignment.centerLeft;
-  }
-
-  Alignment get contentAlign {
-    AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
-    if (widget.contentAlign == AntAlign.right) {
-      return Alignment.centerRight;
-    }
-    if (groupState != null &&
-        groupState.widget.contentAlign == AntAlign.right) {
-      return Alignment.centerRight;
-    }
-    return Alignment.centerLeft;
-  }
-
-  Widget get label {
-    AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
-    AntCol? labelCol = widget.labelCol ?? groupState?.widget.labelCol;
-
-    Widget labelWidget =
-        widget.label ??
+  Widget get _label {
+    final AntCol? labelCol = widget.labelCol ?? _group?.labelCol;
+    final Widget labelWidget = widget.label ??
         Text(
           widget.labelText ?? '',
-          style: (widget.labelTextStyle ?? groupState?.widget.labelTextStyle),
+          style: widget.labelTextStyle ?? _group?.labelTextStyle,
         );
 
     if (labelCol?.flex != null) {
       return Container(
-        height: height,
+        height: _height,
         width: labelCol!.flex!,
-        alignment: labelAlign,
+        alignment: _labelAlignment,
         child: labelWidget,
       );
-    } else if (labelCol?.span != null) {
+    }
+    if (labelCol?.span != null) {
       return Expanded(
         flex: labelCol!.span!,
         child: Container(
-          height: height,
-          alignment: labelAlign,
+          height: _height,
+          alignment: _labelAlignment,
           child: labelWidget,
         ),
       );
     }
-    return Container(height: height, alignment: labelAlign, child: labelWidget);
+    return Container(
+      height: _height,
+      alignment: _labelAlignment,
+      child: labelWidget,
+    );
   }
 
-  Widget get arrowIcon {
-    AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
+  Widget get _arrowIcon {
     return widget.arrowIcon ??
-        groupState?.widget.arrowIcon ??
+        _group?.arrowIcon ??
         Icon(AntIcons.rightOutline, size: 14, color: Colors.grey);
   }
 
   @override
   void didChangeDependencies() {
-    _cellGroupScope =
-        context.dependOnInheritedWidgetOfExactType<_CellGroupScope>();
+    _groupState = AntCellGroup.maybeOf(context);
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    AntCellGroupState? groupState = AntCellGroup.maybeOf(context);
-    return ConstrainedBox(
-      constraints: BoxConstraints(minHeight: height),
+    final bool hasLabel =
+        widget.label != null || widget.labelText != null;
+
+    final Widget row = ConstrainedBox(
+      constraints: BoxConstraints(minHeight: _height),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (widget.icon != null) widget.icon!,
-          if (widget.label != null || widget.labelText != null) label,
+          if (hasLabel) _label,
           Expanded(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                if (widget.onTap != null) {
-                  widget.onTap!();
-                }
-              },
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: height),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(alignment: contentAlign, child: child),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: _height),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      alignment: _contentAlignment,
+                      child: _content,
                     ),
-                    if (widget.extra != null) widget.extra!,
-                    if (widget.arrow == true ||
-                        groupState?.widget.arrow == true)
-                      arrowIcon,
-                  ],
-                ),
+                  ),
+                  if (widget.extra != null) widget.extra!,
+                  if (_showArrow) _arrowIcon,
+                ],
               ),
             ),
           ),
         ],
       ),
+    );
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: widget.onTap,
+      child: row,
     );
   }
 }

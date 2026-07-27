@@ -144,6 +144,8 @@ class _AntDatePickerCellState extends State<AntDatePickerCell> {
       placeholderText: widget.placeholderText,
       label: widget.label,
       labelText: widget.labelText,
+      labelCol: widget.labelCol,
+      labelAlign: widget.labelAlign,
       contentAlign: widget.contentAlign,
       child: content,
       onTap: () {
