@@ -137,7 +137,7 @@ class ProgressLine extends StatelessWidget {
     this.railColor,
     this.showInfo = true,
     this.status,
-    this.size = AntSize.middle,
+    this.size = AntSize.medium,
     this.strokeColor,
     this.strokeLineCap = AntStrokeLineCap.round,
     this.height,
@@ -176,7 +176,7 @@ class ProgressLine extends StatelessWidget {
     switch (size) {
       case AntSize.small:
         return 6;
-      case AntSize.middle:
+      case AntSize.medium:
         return 8;
       case AntSize.large:
         return 12;

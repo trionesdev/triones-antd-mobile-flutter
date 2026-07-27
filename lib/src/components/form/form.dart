@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 
 import '../constants.dart';
@@ -20,18 +21,18 @@ class AntForm extends StatefulWidget {
     this.labelTextStyle,
     this.wrapperCol,
     this.labelAlign = AntLabelAlign.left,
-    this.size = AntSize.middle,
+    this.size = AntSize.medium,
   });
 
   /// @description 子项间距
   /// @default null
   final double? spacing;
 
-  /// @description 行间距
+  /// @description 行间距（水平布局下 label 与控件间距）
   /// @default null
   final double? rowSpacing;
 
-  /// @description 列间距
+  /// @description 列间距（垂直布局下 label 与控件间距）
   /// @default null
   final double? columnSpacing;
 
@@ -84,6 +85,8 @@ class AntFormState extends State<AntForm> {
 
   AntFormLayout? get layout => widget.layout;
 
+  double? get spacing => widget.spacing;
+
   double? get rowSpacing => widget.rowSpacing;
 
   double? get columnSpacing => widget.columnSpacing;
@@ -96,21 +99,26 @@ class AntFormState extends State<AntForm> {
 
   TextStyle? get labelTextStyle => widget.labelTextStyle;
 
-  ValueNotifier _registerWatch(NamePath path) {
-    var notifier = ValueNotifier(getFieldValue(path));
+  /// 监听指定字段值变化
+  ValueNotifier watch(NamePath path) {
+    final existing = _watches[path.jsonValue];
+    if (existing != null) {
+      return existing;
+    }
+    final notifier = ValueNotifier(getFieldValue(path));
     _watches[path.jsonValue] = notifier;
     return notifier;
   }
 
   void _registerFieldWatch(AntFieldState? field) {
-    if (field?.widget.notifier == null || field?.mergedName == null) {
+    if (field?.widget.notifier == null || field!.mergedName.isEmpty) {
       return;
     }
-    _watches[field!.mergedName.jsonValue] = field.widget.notifier!;
+    _watches[field.mergedName.jsonValue] = field.widget.notifier!;
   }
 
   void _watchFieldChange(NamePath? path, dynamic value) {
-    if (path != null) {
+    if (path != null && path.isNotEmpty) {
       _watches[path.jsonValue]?.value = value;
     }
   }
@@ -118,20 +126,31 @@ class AntFormState extends State<AntForm> {
   void _fieldDidChange(NamePath path, dynamic value) {
     _watchFieldChange(path, value);
     MapUtils.setPathValue(_formValues, path.value, value);
-    _forceRebuild();
   }
 
   void _forceRebuild() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    void doRebuild() {
+      if (!mounted) {
+        return;
+      }
       setState(() {
         _generation++;
       });
-    });
+    }
+
+    switch (SchedulerBinding.instance.schedulerPhase) {
+      case SchedulerPhase.idle:
+      case SchedulerPhase.postFrameCallbacks:
+        doRebuild();
+        break;
+      default:
+        WidgetsBinding.instance.addPostFrameCallback((_) => doRebuild());
+    }
   }
 
   /// 如果子项是后注册的，判断是否需要填充设置的值
   void _formValuesSet(AntFieldState field) {
-    if (field.mergedName == null || field.mergedName!.value.isEmpty) {
+    if (field.mergedName.isEmpty) {
       return;
     }
     var fieldValue = MapUtils.getPathValue(_formValues, field.mergedName.value);
@@ -148,7 +167,6 @@ class AntFormState extends State<AntForm> {
 
   void _unregister<T>(AntFieldState<T?> field) {
     _fields.remove(field);
-    _watches.remove(field.mergedName.jsonValue);
   }
 
   void save() {
@@ -159,8 +177,14 @@ class AntFormState extends State<AntForm> {
 
   void reset<T>() {
     for (final AntFieldState field in _fields) {
-      if (field.mergedName != null && field.mergedName.value.isNotEmpty) {
-        setFieldValue(field.mergedName, field.initialValue);
+      if (field.mergedName.isNotEmpty) {
+        MapUtils.setPathValue(
+          _formValues,
+          field.mergedName.value,
+          field.initialValue,
+        );
+        _watchFieldChange(field.mergedName, field.initialValue);
+        field._formDidChange(field.initialValue);
       }
     }
     _forceRebuild();
@@ -168,19 +192,33 @@ class AntFormState extends State<AntForm> {
 
   void setFieldsValue(Map<dynamic, dynamic>? values) {
     _formValues = values ?? {};
+    for (final AntFieldState field in _fields) {
+      if (field.mergedName.isEmpty) {
+        continue;
+      }
+      final fieldValue =
+          MapUtils.getPathValue(_formValues, field.mergedName.value);
+      field._formDidChange(fieldValue);
+      _watchFieldChange(field.mergedName, fieldValue);
+    }
     _forceRebuild();
   }
 
   void setFieldValue(NamePath name, dynamic value) {
     _formValues = _formValues ?? {};
     MapUtils.setPathValue(_formValues, name.value, value);
+    _watchFieldChange(name, value);
 
-    var field = _fields.firstWhereOrNull((field) {
+    final field = _fields.firstWhereOrNull((field) {
       return field.mergedName.jsonValue == name.jsonValue;
     });
     if (field != null) {
-      _watchFieldChange(field.mergedName, value);
       field._formDidChange(value);
+      field._notifyChanged();
+      if (field.widget.isList == true) {
+        _forceRebuild();
+      }
+    } else {
       _forceRebuild();
     }
   }
@@ -192,9 +230,9 @@ class AntFormState extends State<AntForm> {
       if ((nameList == null || nameList.isEmpty) ||
           nameList.contains(field.mergedName)) {
         if (!field.validate()) {
-          if (field.mergedName != null && field.mergedName.value.isNotEmpty) {
+          if (field.mergedName.isNotEmpty) {
             errorFields.add({
-              "name": field.mergedName?.value,
+              "name": field.mergedName.value,
               "errors": field.getErrorText(),
             });
           }
@@ -202,7 +240,6 @@ class AntFormState extends State<AntForm> {
         }
       }
     }
-    _forceRebuild();
     return !hasError;
   }
 
@@ -211,8 +248,8 @@ class AntFormState extends State<AntForm> {
     Map<String, dynamic?> values = {};
     for (final AntFieldState field in _fields) {
       dynamic fieldValues = values;
-      if (field.mergedName != null && field.mergedName!.value.isNotEmpty) {
-        List<dynamic?> paths = field.mergedName!.value;
+      if (field.mergedName.isNotEmpty) {
+        List<dynamic?> paths = field.mergedName.value;
         for (int i = 0; i < paths.length; i++) {
           if (i < paths.length - 1) {
             fieldValues[paths[i]] ??= {};
@@ -230,7 +267,7 @@ class AntFormState extends State<AntForm> {
   Future<Map<String, dynamic>> validateFields({
     List<NamePath>? nameList,
   }) async {
-    if (!_validate()) {
+    if (!_validate(nameList: nameList)) {
       throw Exception({errorFields});
     }
     return getFieldsValue();
@@ -245,12 +282,10 @@ class AntFormState extends State<AntForm> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      child: _AntFormScope(
-        formState: this,
-        generation: _generation,
-        child: widget.child ?? Container(),
-      ),
+    return _AntFormScope(
+      formState: this,
+      generation: _generation,
+      child: widget.child ?? const SizedBox.shrink(),
     );
   }
 }
@@ -315,13 +350,16 @@ class AntFieldState<T> extends State<Field<T?>> with RestorationMixin {
   late final RestorableStringN _errorText = RestorableStringN(null);
   final RestorableBool _hasInteractedByUser = RestorableBool(false);
   int _generation = 0;
+  bool _registered = false;
 
   /// 获取 合并后的 name
   NamePath get mergedName {
     ///这里的 AntFieldState 不能带类型，如果上层是FormList 会找不到
     AntFieldState? fieldState = _fieldScope?.fieldState;
-    if (fieldState?.mergedName != null && widget.name != null) {
-      return NamePath([...fieldState!.mergedName.value, ...widget.name!.value]);
+    if (fieldState != null &&
+        fieldState.mergedName.isNotEmpty &&
+        widget.name != null) {
+      return NamePath([...fieldState.mergedName.value, ...widget.name!.value]);
     } else {
       return widget.name ?? NamePath([]);
     }
@@ -354,12 +392,22 @@ class AntFieldState<T> extends State<Field<T?>> with RestorationMixin {
     _value = value;
   }
 
+  void _notifyChanged() {
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _generation++;
+    });
+  }
+
   void save() {
     widget.onSaved?.call(value);
   }
 
   bool validate() {
     _validate();
+    _notifyChanged();
     return !hasError;
   }
 
@@ -372,7 +420,7 @@ class AntFieldState<T> extends State<Field<T?>> with RestorationMixin {
   }
 
   void didChange(T? value) {
-    if (mergedName == null || mergedName.isEmpty) {
+    if (mergedName.isEmpty) {
       return;
     }
     if (value == _value) {
@@ -383,9 +431,8 @@ class AntFieldState<T> extends State<Field<T?>> with RestorationMixin {
     _validate();
     if (formState != null) {
       formState._fieldDidChange(mergedName, value);
-      return;
     }
-    setState(() {});
+    _notifyChanged();
   }
 
   @override
@@ -396,15 +443,30 @@ class AntFieldState<T> extends State<Field<T?>> with RestorationMixin {
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
     _formScope = context.dependOnInheritedWidgetOfExactType<_AntFormScope>();
     _fieldScope = context.dependOnInheritedWidgetOfExactType<_FieldScope>();
-    super.didChangeDependencies();
+    if (widget.name != null && _formScope != null && !_registered) {
+      _formScope!._formState._register(this);
+      _registered = true;
+    } else if (widget.name != null && _formScope != null) {
+      // 表单 store 更新后同步值（如 setFieldsValue）
+      _formScope!._formState._formValuesSet(this);
+    }
   }
 
   @override
   void didUpdateWidget(Field<T?> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.name != widget.name) {
+      if (_registered && oldWidget.name != null) {
+        _formScope?._formState._unregister(this);
+        _registered = false;
+      }
+      if (widget.name != null && _formScope != null) {
+        _formScope!._formState._register(this);
+        _registered = true;
+      }
       _generation++;
     }
     if (oldWidget.value != widget.value) {
@@ -413,30 +475,20 @@ class AntFieldState<T> extends State<Field<T?>> with RestorationMixin {
   }
 
   @override
-  void deactivate() {
-    super.deactivate();
-  }
-
-  @override
   void dispose() {
-    if (widget.name != null) {
+    if (_registered) {
       _formScope?._formState._unregister(this);
+      _registered = false;
     }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.name != null) {
-      _formScope!._formState._register(this);
-    }
-
-    return PopScope(
-      child: _FieldScope<T?>(
-        fieldState: this,
-        generation: _generation,
-        child: widget.child,
-      ),
+    return _FieldScope<T?>(
+      fieldState: this,
+      generation: _generation,
+      child: widget.child,
     );
   }
 
@@ -534,6 +586,23 @@ class AntFormItem<T> extends StatelessWidget {
   final bool hidden;
   final bool? noStyle;
 
+  FormItemValidator<T>? _resolveValidator() {
+    if (required != true && validator == null) {
+      return validator;
+    }
+    return (T? value) {
+      if (required == true) {
+        final isEmpty =
+            value == null || (value is String && value.isEmpty);
+        if (isEmpty) {
+          final label = labelText;
+          return (label != null && label.isNotEmpty) ? '请输入$label' : '请输入';
+        }
+      }
+      return validator?.call(value);
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return Offstage(
@@ -542,10 +611,9 @@ class AntFormItem<T> extends StatelessWidget {
         name: name,
         restorationId: restorationId,
         initialValue: initialValue,
-        validator: validator,
+        validator: _resolveValidator(),
         onSaved: onSaved,
         notifier: notifier,
-
         child: InternalFormItem<T?>(
           layout: layout,
           label: label,
@@ -606,11 +674,11 @@ class InternalFormItem<T> extends StatefulWidget {
 class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
   double get height {
     AntFormState? formState = AntForm.maybeOf(context);
-    AntSize size = widget.size ?? formState?.widget.size ?? AntSize.middle;
+    AntSize size = widget.size ?? formState?.widget.size ?? AntSize.medium;
     switch (size) {
       case AntSize.large:
         return sizeLg;
-      case AntSize.middle:
+      case AntSize.medium:
         return sizeMd;
       case AntSize.small:
         return sizeSm;
@@ -655,19 +723,14 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
     if (widget.required == true) {
       if (layout == AntFormLayout.vertical) {
         fieldLabelChildren.add(
-          SizedBox(
+          const SizedBox(
             width: 0,
             child: Text("*", style: TextStyle(color: Colors.red)),
           ),
         );
       } else {
         fieldLabelChildren.add(
-          Container(
-            padding: EdgeInsets.only(left: 0, right: 0, top: 0),
-            // width: 0,
-            // transform: Matrix4.translationValues(-8.0, 0.0, 0.0),
-            child: Text("*", style: TextStyle(color: Colors.red)),
-          ),
+          const Text("*", style: TextStyle(color: Colors.red)),
         );
       }
     }
@@ -769,16 +832,13 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
   }
 
   @override
-  void initState() {}
-
-  @override
-  void didChangeDependencies() {}
-
-  @override
   Widget build(BuildContext context) {
     AntFieldState<T?>? fieldState = Field.maybeOf<T?>(context);
+    final formSpacing = AntForm.maybeOf(context)?.spacing;
 
-    StateStyle stateStyle = _AntFormItemStyle();
+    StateStyle stateStyle = _AntFormItemStyle(
+      spacing: widget.style?.style?.margin == null ? formSpacing : null,
+    );
     stateStyle = stateStyle.merge(widget.style);
 
     List<Widget> fieldItemChildren = [];
@@ -790,12 +850,9 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
       List<Widget> filedInputChildren = [child];
       if (fieldState.errorText != null) {
         filedInputChildren.add(
-          Container(
-            padding: EdgeInsets.only(left: 0, right: 0, top: 0),
-            child: Text(
-              fieldState.errorText ?? "",
-              style: TextStyle(fontSize: 12, color: Colors.red),
-            ),
+          Text(
+            fieldState.errorText ?? "",
+            style: const TextStyle(fontSize: 12, color: Colors.red),
           ),
         );
       }
@@ -815,18 +872,18 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
       if (widget.builder != null) {
         return widget.builder!(fieldState!);
       } else {
-        return Container();
+        return const SizedBox.shrink();
       }
     }
 
+    final resolvedStyle = stateStyle.resolve(<WidgetState>{});
     return Container(
-      decoration: stateStyle.resolve(<WidgetState>{})?.decoration,
-      padding: stateStyle.resolve(<WidgetState>{})?.computedPadding,
-      margin: stateStyle.resolve(<WidgetState>{})?.computedMargin,
+      decoration: resolvedStyle?.decoration,
+      padding: resolvedStyle?.computedPadding,
+      margin: resolvedStyle?.computedMargin,
       child:
           layout == AntFormLayout.horizontal
               ? Row(
-                // crossAxisAlignment: CrossAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 spacing: AntForm.maybeOf(context)?.rowSpacing ?? 0,
@@ -841,7 +898,6 @@ class InternalFormItemState<T> extends State<InternalFormItem<T?>> {
                 children: fieldItemChildren,
               ),
     );
-    // return child;
   }
 }
 //endregion
@@ -851,13 +907,14 @@ typedef FormItemValidator<T> = String? Function(T? value);
 typedef FormItemSetter<T> = void Function(T? newValue);
 
 class _AntFormItemStyle extends StateStyle {
-  const _AntFormItemStyle();
+  const _AntFormItemStyle({this.spacing});
+
+  final double? spacing;
 
   @override
   Style get style {
     return Style(
-      // padding: StylePadding(left: 8, right: 8),
-      // margin: StyleMargin(bottom: 8)
+      margin: spacing != null ? StyleMargin(bottom: spacing) : null,
     );
   }
 }
@@ -890,8 +947,10 @@ class AntFormListState extends State<AntFormList> {
 
   NamePath get mergedName {
     AntFieldState? fieldState = Field.maybeOf(context);
-    if (fieldState?.mergedName != null && widget.name != null) {
-      return NamePath([...fieldState!.mergedName.value, ...widget.name!.value]);
+    if (fieldState != null &&
+        fieldState.mergedName.isNotEmpty &&
+        widget.name != null) {
+      return NamePath([...fieldState.mergedName.value, ...widget.name!.value]);
     } else {
       return widget.name ?? NamePath([]);
     }
@@ -903,32 +962,21 @@ class AntFormListState extends State<AntFormList> {
       formState!._formValues,
       mergedName.value,
     );
-    if (listValue == null) {
-      return [];
-    } else if (listValue is List) {
-      return listValue.map((e) {
-        int index = listValue.indexOf(e);
-        return AntFormListField(name: NamePath(index), index: index);
+    if (listValue is List) {
+      return listValue.asMap().entries.map((entry) {
+        return AntFormListField(
+          name: NamePath(entry.key),
+          index: entry.key,
+        );
       }).toList();
-    } else {
-      return [];
     }
+    return [];
   }
 
   @override
   void didChangeDependencies() {
     _formScope = context.dependOnInheritedWidgetOfExactType<_AntFormScope>();
     super.didChangeDependencies();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -944,34 +992,41 @@ class AntFormListState extends State<AntFormList> {
                 fields,
                 AntFormListOperations(
                   add: (dynamic defaultValue) {
-                    List<dynamic>? listValue =
+                    final existing =
                         MapUtils.getPathValue(
                               formState!._formValues,
                               mergedName.value,
                             )
                             as List<dynamic>?;
-                    if (listValue is List) {
-                      listValue.add(defaultValue);
-                    } else {
-                      listValue = [defaultValue];
-                    }
+                    final List<dynamic> listValue =
+                        existing != null
+                            ? List<dynamic>.from(existing)
+                            : <dynamic>[];
+                    listValue.add(defaultValue);
                     formState.setFieldValue(mergedName, listValue);
                   },
                   remove: (int index) {
-                    List<dynamic>? listValue =
+                    final existing =
                         MapUtils.getPathValue(
                               formState!._formValues,
                               mergedName.value,
                             )
                             as List<dynamic>?;
-                    if (listValue is List) {
-                      listValue.removeAt(index);
+                    if (existing is! List) {
+                      return;
                     }
+                    final List<dynamic> listValue = List<dynamic>.from(
+                      existing,
+                    );
+                    if (index < 0 || index >= listValue.length) {
+                      return;
+                    }
+                    listValue.removeAt(index);
                     formState.setFieldValue(mergedName, listValue);
                   },
                 ),
               )
-              : Container(),
+              : const SizedBox.shrink(),
     );
   }
 }

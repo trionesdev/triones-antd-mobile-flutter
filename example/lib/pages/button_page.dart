@@ -375,7 +375,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     ),
                     AntButton(
                       shape: AntButtonShape.circle,
-                      size: AntSize.middle,
+                      size: AntSize.medium,
                       color: Color(0xffEB2F96),
                       icon: Icon(Icons.add),
                       onPressed: () {

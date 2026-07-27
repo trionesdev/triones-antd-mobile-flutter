@@ -25,7 +25,7 @@ class AntButton extends StatefulWidget {
     this.onPressed,
     this.variant,
     this.shape = AntButtonShape.round,
-    this.size = AntSize.middle,
+    this.size = AntSize.medium,
     this.style,
     this.child,
   });
@@ -98,7 +98,7 @@ class _ButtonState extends State<AntButton> with MaterialStateMixin {
     switch (widget.size) {
       case AntSize.large:
         return sizeLg;
-      case AntSize.middle:
+      case AntSize.medium:
         return sizeMd;
       case AntSize.small:
         return sizeSm;
@@ -255,7 +255,7 @@ class _AntButtonStyle extends StateStyle {
     switch (button.size) {
       case AntSize.small:
         return StylePadding(left: 12, right: 12);
-      case AntSize.middle:
+      case AntSize.medium:
         return StylePadding(left: 18, right: 18);
       case AntSize.large:
         return StylePadding(left: 24, right: 24);

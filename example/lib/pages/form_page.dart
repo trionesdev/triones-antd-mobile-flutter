@@ -45,6 +45,7 @@ class _FormPageState extends State<FormPage> {
               title: "基本使用",
               child: AntForm(
                 key: _formKey,
+                spacing: 12,
                 child: Column(
                   children: [
                     AntFormItem<String>(
@@ -79,12 +80,8 @@ class _FormPageState extends State<FormPage> {
                     ),
                     AntFormItem<String?>(
                       name: NamePath(['username']),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return '请输入用户名';
-                        }
-                        return null;
-                      },
+                      labelText: '用户名',
+                      required: true,
                       builder: (AntFieldState field) {
                         return AntInput(
                           align: AntInputAlign.right,
@@ -97,6 +94,14 @@ class _FormPageState extends State<FormPage> {
                     ),
                     AntFormItem(
                       name: NamePath(['password']),
+                      required: true,
+                      labelText: '密码',
+                      validator: (value) {
+                        if (value == null || (value is String && value.length < 6)) {
+                          return '密码至少6位';
+                        }
+                        return null;
+                      },
                       builder: (AntFieldState field) {
                         return AntInput(
                           value: field.value,
@@ -116,6 +121,16 @@ class _FormPageState extends State<FormPage> {
                           onPressed: () => {
                             _formKey.currentState
                                 ?.validateFields()
+                                .then((values) => {print(values)})
+                                .catchError((err) => {print(err)}),
+                          },
+                        ),
+                        AntButton(
+                          text: "校验用户名",
+                          block: true,
+                          onPressed: () => {
+                            _formKey.currentState
+                                ?.validateFields(nameList: [NamePath(['username'])])
                                 .then((values) => {print(values)})
                                 .catchError((err) => {print(err)}),
                           },

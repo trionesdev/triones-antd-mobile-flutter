@@ -8,7 +8,7 @@ import '../constants.dart';
 class AntInputNumber extends StatefulWidget {
   const AntInputNumber({
     super.key,
-    this.size = AntSize.middle,
+    this.size = AntSize.medium,
     this.step = 1,
     this.min,
     this.max,
@@ -20,7 +20,7 @@ class AntInputNumber extends StatefulWidget {
   });
 
   /// @description 组件大小
-  /// @default middle
+  /// @default medium
   final AntSize size;
 
   /// @description 默认值
@@ -68,7 +68,7 @@ class _AntInputNumberState extends State<AntInputNumber> {
     switch (widget.size) {
       case AntSize.large:
         return sizeLg;
-      case AntSize.middle:
+      case AntSize.medium:
         return sizeMd;
       case AntSize.small:
         return sizeSm;

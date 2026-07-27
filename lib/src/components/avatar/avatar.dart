@@ -11,7 +11,7 @@ class AntAvatar extends StatefulWidget {
     this.src,
     this.icon,
     this.shape = AntAvatarShape.square,
-    this.size = AntSize.middle,
+    this.size = AntSize.medium,
     this.diameter,
     this.style,
     this.decoration,
@@ -50,7 +50,7 @@ class _AvatarState extends State<AntAvatar> with MaterialStateMixin {
     switch (widget.size) {
       case AntSize.large:
         return sizeLg;
-      case AntSize.middle:
+      case AntSize.medium:
         return sizeMd;
       case AntSize.small:
         return sizeSm;
@@ -66,7 +66,7 @@ class _AvatarState extends State<AntAvatar> with MaterialStateMixin {
     switch (widget.size) {
       case AntSize.large:
         return sizeLg;
-      case AntSize.middle:
+      case AntSize.medium:
         return sizeMd;
       case AntSize.small:
         return sizeSm;

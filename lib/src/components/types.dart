@@ -1,4 +1,4 @@
-enum AntSize { small, middle, large }
+enum AntSize { small, medium, large }
 
 enum AntLayout { horizontal, vertical }
 
@@ -35,6 +35,8 @@ class NamePath {
 
   bool get isEmpty => _namePaths.isEmpty;
 
+  bool get isNotEmpty => _namePaths.isNotEmpty;
+
   NamePath append(dynamic name) {
     if (name is List) {
       _namePaths.addAll(name);
@@ -51,6 +53,9 @@ class NamePath {
     }
     return jsonValue == other.jsonValue;
   }
+
+  @override
+  int get hashCode => jsonValue.hashCode;
 
   String get jsonValue => _namePaths
       .map((item) {

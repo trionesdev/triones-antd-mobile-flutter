@@ -17,10 +17,23 @@
 | labelCol      | label 布局                              | `AntCol`        |              |
 | labelAlign    | label 对其方式                            | `AntLabelAlign` | `left`       |
 | wrapperCol    | 内容布局                                  | `AntCol`        |              |
-| spacing       | 间隔                                    | double          |              |
-| rowSpacing    | 行间隔                                   | double          |              |
-| columnSpacing | 列间隔                                   | double          |              |
+| spacing       | 表单项之间的间距（应用到 FormItem 的 margin.bottom） | double          |              |
+| rowSpacing    | 水平布局下 label 与控件间距                     | double          |              |
+| columnSpacing | 垂直布局下 label 与控件间距                     | double          |              |
 | size          | 表单大小                                  | `AntSize`       | `middle`     |
+
+### AntFormState 方法
+
+| 方法 | 说明 | 类型 |
+|------|------|------|
+| watch | 监听指定字段值变化，返回 `ValueNotifier` | `ValueNotifier watch(NamePath path)` |
+| setFieldsValue | 批量设置表单值并同步到已注册字段 | `void setFieldsValue(Map?)` |
+| setFieldValue | 设置单个字段值 | `void setFieldValue(NamePath, dynamic)` |
+| getFieldsValue | 获取表单全部字段值 | `Map getFieldsValue()` |
+| getFieldValue | 获取单个字段值 | `dynamic getFieldValue(NamePath)` |
+| validateFields | 校验字段；可通过 `nameList` 指定局部校验 | `Future<Map> validateFields({List<NamePath>? nameList})` |
+| reset | 重置为初始值 | `void reset()` |
+| save | 触发各字段 onSaved | `void save()` |
 
 ### AntFormItem
 
@@ -29,15 +42,15 @@
 | layout       | 表单布局，可选值为 horizontal（水平） vertical（垂直） | `AntFormLayout`                        | `horizontal` |
 | name         | name属性                                | `NamePath`                             |              |
 | label        | 标签                                    | `Widget`                               |              |
-| labelText    | 标签文本                                  | `String`                               |              |
+| labelText    | 标签文本（`required` 校验文案会优先使用）           | `String`                               |              |
 | labelCol     | label 布局,会覆盖Form 的labelCol            | `AntCol`                               |              |
 | labelAlign   | label 对其方式,会覆盖Form的labelAlign         | `AntLabelAlign`                        | `left`       |
 | wrapperCol   | 内容布局                                  | `AntCol`                               |              |
-| builder      | Item创建函数                              | `Widget Function(AntFieldState field)` |              |
+| builder      | Item构建函数                              | `Widget Function(AntFieldState field)` |              |
 | onSaved      | 保存时回调                                 | `void Function(dynamic? newValue)`      |              |
 | initialValue | 初始值                                   | dynamic                                |              |
-| validator    | 验证函数                                  | `String? Function(dynamic? value)`      |              |
-| required     | 是否必填                                  | bool                                   |              |
+| validator    | 验证函数；与 `required` 同时存在时先做必填校验         | `String? Function(dynamic? value)`      |              |
+| required     | 是否必填；为 true 时自动非空校验并显示 `*`           | bool                                   |              |
 | style        | 组件样式                                  | `StateStyle`                           |              |
 | notifier     | 值变化通知器                               | `ValueNotifier`                        |              |
 | hidden       | 是否隐藏                                  | bool                                   | false        |
@@ -62,7 +75,7 @@
 | 属性      | 说明       | 类型                                                                                                     | 默认值 |
 |---------|----------|--------------------------------------------------------------------------------------------------------|-----|
 | name    | name属性   | `NamePath`                                                                                             |     |
-| builder | List创建函数 | `Widget Function(BuildContext context,List<AntFormListField> fields,AntFormListOperations operations)` |     |
+| builder | List构建函数 | `Widget Function(BuildContext context,List<AntFormListField> fields,AntFormListOperations operations)` |     |
 
 ### AntFormListOperations
 

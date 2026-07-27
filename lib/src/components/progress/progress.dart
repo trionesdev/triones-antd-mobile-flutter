@@ -13,7 +13,7 @@ class AntProgress extends StatelessWidget {
     this.showInfo = true,
     this.status,
     this.strokeColor,
-    this.size = AntSize.middle,
+    this.size = AntSize.medium,
     this.height,
     this.diameter,
     this.percentPositionAlign = AntPercentPositionAlign.end,

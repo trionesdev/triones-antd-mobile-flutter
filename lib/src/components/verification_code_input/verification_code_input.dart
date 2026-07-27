@@ -11,7 +11,7 @@ class AntVerificationCodeInput extends StatefulWidget {
   const AntVerificationCodeInput({
     super.key,
     this.style,
-    this.size = AntSize.middle,
+    this.size = AntSize.medium,
     this.height,
     this.placeholder,
     this.type = AntInputType.text,

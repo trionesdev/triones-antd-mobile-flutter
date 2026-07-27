@@ -178,7 +178,7 @@ class ProgressCircle extends StatelessWidget {
     this.showInfo = true,
     this.status,
     this.strokeColor,
-    this.size = AntSize.middle,
+    this.size = AntSize.medium,
     this.diameter,
     this.strokeLineCap = AntStrokeLineCap.round,
     this.strokeWidth = 6,
@@ -221,7 +221,7 @@ class ProgressCircle extends StatelessWidget {
     switch (size) {
       case AntSize.small:
         return 60;
-      case AntSize.middle:
+      case AntSize.medium:
         return 120;
       case AntSize.large:
         return 160;
@@ -235,7 +235,7 @@ class ProgressCircle extends StatelessWidget {
     switch (size) {
       case AntSize.small:
         return 60;
-      case AntSize.middle:
+      case AntSize.medium:
         return 120;
       case AntSize.large:
         return 160;

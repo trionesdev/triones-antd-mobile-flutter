@@ -7,27 +7,81 @@ class MapUtils {
     dynamic cloneValues = map;
     for (int i = 0; i < keys.length - 1; i++) {
       final key = keys.elementAt(i);
-      cloneValues = cloneValues[key];
+      if (cloneValues is Map) {
+        cloneValues = cloneValues[key];
+      } else if (cloneValues is List && key is int) {
+        if (key < 0 || key >= cloneValues.length) {
+          return null;
+        }
+        cloneValues = cloneValues[key];
+      } else {
+        return null;
+      }
       if (cloneValues == null) {
         return null;
       }
     }
-    return cloneValues[keys.last];
+    final lastKey = keys.last;
+    if (cloneValues is Map) {
+      return cloneValues[lastKey];
+    }
+    if (cloneValues is List && lastKey is int) {
+      if (lastKey < 0 || lastKey >= cloneValues.length) {
+        return null;
+      }
+      return cloneValues[lastKey];
+    }
+    return null;
   }
 
-  static Map<dynamic, dynamic?> setPathValue(Map<dynamic, dynamic>? map,
-      List<dynamic> keys,
-      dynamic value,) {
-    dynamic cloneMap = map;
-    dynamic? current = cloneMap;
+  static Map<dynamic, dynamic?> setPathValue(
+    Map<dynamic, dynamic>? map,
+    List<dynamic> keys,
+    dynamic value,
+  ) {
+    if (map == null || keys.isEmpty) {
+      return map ?? {};
+    }
+    dynamic current = map;
 
     for (int i = 0; i < keys.length - 1; i++) {
-      final key = keys.elementAt(i);
-      current = current[key];
-      current ??= (keys[i + 1] is String) ? <dynamic, dynamic?>{} : <dynamic>[];
+      final key = keys[i];
+      final nextKey = keys[i + 1];
+      final nextContainer =
+          (nextKey is int) ? <dynamic>[] : <dynamic, dynamic>{};
+
+      if (current is Map) {
+        dynamic next = current[key];
+        if (next == null) {
+          next = nextContainer;
+          current[key] = next;
+        }
+        current = next;
+      } else if (current is List && key is int) {
+        while (current.length <= key) {
+          current.add(null);
+        }
+        dynamic next = current[key];
+        if (next == null) {
+          next = nextContainer;
+          current[key] = next;
+        }
+        current = next;
+      } else {
+        return map;
+      }
     }
-    current[keys.last] = value;
-    return cloneMap;
+
+    final lastKey = keys.last;
+    if (current is Map) {
+      current[lastKey] = value;
+    } else if (current is List && lastKey is int) {
+      while (current.length <= lastKey) {
+        current.add(null);
+      }
+      current[lastKey] = value;
+    }
+    return map;
   }
 
   /// 将Map转换为扁平化Map

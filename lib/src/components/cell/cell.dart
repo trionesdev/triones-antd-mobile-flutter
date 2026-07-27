@@ -293,11 +293,11 @@ class _AntCellState extends State<AntCell> {
   AntCellGroup? get _group => _groupState?.widget;
 
   double get _height {
-    final AntSize size = widget.size ?? _group?.size ?? AntSize.middle;
+    final AntSize size = widget.size ?? _group?.size ?? AntSize.medium;
     switch (size) {
       case AntSize.large:
         return sizeLg;
-      case AntSize.middle:
+      case AntSize.medium:
         return sizeMd;
       case AntSize.small:
         return sizeSm;

@@ -31,7 +31,7 @@ class _DecimalTextInputFormatter extends TextInputFormatter {
 class AntInput extends StatefulWidget {
   const AntInput({
     super.key,
-    this.size = AntSize.middle,
+    this.size = AntSize.medium,
     this.readOnly = false,
     this.placeholder,
     this.placeholderTextStyle,
@@ -157,7 +157,7 @@ class _InputState extends State<AntInput> with MaterialStateMixin {
     switch (widget.size) {
       case AntSize.large:
         return sizeLg;
-      case AntSize.middle:
+      case AntSize.medium:
         return sizeMd;
       case AntSize.small:
         return sizeSm;
