@@ -1,6 +1,5 @@
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 
 class AntPageRoute<T> extends PageRoute<T> with AntRouteTransitionMixin<T> {
   /// Construct a MaterialPageRoute whose contents are defined by [builder].
@@ -31,7 +30,6 @@ class AntPageRoute<T> extends PageRoute<T> with AntRouteTransitionMixin<T> {
   String get debugLabel => '${super.debugLabel}(${settings.name})';
 }
 
-
 mixin AntRouteTransitionMixin<T> on PageRoute<T> {
   /// Builds the primary contents of the route.
   @protected
@@ -40,19 +38,23 @@ mixin AntRouteTransitionMixin<T> on PageRoute<T> {
   @override
   Duration get transitionDuration =>
       _getPageTransitionBuilder(navigator!.context)?.transitionDuration ??
-          const Duration(microseconds: 300);
+      const Duration(microseconds: 300);
 
   @override
   Duration get reverseTransitionDuration =>
-      _getPageTransitionBuilder(navigator!.context)?.reverseTransitionDuration ??
-          const Duration(microseconds: 300);
+      _getPageTransitionBuilder(
+        navigator!.context,
+      )?.reverseTransitionDuration ??
+      const Duration(microseconds: 300);
 
   PageTransitionsBuilder? _getPageTransitionBuilder(BuildContext context) {
     final TargetPlatform platform = Theme.of(context).platform;
-    final PageTransitionsTheme pageTransitionsTheme = Theme.of(context).pageTransitionsTheme;
+    final PageTransitionsTheme pageTransitionsTheme =
+        Theme.of(context).pageTransitionsTheme;
     return pageTransitionsTheme.builders[platform] ??
         switch (platform) {
-          TargetPlatform.iOS || TargetPlatform.macOS => const CupertinoPageTransitionsBuilder(),
+          TargetPlatform.iOS ||
+          TargetPlatform.macOS => const CupertinoPageTransitionsBuilder(),
           TargetPlatform.android ||
           TargetPlatform.fuchsia ||
           TargetPlatform.windows ||
@@ -92,19 +94,24 @@ mixin AntRouteTransitionMixin<T> on PageRoute<T> {
   DelegatedTransitionBuilder? get delegatedTransition => _delegatedTransition;
 
   static Widget? _delegatedTransition(
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      bool allowSnapshotting,
-      Widget? child,
-      ) {
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    bool allowSnapshotting,
+    Widget? child,
+  ) {
     final PageTransitionsTheme theme = Theme.of(context).pageTransitionsTheme;
     final TargetPlatform platform = Theme.of(context).platform;
-    final DelegatedTransitionBuilder? themeDelegatedTransition = theme.delegatedTransition(
-      platform,
-    );
+    final DelegatedTransitionBuilder? themeDelegatedTransition = theme
+        .delegatedTransition(platform);
     return themeDelegatedTransition != null
-        ? themeDelegatedTransition(context, animation, secondaryAnimation, allowSnapshotting, child)
+        ? themeDelegatedTransition(
+          context,
+          animation,
+          secondaryAnimation,
+          allowSnapshotting,
+          child,
+        )
         : null;
   }
 
@@ -125,7 +132,8 @@ mixin AntRouteTransitionMixin<T> on PageRoute<T> {
     // Otherwise if the next route has the same route transition mixin as this
     // one, then this route will already be synced with its transition.
     return nextRouteIsNotFullscreen &&
-        ((nextRoute is MaterialRouteTransitionMixin) || nextRouteHasDelegatedTransition);
+        ((nextRoute is MaterialRouteTransitionMixin) ||
+            nextRouteHasDelegatedTransition);
   }
 
   @override
@@ -136,23 +144,33 @@ mixin AntRouteTransitionMixin<T> on PageRoute<T> {
 
   @override
   Widget buildPage(
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      ) {
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
     final Widget result = buildContent(context);
-    return Semantics(scopesRoute: true, explicitChildNodes: true, child: result);
+    return Semantics(
+      scopesRoute: true,
+      explicitChildNodes: true,
+      child: result,
+    );
   }
 
   @override
   Widget buildTransitions(
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child,
-      ) {
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
     final PageTransitionsTheme theme = Theme.of(context).pageTransitionsTheme;
-    return theme.buildTransitions<T>(this, context, animation, secondaryAnimation, child);
+    return theme.buildTransitions<T>(
+      this,
+      context,
+      animation,
+      secondaryAnimation,
+      child,
+    );
   }
 }
 
@@ -205,7 +223,10 @@ class AntPage<T> extends Page<T> {
 
   @override
   Route<T> createRoute(BuildContext context) {
-    return _PageBasedMaterialPageRoute<T>(page: this, allowSnapshotting: allowSnapshotting);
+    return _PageBasedMaterialPageRoute<T>(
+      page: this,
+      allowSnapshotting: allowSnapshotting,
+    );
   }
 }
 
@@ -213,9 +234,12 @@ class AntPage<T> extends Page<T> {
 //
 // This route uses the builder from the page to build its content. This ensures
 // the content is up to date after page updates.
-class _PageBasedMaterialPageRoute<T> extends PageRoute<T> with MaterialRouteTransitionMixin<T> {
-  _PageBasedMaterialPageRoute({required AntPage<T> page, super.allowSnapshotting})
-      : super(settings: page) {
+class _PageBasedMaterialPageRoute<T> extends PageRoute<T>
+    with MaterialRouteTransitionMixin<T> {
+  _PageBasedMaterialPageRoute({
+    required AntPage<T> page,
+    super.allowSnapshotting,
+  }) : super(settings: page) {
     assert(opaque);
   }
 
