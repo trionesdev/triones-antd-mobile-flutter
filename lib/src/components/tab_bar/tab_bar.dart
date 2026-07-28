@@ -41,30 +41,31 @@ class AntTabBar extends StatefulWidget {
   /// @default null
   final Color? activeColor;
 
-  /// @description 当前激活的tabKey
+  /// @description 当前激活的tabKey（受控）
   /// @default null
   final String? activeKey;
 
-  /// @description 默认激活的tabKey
+  /// @description 默认激活的tabKey（非受控）
   /// @default null
   final String? defaultActiveKey;
 
   /// @description 切换回调
   /// @default null
-  final Function(String key)? onChange;
+  final Function(String key, int index)? onChange;
 
   /// @description 子组件
   /// @default null
   final List<Widget>? children;
 
   static AntTabBarState? maybeOf(BuildContext context) {
-    _AntTabBarScope? scope =
+    final _AntTabBarScope? scope =
         context.dependOnInheritedWidgetOfExactType<_AntTabBarScope>();
     return scope?._tabBarState;
   }
 
   static AntTabBarState of(BuildContext context) {
-    AntTabBarState? result = maybeOf(context);
+    final AntTabBarState? result = maybeOf(context);
+    assert(result != null, 'AntTabBar.of() called with a context that does not contain an AntTabBar.');
     return result!;
   }
 
@@ -77,24 +78,19 @@ class AntTabBarState extends State<AntTabBar> with MaterialStateMixin {
   final Set<AntTabBarItemState> _items = <AntTabBarItemState>{};
   String? _currentActiveKey;
 
-  Color? get color {
-    return widget.color;
-  }
+  /// 是否为受控模式（由外部 activeKey 驱动）
+  bool get _isControlled => widget.activeKey != null;
+
+  List<AntTabBarItem> get _tabItems =>
+      widget.children?.whereType<AntTabBarItem>().toList() ?? const [];
+
+  Color? get color => widget.color;
 
   Color? get activeColor {
-    AntThemeData themeData = AntTheme.of(context);
-    return widget.activeColor ?? themeData.colorPrimary;
+    return widget.activeColor ?? AntTheme.of(context).colorPrimary;
   }
 
-  void _itemDidChange() {
-    _forceRebuild();
-  }
-
-  void _forceRebuild() {
-    setState(() {
-      ++_generation;
-    });
-  }
+  String? get currentActiveKey => _currentActiveKey;
 
   void _register(AntTabBarItemState item) {
     _items.add(item);
@@ -104,37 +100,48 @@ class AntTabBarState extends State<AntTabBar> with MaterialStateMixin {
     _items.remove(item);
   }
 
-  bool isActive(String tabKey) {
-    return _currentActiveKey == tabKey;
+  bool isActive(String tabKey) => _currentActiveKey == tabKey;
+
+  int _indexOfKey(String key) {
+    return _tabItems.indexWhere((item) => item.antKey == key);
   }
 
   void _setCurrentActiveKey(String key) {
     if (key == _currentActiveKey) {
       return;
     }
-    setState(() {
-      _currentActiveKey = key;
-    });
-    _itemDidChange();
-    widget.onChange?.call(key);
+    if (!_isControlled) {
+      setState(() {
+        _currentActiveKey = key;
+        ++_generation;
+      });
+    }
+    widget.onChange?.call(key, _indexOfKey(key));
   }
 
   @override
   void initState() {
     super.initState();
-    List<AntTabBarItem> items =
-        widget.children?.whereType<AntTabBarItem>().toList() ?? [];
+    final items = _tabItems;
     _currentActiveKey =
-        (widget.activeKey ?? widget.defaultActiveKey) ?? items.first.antKey;
+        widget.activeKey ??
+        widget.defaultActiveKey ??
+        (items.isNotEmpty ? items.first.antKey : null);
   }
 
   @override
   void didUpdateWidget(AntTabBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.activeKey != widget.activeKey) {
-      setState(() {
-        _currentActiveKey = widget.activeKey;
-      });
+    if (widget.activeKey != oldWidget.activeKey) {
+      _currentActiveKey = widget.activeKey ?? _currentActiveKey;
+      ++_generation;
+    } else if (!_isControlled &&
+        widget.defaultActiveKey != oldWidget.defaultActiveKey &&
+        widget.defaultActiveKey != null &&
+        _currentActiveKey == oldWidget.defaultActiveKey) {
+      // 仅当仍停留在旧默认值时，跟随 defaultActiveKey 变化
+      _currentActiveKey = widget.defaultActiveKey;
+      ++_generation;
     }
   }
 
@@ -142,25 +149,20 @@ class AntTabBarState extends State<AntTabBar> with MaterialStateMixin {
   Widget build(BuildContext context) {
     StateStyle stateStyle = _AntTabBarStyle();
     stateStyle = stateStyle.merge(widget.style);
+    final resolvedStyle = stateStyle.resolve(materialStates);
 
-    return PopScope(
-      child: _AntTabBarScope(
-        tabBarState: this,
-        generation: _generation,
-        child: Container(
-          decoration:
-              widget.decoration ??
-              stateStyle.resolve(materialStates)?.decoration,
-          child: BottomAppBar(
-            color: Colors.transparent,
-            height: widget.height!,
-            padding:
-                widget.padding ??
-                stateStyle.resolve(materialStates)?.computedPadding,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: widget.children ?? [],
-            ),
+    return _AntTabBarScope(
+      tabBarState: this,
+      generation: _generation,
+      child: Container(
+        decoration: widget.decoration ?? resolvedStyle?.decoration,
+        child: BottomAppBar(
+          color: Colors.transparent,
+          height: widget.height ?? 54,
+          padding: widget.padding ?? resolvedStyle?.computedPadding,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: widget.children ?? const [],
           ),
         ),
       ),
@@ -182,6 +184,7 @@ class _AntTabBarScope extends InheritedWidget {
     required AntTabBarState tabBarState,
   }) : _generation = generation,
        _tabBarState = tabBarState;
+
   final int _generation;
   final AntTabBarState _tabBarState;
 
@@ -216,6 +219,8 @@ class AntTabBarItem extends StatefulWidget {
   final Function(String key)? onPressed;
   final Color? color;
   final Color? activeColor;
+
+  /// 保留字段，与历史 API 兼容
   final bool stopPropagation;
 
   @override
@@ -224,59 +229,41 @@ class AntTabBarItem extends StatefulWidget {
 
 class AntTabBarItemState extends State<AntTabBarItem> {
   _AntTabBarScope? _ancestor;
+  bool _registered = false;
 
-  Color? get color {
-    AntTabBarState? tabBar = AntTabBar.maybeOf(context);
-    if (widget.color != null) {
-      return widget.color!;
-    }
-    if (tabBar?.color != null) {
-      return tabBar?.color;
-    }
-    return null;
-  }
+  AntTabBarState? get _tabBar => _ancestor?._tabBarState;
+
+  Color? get color => widget.color ?? _tabBar?.color;
 
   Color? get activeColor {
-    AntTabBarState? tabBar = AntTabBar.maybeOf(context);
-    if (widget.activeColor != null) {
-      return widget.activeColor!;
-    }
-    if (tabBar?.activeColor != null) {
-      return tabBar?.activeColor;
-    }
-    return AntTheme.of(context).colorPrimaryText;
+    return widget.activeColor ??
+        _tabBar?.activeColor ??
+        AntTheme.of(context).colorPrimaryText;
   }
 
-  bool get isActive {
-    AntTabBarState? tabBar = AntTabBar.maybeOf(context);
-    return tabBar?._currentActiveKey == widget.antKey;
-  }
+  bool get isActive => _tabBar?.currentActiveKey == widget.antKey;
 
-  void didChange() {
-    AntTabBarState? tabBar = AntTabBar.maybeOf(context);
-    tabBar?._itemDidChange();
-  }
-
-  Widget icon() {
-    if (isActive) {
-      if (widget.activeIcon is Icon) {
-        return widget.activeIcon as Icon;
-      }
+  Widget _buildIcon() {
+    final displayIcon =
+        (isActive && widget.activeIcon != null)
+            ? widget.activeIcon!
+            : widget.icon;
+    if (displayIcon == null) {
+      return const SizedBox.shrink();
     }
-    if (widget.icon is Icon) {
-      Icon iconIcon = widget.icon as Icon;
+    if (displayIcon is Icon) {
       return WidgetUtils.iconMerge(
-        Icon(iconIcon.icon, color: isActive ? activeColor : color),
-        iconIcon,
+        Icon(displayIcon.icon, color: isActive ? activeColor : color),
+        displayIcon,
       );
     }
-    return widget.icon!;
+    return displayIcon;
   }
 
-  Widget? get label {
+  Widget? _buildLabel() {
     if (widget.label != null) {
       if (widget.label is Text) {
-        Text labelText = widget.label as Text;
+        final Text labelText = widget.label as Text;
         return WidgetUtils.textMerge(
           Text(
             labelText.data ?? '',
@@ -288,7 +275,7 @@ class AntTabBarItemState extends State<AntTabBarItem> {
           labelText,
         );
       }
-      return widget.label!;
+      return widget.label;
     }
     if (widget.labelText != null) {
       return Text(
@@ -305,37 +292,54 @@ class AntTabBarItemState extends State<AntTabBarItem> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _ancestor = context.dependOnInheritedWidgetOfExactType<_AntTabBarScope>();
+    final scope =
+        context.dependOnInheritedWidgetOfExactType<_AntTabBarScope>();
+    if (_registered && _ancestor != null && scope != _ancestor) {
+      _ancestor!._tabBarState._unregister(this);
+      _registered = false;
+    }
+    _ancestor = scope;
+    if (!_registered && _ancestor != null) {
+      _ancestor!._tabBarState._register(this);
+      _registered = true;
+    }
   }
 
   @override
   void dispose() {
-    _ancestor?._tabBarState._unregister(this);
+    if (_registered) {
+      _ancestor?._tabBarState._unregister(this);
+      _registered = false;
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    AntTabBarState? tabBar = AntTabBar.maybeOf(context);
-    tabBar?._register(this);
-
-    List<Widget> children = [];
-    if (widget.icon != null) {
-      children.add(icon());
+    final List<Widget> children = [];
+    if (widget.icon != null || widget.activeIcon != null) {
+      children.add(_buildIcon());
     }
-    if (widget.label != null || widget.labelText != null) {
-      children.add(label! ?? SizedBox.shrink());
+    final label = _buildLabel();
+    if (label != null) {
+      children.add(label);
     }
 
-    return Flexible(
-      flex: 1,
+    return Expanded(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          tabBar?._setCurrentActiveKey(widget.antKey);
+          _tabBar?._setCurrentActiveKey(widget.antKey);
           widget.onPressed?.call(widget.antKey);
         },
-        child: widget.child ?? Column(children: children),
+        child:
+            widget.child ??
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              spacing: 2,
+              children: children,
+            ),
       ),
     );
   }

@@ -22,6 +22,9 @@ class _TabBarPageState extends State<TabBarPage> {
               child: Column(
                 children: [
                   AntTabBar(
+                    onChange: (key, index) {
+                      print('key=$key index=$index');
+                    },
                     children: [
                       AntTabBarItem(
                         icon: Icon(Icons.home),

@@ -25,9 +25,9 @@
 | height           | 高度          | double?               | 54   |
 | color            | 颜色          | Color?                | null |
 | activeColor      | 激活颜色        | Color?                | null |
-| activeKey        | 当前激活的tabKey | String?               | null |
-| defaultActiveKey | 默认激活的tabKey | String?               | null |
-| onChange         | 切换回调        | Function(String key)? | null |
+| activeKey        | 当前激活的 tabKey（受控） | String?               | null |
+| defaultActiveKey | 默认激活的 tabKey（非受控） | String?               | null |
+| onChange         | 切换回调，参数为 key 与索引 | `Function(String key, int index)?` | null |
 | children         | 子组件         | `List<Widget>?`         | null |
 
 ### AntTabBarItem
@@ -37,10 +37,13 @@
 | 属性              | 说明     | 类型                    | 默认值  |
 |-----------------|--------|-----------------------|------|
 | antKey          | 标识（必填） | String                | -    |
-| child           | 子组件    | Widget?               | null |
+| child           | 自定义子组件（设置后忽略 icon/label） | Widget?               | null |
 | icon            | 图标     | Widget?               | null |
+| activeIcon      | 激活态图标  | Widget?               | null |
 | label           | 标签     | Widget?               | null |
+| labelText       | 标签文本   | String?               | null |
+| labelTextStyle  | 标签文本样式 | TextStyle?            | null |
 | onPressed       | 点击事件   | Function(String key)? | null |
 | color           | 颜色     | Color?                | null |
 | activeColor     | 激活颜色   | Color?                | null |
-| stopPropagation | 是否阻止冒泡 | bool                  | true |
+| stopPropagation | 保留字段（兼容） | bool                  | true |
