@@ -1,6 +1,6 @@
 name: trionesdev_antd_mobile
 description: "Antd UI，Flutter Mobile UI Kit by TrionesDev"
-version: 0.0.5-beta.4
+version: 0.0.6-beta.0
 homepage: https://github.com/trionesdev/triones-antd-mobile-flutter
 
 environment:
