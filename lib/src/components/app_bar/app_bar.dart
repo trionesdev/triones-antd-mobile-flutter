@@ -113,34 +113,33 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
     return null;
   }
 
-  Widget? _leadingWidget(BuildContext context) {
-    final List<Widget> children = [];
-    if (showBack) {
-      final Widget? backLabel = _backLabel();
-      children.add(
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            if (onBack != null) {
-              onBack!();
-              return;
-            }
-            Navigator.maybePop(context);
-          },
+  void _handleBack(BuildContext context) {
+    if (onBack != null) {
+      onBack!();
+      return;
+    }
+    Navigator.maybePop(context);
+  }
+
+  Widget _backButton(BuildContext context) {
+    final Widget? backLabel = _backLabel();
+    final Widget icon =
+        backIcon ?? const Icon(AntIcons.leftOutline, size: 20);
+
+    // 占满 AppBar leading 槽位，整块区域可点（不再只有 16x16 图标可点）
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        onTap: () => _handleBack(context),
+        child: Align(
+          alignment: Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: Center(
-                    child: backIcon ??
-                        const Icon(AntIcons.leftOutline, size: 16),
-                  ),
-                ),
+                icon,
                 if (backLabel != null) ...[
                   const SizedBox(width: 4),
                   backLabel,
@@ -149,7 +148,14 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
+
+  Widget? _leadingWidget(BuildContext context) {
+    final List<Widget> children = [];
+    if (showBack) {
+      children.add(_backButton(context));
     }
     if (leading != null) {
       children.add(leading!);
@@ -157,15 +163,13 @@ class AntAppBar extends StatelessWidget implements PreferredSizeWidget {
     if (children.isEmpty) {
       return null;
     }
-    // FittedBox 吸收亚像素取整导致的 0.5px 溢出
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      alignment: Alignment.centerLeft,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: children,
-      ),
+    if (children.length == 1) {
+      return children.first;
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: children,
     );
   }
 
