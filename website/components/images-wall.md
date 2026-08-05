@@ -15,16 +15,18 @@
 
 图片墙的属性说明如下：
 
-| 属性             | 说明         | 类型                                                                 | 默认值   |
-|----------------|------------|--------------------------------------------------------------------|-------|
-| value          | 当前值        | `List<AntImagesWallItemStruct>?`                                     | null  |
-| maxCount       | 最大图片数量     | int?                                                               | null  |
-| disabled       | 是否禁用       | bool                                                               | false |
-| crossAxisCount | 列数         | int?                                                               | 5     |
-| onChange       | 值改变回调      | `ValueChanged<List<AntImagesWallItemStruct>>?`                       | null  |
-| uploadRequest  | 上传请求       | Future<String?> Function(Uint8List fileContent, String? fileName)? | null  |
-| multiSelect    | 是否多选       | bool?                                                              | true  |
-| maxSize        | 图片最大大小(MB) | int?                                                               | null  |
+| 属性             | 说明                      | 类型                                                                 | 默认值   |
+|----------------|-------------------------|--------------------------------------------------------------------|-------|
+| value          | 当前值                     | `List<AntImagesWallItemStruct>?`                                     | null  |
+| maxCount       | 最大图片数量                  | int?                                                               | null  |
+| disabled       | 是否禁用                    | bool                                                               | false |
+| crossAxisCount | 列数                      | int                                                                | 5     |
+| onChange       | 值改变回调                   | `ValueChanged<List<AntImagesWallItemStruct>>?`                       | null  |
+| uploadRequest  | 上传请求，返回图片 URL           | `Future<String?> Function(Uint8List fileContent, String? fileName)?` | null  |
+| beforeUpload   | 上传前校验，返回 false 则跳过该文件   | `FutureOr<bool> Function(Uint8List fileContent, String? fileName)?`  | null  |
+| multiSelect    | 是否多选                    | bool                                                               | true  |
+| maxSize        | 图片最大大小(MB)              | int?                                                               | null  |
+| preview        | 是否开启预览                  | bool                                                               | true  |
 
 ### AntImagesWallItemStruct 属性
 

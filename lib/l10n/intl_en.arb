@@ -11,5 +11,10 @@
   "calendar_fir": "Fir",
   "calendar_sat": "Sat",
   "calendar_sun": "Sun",
-  "cascader_placeholder":"Please Select"
+  "cascader_placeholder":"Please Select",
+  "images_wall_camera":"Take Photo",
+  "images_wall_album":"Choose from Album",
+  "images_wall_too_large":"Image too large",
+  "images_wall_error":"Upload failed",
+  "images_wall_preview":"Preview"
 }

@@ -43,4 +43,19 @@ class AntdLocalizationsEn extends AntdLocalizations {
 
   @override
   String get cascader_placeholder => 'Please Select';
+
+  @override
+  String get images_wall_camera => 'Take Photo';
+
+  @override
+  String get images_wall_album => 'Choose from Album';
+
+  @override
+  String get images_wall_too_large => 'Image too large';
+
+  @override
+  String get images_wall_error => 'Upload failed';
+
+  @override
+  String get images_wall_preview => 'Preview';
 }

@@ -35,6 +35,7 @@ import 'package:antd_flutter_example/pages/search_bar_page.dart';
 import 'package:antd_flutter_example/pages/segmented_page.dart';
 import 'package:antd_flutter_example/pages/select_page.dart';
 import 'package:antd_flutter_example/pages/space_page.dart';
+import 'package:antd_flutter_example/pages/stepper_page.dart';
 import 'package:antd_flutter_example/pages/switch_page.dart';
 import 'package:antd_flutter_example/pages/tab_bar_page.dart';
 import 'package:antd_flutter_example/pages/tabs_page.dart';
@@ -127,6 +128,7 @@ class MyApp extends StatelessWidget {
         '/dialog': (context) => DialogPage(),
         '/rate': (context) => RatePage(),
         '/input-number': (context) => InputNumberPage(),
+        '/stepper': (context) => StepperPage(),
         '/text-area': (context) => TextAreaPage(),
         '/image': (context) => ImagePage(),
         '/collapse': (context) => CollapsePage(),
@@ -460,6 +462,12 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text('InputNumber 数字输入框'),
               onTap: () {
                 Navigator.pushNamed(context, '/input-number');
+              },
+            ),
+            material.ListTile(
+              title: Text('Stepper 步进器'),
+              onTap: () {
+                Navigator.pushNamed(context, '/stepper');
               },
             ),
             material.ListTile(

@@ -174,6 +174,36 @@ abstract class AntdLocalizations {
   /// In zh_Hans_CN, this message translates to:
   /// **'请选择'**
   String get cascader_placeholder;
+
+  /// No description provided for @images_wall_camera.
+  ///
+  /// In zh, this message translates to:
+  /// **'拍摄照片'**
+  String get images_wall_camera;
+
+  /// No description provided for @images_wall_album.
+  ///
+  /// In zh, this message translates to:
+  /// **'从相册选择'**
+  String get images_wall_album;
+
+  /// No description provided for @images_wall_too_large.
+  ///
+  /// In zh, this message translates to:
+  /// **'图片过大'**
+  String get images_wall_too_large;
+
+  /// No description provided for @images_wall_error.
+  ///
+  /// In zh, this message translates to:
+  /// **'上传失败'**
+  String get images_wall_error;
+
+  /// No description provided for @images_wall_preview.
+  ///
+  /// In zh, this message translates to:
+  /// **'图片预览'**
+  String get images_wall_preview;
 }
 
 class _AntdLocalizationsDelegate

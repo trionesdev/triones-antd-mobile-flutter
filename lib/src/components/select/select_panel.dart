@@ -21,6 +21,7 @@ class SelectPanel extends StatefulWidget {
     //距底部多远时（单位px），触发 scrolltolower 事件
     this.lowerThreshold = 50,
     this.onScrollToLower,
+    this.padding,
   });
 
   final bool? multiple;
@@ -37,6 +38,7 @@ class SelectPanel extends StatefulWidget {
   final int upperThreshold;
   final int lowerThreshold;
   final AsyncCallback? onScrollToLower;
+  final EdgeInsetsGeometry? padding;
 
   @override
   State<StatefulWidget> createState() => SelectPanelState();
@@ -50,10 +52,7 @@ class SelectPanelState extends State<SelectPanel> {
   );
 
   dynamic _value;
-
-  void refreshUI() {
-    setState(() {});
-  }
+  bool _loadingMore = false;
 
   void selectItem(value) {
     setState(() {
@@ -74,9 +73,45 @@ class SelectPanelState extends State<SelectPanel> {
     });
   }
 
+  void _scheduleCheckNeedLoadMore() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkNeedLoadMore();
+    });
+  }
+
+  /// 当前数据未撑满可视区域时无法触发滚动监听，需主动加载下一页
+  Future<void> _checkNeedLoadMore() async {
+    if (!mounted || !_scrollController.hasClients) return;
+    if (widget.onScrollToLower == null || _loadingMore) return;
+    if (!_scrollController.position.hasContentDimensions) return;
+
+    if (_scrollController.position.maxScrollExtent <= widget.lowerThreshold) {
+      final lengthBefore = widget.options.value.length;
+      _loadingMore = true;
+      try {
+        await widget.onScrollToLower!.call();
+      } finally {
+        _loadingMore = false;
+        if (mounted) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            // 仅在有新增数据时继续补页，避免无更多数据时死循环
+            if (widget.options.value.length > lengthBefore) {
+              _checkNeedLoadMore();
+            }
+          });
+        }
+      }
+    }
+  }
+
+  void _onOptionsChanged() {
+    _scheduleCheckNeedLoadMore();
+  }
+
   @override
   void initState() {
     _scrollController.addListener(() {
+      if (_loadingMore) return;
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - widget.lowerThreshold) {
         widget.onScrollToLower?.call();
@@ -88,16 +123,23 @@ class SelectPanelState extends State<SelectPanel> {
     );
 
     _value = widget.value ?? (widget.multiple == true ? [] : null);
+    widget.options.addListener(_onOptionsChanged);
     super.initState();
+    _scheduleCheckNeedLoadMore();
   }
 
   @override
   void didUpdateWidget(covariant SelectPanel oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.options != widget.options) {
+      oldWidget.options.removeListener(_onOptionsChanged);
+      widget.options.addListener(_onOptionsChanged);
+    }
   }
 
   @override
   void dispose() {
+    widget.options.removeListener(_onOptionsChanged);
     _scrollController.dispose();
     super.dispose();
   }
@@ -140,50 +182,66 @@ class SelectPanelState extends State<SelectPanel> {
             onRefresh: () async {
               await widget.onRefresh?.call();
             },
-            child: AntList(
-              controller: _scrollController,
-              dataSource: widget.options.value,
-              itemBuilder: (context, item, index) {
-                var selected = handleSelected(item);
-                return GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    selectItem(MapUtils.getPathValue(item, _fieldsNames.value?.value));
-                  },
-                  child:
-                      widget.optionBuilder != null
-                          ? widget.optionBuilder!(
-                            context,
+            child: ValueListenableBuilder<List<dynamic>>(
+              valueListenable: widget.options,
+              builder: (context, options, _) {
+                return AntList(
+                  padding: widget.padding,
+                  controller: _scrollController,
+                  dataSource: options,
+                  itemBuilder: (context, item, index) {
+                    var selected = handleSelected(item);
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        selectItem(
+                          MapUtils.getPathValue(
                             item,
-                            index,
-                            selected,
-                          )
-                          : Container(
-                            padding: EdgeInsets.all(8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  MapUtils.getPathValue(item, _fieldsNames.label?.value) ?? "",
-                                  style: TextStyle(
-                                    color:
-                                        selected
-                                            ? themeData.colorPrimary
-                                            : null,
-                                  ),
-                                ),
-                                if (selected)
-                                  Icon(
-                                    AntIcons.checkOutline,
-                                    size: 16,
-                                    color:
-                                        selected
-                                            ? themeData.colorPrimary
-                                            : null,
-                                  ),
-                              ],
-                            ),
+                            _fieldsNames.value?.value,
                           ),
+                        );
+                      },
+                      child:
+                          widget.optionBuilder != null
+                              ? widget.optionBuilder!(
+                                context,
+                                item,
+                                index,
+                                selected,
+                              )
+                              : Container(
+                                padding: EdgeInsets.all(8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      MapUtils.getPathValue(
+                                            item,
+                                            _fieldsNames.label?.value,
+                                          ) ??
+                                          "",
+                                      style: TextStyle(
+                                        color:
+                                            selected
+                                                ? themeData.colorPrimary
+                                                : null,
+                                      ),
+                                    ),
+                                    if (selected)
+                                      Icon(
+                                        AntIcons.checkOutline,
+                                        size: 16,
+                                        color:
+                                            selected
+                                                ? themeData.colorPrimary
+                                                : null,
+                                      ),
+                                  ],
+                                ),
+                              ),
+                    );
+                  },
                 );
               },
             ),

@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'dart:io';
-import 'package:collection/collection.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 import 'package:trionesdev_antd_mobile/src/components/images_wall/images_preview.dart';
+import 'package:trionesdev_antd_mobile/trionesdev_antd_mobile.dart';
 import 'package:uuid/uuid.dart';
 
 class AntImagesWallItemStruct {
@@ -25,6 +26,42 @@ class AntImagesWallItemStruct {
   AntImageType? type;
   String? fileName;
   String? errorMessage;
+
+  AntImagesWallItemStruct copyWith({
+    String? uid,
+    AntImageStatus? status,
+    Image? image,
+    String? path,
+    AntImageType? type,
+    String? fileName,
+    String? errorMessage,
+  }) {
+    return AntImagesWallItemStruct(
+      uid: uid ?? this.uid,
+      status: status ?? this.status,
+      image: image ?? this.image,
+      path: path ?? this.path,
+      type: type ?? this.type,
+      fileName: fileName ?? this.fileName,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is AntImagesWallItemStruct &&
+        uid == other.uid &&
+        path == other.path &&
+        status == other.status &&
+        type == other.type &&
+        fileName == other.fileName &&
+        errorMessage == other.errorMessage;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(uid, path, status, type, fileName, errorMessage);
 }
 
 enum AntImageStatus { done, uploading, error, removed }
@@ -39,11 +76,12 @@ class AntImagesWall extends StatefulWidget {
     this.maxCount,
     this.disabled = false,
     this.crossAxisCount = 5,
-
     this.onChange,
     this.uploadRequest,
+    this.beforeUpload,
     this.multiSelect = true,
     this.maxSize,
+    this.preview = true,
   });
 
   /// @description 当前值
@@ -60,7 +98,7 @@ class AntImagesWall extends StatefulWidget {
 
   /// @description 列数
   /// @default 5
-  final int? crossAxisCount;
+  final int crossAxisCount;
 
   /// @description 是否禁用
   /// @default false
@@ -68,397 +106,436 @@ class AntImagesWall extends StatefulWidget {
 
   /// @description 是否多选
   /// @default true
-  final bool? multiSelect;
+  final bool multiSelect;
 
   /// @description 图片最大大小，单位MB
   /// @default null
   final int? maxSize;
 
-  /// @description 上传请求
+  /// @description 是否开启预览
+  /// @default true
+  final bool preview;
+
+  /// @description 上传前校验，返回 false 则跳过该文件
+  /// @default null
+  final FutureOr<bool> Function(Uint8List fileContent, String? fileName)?
+      beforeUpload;
+
+  /// @description 上传请求，返回图片 URL
   /// @default null
   final Future<String?> Function(Uint8List fileContent, String? fileName)?
-  uploadRequest;
+      uploadRequest;
 
   @override
-  State<StatefulWidget> createState() => _AntImagesWallState();
+  State<AntImagesWall> createState() => _AntImagesWallState();
 }
 
 class _AntImagesWallState extends State<AntImagesWall> {
+  final Uuid _uuid = const Uuid();
+  final ImagePicker _picker = ImagePicker();
   List<AntImagesWallItemStruct> _images = [];
-  var uuid = Uuid();
 
-  void onChange(List<AntImagesWallItemStruct> images) {
-    if (widget.onChange != null) {
-      widget.onChange!(images);
+  AntdLocalizations? get _l10n => AntdLocalizations.of(context);
+
+  Image _createImage({
+    required AntImageType type,
+    required String path,
+    Uint8List? bytes,
+  }) {
+    if (bytes != null) {
+      return Image.memory(bytes, fit: BoxFit.cover);
+    }
+    switch (type) {
+      case AntImageType.asset:
+        return Image.asset(path, fit: BoxFit.cover);
+      case AntImageType.file:
+        return Image.file(File(path), fit: BoxFit.cover);
+      case AntImageType.network:
+        return Image.network(path, fit: BoxFit.cover);
     }
   }
 
-  void addImages(List<XFile> images) async {
-    if (images.isEmpty) {
-      return;
+  List<AntImagesWallItemStruct> _normalize(
+    List<AntImagesWallItemStruct>? source,
+  ) {
+    if (source == null || source.isEmpty) return [];
+    return source.map((item) {
+      final type = item.type ?? AntImageType.network;
+      final path = item.path;
+      return AntImagesWallItemStruct(
+        uid: item.uid ?? _uuid.v4(),
+        status: item.status ?? AntImageStatus.done,
+        path: path,
+        type: type,
+        fileName: item.fileName,
+        errorMessage: item.errorMessage,
+        image: item.image ??
+            (path != null && path.isNotEmpty
+                ? _createImage(type: type, path: path)
+                : null),
+      );
+    }).toList();
+  }
+
+  void _notifyChange() {
+    widget.onChange?.call(List<AntImagesWallItemStruct>.from(_images));
+  }
+
+  AntImagesWallItemStruct? _findByUid(String uid) {
+    for (final item in _images) {
+      if (item.uid == uid) return item;
     }
-    // List<ImagesWallItem> imageRecords = [];
-    List<Future> uploadRequests =
-        []; //如果有上传请求，则将所有异步请求放在一个列表中，再等待所有异步请求完成，再更新状态
-    for (var image in images) {
-      var uid = uuid.v4();
-      if (kIsWeb) {
-        _images.add(
-          AntImagesWallItemStruct(
-            uid: uid,
-            type: AntImageType.network,
-            path: image.path,
-            image: Image.network(image.path, fit: BoxFit.cover),
-            fileName: image.name,
-          ),
-        );
-      } else {
-        _images.add(
-          AntImagesWallItemStruct(
-            uid: uid,
-            type: AntImageType.file,
-            path: image.path,
-            image: Image.file(File(image.path), fit: BoxFit.cover),
-            fileName: image.name,
-          ),
-        );
+    return null;
+  }
+
+  Future<void> _uploadOne({
+    required String uid,
+    required Uint8List bytes,
+    required String? fileName,
+  }) async {
+    final uploadRequest = widget.uploadRequest;
+    if (uploadRequest == null) return;
+
+    try {
+      final url = await uploadRequest(bytes, fileName);
+      if (!mounted) return;
+      setState(() {
+        final item = _findByUid(uid);
+        if (item == null) return;
+        if (url == null || url.isEmpty) {
+          item.status = AntImageStatus.error;
+          item.errorMessage =
+              _l10n?.images_wall_error ?? '上传失败';
+          return;
+        }
+        item.path = url;
+        item.type = AntImageType.network;
+        item.image = _createImage(type: AntImageType.network, path: url);
+        item.status = AntImageStatus.done;
+        item.errorMessage = null;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        final item = _findByUid(uid);
+        if (item == null) return;
+        item.status = AntImageStatus.error;
+        item.errorMessage = _l10n?.images_wall_error ?? '上传失败';
+      });
+    }
+  }
+
+  Future<void> _addImages(List<XFile> files) async {
+    if (files.isEmpty || widget.disabled) return;
+
+    final remain = widget.maxCount == null
+        ? files.length
+        : widget.maxCount! - _images.length;
+    if (remain <= 0) return;
+
+    final selected = files.take(remain).toList();
+    final uploadTasks = <Future<void>>[];
+
+    for (final file in selected) {
+      final uid = _uuid.v4();
+      late final Uint8List bytes;
+      try {
+        bytes = await file.readAsBytes();
+      } catch (_) {
+        continue;
+      }
+
+      if (widget.beforeUpload != null) {
+        final pass = await widget.beforeUpload!(bytes, file.name);
+        if (!pass) continue;
+      }
+
+      final isWeb = kIsWeb;
+      final type = isWeb ? AntImageType.network : AntImageType.file;
+      final item = AntImagesWallItemStruct(
+        uid: uid,
+        type: type,
+        path: file.path,
+        fileName: file.name,
+        image: _createImage(type: type, path: file.path, bytes: bytes),
+        status: AntImageStatus.done,
+      );
+
+      if (widget.maxSize != null &&
+          bytes.lengthInBytes / 1024 / 1024 > widget.maxSize!) {
+        item.status = AntImageStatus.error;
+        item.errorMessage = _l10n?.images_wall_too_large ?? '图片过大';
+        if (mounted) {
+          showAntToast(
+            context: context,
+            content: Text(
+              '${_l10n?.images_wall_too_large ?? '图片过大'}(${widget.maxSize}MB)',
+            ),
+            duration: 1500,
+          );
+        }
+        if (!mounted) return;
+        setState(() {
+          _images.add(item);
+        });
+        continue;
       }
 
       if (widget.uploadRequest != null) {
-        await image.readAsBytes().then((bytes) async {
-          var imageItem = _images.firstWhereOrNull(
-            (element) => element.uid == uid,
-          );
-          setState(() {
-            if (imageItem != null) {
-              if (widget.maxSize != null &&
-                  bytes.length / 1024 / 1024 > widget.maxSize!) {
-                imageItem.status = AntImageStatus.error;
-                imageItem.errorMessage = "图片过大";
-                showAntToast(
-                  context: context,
-                  content: Text("图片不能超过${widget.maxSize}M"),
-                  duration: 1000,
-                );
-              } else {
-                imageItem.status = AntImageStatus.uploading;
-              }
-            }
-          });
-          if (imageItem == null ||
-              imageItem.status != AntImageStatus.uploading) {
-            return;
-          }
-          var req = widget.uploadRequest!(bytes, image.name)
-              .then((url) {
-                setState(() {
-                  var imageItem = _images.firstWhereOrNull(
-                    (element) => element.uid == uid,
-                  );
-                  if (imageItem != null) {
-                    imageItem.image = Image.network(url!, fit: BoxFit.cover);
-                    imageItem.path = url;
-                    imageItem.type = AntImageType.network;
-                    imageItem.status = AntImageStatus.done;
-                  }
-                });
-              })
-              .catchError((err) {
-                setState(() {
-                  var imageItem = _images.firstWhereOrNull(
-                    (element) => element.uid == uid,
-                  );
-                  if (imageItem != null) {
-                    imageItem.status = AntImageStatus.error;
-                  }
-                });
-              });
-          uploadRequests.add(req);
-        });
+        item.status = AntImageStatus.uploading;
+        uploadTasks.add(
+          _uploadOne(uid: uid, bytes: bytes, fileName: file.name),
+        );
       }
-    }
-    if (uploadRequests.isNotEmpty) {
-      Future.wait(uploadRequests).then((value) {
-        onChange(_images);
-      });
-    } else {
-      onChange(_images);
-    }
-  }
 
-  Future<void> selectImageFromGallery(bool multi) async {
-    final ImagePicker picker = ImagePicker();
-    if (widget.maxCount != null) {
-      if (widget.maxCount! <= _images.length) {
-        return;
-      }
-    }
-    int? limit;
-    if (widget.maxCount != null) {
-      limit = widget.maxCount! - _images.length;
-    }
-    if (multi) {
-      final List<XFile> images = await picker.pickMultiImage(limit: limit);
-      if (images.isNotEmpty) {
-        if (limit == null) {
-          setState(() {
-            addImages(images);
-          });
-        } else {
-          setState(() {
-            addImages(images.take(limit!).toList());
-          });
-        }
-      }
-    } else {
-      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        setState(() {
-          addImages([image]);
-        });
-      }
-    }
-  }
-
-  Future<void> selectImageFromCamera() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? photo = await picker.pickImage(source: ImageSource.camera);
-
-    if (photo != null) {
+      if (!mounted) return;
       setState(() {
-        addImages([photo]);
+        _images.add(item);
       });
     }
+
+    _notifyChange();
+
+    if (uploadTasks.isNotEmpty) {
+      await Future.wait(uploadTasks);
+      if (!mounted) return;
+      _notifyChange();
+    }
   }
 
-  Image generateImage(AntImagesWallItemStruct image) {
-    if (image.type == AntImageType.asset) {
-      return Image.asset(image.path!, fit: BoxFit.cover);
-    } else if (image.type == AntImageType.network) {
-      return Image.network(image.path!, fit: BoxFit.cover);
-    } else if (image.type == AntImageType.file) {
-      return Image.file(File(image.path!), fit: BoxFit.cover);
+  Future<void> _selectFromGallery() async {
+    if (widget.maxCount != null && _images.length >= widget.maxCount!) {
+      return;
+    }
+    final limit =
+        widget.maxCount == null ? null : widget.maxCount! - _images.length;
+
+    if (widget.multiSelect) {
+      final images = await _picker.pickMultiImage(limit: limit);
+      if (images.isEmpty) return;
+      final clipped =
+          limit == null ? images : images.take(limit).toList(growable: false);
+      await _addImages(clipped);
     } else {
-      return Image.network(image.path!, fit: BoxFit.cover);
+      final image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      await _addImages([image]);
     }
   }
 
-  List<AntImagesWallItemStruct>? generateImages(
-    List<AntImagesWallItemStruct>? images,
-  ) {
-    if (images != null && images.isNotEmpty) {
-      for (var element in widget.value!) {
-        element.uid ??= uuid.v4();
-        element.status ??= AntImageStatus.done;
-        element.image ??= generateImage(element);
-        element.type ??= AntImageType.network;
-      }
+  Future<void> _selectFromCamera() async {
+    if (widget.maxCount != null && _images.length >= widget.maxCount!) {
+      return;
     }
-    return images;
+    final photo = await _picker.pickImage(source: ImageSource.camera);
+    if (photo == null) return;
+    await _addImages([photo]);
+  }
+
+  void _showPickerSheet() {
+    final l10n = _l10n;
+    AntActionSheet.show(
+      context: context,
+      actions: [
+        AntActionSheetItemStruct(
+          label: Text(l10n?.images_wall_album ?? '从相册选择'),
+          onPressed: () {
+            Navigator.of(context).pop();
+            _selectFromGallery();
+          },
+        ),
+        AntActionSheetItemStruct(
+          label: Text(l10n?.images_wall_camera ?? '拍摄照片'),
+          onPressed: () {
+            Navigator.of(context).pop();
+            _selectFromCamera();
+          },
+        ),
+      ],
+    );
+  }
+
+  void _removeImage(String? uid) {
+    if (uid == null || widget.disabled) return;
+    setState(() {
+      _images.removeWhere((element) => element.uid == uid);
+    });
+    _notifyChange();
+  }
+
+  void _previewAt(int index) {
+    if (!widget.preview) return;
+    final providers = <ImageProvider>[];
+    final tags = <Object>[];
+    for (final item in _images) {
+      final provider = item.image?.image;
+      if (provider == null) continue;
+      providers.add(provider);
+      tags.add(item.uid ?? item.path ?? providers.length);
+    }
+    if (providers.isEmpty) return;
+    final safeIndex = index.clamp(0, providers.length - 1);
+    AntMask.show(
+      context: context,
+      clickMaskClose: true,
+      child: ImagesPreview(
+        images: providers,
+        heroTags: tags,
+        initialIndex: safeIndex,
+        title: _l10n?.images_wall_preview ?? '图片预览',
+      ),
+    );
   }
 
   @override
   void initState() {
     super.initState();
-    _images = generateImages(widget.value) ?? [];
+    _images = _normalize(widget.value);
   }
 
   @override
   void didUpdateWidget(covariant AntImagesWall oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!ListEquality().equals(oldWidget.value ?? [], widget.value ?? [])) {
-      _images = generateImages(widget.value) ?? [];
+    final next = _normalize(widget.value);
+    if (!listEquals(oldWidget.value ?? const [], widget.value ?? const [])) {
+      _images = next;
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  bool get _canAdd =>
+      !widget.disabled &&
+      (widget.maxCount == null || _images.length < widget.maxCount!);
 
   @override
   Widget build(BuildContext context) {
-    AntThemeData antThemeData = AntTheme.of(context);
-    List<Widget> widgets = [];
-
-    for (int i = 0; i < _images.length; i++) {
-      widgets.add(
+    final theme = AntTheme.of(context);
+    final children = <Widget>[
+      for (var i = 0; i < _images.length; i++)
         AntImageWallItem(
-          image: _images.elementAt(i),
-          images: _images,
-          disabled: widget.disabled,
+          key: ValueKey(_images[i].uid ?? '$i'),
+          image: _images[i],
           index: i,
-          onRemove: (uid) {
-            setState(() {
-              _images.removeWhere((element) => element.uid == uid);
-              widget.onChange?.call(_images);
-            });
-          },
+          disabled: widget.disabled,
+          errorText: _l10n?.images_wall_error ?? '上传失败',
+          onPreview: () => _previewAt(i),
+          onRemove: _removeImage,
         ),
-      );
-    }
-    if (!widget.disabled &&
-        (widget.maxCount == null ||
-            (widget.maxCount != null && _images.length < widget.maxCount!))) {
-      widgets.add(
+    ];
+
+    if (_canAdd) {
+      children.add(
         GestureDetector(
-          onTap: () {
-            AntActionSheet.show(
-              context: context,
-              actions: [
-                AntActionSheetItemStruct(
-                  label: Text('从相册选择'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    selectImageFromGallery(widget.multiSelect!);
-                  },
-                ),
-                AntActionSheetItemStruct(
-                  label: Text('拍摄照片'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    selectImageFromCamera();
-                  },
-                ),
-              ],
-            );
-          },
+          onTap: _showPickerSheet,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.black12,
-              borderRadius: BorderRadius.horizontal(
-                left: Radius.circular(antThemeData.borderRadius),
-                right: Radius.circular(antThemeData.borderRadius),
-              ),
+              color: theme.colorFillSecondary,
+              borderRadius: BorderRadius.circular(theme.borderRadius),
             ),
-            child: Icon(AntIcons.addOutline, color: Color(0xff999999)),
+            child: Icon(
+              AntIcons.addOutline,
+              color: theme.colorTextPlaceholder,
+            ),
           ),
         ),
       );
     }
 
     return GridView(
-      padding: EdgeInsets.all(4),
+      padding: const EdgeInsets.all(4),
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: widget.crossAxisCount!,
+        crossAxisCount: widget.crossAxisCount,
         childAspectRatio: 1,
-        crossAxisSpacing: 2,
-        mainAxisSpacing: 2,
+        crossAxisSpacing: 4,
+        mainAxisSpacing: 4,
       ),
-      children: widgets,
+      children: children,
     );
   }
 }
 
-class AntImageWallItem extends StatefulWidget {
+class AntImageWallItem extends StatelessWidget {
   const AntImageWallItem({
     super.key,
     required this.image,
-    this.onRemove,
-    this.disabled = false,
-    required this.images,
     required this.index,
+    required this.onRemove,
+    required this.onPreview,
+    required this.errorText,
+    this.disabled = false,
   });
 
-  final bool disabled;
   final AntImagesWallItemStruct image;
   final int index;
-  final List<AntImagesWallItemStruct> images;
-  final Function(String? uid)? onRemove;
-
-  @override
-  State<StatefulWidget> createState() => _AntImageWallItemState();
-}
-
-class _AntImageWallItemState extends State<AntImageWallItem> {
-  late AntImagesWallItemStruct _image;
-  List<AntImagesWallItemStruct> _images = [];
-  int _index = 0;
-
-  @override
-  void didUpdateWidget(covariant AntImageWallItem oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _images = widget.images;
-    _index = widget.index;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _image = widget.image;
-    _images = widget.images;
-    _index = widget.index;
-  }
+  final bool disabled;
+  final String errorText;
+  final ValueChanged<String?> onRemove;
+  final VoidCallback onPreview;
 
   @override
   Widget build(BuildContext context) {
-    AntThemeData antThemeData = AntTheme.of(context);
+    final theme = AntTheme.of(context);
+    final radius = BorderRadius.circular(theme.borderRadius);
+
     return ClipRRect(
-      borderRadius: BorderRadius.horizontal(
-        left: Radius.circular(antThemeData.borderRadius),
-        right: Radius.circular(antThemeData.borderRadius),
-      ),
+      borderRadius: radius,
       child: Stack(
+        fit: StackFit.expand,
         children: [
-          AspectRatio(
-            aspectRatio: 1,
-            child: GestureDetector(
-              onTap: () {
-                AntMask.show(
-                  context: context,
-                  child: ImagesPreview(
-                    images:
-                        _images.map((image) {
-                          return image.image!;
-                        }).toList(),
-                    initialIndex: _index,
-                  ),
-                );
-              },
-              child: FittedBox(
-                fit: BoxFit.cover,
-                child: _images.elementAtOrNull(_index)?.image,
-              ),
-            ),
+          GestureDetector(
+            onTap: onPreview,
+            child: image.image != null
+                ? Image(
+                    image: image.image!.image,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                  )
+                : Container(color: theme.colorFillTertiary),
           ),
-          if (_image.status == AntImageStatus.uploading)
+          if (image.status == AntImageStatus.uploading)
             Positioned.fill(
               child: Container(
                 color: Colors.black26,
-                child: Center(child: AntSpinLoading()),
+                child: const Center(child: AntSpinLoading()),
               ),
             ),
-          if (_image.status == AntImageStatus.error)
+          if (image.status == AntImageStatus.error)
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.black26,
-                  border: Border.all(color: Colors.red, width: 1),
-                  borderRadius: BorderRadius.horizontal(
-                    left: Radius.circular(antThemeData.borderRadius),
-                    right: Radius.circular(antThemeData.borderRadius),
-                  ),
+                  border: Border.all(color: theme.colorError, width: 1),
+                  borderRadius: radius,
                 ),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     var size = constraints.maxWidth / 2;
-                    if (size > 32) {
-                      size = 32;
-                    }
+                    if (size > 32) size = 32;
                     return Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
                             Icons.broken_image_outlined,
-                            color: Colors.red,
+                            color: theme.colorError,
                             size: size,
                           ),
                           if (constraints.maxWidth > 64)
-                            Text(
-                              _image.errorMessage ?? "上传失败",
-                              style: TextStyle(color: Colors.red, fontSize: 12),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                              ),
+                              child: Text(
+                                image.errorMessage ?? errorText,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: theme.colorError,
+                                  fontSize: 12,
+                                ),
+                              ),
                             ),
                         ],
                       ),
@@ -467,23 +544,26 @@ class _AntImageWallItemState extends State<AntImageWallItem> {
                 ),
               ),
             ),
-          if (!widget.disabled)
+          if (!disabled)
             Positioned(
               top: 0,
               right: 0,
               child: GestureDetector(
-                onTap: () {
-                  widget.onRemove?.call(widget.image.uid);
-                },
+                onTap: () => onRemove(image.uid),
+                behavior: HitTestBehavior.opaque,
                 child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black26,
+                  decoration: const BoxDecoration(
+                    color: Colors.black38,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(6),
                     ),
                   ),
-                  padding: EdgeInsets.all(4),
-                  child: Icon(Icons.close, color: Colors.white, size: 14),
+                  padding: const EdgeInsets.all(4),
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 14,
+                  ),
                 ),
               ),
             ),
