@@ -304,7 +304,7 @@ class _AntCellState extends State<AntCell> {
     }
   }
 
-  bool get _showArrow => widget.arrow ?? _group?.arrow ?? true;
+  bool get _showArrow => widget.arrow ?? _group?.arrow ?? false;
 
   Alignment get _labelAlignment {
     final AntLabelAlign? align = widget.labelAlign ?? _group?.labelAlign;
