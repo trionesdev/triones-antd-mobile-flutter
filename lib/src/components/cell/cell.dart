@@ -18,7 +18,7 @@ class AntCellGroup extends StatefulWidget {
     this.contentAlign = AntAlign.left,
     this.children,
     this.showDivider = false,
-    this.arrow = true,
+    this.arrow,
     this.arrowIcon,
     this.contentTextStyle,
   });
@@ -65,8 +65,8 @@ class AntCellGroup extends StatefulWidget {
   final bool showDivider;
 
   /// @description 是否显示箭头
-  /// @default true
-  final bool arrow;
+  /// @default false
+  final bool? arrow;
 
   /// @description 箭头图标
   /// @default null
@@ -120,10 +120,12 @@ class AntCellGroupState extends State<AntCellGroup> {
   Widget get _titleWidget {
     return Align(
       alignment: _titleAlignment,
-      child: widget.title ??
+      child:
+          widget.title ??
           Text(
             widget.titleText ?? '',
-            style: widget.titleStyle ??
+            style:
+                widget.titleStyle ??
                 const TextStyle(fontSize: 14, color: Colors.grey),
           ),
     );
@@ -354,7 +356,8 @@ class _AntCellState extends State<AntCell> {
 
   Widget get _label {
     final AntCol? labelCol = widget.labelCol ?? _group?.labelCol;
-    final Widget labelWidget = widget.label ??
+    final Widget labelWidget =
+        widget.label ??
         Text(
           widget.labelText ?? '',
           style: widget.labelTextStyle ?? _group?.labelTextStyle,
@@ -399,8 +402,7 @@ class _AntCellState extends State<AntCell> {
 
   @override
   Widget build(BuildContext context) {
-    final bool hasLabel =
-        widget.label != null || widget.labelText != null;
+    final bool hasLabel = widget.label != null || widget.labelText != null;
 
     final Widget row = ConstrainedBox(
       constraints: BoxConstraints(minHeight: _height),
